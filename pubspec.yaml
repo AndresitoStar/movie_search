@@ -47,6 +47,13 @@ dev_dependencies:
     sdk: flutter
   moor_generator: 3.3.1
   build_runner:
+  flutter_launcher_icons: 0.7.5
+
+flutter_icons:
+  image_path: "busqueda.png"
+  adaptative_icon_background: "background.png"
+  ios: false
+  android: true
 
 
 # For information on the generic Dart part of this file, see the
