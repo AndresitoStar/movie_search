@@ -1,3 +1,5 @@
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
+import 'package:movie_search/ui/app_theme.dart';
 import 'package:movie_search/ui/pages/dashboard.dart';
 
 import 'data/moor_database.dart';
@@ -7,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/audiovisuales_provider.dart';
 import 'providers/games_provider.dart';
-import 'ui/screens/home_screen.dart';
 
 import 'ui/screens/favs_screen.dart';
 import 'ui/screens/onboard.dart';
@@ -15,7 +16,8 @@ import 'ui/screens/onboard.dart';
 //LoginService service = new LoginService();
 
 //void main() => runApp(Home());
-void main() => runApp(HomeImbd(showOnboard: false,));
+//void main() => runApp(HomeImbd(showOnboard: false,));
+void main() => runApp(EasyDynamicThemeWidget(child: HomeImbd(showOnboard: false,)));
 
 class HomeImbd extends StatelessWidget {
   final bool showOnboard;
@@ -36,11 +38,9 @@ class HomeImbd extends StatelessWidget {
       child: MaterialApp(
         title: 'Melon App',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            primarySwatch: Colors.amber,
-            accentColor: Colors.amberAccent,
-            fontFamily: 'Dosis'),
-        themeMode: ThemeMode.dark,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: EasyDynamicTheme.of(context).themeMode,
         home: showOnboard ? OnboardScreen() : Dashboard(),
         routes: {
           AudiovisualDetail.routeName: (ctx) => AudiovisualDetail(),

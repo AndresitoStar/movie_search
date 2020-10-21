@@ -1,3 +1,4 @@
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:movie_search/providers/audiovisuales_provider.dart';
 import 'package:movie_search/ui/pages/trending_page.dart';
 import 'package:movie_search/ui/screens/movie_search_delegate.dart';
@@ -18,6 +19,12 @@ class _DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixi
   Widget build(BuildContext context) {
     Provider.of<AudiovisualListProvider>(context).synchronizeDashboard(context);
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Melon App', style: Theme.of(context).textTheme.headline6,),
+        actions: [
+          EasyDynamicThemeBtn(),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'search',
         onPressed: () => showSearch(context: context, delegate: MovieSearchDelegate()),
