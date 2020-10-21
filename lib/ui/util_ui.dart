@@ -56,12 +56,11 @@ class UtilView {
           return AlertDialog(
             backgroundColor: Colors.white,
             shape: CircleBorder(),
-            contentPadding: const EdgeInsets.all(10),
+            contentPadding: const EdgeInsets.all(5),
             content: CircleAvatar(
                 backgroundColor: Colors.transparent,
                 child: CircularProgressIndicator(
                   backgroundColor: Colors.white,
-                  strokeWidth: 10,
                 )),
           );
         }).catchError((v) {
