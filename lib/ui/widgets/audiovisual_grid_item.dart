@@ -8,14 +8,19 @@ import 'package:provider/provider.dart';
 import 'default_image.dart';
 
 class AudiovisualGridItem extends StatelessWidget {
+  final bool trending;
+
+  const AudiovisualGridItem({Key key, this.trending}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final audiovisual = Provider.of<AudiovisualProvider>(context, listen: false);
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
+    return Card(
+      clipBehavior: Clip.hardEdge,
+      color: Theme.of(context).cardTheme.color,
       child: GridTile(
-        child: InkWell(
+        child: GestureDetector(
           onTap: () {
             Navigator.of(context).push(
               PageRouteBuilder(
@@ -23,50 +28,44 @@ class AudiovisualGridItem extends StatelessWidget {
                 pageBuilder: (_, __, ___) => ChangeNotifierProvider.value(
                     value: audiovisual,
                     child: AudiovisualDetail(
-                      trending: true,
+                      trending: trending,
                     )),
               ),
             );
           },
-          splashColor: Colors.white,
           child: Hero(
             tag: audiovisual.id,
             child: Material(
-              child: CachedNetworkImage(
-                imageUrl: audiovisual.image,
-                placeholder: (_, __) => Container(
-                    color: HexColor('#252525'), child: Center(child: CircularProgressIndicator())),
-                errorWidget: (ctx, _, __) => Container(
-                    color: HexColor('#252525'), child: Center(child: Icon(Icons.broken_image))),
-                fit: BoxFit.cover,
-                height: double.infinity,
-                width: double.infinity,
+              color: Theme.of(context).cardTheme.color,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: ClipRRect(
+                  clipBehavior: Clip.hardEdge,
+                  borderRadius: BorderRadius.circular(10),
+                  child: CachedNetworkImage(
+                    imageUrl: audiovisual.image,
+                    placeholder: (_, __) => Container(
+                        color: HexColor('#252525'), child: Center(child: CircularProgressIndicator())),
+                    errorWidget: (ctx, _, __) => Container(
+                        color: HexColor('#252525'), child: Center(child: Icon(Icons.broken_image))),
+                    fit: BoxFit.cover,
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                ),
               ),
             ),
           ),
         ),
         footer: GridTileBar(
-            backgroundColor: HexColor('#252525'),
+            backgroundColor: Theme.of(context).cardTheme.color,
             title: Text(
               audiovisual.title,
               maxLines: 2,
-              style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white),
+              style: Theme.of(context).textTheme.subtitle1,
             )),
       ),
     );
   }
 
-  Color getRatingColor(String score) {
-    try {
-      var d = double.parse(score);
-      if (d < 6) {
-        return Colors.redAccent;
-      } else if (d < 9) {
-        return Colors.yellowAccent;
-      }
-      return Colors.greenAccent;
-    } catch (e) {
-      return HexColor('#252525');
-    }
-  }
 }

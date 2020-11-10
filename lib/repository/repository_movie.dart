@@ -43,6 +43,10 @@ class MovieRepository {
     return _resolver.getTrending();
   }
 
+  Future<List<AudiovisualProvider>> getTrendingSeries() async {
+    return _resolver.getTrendingSeries();
+  }
+
   Future<List<AudiovisualProvider>> getAllSaved() async {
     var list = await db.getAllMovies();
     return list

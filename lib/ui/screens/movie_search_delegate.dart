@@ -2,12 +2,14 @@ import 'dart:collection';
 
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/repository/repository_movie.dart';
 import 'package:movie_search/rest/resolver.dart';
 import 'package:movie_search/ui/util_ui.dart';
 import 'package:movie_search/ui/widgets/audiovisual_list_item.dart';
 import 'package:movie_search/ui/widgets/hex_color.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/ui/widgets/theme_switcher.dart';
 import 'package:provider/provider.dart';
 
 class Searcher with ChangeNotifier {
@@ -47,6 +49,9 @@ class Searcher with ChangeNotifier {
 
 class MovieSearchDelegate extends SearchDelegate {
   Searcher _searcher = Searcher();
+  final _debounce = Debounce(milliseconds: 300);
+
+//  MovieSearchDelegate() : super(searchFieldStyle: theme.inputDecorationTheme.hintStyle);
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -54,9 +59,14 @@ class MovieSearchDelegate extends SearchDelegate {
     final ThemeData theme = Theme.of(context);
     assert(theme != null);
     return theme.copyWith(
-      textTheme: theme.textTheme.copyWith(
-        title: TextStyle(color: HexColor('#252525')),
-      ),
+      textTheme: theme.textTheme.copyWith(subtitle: TextStyle(color: Colors.red)),
+      backgroundColor: theme.appBarTheme.color,
+      primaryColor: theme.appBarTheme.color,
+      primaryIconTheme: theme.iconTheme,
+      primaryColorBrightness: theme.appBarTheme.brightness,
+      primaryTextTheme: theme.textTheme,
+      appBarTheme: theme.appBarTheme,
+      colorScheme: theme.colorScheme,
     );
   }
 
@@ -72,6 +82,7 @@ class MovieSearchDelegate extends SearchDelegate {
           query = '';
         },
       ),
+      MyEasyDynamicThemeBtn()
     ];
   }
 
@@ -87,21 +98,7 @@ class MovieSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    if (query.length < 3) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: Text(
-              "Debe buscar con más de 2 letras",
-            ),
-          )
-        ],
-      );
-    }
-
-    Future.delayed(Duration(milliseconds: 100),
-        () => UtilView.showLongTaskDialogDynamic(context, () => _searcher.search(query)));
+    _debounce.run(() => _searcher.search(query));
     return ChangeNotifierProvider.value(
         value: _searcher,
         child: Consumer<Searcher>(
@@ -134,7 +131,7 @@ class MovieSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Container();
+    return buildResults(context);
   }
 }
 

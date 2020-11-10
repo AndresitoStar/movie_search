@@ -79,7 +79,7 @@ class AudiovisualProvider with ChangeNotifier {
     var result = await _repository.getByTrendingId(id);
     isFavourite = result?.isFavourite;
     _data = result;
-    imageUrl = result.image;
+    imageUrl = result?.image;
     _loadingStreamController.add(false);
     notifyListeners();
   }

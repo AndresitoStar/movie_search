@@ -51,6 +51,11 @@ class AudiovisualListProvider with ChangeNotifier {
 
   List<AudiovisualProvider> get trendings => _trendings != null ? [..._trendings] : null;
 
+  List<AudiovisualProvider> _trendingSeries;
+
+  List<AudiovisualProvider> get trendingSeries =>
+      _trendingSeries != null ? [..._trendingSeries] : null;
+
   List<AudiovisualProvider> _forDashboard = [];
 
   List<AudiovisualProvider> get forDashboard => [..._forDashboard];
@@ -96,10 +101,14 @@ class AudiovisualListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future synchronizeTrending(BuildContext context) async {
+  Future synchronizeTrending(BuildContext context, GRID_CONTENT gridContent) async {
     final MovieRepository _repository = MovieRepository.getInstance(context);
-    if (_trendings == null || _trendings.isEmpty) {
+    if (gridContent == GRID_CONTENT.TRENDING_MOVIE && (_trendings == null || _trendings.isEmpty)) {
       _trendings = await _repository.getTrending();
+      notifyListeners();
+    } else if (gridContent == GRID_CONTENT.TRENDING_TV &&
+        (_trendingSeries == null || _trendingSeries.isEmpty)) {
+      _trendingSeries = await _repository.getTrendingSeries();
       notifyListeners();
     }
   }
@@ -110,6 +119,22 @@ class AudiovisualListProvider with ChangeNotifier {
       _forDashboard = await _repository.getAllSaved();
       notifyListeners();
     }
+  }
+
+  Future synchronizeDashboardAlter(BuildContext context, {bool force = false}) async {
+    final MovieRepository _repository = MovieRepository.getInstance(context);
+    if (_trendings == null || _trendings.isEmpty || force) {
+      _trendings = await _repository.getTrending();
+      notifyListeners();
+    }
+    if (_trendingSeries == null || _trendingSeries.isEmpty || force) {
+      _trendingSeries = await _repository.getTrendingSeries();
+      notifyListeners();
+    }
+//    if (_forDashboard.isEmpty || force) {
+      _forDashboard = await _repository.getAllSaved();
+      notifyListeners();
+//    }
   }
 
   Future fetchMore(BuildContext context) async {

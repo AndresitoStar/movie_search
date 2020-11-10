@@ -54,14 +54,10 @@ class UtilView {
             });
           });
           return AlertDialog(
-            backgroundColor: Colors.white,
             shape: CircleBorder(),
             contentPadding: const EdgeInsets.all(5),
             content: CircleAvatar(
-                backgroundColor: Colors.transparent,
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                )),
+                backgroundColor: Colors.transparent, child: CircularProgressIndicator()),
           );
         }).catchError((v) {
       showConfirmationDialog(

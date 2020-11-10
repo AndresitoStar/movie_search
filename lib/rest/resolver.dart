@@ -114,6 +114,39 @@ class RestResolver {
               title: a['title'],
               id: a['id']?.toString(),
               image: 'http://image.tmdb.org/t/p/w185${a['poster_path']}',
+              type: a['media_type'],
+              voteAverage: a['vote_average'],
+              imageUrl: 'http://image.tmdb.org/t/p/w185${a['poster_path']}',
+              isFavourite: false);
+          result.add(aa);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return result;
+  }
+
+  Future<List<AudiovisualProvider>> getTrendingSeries() async {
+    List<AudiovisualProvider> result = [];
+
+    const url = 'api.themoviedb.org';
+
+    Map<String, String> params = {
+      'api_key': '3e56846ee7cfb0b7d870484a9f66218c'
+    };
+    var uri = Uri.https(url, '/3/trending/tv/week', params);
+    try {
+      var response = await http.get(uri);
+      if (response.statusCode == 200) {
+        result = [];
+        final body = jsonDecode(response.body);
+        for (var a in body['results']) {
+          var aa = new AudiovisualProvider(
+              title: a['original_name'],
+              id: a['id']?.toString(),
+              image: 'http://image.tmdb.org/t/p/w185${a['poster_path']}',
+              type: a['media_type'],
               voteAverage: a['vote_average'],
               imageUrl: 'http://image.tmdb.org/t/p/w185${a['poster_path']}',
               isFavourite: false);

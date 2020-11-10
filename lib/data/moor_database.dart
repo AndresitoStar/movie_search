@@ -130,14 +130,20 @@ class MyDatabase extends _$MyDatabase {
   }
 
   Future<AudiovisualTableData> getAudiovisualByExternalId(String trendingId) async {
-    var query = select(audiovisualTable);
-    query.where((a) => a.externalId.equals(trendingId));
-    return await query.getSingle();
+    try {
+      var query = select(audiovisualTable);
+      query.where((a) => a.externalId.equals(trendingId));
+      return await query.getSingle();
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   Future<List<AudiovisualTableData>> getAllMovies() async {
     SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
     query = select(audiovisualTable)..limit(15)
+      ..where((tbl) => tbl.image.like('N/A').not())
       ..orderBy([(r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)])
         ;
     return query.get();
