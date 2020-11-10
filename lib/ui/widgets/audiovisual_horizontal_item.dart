@@ -20,6 +20,8 @@ class AudiovisualHorizontalItem extends StatelessWidget {
     return Container(
       width: width,
       child: Card(
+        margin: const EdgeInsets.all(10),
+        elevation: 5,
         clipBehavior: Clip.hardEdge,
         color: Theme.of(context).cardTheme.color,
         child: GridTile(
@@ -58,13 +60,13 @@ class AudiovisualHorizontalItem extends StatelessWidget {
               ),
             ),
           ),
-          footer: GridTileBar(
+          footer: trending ? GridTileBar(
               backgroundColor: Theme.of(context).cardTheme.color,
               title: Text(
                 audiovisual.title,
                 maxLines: 2,
                 style: Theme.of(context).textTheme.subtitle1,
-              )),
+              )) : null,
         ),
       ),
     );

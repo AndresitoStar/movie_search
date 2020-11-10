@@ -70,12 +70,12 @@ class MovieRepository {
     return result;
   }
 
-  Future<AudiovisualTableData> getByTrendingId(String trendingId) async {
+  Future<AudiovisualTableData> getByTrendingId(String trendingId, String type) async {
     final localData = await db.getAudiovisualByExternalId(trendingId);
     if (localData != null) {
       return localData;
     }
-    final result = await _resolver.getByTrendingId(trendingId);
+    final result = await _resolver.getByTrendingId(trendingId, type);
     if(result != null) {
       db.insertAudiovisual(result);
     }

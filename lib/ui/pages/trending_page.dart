@@ -1,14 +1,19 @@
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/audiovisual_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/ui/widgets/theme_switcher.dart';
 
 class TrendingPage extends StatelessWidget {
+  final GRID_CONTENT gridContent;
+
+  const TrendingPage({Key key, this.gridContent}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Tendencia',
+          gridContent.title,
           style: Theme.of(context).textTheme.headline6,
         ),
         titleSpacing: 0,
@@ -20,6 +25,7 @@ class TrendingPage extends StatelessWidget {
       ),
       body: AudiovisualGrid(
         trending: true,
+        gridContent: gridContent,
       ),
     );
   }

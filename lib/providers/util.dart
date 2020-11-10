@@ -14,6 +14,21 @@ enum FAVOURITE_THINGS { FILMS, SERIES, GAMES }
 
 enum GRID_CONTENT {TRENDING_MOVIE, TRENDING_TV, FAVOURITE}
 
+extension Data on GRID_CONTENT {
+  String get title {
+    switch(this) {
+      case GRID_CONTENT.TRENDING_MOVIE:
+        return 'Películas';
+      case GRID_CONTENT.TRENDING_TV:
+        return 'Series';
+      case GRID_CONTENT.FAVOURITE:
+        return 'Favoritos';
+      default:
+        return '';
+    }
+  }
+}
+
 class Debounce {
   final int milliseconds;
   VoidCallback action;

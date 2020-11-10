@@ -56,9 +56,9 @@ class AudiovisualListProvider with ChangeNotifier {
   List<AudiovisualProvider> get trendingSeries =>
       _trendingSeries != null ? [..._trendingSeries] : null;
 
-  List<AudiovisualProvider> _forDashboard = [];
+  List<AudiovisualProvider> _forDashboard;
 
-  List<AudiovisualProvider> get forDashboard => [..._forDashboard];
+  List<AudiovisualProvider> get forDashboard => _forDashboard != null ? [..._forDashboard] : null;
 
   bool get hasMore => _hasMore;
 

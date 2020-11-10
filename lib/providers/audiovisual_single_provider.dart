@@ -76,7 +76,7 @@ class AudiovisualProvider with ChangeNotifier {
     _loadingStreamController.add(true);
     imageLoaded = true;
     final _repository = MovieRepository.getInstance(context);
-    var result = await _repository.getByTrendingId(id);
+    var result = await _repository.getByTrendingId(id, type);
     isFavourite = result?.isFavourite;
     _data = result;
     imageUrl = result?.image;

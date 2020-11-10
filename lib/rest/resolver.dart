@@ -73,13 +73,13 @@ class RestResolver {
     return new SearchMovieResponse(result: result, totalResult: totalResults);
   }
 
-  Future<AudiovisualTableData> getByTrendingId(String id) async {
+  Future<AudiovisualTableData> getByTrendingId(String id, String type) async {
     const url = 'api.themoviedb.org';
 
     Map<String, String> params = {
       'api_key': '3e56846ee7cfb0b7d870484a9f66218c'
     };
-    var uri = Uri.https(url, '/3/movie/$id/external_ids', params);
+    var uri = Uri.https(url, '/3/$type/$id/external_ids', params);
     try {
       var response = await http.get(uri);
       if (response.statusCode == 200) {
