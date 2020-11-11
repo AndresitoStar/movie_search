@@ -1,31 +1,22 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
+import 'package:flutter/material.dart';
 import 'package:movie_search/ui/app_theme.dart';
 import 'package:movie_search/ui/pages/dashboard.dart';
-import 'package:movie_search/ui/pages/dashboard_alter.dart';
+import 'package:provider/provider.dart';
 
 import 'data/moor_database.dart';
-import 'providers/util.dart';
-import 'ui/screens/audiovisual_detail_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'providers/audiovisuales_provider.dart';
-import 'providers/games_provider.dart';
-
-import 'ui/screens/favs_screen.dart';
 import 'ui/screens/onboard.dart';
 
-void main() => runApp(EasyDynamicThemeWidget(child: HomeImbd(showOnboard: false,)));
+void main() => runApp(EasyDynamicThemeWidget(child: App(showOnboard: false)));
 
-class HomeImbd extends StatelessWidget {
+class App extends StatelessWidget {
   final bool showOnboard;
+  const App({Key key, @required this.showOnboard}) : super(key: key);
 
-  const HomeImbd({Key key, @required this.showOnboard}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: AudiovisualListProvider()),
-//        ChangeNotifierProvider.value(value: GameListProvider()),
         Provider<MyDatabase>(
           create: (context) => MyDatabase(),
           dispose: (context, db) => db.close(),
@@ -37,19 +28,7 @@ class HomeImbd extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: EasyDynamicTheme.of(context).themeMode,
-        home: showOnboard ? OnboardScreen() : DashBoardAlter(),
-        routes: {
-          AudiovisualDetail.routeName: (ctx) => AudiovisualDetail(),
-          FavouriteScren.routeNameFilms: (ctx) => FavouriteScren(
-                param: FAVOURITE_THINGS.FILMS,
-              ),
-          FavouriteScren.routeNameGames: (ctx) => FavouriteScren(
-                param: FAVOURITE_THINGS.GAMES,
-              ),
-          FavouriteScren.routeNameSeries: (ctx) => FavouriteScren(
-                param: FAVOURITE_THINGS.SERIES,
-              ),
-        },
+        home: showOnboard ? OnboardScreen() : Dashboard(),
       ),
     );
   }

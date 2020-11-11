@@ -2,80 +2,82 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/providers/audiovisuales_provider.dart';
 import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/ui/pages/trending_page.dart';
 import 'package:provider/provider.dart';
 
-import 'audiovisual_horizontal_item.dart';
+import 'file:///C:/Workspace/Flutter/movie_search/lib/ui/screens/trending_page.dart';
+
+import 'audiovisual_grid_item.dart';
+
 
 class HorizontalList extends StatelessWidget {
-  final String headline;
-  final Widget subtitle;
-  final List<AudiovisualProvider> list;
-  final GRID_CONTENT gridContent;
   final double height;
   final double width;
-  final _defaultLength = 5;
 
-  HorizontalList(
-      {@required this.headline,
-      @required this.list,
-      @required this.gridContent,
-      this.height,
-      this.width, this.subtitle});
+  HorizontalList({
+    this.height,
+    this.width,
+  });
+
+  final _defaultLength = 5;
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AudiovisualListProvider>(context, listen: false);
+    provider.synchronize(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ListTile(
-          title: Text(headline, style: Theme.of(context).textTheme.headline6),
-          subtitle: subtitle,
+          title: Text(provider.content.title, style: Theme.of(context).textTheme.headline6),
           trailing: IconButton(
               icon: Icon(Icons.navigate_next),
               color: Theme.of(context).iconTheme.color,
-              onPressed: () => Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                      transitionDuration: Duration(milliseconds: 400),
-                      pageBuilder: (_, __, ___) => TrendingPage(gridContent: gridContent)))),
+              onPressed: () => goToTrending(context, provider)),
         ),
-        list == null
-            ? Center(
-                child:
-                    Padding(padding: const EdgeInsets.all(8.0), child: LinearProgressIndicator()))
-            : SizedBox(
-                height: height,
-                child: ListView.builder(
-                  physics: ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: /*list.length*/ _defaultLength + 1,
-                  itemBuilder: (ctx, i) => i == _defaultLength
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: FloatingActionButton(
-                              child: Icon(FontAwesomeIcons.plus),
-                              heroTag: 'more$gridContent',
-                              backgroundColor: Colors.orangeAccent,
-                              foregroundColor: Colors.white,
-                              onPressed: () => Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                      transitionDuration: Duration(milliseconds: 400),
-                                      pageBuilder: (_, __, ___) =>
-                                          TrendingPage(gridContent: gridContent))),
+        Consumer<AudiovisualListProvider>(
+          builder: (context, provider, child) => provider.items == null || provider.items.isEmpty
+              ? Center(
+                  child:
+                      Padding(padding: const EdgeInsets.all(8.0), child: LinearProgressIndicator()))
+              : SizedBox(
+                  height: height,
+                  child: ListView.builder(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: /*list.length*/ _defaultLength + 1,
+                    itemBuilder: (ctx, i) => i == _defaultLength
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: FloatingActionButton(
+                                child: Icon(FontAwesomeIcons.plus),
+                                heroTag: 'more${provider.content}',
+                                backgroundColor: Colors.orangeAccent,
+                                foregroundColor: Colors.white,
+                                onPressed: () => goToTrending(context, provider),
+                              ),
                             ),
-                          ),
-                        )
-                      : ChangeNotifierProvider<AudiovisualProvider>.value(
-                          value: list[i],
-                          child: AudiovisualHorizontalItem(trending: true, width: width)),
+                          )
+                        : ChangeNotifierProvider<AudiovisualProvider>.value(
+                            value: provider.items[i],
+                            child: Container(
+                                child: AudiovisualGridItem(trending: true), width: width)),
+                  ),
                 ),
-              )
+        ),
       ],
     );
+  }
+
+  Future goToTrending(BuildContext context, AudiovisualListProvider provider) {
+    return Navigator.push(
+        context,
+        PageRouteBuilder(
+            transitionDuration: Duration(milliseconds: 400),
+            pageBuilder: (_, __, ___) => ChangeNotifierProvider<AudiovisualListProvider>.value(
+                value: provider, child: TrendingPage())));
   }
 }

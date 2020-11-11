@@ -1,8 +1,7 @@
-import 'package:movie_search/ui/widgets/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-
-import 'home_screen.dart';
+import 'package:movie_search/ui/pages/dashboard.dart';
+import 'package:movie_search/ui/widgets/hex_color.dart';
 
 class OnboardScreen extends StatelessWidget {
   @override
@@ -113,7 +112,7 @@ class OnboardScreen extends StatelessWidget {
 //    appAuth.setWasHereBefore();
     Navigator.pushAndRemoveUntil(
         context,
-        new MaterialPageRoute(builder: (context) => ImbdScreen()),
+        new MaterialPageRoute(builder: (context) => Dashboard()),
         ModalRoute.withName('/home'));
   }
 }

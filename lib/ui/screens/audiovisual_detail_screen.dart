@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../widgets/default_image.dart';
 
 class AudiovisualDetail extends StatefulWidget {
-  static const routeName = '/audiovisualDetail';
   final bool trending;
 
   const AudiovisualDetail({Key key, this.trending}) : super(key: key);
@@ -33,7 +32,6 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
         audiovisualProvider.findMyDataTrending(context);
       else
         audiovisualProvider.findMyData(context);
-      Provider.of<AudiovisualListProvider>(context, listen: false).synchronizeDashboard(context);
     });
   }
 
@@ -46,17 +44,15 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
 //      color: Colors.white,
         child: Scaffold(
           body: NestedScrollView(
-            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverOverlapAbsorber(
-                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                  sliver: SliverSafeArea(
-                    top: false,
-                    sliver: getAppBar(context),
-                  ),
-                )
-              ];
-            },
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) => <Widget>[
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverSafeArea(
+                  top: false,
+                  sliver: getAppBar(context),
+                ),
+              )
+            ],
             body: Container(
 //            color: Colors.white,
               child: CustomScrollView(
@@ -100,9 +96,12 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                     buildDivider(audiovisualProvider.data?.genre),
                     AudiovisualContentHorizontal(
                         label: 'Género', content: audiovisualProvider.data?.genre),
-                    buildDivider(audiovisualProvider.data?.score),
+                    buildDivider(audiovisualProvider.voteAverage?.toString() ??
+                        audiovisualProvider.data?.score),
                     AudiovisualContentHorizontal(
-                        label: 'Valoracion', content: audiovisualProvider.data?.score),
+                        label: 'Valoracion',
+                        content: audiovisualProvider.voteAverage?.toString() ??
+                            audiovisualProvider.data?.score),
                     buildDivider(audiovisualProvider.data?.pais),
                     AudiovisualContentHorizontal(
                         label: 'Pais', content: audiovisualProvider.data?.pais),
@@ -177,9 +176,13 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
         actions: <Widget>[
           Consumer<AudiovisualProvider>(
             builder: (_, audiovisualProvider, child) => CircleAvatar(
-              backgroundColor: getRatingColor(audiovisualProvider.data?.score).withOpacity(0.5),
+              backgroundColor: getRatingColor(
+                      audiovisualProvider.voteAverage?.toString() ?? audiovisualProvider.data?.score)
+                  .withOpacity(0.5),
               child: Text(
-                audiovisualProvider.data?.score ?? '-',
+                audiovisualProvider.voteAverage?.toString() ??
+                    audiovisualProvider.data?.score ??
+                    '-',
                 style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white70),
               ),
             ),

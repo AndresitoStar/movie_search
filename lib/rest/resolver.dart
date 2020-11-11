@@ -1,14 +1,11 @@
 import 'dart:convert';
-import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/providers/audiovisual_single_provider.dart';
-import 'package:movie_search/providers/game_single_provider.dart';
-import 'package:movie_search/providers/util.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-
-import 'dummy_data.dart';
+import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/providers/util.dart';
 
 class RestResolver {
   Dio getDioClient() {
@@ -94,13 +91,15 @@ class RestResolver {
     return null;
   }
 
-  Future<List<AudiovisualProvider>> getTrending() async {
+  Future<SearchMovieResponse> getTrending({int page = 1}) async {
     List<AudiovisualProvider> result = [];
+    int total = 0;
 
     const url = 'api.themoviedb.org';
 
     Map<String, String> params = {
-      'api_key': '3e56846ee7cfb0b7d870484a9f66218c'
+      'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
+      'page' : page.toString()
     };
     var uri = Uri.https(url, '/3/trending/movie/week', params);
     try {
@@ -109,6 +108,7 @@ class RestResolver {
         result = [];
         final body = jsonDecode(response.body);
 //        final body = jsonDecode(DummyData.TRENDING_RESPONSE);
+        total = body['total_results'];
         for (var a in body['results']) {
           var aa = new AudiovisualProvider(
               title: a['title'],
@@ -124,16 +124,18 @@ class RestResolver {
     } catch (e) {
       print(e);
     }
-    return result;
+    return SearchMovieResponse(result: result, totalResult: total);
   }
 
-  Future<List<AudiovisualProvider>> getTrendingSeries() async {
+  Future<SearchMovieResponse> getTrendingSeries({int page = 1}) async {
     List<AudiovisualProvider> result = [];
+    int total = 0;
 
     const url = 'api.themoviedb.org';
 
     Map<String, String> params = {
-      'api_key': '3e56846ee7cfb0b7d870484a9f66218c'
+      'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
+      'page' : page.toString()
     };
     var uri = Uri.https(url, '/3/trending/tv/week', params);
     try {
@@ -141,6 +143,7 @@ class RestResolver {
       if (response.statusCode == 200) {
         result = [];
         final body = jsonDecode(response.body);
+        total = body['total_results'];
         for (var a in body['results']) {
           var aa = new AudiovisualProvider(
               title: a['original_name'],
@@ -156,66 +159,66 @@ class RestResolver {
     } catch (e) {
       print(e);
     }
-    return result;
+    return SearchMovieResponse(result: result, totalResult: total);
   }
 
-  Future<List<GameProvider>> searchGames(String query,
-      {@required int offset}) async {
-    await countGames(query);
-    List<GameProvider> result;
-    const url = 'https://api-v3.igdb.com/games';
-    const headers = {'user-key': '26c513d89314b2f280e551a4bbb1eff0'};
-    final body =
-        'fields name,first_release_date,platforms.name;where first_release_date != null; offset $offset; search "$query";';
-    try {
-      var response = await http.post(url, headers: headers, body: body);
-      if (response.statusCode == 200) {
-        result = [];
-        var body = jsonDecode(response.body);
-        for (var a in body) {
-          if (a["first_release_date"] == null) {
-            continue;
-          }
-          final List plataformas = a["platforms"];
-//          print(plataformas?.map((a) => a["name"].toString()));
-          final platform =
-              plataformas?.map((a) => a["name"].toString())?.join(', ');
-          final fechaLanzamiento = new DateTime.fromMillisecondsSinceEpoch(
-              (a["first_release_date"] as int) * 1000);
-          var game = new GameProvider(
-              title: a['name'],
-              id: a['id'].toString(),
-              year: DateFormat.y().format(fechaLanzamiento),
-              platforms: platform,
-              isFavourite: false);
-          result.add(game);
-        }
-      } else
-        print(response.statusCode);
-    } catch (e) {
-      print(e);
-    }
-    return result;
-  }
+//  Future<List<GameProvider>> searchGames(String query,
+//      {@required int offset}) async {
+//    await countGames(query);
+//    List<GameProvider> result;
+//    const url = 'https://api-v3.igdb.com/games';
+//    const headers = {'user-key': '26c513d89314b2f280e551a4bbb1eff0'};
+//    final body =
+//        'fields name,first_release_date,platforms.name;where first_release_date != null; offset $offset; search "$query";';
+//    try {
+//      var response = await http.post(url, headers: headers, body: body);
+//      if (response.statusCode == 200) {
+//        result = [];
+//        var body = jsonDecode(response.body);
+//        for (var a in body) {
+//          if (a["first_release_date"] == null) {
+//            continue;
+//          }
+//          final List plataformas = a["platforms"];
+////          print(plataformas?.map((a) => a["name"].toString()));
+//          final platform =
+//              plataformas?.map((a) => a["name"].toString())?.join(', ');
+//          final fechaLanzamiento = new DateTime.fromMillisecondsSinceEpoch(
+//              (a["first_release_date"] as int) * 1000);
+//          var game = new GameProvider(
+//              title: a['name'],
+//              id: a['id'].toString(),
+//              year: DateFormat.y().format(fechaLanzamiento),
+//              platforms: platform,
+//              isFavourite: false);
+//          result.add(game);
+//        }
+//      } else
+//        print(response.statusCode);
+//    } catch (e) {
+//      print(e);
+//    }
+//    return result;
+//  }
 
-  Future countGames(String query) async {
-    List<GameProvider> result;
-    const url = 'https://api-v3.igdb.com/games/count';
-    const headers = {'user-key': '26c513d89314b2f280e551a4bbb1eff0'};
-    final body = 'where first_release_date != null; search "$query";';
-    try {
-      var response = await http.post(url, headers: headers, body: body);
-      if (response.statusCode == 200) {
-        result = [];
-        var body = jsonDecode(response.body);
-        print('$query - $body');
-      } else
-        print(response.statusCode);
-    } catch (e) {
-      print(e);
-    }
-    return result;
-  }
+//  Future countGames(String query) async {
+//    List<GameProvider> result;
+//    const url = 'https://api-v3.igdb.com/games/count';
+//    const headers = {'user-key': '26c513d89314b2f280e551a4bbb1eff0'};
+//    final body = 'where first_release_date != null; search "$query";';
+//    try {
+//      var response = await http.post(url, headers: headers, body: body);
+//      if (response.statusCode == 200) {
+//        result = [];
+//        var body = jsonDecode(response.body);
+//        print('$query - $body');
+//      } else
+//        print(response.statusCode);
+//    } catch (e) {
+//      print(e);
+//    }
+//    return result;
+//  }
 
   Future<AudiovisualTableData> findMovieById(String id, {String externalId}) async {
     try {

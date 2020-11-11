@@ -14,7 +14,7 @@ enum FAVOURITE_THINGS { FILMS, SERIES, GAMES }
 
 enum GRID_CONTENT {TRENDING_MOVIE, TRENDING_TV, FAVOURITE}
 
-extension Data on GRID_CONTENT {
+extension asdasd on GRID_CONTENT {
   String get title {
     switch(this) {
       case GRID_CONTENT.TRENDING_MOVIE:

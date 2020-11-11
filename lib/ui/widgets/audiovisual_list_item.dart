@@ -10,7 +10,6 @@ class AudiovisualListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final audiovisual = Provider.of<AudiovisualProvider>(context, listen: false);
-    final provider = Provider.of<AudiovisualListProvider>(context, listen: false);
 
     return Card(
       elevation: 5,
@@ -25,23 +24,8 @@ class AudiovisualListItem extends StatelessWidget {
                         trending: false,
                       ))))
               .then((_) {
-//            FocusScope.of(context).requestFocus(FocusNode());
-            provider.loadFavorites(context, typeDc: audiovisual.type);
           });
         },
-//        leading: audiovisual.imageUrl != null
-//            ? Image.network(
-//                audiovisual.imageUrl,
-//                fit: BoxFit.fill,
-//              )
-//            : backFlipCard(audiovisual),
-//        trailing: Consumer<AudiovisualProvider>(
-//            builder: (ctx, product, child) => IconButton(
-//                icon: product.isFavourite
-//                    ? Icon(Icons.favorite, color: Colors.red)
-//                    : Icon(Icons.favorite_border, color: Colors.red),
-//                onPressed: () => product.toggleFavourite(),
-//                color: Theme.of(context).accentColor)),
         title: Hero(
             tag: 'title-${audiovisual.id}',
             child: Material(

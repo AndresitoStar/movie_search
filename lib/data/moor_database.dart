@@ -140,12 +140,29 @@ class MyDatabase extends _$MyDatabase {
     }
   }
 
+  Stream<List<AudiovisualTableData>> watchDashboard() {
+    SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
+    query = select(audiovisualTable)
+      ..limit(15)
+      ..where((tbl) => tbl.image.like('N/A').not())
+      ..orderBy([(r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)]);
+    return query.watch();
+  }
+
+  Stream<List<AudiovisualTableData>> watchFavourites() {
+    SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
+    query = select(audiovisualTable)
+      ..where((tbl) => tbl.isFavourite)
+      ..orderBy([(r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)]);
+    return query.watch();
+  }
+
   Future<List<AudiovisualTableData>> getAllMovies() async {
     SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
-    query = select(audiovisualTable)..limit(15)
+    query = select(audiovisualTable)
+      ..limit(15)
       ..where((tbl) => tbl.image.like('N/A').not())
-      ..orderBy([(r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)])
-        ;
+      ..orderBy([(r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)]);
     return query.get();
   }
 
@@ -176,8 +193,8 @@ class MyDatabase extends _$MyDatabase {
 
   Future countFavouriteMovies(String type) async {
     var query = customSelect('select count(*) as count from ${audiovisualTable.actualTableName} '
-            'where ${audiovisualTable.category.escapedName} = \'$type\' '
-            'and ${audiovisualTable.isFavourite.escapedName} = 1');
+        'where ${audiovisualTable.category.escapedName} = \'$type\' '
+        'and ${audiovisualTable.isFavourite.escapedName} = 1');
     final result = await query.getSingle();
     return result.data['count'];
   }

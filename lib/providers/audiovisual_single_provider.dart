@@ -30,6 +30,16 @@ class AudiovisualProvider with ChangeNotifier {
     super.dispose();
   }
 
+  AudiovisualProvider._(this._data,
+      {@required this.id,
+      @required this.title,
+      this.year,
+      this.type,
+      this.voteAverage,
+      @required this.image,
+      @required this.imageUrl,
+      this.isFavourite});
+
   AudiovisualProvider(
       {@required this.id,
       @required this.title,
@@ -39,6 +49,16 @@ class AudiovisualProvider with ChangeNotifier {
       @required this.image,
       @required this.imageUrl,
       this.isFavourite});
+
+  AudiovisualProvider.fromData(AudiovisualTableData data)
+      : this._(data,
+            title: data.titulo,
+            id: data.id,
+            year: data.anno,
+//            type: data.type,
+            image: data.image,
+            imageUrl: data.image,
+            isFavourite: data.isFavourite);
 
   Future<bool> toggleFavourite({@required BuildContext context}) async {
     isFavourite = !isFavourite;
