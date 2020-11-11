@@ -43,6 +43,7 @@ dependencies:
   extended_image: 1.1.0
   easy_dynamic_theme: ^0.0.5
   carousel_slider: ^2.3.1
+  dots_indicator: ^1.2.0
 
 dev_dependencies:
   flutter_test:

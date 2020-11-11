@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:movie_search/providers/audiovisual_single_provider.dart';
-import 'package:movie_search/providers/audiovisuales_provider.dart';
-import 'package:movie_search/ui/widgets/hex_color.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/ui/widgets/hex_color.dart';
 import 'package:movie_search/ui/widgets/theme_switcher.dart';
 import 'package:provider/provider.dart';
 
@@ -26,12 +25,13 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
   void initState() {
     super.initState();
     audiovisualProvider = Provider.of<AudiovisualProvider>(context, listen: false);
-    Future.delayed(Duration(milliseconds: 100), () {
+    Future.delayed(Duration(milliseconds: 100), () async {
       audiovisualProvider.checkImageCached();
       if (widget.trending ?? false)
-        audiovisualProvider.findMyDataTrending(context);
+        await audiovisualProvider.findMyDataTrending(context);
       else
-        audiovisualProvider.findMyData(context);
+        await audiovisualProvider.findMyData(context);
+      audiovisualProvider.toggleDateReg(context);
     });
   }
 
@@ -176,8 +176,8 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
         actions: <Widget>[
           Consumer<AudiovisualProvider>(
             builder: (_, audiovisualProvider, child) => CircleAvatar(
-              backgroundColor: getRatingColor(
-                      audiovisualProvider.voteAverage?.toString() ?? audiovisualProvider.data?.score)
+              backgroundColor: getRatingColor(audiovisualProvider.voteAverage?.toString() ??
+                      audiovisualProvider.data?.score)
                   .withOpacity(0.5),
               child: Text(
                 audiovisualProvider.voteAverage?.toString() ??
@@ -231,7 +231,7 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
 
   Widget likeButton(BuildContext context) =>
       Consumer<AudiovisualProvider>(builder: (ctx, av, child) {
-        final fav = av.isFavourite ?? false;
+        final fav = av.data?.isFavourite ?? av.isFavourite;
         return IconButton(
           icon: Icon(fav ? Icons.favorite : Icons.favorite_border),
           color: fav ? Colors.red : Colors.white,

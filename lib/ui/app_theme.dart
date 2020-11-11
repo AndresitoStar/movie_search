@@ -18,7 +18,7 @@ class AppTheme {
     ),
     cardTheme: CardTheme(
       color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       clipBehavior: Clip.hardEdge,
       elevation: 5,
     ),
@@ -60,7 +60,7 @@ class AppTheme {
     ),
     cardTheme: CardTheme(
       color: Color(0xff19171c),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       clipBehavior: Clip.hardEdge,
       elevation: 5,
     ),

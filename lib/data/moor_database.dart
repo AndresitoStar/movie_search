@@ -113,8 +113,12 @@ class MyDatabase extends _$MyDatabase {
     });
   }
 
-  Future updateAudiovisual(AudiovisualTableData data) {
-    update(audiovisualTable).replace(data);
+  Future toggleFavouriteAudiovisual(AudiovisualTableData data) {
+    return update(audiovisualTable).replace(data.copyWith(isFavourite: !data.isFavourite));
+  }
+
+  Future toggleDateReg(AudiovisualTableData data) {
+    return update(audiovisualTable).replace(data.copyWith(fecha_reg: DateTime.now()));
   }
 
   Future<AudiovisualTableData> getAudiovisualById(String id) async {
@@ -143,7 +147,7 @@ class MyDatabase extends _$MyDatabase {
   Stream<List<AudiovisualTableData>> watchDashboard() {
     SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
     query = select(audiovisualTable)
-      ..limit(15)
+      ..limit(10)
       ..where((tbl) => tbl.image.like('N/A').not())
       ..orderBy([(r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)]);
     return query.watch();
@@ -155,6 +159,13 @@ class MyDatabase extends _$MyDatabase {
       ..where((tbl) => tbl.isFavourite)
       ..orderBy([(r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)]);
     return query.watch();
+  }
+
+  Stream<List<String>> watchFavouritesId() {
+    final query = selectOnly(audiovisualTable)
+      ..addColumns([audiovisualTable.externalId])
+      ..where(audiovisualTable.isFavourite.equals(true));
+    return query.map((r) => r.read(audiovisualTable.externalId ?? audiovisualTable.id)).watch();
   }
 
   Future<List<AudiovisualTableData>> getAllMovies() async {

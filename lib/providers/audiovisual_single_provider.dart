@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/providers/audiovisuales_provider.dart';
-import 'package:movie_search/repository/repository_movie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:provider/provider.dart';
+import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/repository/repository_movie.dart';
 
 class AudiovisualProvider with ChangeNotifier {
   final String id;
@@ -16,6 +14,7 @@ class AudiovisualProvider with ChangeNotifier {
   final String year;
   String imageUrl;
   bool isFavourite;
+  bool isTrending = false;
   bool imageLoaded = false;
   AudiovisualTableData _data;
 
@@ -45,6 +44,7 @@ class AudiovisualProvider with ChangeNotifier {
       @required this.title,
       this.year,
       this.type,
+      this.isTrending = false,
       this.voteAverage,
       @required this.image,
       @required this.imageUrl,
@@ -55,6 +55,7 @@ class AudiovisualProvider with ChangeNotifier {
             title: data.titulo,
             id: data.id,
             year: data.anno,
+            voteAverage: double.tryParse(data.score),
 //            type: data.type,
             image: data.image,
             imageUrl: data.image,
@@ -62,12 +63,27 @@ class AudiovisualProvider with ChangeNotifier {
 
   Future<bool> toggleFavourite({@required BuildContext context}) async {
     isFavourite = !isFavourite;
+    if (isTrending)
+      await findMyDataTrending(context);
+    else
+      await findMyData(context);
     if (_data != null) {
       final _repository = MovieRepository.getInstance(context);
-      _repository.db.updateAudiovisual(_data.copyWith(isFavourite: isFavourite));
+      await _repository.db.toggleFavouriteAudiovisual(_data);
     }
+    if (isTrending)
+      await findMyDataTrending(context);
+    else
+      await findMyData(context);
     notifyListeners();
-    return isFavourite;
+    return !isFavourite;
+  }
+
+  toggleDateReg(BuildContext context) {
+    if (_data != null) {
+      final _repository = MovieRepository.getInstance(context);
+      _repository.db.toggleDateReg(_data);
+    }
   }
 
   Future toggleLoadImage() async {
@@ -86,7 +102,7 @@ class AudiovisualProvider with ChangeNotifier {
     _loadingStreamController.add(true);
     final _repository = MovieRepository.getInstance(context);
     var result = await _repository.getById(id);
-    isFavourite = result?.isFavourite;
+//    isFavourite = result?.isFavourite;
     _data = result;
     _loadingStreamController.add(false);
     notifyListeners();
@@ -96,8 +112,8 @@ class AudiovisualProvider with ChangeNotifier {
     _loadingStreamController.add(true);
     imageLoaded = true;
     final _repository = MovieRepository.getInstance(context);
-    var result = await _repository.getByTrendingId(id, type);
-    isFavourite = result?.isFavourite;
+    var result = await _repository.getByTrendingId(id, type, defaultImage: imageUrl);
+//    isFavourite = result?.isFavourite;
     _data = result;
     imageUrl = result?.image;
     _loadingStreamController.add(false);

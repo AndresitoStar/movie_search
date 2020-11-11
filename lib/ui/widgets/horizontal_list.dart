@@ -10,15 +10,10 @@ import 'file:///C:/Workspace/Flutter/movie_search/lib/ui/screens/trending_page.d
 
 import 'audiovisual_grid_item.dart';
 
-
 class HorizontalList extends StatelessWidget {
   final double height;
-  final double width;
 
-  HorizontalList({
-    this.height,
-    this.width,
-  });
+  HorizontalList({this.height});
 
   final _defaultLength = 5;
 
@@ -41,8 +36,8 @@ class HorizontalList extends StatelessWidget {
               ? Center(
                   child:
                       Padding(padding: const EdgeInsets.all(8.0), child: LinearProgressIndicator()))
-              : SizedBox(
-                  height: height,
+              : Container(
+                  constraints: BoxConstraints(minHeight: height - 100, maxHeight: height + 50),
                   child: ListView.builder(
                     physics: ClampingScrollPhysics(),
                     shrinkWrap: true,
@@ -63,8 +58,10 @@ class HorizontalList extends StatelessWidget {
                           )
                         : ChangeNotifierProvider<AudiovisualProvider>.value(
                             value: provider.items[i],
-                            child: Container(
-                                child: AudiovisualGridItem(trending: true), width: width)),
+                            child: AspectRatio(
+                              child: AudiovisualGridItem(trending: true),
+                              aspectRatio: 8 / 16,
+                            )),
                   ),
                 ),
         ),

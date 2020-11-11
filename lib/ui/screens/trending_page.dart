@@ -42,7 +42,7 @@ class TrendingPage extends StatelessWidget {
                   : Container(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
-              childAspectRatio: 3 / 5,
+              childAspectRatio: 5 / 9,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10),
         ),

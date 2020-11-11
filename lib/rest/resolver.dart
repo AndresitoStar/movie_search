@@ -17,8 +17,7 @@ class RestResolver {
     return dio;
   }
 
-  Future<SearchMovieResponse> searchMovie(String query,
-      {String type, @required int page}) async {
+  Future<SearchMovieResponse> searchMovie(String query, {String type, @required int page}) async {
     List<AudiovisualProvider> result = [];
 
     int totalResults = -1;
@@ -73,9 +72,7 @@ class RestResolver {
   Future<AudiovisualTableData> getByTrendingId(String id, String type) async {
     const url = 'api.themoviedb.org';
 
-    Map<String, String> params = {
-      'api_key': '3e56846ee7cfb0b7d870484a9f66218c'
-    };
+    Map<String, String> params = {'api_key': '3e56846ee7cfb0b7d870484a9f66218c'};
     var uri = Uri.https(url, '/3/$type/$id/external_ids', params);
     try {
       var response = await http.get(uri);
@@ -99,7 +96,7 @@ class RestResolver {
 
     Map<String, String> params = {
       'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
-      'page' : page.toString()
+      'page': page.toString()
     };
     var uri = Uri.https(url, '/3/trending/movie/week', params);
     try {
@@ -115,6 +112,7 @@ class RestResolver {
               id: a['id']?.toString(),
               image: 'http://image.tmdb.org/t/p/w185${a['poster_path']}',
               type: a['media_type'],
+              isTrending: true,
               voteAverage: a['vote_average'],
               imageUrl: 'http://image.tmdb.org/t/p/w185${a['poster_path']}',
               isFavourite: false);
@@ -135,7 +133,7 @@ class RestResolver {
 
     Map<String, String> params = {
       'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
-      'page' : page.toString()
+      'page': page.toString()
     };
     var uri = Uri.https(url, '/3/trending/tv/week', params);
     try {
@@ -150,6 +148,7 @@ class RestResolver {
               id: a['id']?.toString(),
               image: 'http://image.tmdb.org/t/p/w185${a['poster_path']}',
               type: a['media_type'],
+              isTrending: true,
               voteAverage: a['vote_average'],
               imageUrl: 'http://image.tmdb.org/t/p/w185${a['poster_path']}',
               isFavourite: false);
@@ -258,12 +257,7 @@ class RestResolver {
   Future<AudiovisualTableData> findMovieByTitle(String title) async {
     try {
       const url = 'www.omdbapi.com';
-      var params = {
-        'apikey': '9eb7fce9',
-        't': title,
-        'r': 'json',
-        'plot': 'full'
-      };
+      var params = {'apikey': '9eb7fce9', 't': title, 'r': 'json', 'plot': 'full'};
       var uri = Uri.http(url, '/', params);
       var response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -344,13 +338,7 @@ class RestResolver {
 
   Future translate(String text) async {
     const url = 'translate.googleapis.com';
-    var params = {
-      'client': 'gtx',
-      'sl': 'auto',
-      'tl': 'es',
-      'dt': 't',
-      'q': text
-    };
+    var params = {'client': 'gtx', 'sl': 'auto', 'tl': 'es', 'dt': 't', 'q': text};
     var uri = Uri.https(url, '/translate_a/single', params);
     var response = await http.get(uri);
     if (response.statusCode == 200) {

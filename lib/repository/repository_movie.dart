@@ -1,8 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 class MovieRepository {
@@ -64,22 +64,24 @@ class MovieRepository {
     if (localData != null) {
       return localData;
     }
-//    final result = await findMyData2();
     final result = await _resolver.findMovieById(id);
     db.insertAudiovisual(result);
     return result;
   }
 
-  Future<AudiovisualTableData> getByTrendingId(String trendingId, String type) async {
+  Future<AudiovisualTableData> getByTrendingId(String trendingId, String type,
+      {String defaultImage}) async {
     final localData = await db.getAudiovisualByExternalId(trendingId);
     if (localData != null) {
       return localData;
     }
     final result = await _resolver.getByTrendingId(trendingId, type);
-    if(result != null) {
-      db.insertAudiovisual(result);
+    if (result != null) {
+      if (result.image == null || result.image.isEmpty || !result.image.startsWith('http')) {
+        db.insertAudiovisual(result.copyWith(image: defaultImage));
+      } else
+        db.insertAudiovisual(result);
     }
     return result;
   }
-
 }
