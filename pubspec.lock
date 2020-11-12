@@ -43,13 +43,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.5.0-nullsafety.1"
-  bmnav:
-    dependency: "direct main"
-    description:
-      name: bmnav
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.3.4"
   boolean_selector:
     dependency: transitive
     description:
@@ -605,19 +598,12 @@ packages:
     source: hosted
     version: "0.23.1"
   shared_preferences:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.5.12+2"
-  shared_preferences_linux:
-    dependency: transitive
-    description:
-      name: shared_preferences_linux
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.0.2+2"
+    version: "0.5.6+3"
   shared_preferences_macos:
     dependency: transitive
     description:
@@ -639,13 +625,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.2+7"
-  shared_preferences_windows:
-    dependency: transitive
-    description:
-      name: shared_preferences_windows
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.0.1+1"
   shelf:
     dependency: transitive
     description:

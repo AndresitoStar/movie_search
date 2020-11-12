@@ -22,7 +22,7 @@ class TrendingPage extends StatelessWidget {
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [MyEasyDynamicThemeBtn()],
+//        actions: [MyEasyDynamicThemeBtn()],
       ),
       body: Consumer<AudiovisualListProvider>(
         builder: (context, provider, child) => GridView.builder(

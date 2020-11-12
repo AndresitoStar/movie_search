@@ -4,6 +4,12 @@ class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     fontFamily: 'Dosis',
     scaffoldBackgroundColor: Color(0xffF5F5F5),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black87,
+    ),
+    primaryColor: Colors.orange,
+    accentColor: Colors.orangeAccent,
     appBarTheme: AppBarTheme(
       color: Colors.white,
       textTheme: TextTheme(
@@ -50,6 +56,12 @@ class AppTheme {
     iconTheme: IconThemeData(
       color: Colors.white54,
     ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: Color(0xff19171c),
+        foregroundColor: Colors.white54,
+    ),
+    primaryColor: Colors.orange,
+    accentColor: Colors.orangeAccent,
     scaffoldBackgroundColor: Colors.black87,
     appBarTheme: AppBarTheme(
       textTheme: TextTheme(

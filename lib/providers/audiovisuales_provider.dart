@@ -62,3 +62,19 @@ class AudiovisualListProvider with ChangeNotifier {
   }
 
 }
+
+class AudiovisualListProviderHelper {
+  static AudiovisualListProviderHelper _instance;
+
+  Map<GRID_CONTENT, AudiovisualListProvider> _map = {};
+
+  AudiovisualListProvider getProvider(GRID_CONTENT key) =>
+      _map.putIfAbsent(key, () => AudiovisualListProvider(key));
+
+  static AudiovisualListProviderHelper getInstance() {
+    if (_instance == null) _instance = AudiovisualListProviderHelper._();
+    return _instance;
+  }
+
+  AudiovisualListProviderHelper._();
+}

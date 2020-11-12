@@ -188,7 +188,7 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
             ),
           ),
           likeButton(context),
-          MyEasyDynamicThemeBtn()
+//          MyEasyDynamicThemeBtn()
         ],
         actionsIconTheme: IconThemeData(color: Colors.white),
         iconTheme: IconThemeData(color: Colors.white),

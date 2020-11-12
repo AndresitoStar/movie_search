@@ -1,28 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/pages/dashboard.dart';
 import 'package:movie_search/ui/widgets/hex_color.dart';
 
 class OnboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final titleStyle = Theme.of(context).textTheme.headline4.copyWith(color: Colors.white70);
     final pages = [
       PageViewModel(
         title: "",
-//        body: "",
         bodyWidget: Center(
             child: Image.asset(
           'assets/images/o_1.webp',
           fit: BoxFit.fill,
           width: double.infinity,
         )),
-        footer: Text(
-          'DESCUBRE',
-          style: Theme.of(context)
-              .textTheme
-              .display1
-              .copyWith(color: Theme.of(context).primaryColor),
-        ),
+        footer: Text('DESCUBRE', style: titleStyle),
         decoration: const PageDecoration(
           titleTextStyle: TextStyle(color: Colors.orange),
           contentPadding: const EdgeInsets.all(0),
@@ -31,20 +26,13 @@ class OnboardScreen extends StatelessWidget {
       ),
       PageViewModel(
         title: "",
-//        body: "",
         bodyWidget: Center(
             child: Image.asset(
           'assets/images/o_2.webp',
           fit: BoxFit.fill,
           width: double.infinity,
         )),
-        footer: Text(
-          'COMPARTE',
-          style: Theme.of(context)
-              .textTheme
-              .display1
-              .copyWith(color: Theme.of(context).primaryColor),
-        ),
+        footer: Text('COMPARTE', style: titleStyle),
         decoration: const PageDecoration(
           titleTextStyle: TextStyle(color: Colors.orange),
           contentPadding: const EdgeInsets.all(0),
@@ -53,20 +41,13 @@ class OnboardScreen extends StatelessWidget {
       ),
       PageViewModel(
         title: "",
-//        body: "",
         bodyWidget: Center(
             child: Image.asset(
           'assets/images/o_3.webp',
           fit: BoxFit.fill,
           width: double.infinity,
         )),
-        footer: Text(
-          'COLECCIONA',
-          style: Theme.of(context)
-              .textTheme
-              .display1
-              .copyWith(color: Theme.of(context).primaryColor),
-        ),
+        footer: Text('COLECCIONA', style: titleStyle),
         decoration: const PageDecoration(
           titleTextStyle: TextStyle(color: Colors.orange),
           contentPadding: const EdgeInsets.all(0),
@@ -82,18 +63,14 @@ class OnboardScreen extends StatelessWidget {
         showSkipButton: true,
         skip: Text(
           'OMITIR',
-          style:
-              Theme.of(context).textTheme.title.copyWith(color: Colors.white70),
+          style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white70),
         ),
         next: const Icon(
           Icons.navigate_next,
           color: Colors.white70,
         ),
-        done: Text("HECHO",
-            style: Theme.of(context)
-                .textTheme
-                .title
-                .copyWith(color: Colors.white70)),
+        done:
+            Text("HECHO", style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white70)),
         globalBackgroundColor: HexColor('#0A0A0A'),
         dotsDecorator: DotsDecorator(
             size: const Size.square(10.0),
@@ -101,18 +78,16 @@ class OnboardScreen extends StatelessWidget {
             activeColor: Theme.of(context).primaryColor,
             color: Colors.black26,
             spacing: const EdgeInsets.symmetric(horizontal: 3.0),
-            activeShape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25.0))),
+            activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0))),
       ),
     );
   }
 
   void navigateToHome(BuildContext context) {
-    print('Dandeline');
-//    appAuth.setWasHereBefore();
-    Navigator.pushAndRemoveUntil(
-        context,
-        new MaterialPageRoute(builder: (context) => Dashboard()),
-        ModalRoute.withName('/home'));
+    SharedPreferencesHelper.setFirstTime();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => Dashboard()),
+      (route) => false,
+    );
   }
 }

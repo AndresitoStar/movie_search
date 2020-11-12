@@ -36,9 +36,9 @@ dependencies:
   cached_network_image: 2.0.0
   rxdart: ^0.23.1
   intl: 0.16.1
-  bmnav: 0.3.4
   flutter_cache_manager: ^1.1.2
   introduction_screen: ^1.0.7
+  shared_preferences: 0.5.6+3
   dio: 3.0.9
   extended_image: 1.1.0
   easy_dynamic_theme: ^0.0.5

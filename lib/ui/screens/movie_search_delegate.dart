@@ -82,7 +82,7 @@ class MovieSearchDelegate extends SearchDelegate {
           query = '';
         },
       ),
-      MyEasyDynamicThemeBtn()
+//      MyEasyDynamicThemeBtn()
     ];
   }
 
