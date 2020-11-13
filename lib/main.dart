@@ -2,7 +2,7 @@ import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/app_theme.dart';
-import 'package:movie_search/ui/pages/dashboard.dart';
+import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:provider/provider.dart';
 
 import 'data/moor_database.dart';
@@ -30,8 +30,8 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'Melon App',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        theme: myThemeLight,
+        darkTheme: myThemeDark,
         themeMode: EasyDynamicTheme.of(context).themeMode,
         routes: {
           Dashboard.routeName: (ctx) => Dashboard(),

@@ -156,8 +156,7 @@ class MyDatabase extends _$MyDatabase {
   Stream<List<AudiovisualTableData>> watchFavourites() {
     SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
     query = select(audiovisualTable)
-      ..where((tbl) => tbl.isFavourite)
-      ..orderBy([(r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)]);
+      ..where((tbl) => tbl.isFavourite);
     return query.watch();
   }
 

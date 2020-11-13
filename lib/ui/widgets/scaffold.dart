@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/ui/widgets/theme_switcher.dart';
 
 import 'bottom_bar.dart';
 

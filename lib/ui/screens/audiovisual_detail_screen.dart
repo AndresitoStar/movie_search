@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
-import 'package:movie_search/ui/util_ui.dart';
-import 'package:movie_search/ui/widgets/hex_color.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/default_image.dart';

@@ -1,15 +1,10 @@
 import 'dart:collection';
 
-import 'package:movie_search/data/moor_database.dart';
+import 'package:flutter/material.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/repository/repository_movie.dart';
 import 'package:movie_search/rest/resolver.dart';
-import 'package:movie_search/ui/util_ui.dart';
 import 'package:movie_search/ui/widgets/audiovisual_list_item.dart';
-import 'package:movie_search/ui/widgets/hex_color.dart';
-import 'package:flutter/material.dart';
-import 'package:movie_search/ui/widgets/theme_switcher.dart';
 import 'package:provider/provider.dart';
 
 class Searcher with ChangeNotifier {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/ui/pages/dashboard.dart';
+import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:movie_search/ui/widgets/hex_color.dart';
 
 class OnboardScreen extends StatelessWidget {

@@ -1,6 +1,5 @@
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/ui/pages/dashboard.dart';
+import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:movie_search/ui/screens/favs_screen.dart';
 import 'package:movie_search/ui/screens/movie_search_delegate.dart';
 import 'package:movie_search/ui/screens/settings.dart';
@@ -14,14 +13,9 @@ class MyBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: index,
-      backgroundColor: Theme.of(context).appBarTheme.color,
       showSelectedLabels: false,
       elevation: 10,
       showUnselectedLabels: false,
-      unselectedItemColor: EasyDynamicTheme.of(context).themeMode == ThemeMode.light
-          ? Colors.black26
-          : Colors.white24,
-      selectedItemColor: Theme.of(context).primaryColor,
       type: BottomNavigationBarType.fixed,
       iconSize: 30,
       onTap: (i) {

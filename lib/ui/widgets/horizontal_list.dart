@@ -4,9 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/audiovisuales_provider.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/ui/screens/trending_page.dart';
 import 'package:provider/provider.dart';
-
-import 'file:///C:/Workspace/Flutter/movie_search/lib/ui/screens/trending_page.dart';
 
 import 'audiovisual_grid_item.dart';
 

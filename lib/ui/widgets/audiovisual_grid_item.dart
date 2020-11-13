@@ -81,35 +81,41 @@ class AudiovisualGridItem extends StatelessWidget {
                         Positioned(
                           bottom: 0,
                           right: 0,
-                          child: trending
-                              ? StreamBuilder<List<String>>(
-                                  stream: db.watchFavouritesId(),
-                                  initialData: [],
-                                  builder: (context, snapshot) => IconButton(
-                                      onPressed: snapshot.data.contains(audiovisual.id)
-                                          ? () => audiovisual.toggleFavourite(context: context)
-                                          : null,
-                                      alignment: Alignment.centerRight,
-                                      icon: snapshot.data.contains(audiovisual.id)
-                                          ? Icon(Icons.favorite, color: Colors.redAccent)
-                                          : Icon(Icons.favorite_border)))
-                              : IconButton(
-                                  onPressed: () => audiovisual.toggleFavourite(context: context),
-                                  alignment: Alignment.centerRight,
-                                  icon: audiovisual.isFavourite
-                                      ? Icon(Icons.favorite, color: Colors.redAccent)
-                                      : Icon(Icons.favorite_border)),
+                          child: StreamBuilder<bool>(
+                            stream: audiovisual.loadingStreamController,
+                            initialData: false,
+                            builder: (_, loadingSnapshot) => loadingSnapshot.data
+                                ? Container(
+                                    padding: const EdgeInsets.all(8),
+                                    margin: const EdgeInsets.all(5),
+                                    child: Center(
+                                        child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(strokeWidth: 1),
+                                    )),
+                                  )
+                                : StreamBuilder<List<String>>(
+                                    stream: db.watchFavouritesId(),
+                                    initialData: [],
+                                    builder: (context, snapshot) => IconButton(
+                                        onPressed: () =>
+                                            audiovisual.toggleFavourite(context: context),
+                                        alignment: Alignment.centerRight,
+                                        icon: snapshot.data.contains(audiovisual.id) || (audiovisual.data?.isFavourite ?? false)
+                                            ? Icon(Icons.favorite, color: Colors.redAccent)
+                                            : Icon(Icons.favorite_border))),
+                          ),
                         ),
                         ListTile(
-//                            subtitle: Text(
-//                                '${trending ? audiovisual.voteAverage : audiovisual.data.score}'),
-                            title: Text(
-                          audiovisual.title + '\n',
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16),
-                        )),
+                          title: Text(
+                            audiovisual.title + '\n',
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16),
+                          ),
+                        ),
                       ],
                     ),
                   )
