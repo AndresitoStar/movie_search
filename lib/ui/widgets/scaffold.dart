@@ -13,12 +13,15 @@ class CustomScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-        bottomNavigationBar: MyBottomBar(index: bottomBarIndex),
-        appBar: appBar,
-        body: body,
+    return Container(
+      padding: MediaQuery.of(context).padding.copyWith(left: 0, right: 0, bottom: 0),
+      color: Theme.of(context).primaryColor,
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          bottomNavigationBar: MyBottomBar(index: bottomBarIndex),
+          body: body,
+        ),
       ),
     );
   }

@@ -62,6 +62,7 @@ class AudiovisualProvider with ChangeNotifier {
             isFavourite: data.isFavourite);
 
   Future<bool> toggleFavourite({@required BuildContext context}) async {
+    _loadingStreamController.add(true);
     isFavourite = !isFavourite;
     if (isTrending)
       await findMyDataTrending(context);
@@ -76,6 +77,7 @@ class AudiovisualProvider with ChangeNotifier {
     else
       await findMyData(context);
     notifyListeners();
+    _loadingStreamController.add(false);
     return !isFavourite;
   }
 
@@ -99,24 +101,20 @@ class AudiovisualProvider with ChangeNotifier {
   }
 
   Future findMyData(BuildContext context) async {
-    _loadingStreamController.add(true);
     final _repository = MovieRepository.getInstance(context);
     var result = await _repository.getById(id);
 //    isFavourite = result?.isFavourite;
     _data = result;
-    _loadingStreamController.add(false);
     notifyListeners();
   }
 
   Future findMyDataTrending(BuildContext context) async {
-    _loadingStreamController.add(true);
     imageLoaded = true;
     final _repository = MovieRepository.getInstance(context);
     var result = await _repository.getByTrendingId(id, type, defaultImage: imageUrl);
 //    isFavourite = result?.isFavourite;
     _data = result;
     imageUrl = result?.image;
-    _loadingStreamController.add(false);
     notifyListeners();
   }
 }

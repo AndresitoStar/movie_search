@@ -33,6 +33,11 @@ class App extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: EasyDynamicTheme.of(context).themeMode,
+        routes: {
+          Dashboard.routeName: (ctx) => Dashboard(),
+          OnboardScreen.routeName: (ctx) => OnboardScreen(),
+        },
+        initialRoute: wasHereBefore ? Dashboard.routeName : OnboardScreen.routeName,
         home: wasHereBefore ? Dashboard() : OnboardScreen(),
       ),
     );

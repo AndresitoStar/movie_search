@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/ui/util_ui.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/audiovisual_detail_screen.dart';
@@ -67,35 +69,49 @@ class AudiovisualGridItem extends StatelessWidget {
                   Expanded(flex: 5, child: hero),
                   Expanded(
                     flex: 2,
-                    child: ListTile(
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('${trending ? audiovisual.voteAverage : audiovisual.data.score}'),
-                            trending
-                                ? StreamBuilder<List<String>>(
-                                    stream: db.watchFavouritesId(),
-                                    initialData: [],
-                                    builder: (context, snapshot) => IconButton(
-                                        onPressed: snapshot.data.contains(audiovisual.id)
-                                            ? () => audiovisual.toggleFavourite(context: context)
-                                            : null,
-                                        icon: snapshot.data.contains(audiovisual.id)
-                                            ? Icon(FontAwesomeIcons.solidHeart,
-                                                color: Colors.redAccent)
-                                            : Icon(FontAwesomeIcons.heart)))
-                                : IconButton(
-                                    onPressed: () => audiovisual.toggleFavourite(context: context),
-                                    icon: audiovisual.isFavourite
-                                        ? Icon(FontAwesomeIcons.solidHeart, color: Colors.redAccent)
-                                        : Icon(FontAwesomeIcons.heart)),
-                          ],
+                    child: Stack(
+                      children: [
+                        Positioned(
+                            bottom: 12,
+                            left: 12,
+                            child: Text(
+                              '${trending ? audiovisual.voteAverage : audiovisual.data.score}',
+                              style: Theme.of(context).textTheme.subtitle1,
+                            )),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: trending
+                              ? StreamBuilder<List<String>>(
+                                  stream: db.watchFavouritesId(),
+                                  initialData: [],
+                                  builder: (context, snapshot) => IconButton(
+                                      onPressed: snapshot.data.contains(audiovisual.id)
+                                          ? () => audiovisual.toggleFavourite(context: context)
+                                          : null,
+                                      alignment: Alignment.centerRight,
+                                      icon: snapshot.data.contains(audiovisual.id)
+                                          ? Icon(Icons.favorite, color: Colors.redAccent)
+                                          : Icon(Icons.favorite_border)))
+                              : IconButton(
+                                  onPressed: () => audiovisual.toggleFavourite(context: context),
+                                  alignment: Alignment.centerRight,
+                                  icon: audiovisual.isFavourite
+                                      ? Icon(Icons.favorite, color: Colors.redAccent)
+                                      : Icon(Icons.favorite_border)),
                         ),
-                        title: Text(
-                          audiovisual.title,
+                        ListTile(
+//                            subtitle: Text(
+//                                '${trending ? audiovisual.voteAverage : audiovisual.data.score}'),
+                            title: Text(
+                          audiovisual.title + '\n',
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16),
                         )),
+                      ],
+                    ),
                   )
                 ],
               )

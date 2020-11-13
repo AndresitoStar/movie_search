@@ -30,6 +30,10 @@ class Searcher with ChangeNotifier {
   search(String query) async {
     try {
       _page = 1;
+      if (query == null || query.isEmpty) {
+        _total = -1;
+        _movies = [];
+      }
       final response = await _resolver.searchMovie(query, page: _page);
       if (response != null) _movies = response.result;
       _total = response.totalResult;
@@ -59,14 +63,16 @@ class MovieSearchDelegate extends SearchDelegate {
     final ThemeData theme = Theme.of(context);
     assert(theme != null);
     return theme.copyWith(
-      textTheme: theme.textTheme.copyWith(subtitle: TextStyle(color: Colors.red)),
-      backgroundColor: theme.appBarTheme.color,
-      primaryColor: theme.appBarTheme.color,
-      primaryIconTheme: theme.iconTheme,
-      primaryColorBrightness: theme.appBarTheme.brightness,
-      primaryTextTheme: theme.textTheme,
-      appBarTheme: theme.appBarTheme,
-      colorScheme: theme.colorScheme,
+      textTheme: theme.textTheme.copyWith(
+        title: TextStyle(color: Colors.black87),
+      ),
+//      backgroundColor: theme.appBarTheme.color,
+//      primaryColor: theme.appBarTheme.color,
+//      primaryIconTheme: theme.iconTheme,
+//      primaryColorBrightness: theme.appBarTheme.brightness,
+//      primaryTextTheme: theme.textTheme,
+//      appBarTheme: theme.appBarTheme,
+//      colorScheme: theme.colorScheme,
     );
   }
 
@@ -134,4 +140,3 @@ class MovieSearchDelegate extends SearchDelegate {
     return buildResults(context);
   }
 }
-

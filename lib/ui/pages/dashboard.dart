@@ -17,6 +17,8 @@ import 'package:provider/provider.dart';
 class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
+
+  static String routeName = "Dashboard";
 }
 
 class _DashboardState extends State<Dashboard> {

@@ -2,9 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/ui/util_ui.dart';
 import 'package:movie_search/ui/widgets/hex_color.dart';
-import 'package:movie_search/ui/widgets/theme_switcher.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/default_image.dart';
@@ -37,11 +38,10 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Container(
-//      padding: MediaQuery.of(context).padding.copyWith(left: 0, right: 0, bottom: 0),
-//      color: Colors.white,
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: SafeArea(
+        top: true,
         child: Scaffold(
           body: NestedScrollView(
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) => <Widget>[
@@ -69,9 +69,6 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
       padding: const EdgeInsets.all(8.0),
       sliver: SliverList(
         delegate: SliverChildListDelegate(<Widget>[
-          Consumer<AudiovisualProvider>(
-              builder: (context, snapshot, _) =>
-                  snapshot.data == null ? LinearProgressIndicator() : Container()),
           Card(
             margin: const EdgeInsets.all(10),
             elevation: 5,
@@ -79,6 +76,7 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
               child: Consumer<AudiovisualProvider>(
                 builder: (context, audiovisualProvider, child) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Hero(
                       tag: 'title-${audiovisualProvider.id}',
@@ -91,17 +89,32 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                         ),
                       ),
                     ),
-                    AudiovisualContentHorizontal(
-                        label: 'Sinópsis', content: audiovisualProvider.data?.sinopsis),
-                    buildDivider(audiovisualProvider.data?.genre),
-                    AudiovisualContentHorizontal(
-                        label: 'Género', content: audiovisualProvider.data?.genre),
-                    buildDivider(audiovisualProvider.voteAverage?.toString() ??
-                        audiovisualProvider.data?.score),
-                    AudiovisualContentHorizontal(
-                        label: 'Valoracion',
-                        content: audiovisualProvider.voteAverage?.toString() ??
-                            audiovisualProvider.data?.score),
+                    Visibility(
+                      visible: audiovisualProvider.data != null,
+                      child: ListTile(
+                        title: Text(
+                            '${audiovisualProvider.data?.anno} / ${audiovisualProvider.data?.genre}'),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                      child: Row(
+                        children: [
+                          Icon(FontAwesomeIcons.imdb, color: Colors.orange, size: 60),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                                audiovisualProvider.data?.score ??
+                                    '${audiovisualProvider.voteAverage}',
+                                style: Theme.of(context).textTheme.headline4),
+                          ),
+                          Expanded(child: Container()),
+                          likeButton(context),
+                        ],
+                      ),
+                    ),
+                    audiovisualProvider.data == null ? LinearProgressIndicator() : Container(),
+                    AudiovisualContentHorizontal(content: audiovisualProvider.data?.sinopsis),
                     buildDivider(audiovisualProvider.data?.pais),
                     AudiovisualContentHorizontal(
                         label: 'Pais', content: audiovisualProvider.data?.pais),
@@ -148,50 +161,31 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
     return audiovisualProvider.toggleFavourite(context: context);
   }
 
-  Color getRatingColor(String score) {
-    try {
-      var d = double.parse(score);
-      if (d < 6) {
-        return Colors.redAccent;
-      } else if (d < 9) {
-        return Colors.yellowAccent;
-      }
-      return Colors.greenAccent;
-    } catch (e) {
-      return Theme.of(context).primaryColor;
-    }
-  }
-
   SliverAppBar getAppBar(BuildContext context) => SliverAppBar(
-        pinned: true,
+        pinned: false,
         floating: true,
-        backgroundColor: HexColor('#252525'),
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 5,
         expandedHeight: MediaQuery.of(context).size.height * 0.6,
         primary: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        actions: <Widget>[
-          Consumer<AudiovisualProvider>(
-            builder: (_, audiovisualProvider, child) => CircleAvatar(
-              backgroundColor: getRatingColor(audiovisualProvider.voteAverage?.toString() ??
-                      audiovisualProvider.data?.score)
-                  .withOpacity(0.5),
-              child: Text(
-                audiovisualProvider.voteAverage?.toString() ??
-                    audiovisualProvider.data?.score ??
-                    '-',
-                style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white70),
-              ),
+        automaticallyImplyLeading: false,
+        leading: Stack(
+          fit: StackFit.loose,
+          children: [
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios, color: Colors.orange.withOpacity(0.5)),
+              onPressed: () => Navigator.of(context).pop(),
             ),
-          ),
-          likeButton(context),
-//          MyEasyDynamicThemeBtn()
-        ],
-        actionsIconTheme: IconThemeData(color: Colors.white),
-        iconTheme: IconThemeData(color: Colors.white),
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios, color: Colors.white.withOpacity(0.5)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios, color: Colors.black.withOpacity(0.5)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
         flexibleSpace: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             return FlexibleSpaceBar(
@@ -201,12 +195,11 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                   builder: (ctx, av, child) => Hero(
                         tag: av.id,
                         child: Material(
-                          color: Colors.black54,
                           child: GestureDetector(
                             onTap: () => previewImageDialog(context, av.imageUrl),
                             child: CachedNetworkImage(
                               imageUrl: av.imageUrl ?? av.data.image,
-                              color: Colors.black54,
+//                              color: Colors.red,
                               colorBlendMode: BlendMode.darken,
                               placeholder: (_, __) => Center(
                                 child: SizedBox(
@@ -234,7 +227,8 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
         final fav = av.data?.isFavourite ?? av.isFavourite;
         return IconButton(
           icon: Icon(fav ? Icons.favorite : Icons.favorite_border),
-          color: fav ? Colors.red : Colors.white,
+          iconSize: 32,
+          color: fav ? Colors.red : Colors.black87,
           onPressed: () {
             return onLikeButtonTap(fav, context);
           },
@@ -325,7 +319,7 @@ class AudiovisualContentHorizontal extends StatelessWidget {
       child: Container(
 //        color: Colors.white,
         child: ListTile(
-          title: Text(label, style: Theme.of(context).textTheme.headline6),
+          title: label != null ? Text(label, style: Theme.of(context).textTheme.headline6) : null,
           subtitle: Text(content != null && content.isNotEmpty ? content : '',
               style: Theme.of(context).textTheme.subtitle2),
         ),

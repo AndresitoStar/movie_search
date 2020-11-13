@@ -8,8 +8,8 @@ class AppTheme {
       backgroundColor: Colors.white,
       foregroundColor: Colors.black87,
     ),
-    primaryColor: Colors.orange,
-    accentColor: Colors.orangeAccent,
+    primarySwatch: Colors.amber,
+    accentColor: Colors.amberAccent,
     appBarTheme: AppBarTheme(
       color: Colors.white,
       textTheme: TextTheme(
@@ -57,12 +57,12 @@ class AppTheme {
       color: Colors.white54,
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: Color(0xff19171c),
-        foregroundColor: Colors.white54,
+      backgroundColor: Color(0xff19171c),
+      foregroundColor: Colors.white54,
     ),
-    primaryColor: Colors.orange,
+    primarySwatch: Colors.orange,
     accentColor: Colors.orangeAccent,
-    scaffoldBackgroundColor: Colors.black87,
+    scaffoldBackgroundColor: Colors.black,
     appBarTheme: AppBarTheme(
       textTheme: TextTheme(
         title: TextStyle(color: Colors.white12),
@@ -80,7 +80,7 @@ class AppTheme {
     dialogTheme: DialogTheme(
       backgroundColor: Colors.black,
     ),
-    inputDecorationTheme: InputDecorationTheme(hintStyle: TextStyle(color: Colors.white12)),
+    inputDecorationTheme: InputDecorationTheme(hintStyle: TextStyle(color: Colors.black12)),
     colorScheme: ColorScheme.light(
       primary: Colors.black,
       onPrimary: Colors.black,

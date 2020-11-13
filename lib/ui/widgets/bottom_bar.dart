@@ -1,5 +1,6 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/ui/pages/dashboard.dart';
 import 'package:movie_search/ui/screens/favs_screen.dart';
 import 'package:movie_search/ui/screens/movie_search_delegate.dart';
 import 'package:movie_search/ui/screens/settings.dart';
@@ -15,17 +16,18 @@ class MyBottomBar extends StatelessWidget {
       currentIndex: index,
       backgroundColor: Theme.of(context).appBarTheme.color,
       showSelectedLabels: false,
+      elevation: 10,
       showUnselectedLabels: false,
       unselectedItemColor: EasyDynamicTheme.of(context).themeMode == ThemeMode.light
           ? Colors.black26
           : Colors.white24,
-      selectedItemColor: Colors.orangeAccent,
+      selectedItemColor: Theme.of(context).primaryColor,
       type: BottomNavigationBarType.fixed,
       iconSize: 30,
       onTap: (i) {
         switch (i) {
           case 0:
-            if (index != 0) Navigator.of(context).pop();
+            if (index != 0) Navigator.of(context).popUntil(ModalRoute.withName(Dashboard.routeName));
             break;
           case 1:
             if (index != 1) showSearch(context: context, delegate: MovieSearchDelegate());

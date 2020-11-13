@@ -98,7 +98,7 @@ class RestResolver {
       'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
       'page': page.toString()
     };
-    var uri = Uri.https(url, '/3/trending/movie/week', params);
+    var uri = Uri.https(url, '/3/trending/movie/day', params);
     try {
       var response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -135,7 +135,7 @@ class RestResolver {
       'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
       'page': page.toString()
     };
-    var uri = Uri.https(url, '/3/trending/tv/week', params);
+    var uri = Uri.https(url, '/3/trending/tv/day', params);
     try {
       var response = await http.get(uri);
       if (response.statusCode == 200) {

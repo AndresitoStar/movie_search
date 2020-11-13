@@ -5,6 +5,8 @@ import 'package:movie_search/ui/pages/dashboard.dart';
 import 'package:movie_search/ui/widgets/hex_color.dart';
 
 class OnboardScreen extends StatelessWidget {
+  static String routeName = "Onboard";
+
   @override
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context).textTheme.headline4.copyWith(color: Colors.white70);
@@ -69,8 +71,8 @@ class OnboardScreen extends StatelessWidget {
           Icons.navigate_next,
           color: Colors.white70,
         ),
-        done:
-            Text("HECHO", style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white70)),
+        done: Text("HECHO",
+            style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white70)),
         globalBackgroundColor: HexColor('#0A0A0A'),
         dotsDecorator: DotsDecorator(
             size: const Size.square(10.0),
@@ -86,7 +88,10 @@ class OnboardScreen extends StatelessWidget {
   void navigateToHome(BuildContext context) {
     SharedPreferencesHelper.setFirstTime();
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => Dashboard()),
+      MaterialPageRoute(
+        builder: (context) => Dashboard(),
+        settings: RouteSettings(name: Dashboard.routeName),
+      ),
       (route) => false,
     );
   }

@@ -70,4 +70,18 @@ class UtilView {
       });
     });
   }
+
+  static Color getRatingColor(BuildContext context, String score) {
+    try {
+      var d = double.parse(score);
+      if (d < 6) {
+        return Colors.redAccent;
+      } else if (d < 9) {
+        return Colors.yellowAccent;
+      }
+      return Colors.greenAccent;
+    } catch (e) {
+      return Theme.of(context).primaryColor;
+    }
+  }
 }

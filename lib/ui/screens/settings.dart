@@ -36,7 +36,7 @@ class SettingsScreen extends StatelessWidget {
                           return snapshot.data != null
                               ? Switch(
                                   value: snapshot.data,
-                                  inactiveTrackColor: Colors.red,
+                                  inactiveTrackColor: Colors.grey.shade600,
                                   onChanged: (value) {
                                     SharedPreferencesHelper.setActiveRecent(value);
                                     return SharedPreferencesHelper.getInstance()
