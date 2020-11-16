@@ -19,9 +19,10 @@ class FavouriteScreen extends StatelessWidget {
             return GridView.builder(
               padding: const EdgeInsets.all(10.0),
               itemCount: snapshot.data.length,
-              itemBuilder: (ctx, i) => ChangeNotifierProvider<AudiovisualProvider>.value(
-                  value: AudiovisualProvider.fromData(snapshot.data[i]),
-                  child: AudiovisualGridItem(trending: false)),
+              itemBuilder: (ctx, i) =>
+                  ChangeNotifierProvider<AudiovisualProvider>.value(
+                      value: AudiovisualProvider.fromData(snapshot.data[i]),
+                      child: AudiovisualGridItem(trending: false)),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
                   childAspectRatio: 5 / 9,

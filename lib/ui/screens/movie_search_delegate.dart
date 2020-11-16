@@ -1,14 +1,19 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:frino_icons/frino_icons.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
 import 'package:movie_search/ui/widgets/audiovisual_list_item.dart';
 import 'package:provider/provider.dart';
 
+class SearchCategory{
+  String label, value;
+}
+
 class Searcher with ChangeNotifier {
-  Set<String> categories;
+  Set<SearchCategory> categories;
 
   Searcher({categories}) {
     this.categories = categories ?? HashSet();
@@ -59,7 +64,7 @@ class MovieSearchDelegate extends SearchDelegate {
     assert(theme != null);
     return theme.copyWith(
       textTheme: theme.textTheme.copyWith(
-        title: TextStyle(color: Colors.black87),
+        title: theme.textTheme.subtitle1,
       ),
 //      backgroundColor: theme.appBarTheme.color,
 //      primaryColor: theme.appBarTheme.color,
@@ -78,7 +83,7 @@ class MovieSearchDelegate extends SearchDelegate {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: Icon(Icons.clear, color: Colors.black54),
         onPressed: () {
           query = '';
         },
@@ -90,7 +95,7 @@ class MovieSearchDelegate extends SearchDelegate {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back_ios),
+      icon: Icon(FrinoIcons.f_arrow_left),
       onPressed: () {
         close(context, null);
       },

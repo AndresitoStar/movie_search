@@ -1,50 +1,46 @@
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_shimmer/flutter_shimmer.dart';
+import 'package:frino_icons/frino_icons.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/audiovisuales_provider.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/audiovisual_grid_item.dart';
+import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 
 class TrendingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AudiovisualListProvider>(context, listen: false);
+    final provider =
+        Provider.of<AudiovisualListProvider>(context, listen: false);
     final orientation = MediaQuery.of(context).orientation;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          provider.content.title,
-          style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black87),
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
+        title: Text(provider.content.title),
+        // backgroundColor: Theme.of(context).primaryColor,
         titleSpacing: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: Icon(FrinoIcons.f_arrow_left),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: Consumer<AudiovisualListProvider>(
         builder: (context, provider, child) => GridView.builder(
           padding: const EdgeInsets.all(10.0),
-          itemCount: provider.items.length + 1,
-          itemBuilder: (ctx, i) => PlayStoreShimmer(
-            isDarkMode: Theme.of(context).brightness == Brightness.dark,
-
-          ),
-//          itemBuilder: (ctx, i) => i < provider.items.length
-//              ? ChangeNotifierProvider<AudiovisualProvider>.value(
-//                  value: provider.items[i], child: AudiovisualGridItem(trending: true))
-//              : provider.hasMore
-//                  ? Builder(
-//                      builder: (context) {
-//                        provider.fetchMore(context);
-//                        return Padding(
-//                            padding: const EdgeInsets.all(8.0), child: PlayStoreShimmer());
-//                      },
-//                    )
-//                  : Container(),
+          itemCount: provider.items.length + 2,
+          itemBuilder: (ctx, i) => i < provider.items.length
+              ? ChangeNotifierProvider<AudiovisualProvider>.value(
+                  value: provider.items[i],
+                  child: AudiovisualGridItem(trending: true))
+              : provider.hasMore
+                  ? Builder(
+                      builder: (context) {
+                        provider.fetchMore(context);
+                        return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GridItemPlaceholder());
+                      },
+                    )
+                  : Container(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
               childAspectRatio: 5 / 9,

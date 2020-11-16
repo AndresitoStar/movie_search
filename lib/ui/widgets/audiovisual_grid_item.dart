@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frino_icons/frino_icons.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
-import 'package:movie_search/ui/util_ui.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/audiovisual_detail_screen.dart';
@@ -24,7 +23,7 @@ class AudiovisualGridItem extends StatelessWidget {
     final hero = Hero(
       tag: audiovisual.id,
       child: Material(
-        color: withThemeColor ? Theme.of(context).cardTheme.color : Colors.white,
+        color: withThemeColor ? Theme.of(context).cardColor : Colors.white,
         child: Padding(
           padding: EdgeInsets.all(trending ? 5 : 3),
           child: ClipRRect(
@@ -35,10 +34,8 @@ class AudiovisualGridItem extends StatelessWidget {
               placeholder: (_, __) => Container(
                   color: Colors.transparent, child: Center(child: CircularProgressIndicator())),
               errorWidget: (ctx, _, __) => Container(
-                  color: Colors.transparent, child: Center(child: Icon(Icons.broken_image))),
+                  color: Colors.transparent, child: Center(child: Icon(FrinoIcons.f_image))),
               fit: BoxFit.cover,
-//                        height: double.infinity,
-//                        width: double.infinity,
             ),
           ),
         ),
@@ -103,8 +100,8 @@ class AudiovisualGridItem extends StatelessWidget {
                                             audiovisual.toggleFavourite(context: context),
                                         alignment: Alignment.centerRight,
                                         icon: snapshot.data.contains(audiovisual.id) || (audiovisual.data?.isFavourite ?? false)
-                                            ? Icon(Icons.favorite, color: Colors.redAccent)
-                                            : Icon(Icons.favorite_border))),
+                                            ? Icon(FrinoIcons.f_heart, color: Colors.redAccent)
+                                            : Icon(FrinoIcons.f_heart))),
                           ),
                         ),
                         ListTile(

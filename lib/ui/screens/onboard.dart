@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frino_icons/frino_icons.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/screens/dashboard.dart';
@@ -68,7 +69,7 @@ class OnboardScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white70),
         ),
         next: const Icon(
-          Icons.navigate_next,
+          FrinoIcons.f_arrow_right,
           color: Colors.white70,
         ),
         done: Text("HECHO",

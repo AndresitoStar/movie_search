@@ -53,7 +53,7 @@ class _DashboardState extends State<Dashboard> {
                       initialData: [],
                       builder: (context, snapshot) {
                         return Container(
-                          color: Theme.of(context).appBarTheme.color,
+                          color: Theme.of(context).cardColor,
                           constraints: BoxConstraints(maxHeight: width - 100),
                           child: Stack(
                             fit: StackFit.expand,
@@ -104,13 +104,13 @@ class _DashboardState extends State<Dashboard> {
                                         mainAxisSize: MainAxisSize.min,
                                         dotsCount: snapshot.data?.length ?? 1,
                                         position: snapshotPages.data.toDouble(),
-                                        decorator: DotsDecorator(
-                                          color: EasyDynamicTheme.of(context).themeMode ==
-                                                  ThemeMode.light
-                                              ? Colors.black12
-                                              : Colors.white12, // Inactive color
-                                          activeColor: Colors.orangeAccent,
-                                        ),
+                                        // decorator: DotsDecorator(
+                                        //   color: EasyDynamicTheme.of(context).themeMode ==
+                                        //           ThemeMode.light
+                                        //       ? Colors.black12
+                                        //       : Colors.white12, // Inactive color
+                                        //   activeColor: Colors.orangeAccent,
+                                        // ),
                                       );
                                     }),
                               ),

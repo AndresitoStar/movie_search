@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frino_icons/frino_icons.dart';
 
 import 'hex_color.dart';
 
@@ -21,7 +22,7 @@ class PlaceholderImage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Icon(
-            FontAwesomeIcons.solidImage,
+            FrinoIcons.f_image,
             color: Colors.white12,
             size: MediaQuery.of(context).size.width / 3,
           ),

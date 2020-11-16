@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frino_icons/frino_icons.dart';
 import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:movie_search/ui/screens/favs_screen.dart';
 import 'package:movie_search/ui/screens/movie_search_delegate.dart';
@@ -17,6 +18,7 @@ class MyBottomBar extends StatelessWidget {
       elevation: 10,
       showUnselectedLabels: false,
       type: BottomNavigationBarType.fixed,
+      backgroundColor: Theme.of(context).cardColor,
       iconSize: 30,
       onTap: (i) {
         switch (i) {
@@ -35,10 +37,10 @@ class MyBottomBar extends StatelessWidget {
         }
       },
       items: [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.search), label: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.favorite), label: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
+        BottomNavigationBarItem(icon: Icon(FrinoIcons.f_home), label: ''),
+        BottomNavigationBarItem(icon: Icon(FrinoIcons.f_search), label: ''),
+        BottomNavigationBarItem(icon: Icon(FrinoIcons.f_heart), label: ''),
+        BottomNavigationBarItem(icon: Icon(FrinoIcons.f_settings), label: ''),
       ],
     );
   }

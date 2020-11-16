@@ -3,6 +3,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frino_icons/frino_icons.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,8 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
   @override
   void initState() {
     super.initState();
-    audiovisualProvider = Provider.of<AudiovisualProvider>(context, listen: false);
+    audiovisualProvider =
+        Provider.of<AudiovisualProvider>(context, listen: false);
     Future.delayed(Duration(milliseconds: 100), () async {
       audiovisualProvider.checkImageCached();
       if (widget.trending ?? false)
@@ -42,9 +44,11 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
         top: true,
         child: Scaffold(
           body: NestedScrollView(
-            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) => <Widget>[
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) => <Widget>[
               SliverOverlapAbsorber(
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: SliverSafeArea(
                   top: false,
                   sliver: getAppBar(context),
@@ -95,15 +99,17 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, bottom: 20),
                       child: Row(
                         children: [
-                          Icon(FontAwesomeIcons.imdb, color: Colors.orange, size: 60),
+                          Icon(FontAwesomeIcons.imdb,
+                              color: Colors.orange, size: 60),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                                 audiovisualProvider.data?.score ??
-                                    '${audiovisualProvider.voteAverage}',
+                                    '${audiovisualProvider.voteAverage ?? ''}',
                                 style: Theme.of(context).textTheme.headline4),
                           ),
                           Expanded(child: Container()),
@@ -111,35 +117,45 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                         ],
                       ),
                     ),
-                    audiovisualProvider.data == null ? LinearProgressIndicator() : Container(),
-                    AudiovisualContentHorizontal(content: audiovisualProvider.data?.sinopsis),
+                    audiovisualProvider.data == null
+                        ? LinearProgressIndicator()
+                        : Container(),
+                    AudiovisualContentHorizontal(
+                        content: audiovisualProvider.data?.sinopsis),
                     buildDivider(audiovisualProvider.data?.pais),
                     AudiovisualContentHorizontal(
                         label: 'Pais', content: audiovisualProvider.data?.pais),
                     buildDivider(audiovisualProvider.data?.director),
                     AudiovisualContentHorizontal(
-                        label: 'Director', content: audiovisualProvider.data?.director),
+                        label: 'Director',
+                        content: audiovisualProvider.data?.director),
                     buildDivider(audiovisualProvider.data?.capitulos),
                     AudiovisualContentHorizontal(
-                        label: 'Guión', content: audiovisualProvider.data?.capitulos),
+                        label: 'Guión',
+                        content: audiovisualProvider.data?.capitulos),
                     buildDivider(audiovisualProvider.data?.temp),
                     AudiovisualContentHorizontal(
-                        label: 'Temporadas', content: audiovisualProvider.data?.temp),
+                        label: 'Temporadas',
+                        content: audiovisualProvider.data?.temp),
                     buildDivider(audiovisualProvider.data?.anno),
                     AudiovisualContentHorizontal(
                         label: 'Año', content: audiovisualProvider.data?.anno),
                     buildDivider(audiovisualProvider.data?.productora),
                     AudiovisualContentHorizontal(
-                        label: 'Productora', content: audiovisualProvider.data?.productora),
+                        label: 'Productora',
+                        content: audiovisualProvider.data?.productora),
                     buildDivider(audiovisualProvider.data?.duracion),
                     AudiovisualContentHorizontal(
-                        label: 'Duración', content: audiovisualProvider.data?.duracion),
+                        label: 'Duración',
+                        content: audiovisualProvider.data?.duracion),
                     buildDivider(audiovisualProvider.data?.idioma),
                     AudiovisualContentHorizontal(
-                        label: 'Idioma', content: audiovisualProvider.data?.idioma),
+                        label: 'Idioma',
+                        content: audiovisualProvider.data?.idioma),
                     buildDivider(audiovisualProvider.data?.reparto),
                     AudiovisualContentHorizontal(
-                        label: 'Reparto', content: audiovisualProvider.data?.reparto),
+                        label: 'Reparto',
+                        content: audiovisualProvider.data?.reparto),
                   ],
                 ),
               ),
@@ -149,11 +165,14 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
       ));
 
   Future<bool> onLikeButtonTap(bool isLiked, BuildContext context) {
-    final ScaffoldState scaffoldState = context.findRootAncestorStateOfType<ScaffoldState>();
+    final ScaffoldState scaffoldState =
+        context.findRootAncestorStateOfType<ScaffoldState>();
     if (scaffoldState != null) {
       scaffoldState.showSnackBar(SnackBar(
         duration: Duration(seconds: 1),
-        content: Text(isLiked ? 'Eliminado de Mis Favoritos' : 'Agregado a Mis Favoritos'),
+        content: Text(isLiked
+            ? 'Eliminado de Mis Favoritos'
+            : 'Agregado a Mis Favoritos'),
       ));
     }
     return audiovisualProvider.toggleFavourite(context: context);
@@ -162,27 +181,13 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
   SliverAppBar getAppBar(BuildContext context) => SliverAppBar(
         pinned: false,
         floating: true,
-        backgroundColor: Theme.of(context).primaryColor,
         elevation: 5,
         expandedHeight: MediaQuery.of(context).size.height * 0.6,
         primary: true,
         automaticallyImplyLeading: false,
-        leading: Stack(
-          fit: StackFit.loose,
-          children: [
-            IconButton(
-              icon: Icon(Icons.arrow_back_ios, color: Colors.orange.withOpacity(0.5)),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_back_ios, color: Colors.white.withOpacity(0.5)),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_back_ios, color: Colors.black.withOpacity(0.5)),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
+        leading: IconButton(
+          icon: Icon(FrinoIcons.f_arrow_left, color: Colors.black87),
+          onPressed: () => Navigator.of(context).pop(),
         ),
         flexibleSpace: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -194,10 +199,11 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                         tag: av.id,
                         child: Material(
                           child: GestureDetector(
-                            onTap: () => previewImageDialog(context, av.imageUrl),
+                            onTap: () =>
+                                previewImageDialog(context, av.imageUrl),
                             child: CachedNetworkImage(
                               imageUrl: av.imageUrl ?? av.data.image,
-//                              color: Colors.red,
+                             color: Colors.black12,
                               colorBlendMode: BlendMode.darken,
                               placeholder: (_, __) => Center(
                                 child: SizedBox(
@@ -206,8 +212,8 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                                   child: CircularProgressIndicator(),
                                 ),
                               ),
-                              errorWidget: (ctx, _, __) =>
-                                  PlaceholderImage(heigth: MediaQuery.of(ctx).size.height * 0.6),
+                              errorWidget: (ctx, _, __) => PlaceholderImage(
+                                  heigth: MediaQuery.of(ctx).size.height * 0.6),
                               fit: BoxFit.cover,
 //                              height: double.infinity,
                               width: double.infinity,
@@ -224,9 +230,9 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
       Consumer<AudiovisualProvider>(builder: (ctx, av, child) {
         final fav = av.data?.isFavourite ?? av.isFavourite;
         return IconButton(
-          icon: Icon(fav ? Icons.favorite : Icons.favorite_border),
+          icon: Icon(fav ? FrinoIcons.f_heart : FrinoIcons.f_heart),
           iconSize: 32,
-          color: fav ? Colors.red : Colors.black87,
+          color: fav ? Colors.red : Colors.grey,
           onPressed: () {
             return onLikeButtonTap(fav, context);
           },
@@ -264,7 +270,7 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                   trailing: CircleAvatar(
 //                backgroundColor: Colors.white70,
                     child: IconButton(
-                      icon: Icon(Icons.close),
+                      icon: Icon(FrinoIcons.f_close),
                       iconSize: 24,
                       color: Colors.black87,
                       onPressed: () => Navigator.of(context).pop(),
@@ -308,7 +314,8 @@ class AudiovisualContentHorizontal extends StatelessWidget {
   final String label;
   final String content;
 
-  const AudiovisualContentHorizontal({Key key, this.label, this.content}) : super(key: key);
+  const AudiovisualContentHorizontal({Key key, this.label, this.content})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -317,7 +324,9 @@ class AudiovisualContentHorizontal extends StatelessWidget {
       child: Container(
 //        color: Colors.white,
         child: ListTile(
-          title: label != null ? Text(label, style: Theme.of(context).textTheme.headline6) : null,
+          title: label != null
+              ? Text(label, style: Theme.of(context).textTheme.headline6)
+              : null,
           subtitle: Text(content != null && content.isNotEmpty ? content : '',
               style: Theme.of(context).textTheme.subtitle2),
         ),
