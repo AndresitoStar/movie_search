@@ -45,7 +45,8 @@ dependencies:
   carousel_slider: ^2.3.1
   dots_indicator: ^1.2.0
   shimmer: ^1.1.2
-  material_floating_search_bar: ^0.2.3
+  package_info: ^0.4.1
+  cool_alert: ^1.0.3
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frino_icons/frino_icons.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/ui/widgets/circular_button.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/default_image.dart';
@@ -27,11 +29,7 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
     audiovisualProvider =
         Provider.of<AudiovisualProvider>(context, listen: false);
     Future.delayed(Duration(milliseconds: 100), () async {
-      audiovisualProvider.checkImageCached();
-      if (widget.trending ?? false)
-        await audiovisualProvider.findMyDataTrending(context);
-      else
-        await audiovisualProvider.findMyData(context);
+      await audiovisualProvider.findMyData(context);
       audiovisualProvider.toggleDateReg(context);
     });
   }
@@ -122,37 +120,35 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                         : Container(),
                     AudiovisualContentHorizontal(
                         content: audiovisualProvider.data?.sinopsis),
-                    buildDivider(audiovisualProvider.data?.pais),
-                    AudiovisualContentHorizontal(
-                        label: 'Pais', content: audiovisualProvider.data?.pais),
-                    buildDivider(audiovisualProvider.data?.director),
+                    AudiovisualContentRow(
+                      label1: 'Pais',
+                      label2: 'Idioma',
+                      value1: audiovisualProvider.data?.pais,
+                      value2: audiovisualProvider.data?.idioma,
+                    ),
+                    ContentDivider(value: audiovisualProvider.data?.director),
                     AudiovisualContentHorizontal(
                         label: 'Director',
                         content: audiovisualProvider.data?.director),
-                    buildDivider(audiovisualProvider.data?.capitulos),
-                    AudiovisualContentHorizontal(
-                        label: 'Guión',
-                        content: audiovisualProvider.data?.capitulos),
-                    buildDivider(audiovisualProvider.data?.temp),
-                    AudiovisualContentHorizontal(
-                        label: 'Temporadas',
-                        content: audiovisualProvider.data?.temp),
-                    buildDivider(audiovisualProvider.data?.anno),
-                    AudiovisualContentHorizontal(
-                        label: 'Año', content: audiovisualProvider.data?.anno),
-                    buildDivider(audiovisualProvider.data?.productora),
+                    AudiovisualContentRow(
+                      label1: 'Temporadas',
+                      label2: 'Capitulos',
+                      value1: audiovisualProvider.data?.temp,
+                      value2: audiovisualProvider.data?.capitulos,
+                    ),
+                    AudiovisualContentRow(
+                      label1: 'Año',
+                      label2: 'Duración',
+                      value1: audiovisualProvider.data?.anno,
+                      value2: audiovisualProvider.data?.duracion != null
+                          ? '${audiovisualProvider.data?.duracion} minutos'
+                          : null,
+                    ),
+                    ContentDivider(value: audiovisualProvider.data?.productora),
                     AudiovisualContentHorizontal(
                         label: 'Productora',
                         content: audiovisualProvider.data?.productora),
-                    buildDivider(audiovisualProvider.data?.duracion),
-                    AudiovisualContentHorizontal(
-                        label: 'Duración',
-                        content: audiovisualProvider.data?.duracion),
-                    buildDivider(audiovisualProvider.data?.idioma),
-                    AudiovisualContentHorizontal(
-                        label: 'Idioma',
-                        content: audiovisualProvider.data?.idioma),
-                    buildDivider(audiovisualProvider.data?.reparto),
+                    ContentDivider(value: audiovisualProvider.data?.reparto),
                     AudiovisualContentHorizontal(
                         label: 'Reparto',
                         content: audiovisualProvider.data?.reparto),
@@ -182,12 +178,29 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
         pinned: false,
         floating: true,
         elevation: 5,
-        expandedHeight: MediaQuery.of(context).size.height * 0.6,
+        expandedHeight: MediaQuery.of(context).size.height /
+            (MediaQuery.of(context).devicePixelRatio) *
+            2,
         primary: true,
         automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: Icon(FrinoIcons.f_arrow_left, color: Colors.black87),
-          onPressed: () => Navigator.of(context).pop(),
+        actions: [
+          Consumer<AudiovisualProvider>(
+            builder: (context, value, child) => Visibility(
+              visible: !audiovisualProvider.imageLoaded,
+              child: IconButton(
+                  icon: Icon(Icons.high_quality_rounded),
+                  onPressed: () => audiovisualProvider.toggleLoadImage()),
+            ),
+          )
+        ],
+        leading: SizedBox(
+          height: 12,
+          width: 12,
+          child: MyCircularButton(
+            color: Colors.white24,
+            icon: Icon(FrinoIcons.f_arrow_left, color: Colors.black87),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
         flexibleSpace: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -196,28 +209,43 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
               centerTitle: false,
               background: Consumer<AudiovisualProvider>(
                   builder: (ctx, av, child) => Hero(
-                        tag: av.id,
+                        tag: '${widget.trending}${av.id}',
                         child: Material(
                           child: GestureDetector(
-                            onTap: () =>
-                                previewImageDialog(context, av.imageUrl),
-                            child: CachedNetworkImage(
-                              imageUrl: av.imageUrl ?? av.data.image,
-                             color: Colors.black12,
-                              colorBlendMode: BlendMode.darken,
-                              placeholder: (_, __) => Center(
-                                child: SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                              errorWidget: (ctx, _, __) => PlaceholderImage(
-                                  heigth: MediaQuery.of(ctx).size.height * 0.6),
-                              fit: BoxFit.cover,
+                            onTap: av.imageUrl != null
+                                ? () => previewImageDialog(
+                                      context,
+                                      av.imageLoaded
+                                          ? '$URL_IMAGE_BIG${av.imageUrl}'
+                                          : '$URL_IMAGE_MEDIUM${av.imageUrl}',
+                                    )
+                                : null,
+                            child: av.imageUrl != null
+                                ? CachedNetworkImage(
+                                    imageUrl: av.imageLoaded
+                                        ? '$URL_IMAGE_BIG${av.imageUrl}'
+                                        : '$URL_IMAGE_MEDIUM${av.imageUrl}',
+                                    color: Colors.black12,
+                                    colorBlendMode: BlendMode.darken,
+                                    placeholder: (_, __) => Center(
+                                      child: SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                    errorWidget: (ctx, _, __) =>
+                                        PlaceholderImage(
+                                            height:
+                                                MediaQuery.of(ctx).size.height *
+                                                    0.6),
+                                    fit: BoxFit.cover,
 //                              height: double.infinity,
-                              width: double.infinity,
-                            ),
+                                    width: double.infinity,
+                                  )
+                                : PlaceholderImage(
+                                    height:
+                                        MediaQuery.of(ctx).size.height * 0.6),
                           ),
                         ),
                       )),
@@ -228,7 +256,7 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
 
   Widget likeButton(BuildContext context) =>
       Consumer<AudiovisualProvider>(builder: (ctx, av, child) {
-        final fav = av.data?.isFavourite ?? av.isFavourite;
+        final fav = av.data?.isFavourite ?? av.isFavourite ?? false;
         return IconButton(
           icon: Icon(fav ? FrinoIcons.f_heart : FrinoIcons.f_heart),
           iconSize: 32,
@@ -238,22 +266,6 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
           },
         );
       });
-
-  Widget buildDivider(String value) {
-    return Visibility(
-      visible: value != null && value.isNotEmpty && value != 'N/A',
-      child: Container(
-//        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-          child: Divider(
-            height: 1,
-//            color: Colors.black,
-          ),
-        ),
-      ),
-    );
-  }
 
   previewImageDialog(BuildContext context, String imageUrl) {
     showDialog(
@@ -268,9 +280,9 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                 title: ListTile(
                   contentPadding: EdgeInsets.zero,
                   trailing: CircleAvatar(
-//                backgroundColor: Colors.white70,
+                    backgroundColor: Colors.white30,
                     child: IconButton(
-                      icon: Icon(FrinoIcons.f_close),
+                      icon: Icon(Icons.close),
                       iconSize: 24,
                       color: Colors.black87,
                       onPressed: () => Navigator.of(context).pop(),
@@ -310,6 +322,64 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
   }
 }
 
+class ContentDivider extends StatelessWidget {
+  const ContentDivider({
+    Key key,
+    @required this.value,
+  }) : super(key: key);
+
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: value != null && value.isNotEmpty && value != 'N/A',
+      child: Container(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+          child: Divider(height: 1),
+        ),
+      ),
+    );
+  }
+}
+
+class AudiovisualContentRow extends StatelessWidget {
+  final String label1;
+  final String value1;
+  final String label2;
+  final String value2;
+
+  const AudiovisualContentRow(
+      {Key key, this.value1, this.value2, this.label1, this.label2})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+        visible: value1 != null && value2 != null,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ContentDivider(value: value1),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: AudiovisualContentHorizontal(
+                      label: label1, content: value1),
+                ),
+                Expanded(
+                  child: AudiovisualContentHorizontal(
+                      label: label2, content: value2),
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
+}
+
 class AudiovisualContentHorizontal extends StatelessWidget {
   final String label;
   final String content;
@@ -322,13 +392,16 @@ class AudiovisualContentHorizontal extends StatelessWidget {
     return Visibility(
       visible: content != null && content.isNotEmpty && content != 'N/A',
       child: Container(
-//        color: Colors.white,
         child: ListTile(
           title: label != null
-              ? Text(label, style: Theme.of(context).textTheme.headline6)
+              ? Text(label,
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(fontWeight: FontWeight.bold))
               : null,
           subtitle: Text(content != null && content.isNotEmpty ? content : '',
-              style: Theme.of(context).textTheme.subtitle2),
+              style: Theme.of(context).textTheme.subtitle1),
         ),
       ),
     );

@@ -7,12 +7,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'audiovisual_single_provider.dart';
 
-class SearchMovieResponse {
+class SearchResponse {
   final List<AudiovisualProvider> result;
   final int totalResult;
 
-  SearchMovieResponse({this.result, this.totalResult});
+  SearchResponse({this.result, this.totalResult});
 }
+
+const String URL_IMAGE_SMALL = 'http://image.tmdb.org/t/p/w92';
+const String URL_IMAGE_MEDIUM = 'http://image.tmdb.org/t/p/w342';
+const String URL_IMAGE_BIG = 'http://image.tmdb.org/t/p/w780';
 
 enum FAVOURITE_THINGS { FILMS, SERIES, GAMES }
 
@@ -29,6 +33,23 @@ extension asdasd on GRID_CONTENT {
         return 'Favoritos';
       default:
         return '';
+    }
+  }
+}
+
+enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON }
+
+extension tmdb_type on TMDB_API_TYPE {
+  String get type {
+    switch (this) {
+      case TMDB_API_TYPE.MOVIE:
+        return 'movie';
+      case TMDB_API_TYPE.TV_SHOW:
+        return 'tv';
+      case TMDB_API_TYPE.PERSON:
+        return 'person';
+      default:
+        return null;
     }
   }
 }

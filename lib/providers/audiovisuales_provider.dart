@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/ui/util.dart';
 
 import '../providers/audiovisual_single_provider.dart';
 import '../repository/repository_movie.dart';
@@ -25,34 +26,45 @@ class AudiovisualListProvider with ChangeNotifier {
 
   int _actualPage = 1;
 
+  final Debounce _debounce = Debounce(milliseconds: 100);
+
   Future synchronize(BuildContext context) async {
     final MovieRepository _repository = MovieRepository.getInstance(context);
-    SearchMovieResponse response;
+    SearchResponse response;
+    TMDB_API_TYPE type;
     switch (content) {
       case GRID_CONTENT.TRENDING_MOVIE:
-        response = await _repository.getTrending();
+        type = TMDB_API_TYPE.MOVIE;
         break;
       case GRID_CONTENT.TRENDING_TV:
-        response = await _repository.getTrendingSeries();
+        type = TMDB_API_TYPE.TV_SHOW;
         break;
       case GRID_CONTENT.FAVOURITE:
         break;
     }
-    _total = response.totalResult;
-    _items = response.result;
+    response = await UtilView.runLongTaskFromServer(
+        context, () => _repository.getTrending(type));
+    _total = response?.totalResult ?? -1;
+    _items = response?.result ?? [];
     notifyListeners();
   }
-
   Future fetchMore(BuildContext context) async {
+    _debounce.run(() => _fetchMore(context));
+  }
+
+  Future _fetchMore(BuildContext context) async {
+    print('fetching...');
     final MovieRepository _repository = MovieRepository.getInstance(context);
     _actualPage++;
-    SearchMovieResponse results;
+    SearchResponse results;
     switch (content) {
       case GRID_CONTENT.TRENDING_MOVIE:
-        results = await _repository.getTrending(page: _actualPage);
+        results = await _repository.getTrending(TMDB_API_TYPE.MOVIE,
+            page: _actualPage);
         break;
       case GRID_CONTENT.TRENDING_TV:
-        results = await _repository.getTrendingSeries(page: _actualPage);
+        results = await _repository.getTrending(TMDB_API_TYPE.TV_SHOW,
+            page: _actualPage);
         break;
       case GRID_CONTENT.FAVOURITE:
         break;
@@ -60,7 +72,6 @@ class AudiovisualListProvider with ChangeNotifier {
     _items.addAll(results.result);
     notifyListeners();
   }
-
 }
 
 class AudiovisualListProviderHelper {

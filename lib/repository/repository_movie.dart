@@ -9,7 +9,7 @@ class MovieRepository {
   static MovieRepository _instance;
 
   final MyDatabase db;
-  final RestResolver _resolver = RestResolver();
+  final RestResolver _resolver = RestResolver.getInstance();
 
   static MovieRepository getInstance(BuildContext context) {
     if (_instance == null)
@@ -23,8 +23,8 @@ class MovieRepository {
 //    db = Provider.of<MyDatabase>(context, listen: false);
 //  }
 
-  Future<SearchMovieResponse> search(String query, {String type, int page}) async {
-    return _resolver.searchMovie(query, type: type, page: page);
+  Future<SearchResponse> search(String query, {String type, int page}) async {
+    return _resolver.search(query, type: type, page: page);
   }
 
   Future countFavouriteMovies(String type) async {
@@ -39,12 +39,8 @@ class MovieRepository {
     return db.getFavRandomWallpaper(type);
   }
 
-  Future<SearchMovieResponse> getTrending({int page = 1}) async {
-    return _resolver.getTrending(page: page);
-  }
-
-  Future<SearchMovieResponse> getTrendingSeries({int page = 1}) async {
-    return _resolver.getTrendingSeries(page: page);
+  Future<SearchResponse> getTrending(TMDB_API_TYPE type, {int page = 1}) async {
+    return _resolver.getTrending(type, page: page);
   }
 
   Future<List<AudiovisualProvider>> getAllSaved() async {
@@ -54,17 +50,16 @@ class MovieRepository {
               id: a.id,
               title: a.titulo,
               image: a.image,
-              imageUrl: a.image,
             ))
         .toList();
   }
 
-  Future<AudiovisualTableData> getById(String id) async {
+  Future<AudiovisualTableData> getById({String id, String type}) async {
     final localData = await db.getAudiovisualById(id);
     if (localData != null) {
       return localData;
     }
-    final result = await _resolver.findMovieById(id);
+    final result = await _resolver.getById(id: id, type: type);
     db.insertAudiovisual(result);
     return result;
   }

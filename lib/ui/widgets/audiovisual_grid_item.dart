@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:frino_icons/frino_icons.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/audiovisual_detail_screen.dart';
@@ -21,7 +22,7 @@ class AudiovisualGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final audiovisual = Provider.of<AudiovisualProvider>(context);
     final hero = Hero(
-      tag: audiovisual.id,
+      tag: '$trending${audiovisual.id}',
       child: Material(
         color: withThemeColor ? Theme.of(context).cardColor : Colors.white,
         child: Padding(
@@ -29,13 +30,19 @@ class AudiovisualGridItem extends StatelessWidget {
           child: ClipRRect(
             clipBehavior: Clip.hardEdge,
             borderRadius: BorderRadius.circular(3),
-            child: CachedNetworkImage(
-              imageUrl: audiovisual.data?.image ?? audiovisual.image,
-              placeholder: (_, __) => Container(
-                  color: Colors.transparent, child: Center(child: CircularProgressIndicator())),
-              errorWidget: (ctx, _, __) => Container(
-                  color: Colors.transparent, child: Center(child: Icon(FrinoIcons.f_image))),
-              fit: BoxFit.cover,
+            child: FutureBuilder<String>(
+              future: audiovisual.checkImageCachedQuality(),
+              initialData: URL_IMAGE_SMALL,
+              builder: (context, snapshot) {
+                return CachedNetworkImage(
+                  imageUrl: '${snapshot.data}${audiovisual.image}',
+                  placeholder: (_, __) => Container(
+                      color: Colors.transparent, child: Center(child: CircularProgressIndicator())),
+                  errorWidget: (ctx, _, __) => Container(
+                      color: Colors.transparent, child: Center(child: Icon(FrinoIcons.f_image))),
+                  fit: BoxFit.cover,
+                );
+              }
             ),
           ),
         ),
@@ -72,7 +79,7 @@ class AudiovisualGridItem extends StatelessWidget {
                             bottom: 12,
                             left: 12,
                             child: Text(
-                              '${trending ? audiovisual.voteAverage : audiovisual.data.score}',
+                              '${trending ? audiovisual.voteAverage : audiovisual.data.score ?? ''}',
                               style: Theme.of(context).textTheme.subtitle1,
                             )),
                         Positioned(
@@ -106,7 +113,7 @@ class AudiovisualGridItem extends StatelessWidget {
                         ),
                         ListTile(
                           title: Text(
-                            audiovisual.title + '\n',
+                            audiovisual.title ?? '' + '\n',
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,

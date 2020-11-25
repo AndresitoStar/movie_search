@@ -8,7 +8,7 @@ import 'package:movie_search/rest/resolver.dart';
 import 'package:movie_search/ui/widgets/audiovisual_list_item.dart';
 import 'package:provider/provider.dart';
 
-class SearchCategory{
+class SearchCategory {
   String label, value;
 }
 
@@ -19,13 +19,18 @@ class Searcher with ChangeNotifier {
     this.categories = categories ?? HashSet();
   }
 
-  final RestResolver _resolver = RestResolver();
+  final RestResolver _resolver = RestResolver.getInstance();
 
   List<AudiovisualProvider> _movies = [];
+
+  List<AudiovisualProvider> get movies => [..._movies];
+
   int _total = -1;
   int _page = 1;
 
   bool get hasMore => _movies.length < _total;
+
+  String _query;
 
   search(String query) async {
     try {
@@ -33,19 +38,22 @@ class Searcher with ChangeNotifier {
       if (query == null || query.isEmpty) {
         _total = -1;
         _movies = [];
+        _query = '';
+      } else {
+        final response = await _resolver.search(query, page: _page);
+        if (response != null) _movies = response.result;
+        _total = response.totalResult;
+        _query = query;
       }
-      final response = await _resolver.searchMovie(query, page: _page);
-      if (response != null) _movies = response.result;
-      _total = response.totalResult;
       notifyListeners();
     } catch (e) {
       print(e);
     }
   }
 
-  fetchMore(BuildContext context, String query) async {
+  fetchMore(BuildContext context) async {
     _page++;
-    var result = await _resolver.searchMovie(query, page: _page);
+    var result = await _resolver.search(_query, page: _page);
     if (result != null) _movies.addAll(result.result);
     notifyListeners();
   }
@@ -66,13 +74,6 @@ class MovieSearchDelegate extends SearchDelegate {
       textTheme: theme.textTheme.copyWith(
         title: theme.textTheme.subtitle1,
       ),
-//      backgroundColor: theme.appBarTheme.color,
-//      primaryColor: theme.appBarTheme.color,
-//      primaryIconTheme: theme.iconTheme,
-//      primaryColorBrightness: theme.appBarTheme.brightness,
-//      primaryTextTheme: theme.textTheme,
-//      appBarTheme: theme.appBarTheme,
-//      colorScheme: theme.colorScheme,
     );
   }
 
@@ -83,7 +84,7 @@ class MovieSearchDelegate extends SearchDelegate {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear, color: Colors.black54),
+        icon: Icon(Icons.clear, color: Theme.of(context).iconTheme.color),
         onPressed: () {
           query = '';
         },
@@ -109,28 +110,30 @@ class MovieSearchDelegate extends SearchDelegate {
         value: _searcher,
         child: Consumer<Searcher>(
           builder: (context, searcher, child) => Builder(
-            builder: (context) => searcher._movies == null || searcher._movies.length == 0
-                ? Container(
-                    child: Center(
-                      child: Text('Sin resultados'),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: searcher._movies.length + 1,
-                    itemBuilder: (ctx, i) => i < searcher._movies.length
-                        ? ChangeNotifierProvider.value(
-                            value: searcher._movies[i], child: AudiovisualListItem())
-                        : searcher.hasMore
-                            ? Builder(
-                                builder: (context) {
-                                  searcher.fetchMore(context, query);
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: LinearProgressIndicator(),
-                                  );
-                                },
-                              )
-                            : Container()),
+            builder: (context) =>
+                searcher._movies == null || searcher._movies.length == 0
+                    ? Container(
+                        child: Center(
+                          child: Text('Sin resultados'),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: searcher._movies.length + 1,
+                        itemBuilder: (ctx, i) => i < searcher._movies.length
+                            ? ChangeNotifierProvider.value(
+                                value: searcher._movies[i],
+                                child: AudiovisualListItem())
+                            : searcher.hasMore
+                                ? Builder(
+                                    builder: (context) {
+                                      searcher.fetchMore(context);
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: LinearProgressIndicator(),
+                                      );
+                                    },
+                                  )
+                                : Container()),
           ),
         ));
   }

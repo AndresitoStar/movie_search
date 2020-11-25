@@ -26,7 +26,7 @@ class TrendingPage extends StatelessWidget {
       body: Consumer<AudiovisualListProvider>(
         builder: (context, provider, child) => GridView.builder(
           padding: const EdgeInsets.all(10.0),
-          itemCount: provider.items.length + 2,
+          itemCount: provider.items.length + 10,
           itemBuilder: (ctx, i) => i < provider.items.length
               ? ChangeNotifierProvider<AudiovisualProvider>.value(
                   value: provider.items[i],
@@ -34,7 +34,8 @@ class TrendingPage extends StatelessWidget {
               : provider.hasMore
                   ? Builder(
                       builder: (context) {
-                        provider.fetchMore(context);
+                        if (i == provider.items.length)
+                          provider.fetchMore(context);
                         return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GridItemPlaceholder());

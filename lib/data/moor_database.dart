@@ -108,7 +108,11 @@ class MyDatabase extends _$MyDatabase {
   // MOVIE & SERIES
   Future insertAudiovisual(AudiovisualTableData data) {
     return batch((b) {
-      b.insert(audiovisualTable, data.copyWith(fecha_reg: DateTime.now()),
+      b.insert(
+          audiovisualTable,
+          data.copyWith(
+            fecha_reg: DateTime.now(),
+          ),
           mode: InsertMode.insertOrReplace);
     });
   }
@@ -119,6 +123,10 @@ class MyDatabase extends _$MyDatabase {
 
   Future toggleDateReg(AudiovisualTableData data) {
     return update(audiovisualTable).replace(data.copyWith(fecha_reg: DateTime.now()));
+  }
+
+  Future cleanAudiovisualData() {
+    return delete(audiovisualTable).go();
   }
 
   Future<AudiovisualTableData> getAudiovisualById(String id) async {
@@ -155,16 +163,15 @@ class MyDatabase extends _$MyDatabase {
 
   Stream<List<AudiovisualTableData>> watchFavourites() {
     SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
-    query = select(audiovisualTable)
-      ..where((tbl) => tbl.isFavourite);
+    query = select(audiovisualTable)..where((tbl) => tbl.isFavourite);
     return query.watch();
   }
 
   Stream<List<String>> watchFavouritesId() {
     final query = selectOnly(audiovisualTable)
-      ..addColumns([audiovisualTable.externalId])
+      ..addColumns([audiovisualTable.id])
       ..where(audiovisualTable.isFavourite.equals(true));
-    return query.map((r) => r.read(audiovisualTable.externalId ?? audiovisualTable.id)).watch();
+    return query.map((r) => r.read(audiovisualTable.id)).watch();
   }
 
   Future<List<AudiovisualTableData>> getAllMovies() async {
