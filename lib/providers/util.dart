@@ -10,8 +10,9 @@ import 'audiovisual_single_provider.dart';
 class SearchResponse {
   final List<AudiovisualProvider> result;
   final int totalResult;
+  final int totalPageResult;
 
-  SearchResponse({this.result, this.totalResult});
+  SearchResponse({this.result, this.totalResult, this.totalPageResult});
 }
 
 const String URL_IMAGE_SMALL = 'http://image.tmdb.org/t/p/w92';
@@ -37,7 +38,10 @@ extension asdasd on GRID_CONTENT {
   }
 }
 
-enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON }
+enum TMDB_API_TYPE {
+  MOVIE,
+  TV_SHOW, /* PERSON */
+}
 
 extension tmdb_type on TMDB_API_TYPE {
   String get type {
@@ -46,8 +50,21 @@ extension tmdb_type on TMDB_API_TYPE {
         return 'movie';
       case TMDB_API_TYPE.TV_SHOW:
         return 'tv';
-      case TMDB_API_TYPE.PERSON:
-        return 'person';
+      // case TMDB_API_TYPE.PERSON:
+      //   return 'person';
+      default:
+        return null;
+    }
+  }
+
+  String get name {
+    switch (this) {
+      case TMDB_API_TYPE.MOVIE:
+        return 'Películas';
+      case TMDB_API_TYPE.TV_SHOW:
+        return 'Series';
+      // case TMDB_API_TYPE.PERSON:
+      //   return 'Persona';
       default:
         return null;
     }

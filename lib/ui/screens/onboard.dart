@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:movie_search/ui/widgets/hex_color.dart';
+
+import 'config_splash.dart';
 
 class OnboardScreen extends StatelessWidget {
   static String routeName = "Onboard";
@@ -88,12 +89,6 @@ class OnboardScreen extends StatelessWidget {
 
   void navigateToHome(BuildContext context) {
     SharedPreferencesHelper.setFirstTime();
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => Dashboard(),
-        settings: RouteSettings(name: Dashboard.routeName),
-      ),
-      (route) => false,
-    );
+    Navigator.of(context).pushNamedAndRemoveUntil(ConfigSplashScreen.route, (route) => false);
   }
 }

@@ -1,9 +1,10 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/dark.dart';
 import 'package:movie_search/ui/light.dart';
-import 'package:movie_search/ui/screens/dashboard.dart';
+import 'package:movie_search/ui/screens/config_splash.dart';
 import 'package:provider/provider.dart';
 
 import 'data/moor_database.dart';
@@ -34,12 +35,9 @@ class App extends StatelessWidget {
         theme: LightTheme.theme,
         darkTheme: DarkTheme.theme,
         themeMode: EasyDynamicTheme.of(context).themeMode,
-        routes: {
-          Dashboard.routeName: (ctx) => Dashboard(),
-          OnboardScreen.routeName: (ctx) => OnboardScreen(),
-        },
-        initialRoute: wasHereBefore ? Dashboard.routeName : OnboardScreen.routeName,
-        home: wasHereBefore ? Dashboard() : OnboardScreen(),
+        routes: Routes.routes,
+        initialRoute: wasHereBefore ? ConfigSplashScreen.route : OnboardScreen.routeName,
+//        home: wasHereBefore ? ConfigSplashScreen() : OnboardScreen(),
       ),
     );
   }

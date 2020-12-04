@@ -53,38 +53,16 @@ class AudiovisualTable extends Table {
   String get tableName => 'audiovisualdb';
 }
 
-class GameTable extends Table {
-  TextColumn get id => text()();
+class LanguageTable extends Table {
+  TextColumn get iso => text()();
 
-  TextColumn get titulo => text()();
+  TextColumn get name => text()();
+}
 
-  TextColumn get sinopsis => text()();
+class CountryTable extends Table {
+  TextColumn get iso => text()();
 
-  TextColumn get category => text().nullable()();
-
-  TextColumn get image => text().nullable()();
-
-  TextColumn get genre => text()();
-
-  TextColumn get plataformas => text()();
-
-  DateTimeColumn get fechaLanzamiento => dateTime().nullable()();
-
-  TextColumn get score => text().nullable()();
-
-  TextColumn get empresa => text().nullable()();
-
-  TextColumn get fecha_reg => text().nullable()();
-
-  TextColumn get fecha_act => text().nullable()();
-
-  BoolColumn get isFavourite => boolean().clientDefault(() => false)();
-
-  @override
-  Set<Column> get primaryKey => {id};
-
-  @override
-  String get tableName => 'game';
+  TextColumn get name => text()();
 }
 
 LazyDatabase _openConnection() {
@@ -98,12 +76,27 @@ LazyDatabase _openConnection() {
   });
 }
 
-@UseMoor(tables: [AudiovisualTable, GameTable])
+@UseMoor(tables: [AudiovisualTable, LanguageTable, CountryTable])
 class MyDatabase extends _$MyDatabase {
   MyDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) {
+        return m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        for (final table in allTables.toList().reversed) {
+          await m.deleteTable(table.actualTableName);
+        }
+        return m.createAll();
+      },
+    );
+  }
 
   // MOVIE & SERIES
   Future insertAudiovisual(AudiovisualTableData data) {
@@ -117,23 +110,50 @@ class MyDatabase extends _$MyDatabase {
     });
   }
 
+  Future<AudiovisualTableData> getAudiovisualById(String id) async {
+    final country = countryTable.name;
+    final language = languageTable.name;
+    final data = select(audiovisualTable)
+      ..where((a) => a.id.equals(id))
+      ..join([
+        leftOuterJoin(
+          countryTable,
+          audiovisualTable.pais.equalsExp(countryTable.iso),
+        ),
+        leftOuterJoin(
+          languageTable,
+          audiovisualTable.idioma.equalsExp(languageTable.iso),
+        )
+      ])
+      ..addColumns([country, language]).map((row) {
+        final d = row.readTable(audiovisualTable).copyWith(
+              idioma: row.read(language),
+              pais: row.read(country) ?? '-',
+            );
+        return d;
+      });
+    return data.getSingle();
+  }
+
   Future toggleFavouriteAudiovisual(AudiovisualTableData data) {
-    return update(audiovisualTable).replace(data.copyWith(isFavourite: !data.isFavourite));
+    return update(audiovisualTable)
+        .replace(data.copyWith(isFavourite: !data.isFavourite));
   }
 
   Future toggleDateReg(AudiovisualTableData data) {
-    return update(audiovisualTable).replace(data.copyWith(fecha_reg: DateTime.now()));
+    return update(audiovisualTable)
+        .replace(data.copyWith(fecha_reg: DateTime.now()));
   }
 
   Future cleanAudiovisualData() {
     return delete(audiovisualTable).go();
   }
 
-  Future<AudiovisualTableData> getAudiovisualById(String id) async {
-    var query = select(audiovisualTable);
-    query.where((a) => a.id.equals(id));
-    return await query.getSingle();
-  }
+//  Future<AudiovisualTableData> getAudiovisualById(String id) async {
+//    var query = select(audiovisualTable);
+//    query.where((a) => a.id.equals(id));
+//    return await query.getSingle();
+//  }
 
   Future<AudiovisualTableData> getAudiovisualByTitle(String title) async {
     var query = select(audiovisualTable);
@@ -141,7 +161,8 @@ class MyDatabase extends _$MyDatabase {
     return await query.getSingle();
   }
 
-  Future<AudiovisualTableData> getAudiovisualByExternalId(String trendingId) async {
+  Future<AudiovisualTableData> getAudiovisualByExternalId(
+      String trendingId) async {
     try {
       var query = select(audiovisualTable);
       query.where((a) => a.externalId.equals(trendingId));
@@ -157,7 +178,9 @@ class MyDatabase extends _$MyDatabase {
     query = select(audiovisualTable)
       ..limit(10)
       ..where((tbl) => tbl.image.like('N/A').not())
-      ..orderBy([(r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)]);
+      ..orderBy([
+        (r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)
+      ]);
     return query.watch();
   }
 
@@ -179,7 +202,9 @@ class MyDatabase extends _$MyDatabase {
     query = select(audiovisualTable)
       ..limit(15)
       ..where((tbl) => tbl.image.like('N/A').not())
-      ..orderBy([(r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)]);
+      ..orderBy([
+        (r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)
+      ]);
     return query.get();
   }
 
@@ -192,10 +217,11 @@ class MyDatabase extends _$MyDatabase {
 
   Future getFavRandomWallpaper(String type) async {
     // SELECT * FROM table ORDER BY RANDOM() LIMIT 1;
-    var query = customSelect('select image from ${audiovisualTable.actualTableName} '
-        'where ${audiovisualTable.category.escapedName} = \'$type\' '
-        'and ${audiovisualTable.isFavourite.escapedName} = 1 '
-        'order by RANDOM() LIMIT 1');
+    var query =
+        customSelect('select image from ${audiovisualTable.actualTableName} '
+            'where ${audiovisualTable.category.escapedName} = \'$type\' '
+            'and ${audiovisualTable.isFavourite.escapedName} = 1 '
+            'order by RANDOM() LIMIT 1');
     final result = await query.getSingle();
     return result.data['count'];
   }
@@ -209,40 +235,37 @@ class MyDatabase extends _$MyDatabase {
   }
 
   Future countFavouriteMovies(String type) async {
-    var query = customSelect('select count(*) as count from ${audiovisualTable.actualTableName} '
+    var query = customSelect(
+        'select count(*) as count from ${audiovisualTable.actualTableName} '
         'where ${audiovisualTable.category.escapedName} = \'$type\' '
         'and ${audiovisualTable.isFavourite.escapedName} = 1');
     final result = await query.getSingle();
     return result.data['count'];
   }
 
-  // GAMES
-  Future insertGame(GameTableData data) {
-    return batch((b) {
-      b.insert(gameTable, data, mode: InsertMode.insertOrReplace);
-    });
+  Future insertCountries(List<CountryTableData> countries) async {
+    await delete(countryTable).go();
+    return batch((b) =>
+        b.insertAll(countryTable, countries, mode: InsertMode.insertOrReplace));
   }
 
-  Future getGameById(String id) async {
-    var query = select(gameTable);
-    query.where((a) => a.id.equals(id));
-    return await query.getSingle();
+  Future<bool> existCountries() async {
+    final count = countryTable.iso.count();
+    final query = selectOnly(countryTable)..addColumns([count]);
+    final result = await query.map((row) => row.read(count)).getSingle();
+    return (result ?? 0) > 0;
   }
 
-  Future updateGame(GameTableData data) {
-    update(gameTable).replace(data);
+  Future insertLanguages(List<LanguageTableData> languages) async {
+    await delete(languageTable).go();
+    return batch((b) => b.insertAll(languageTable, languages,
+        mode: InsertMode.insertOrReplace));
   }
 
-  Future getFavouritesGames() async {
-    var query = select(gameTable);
-    query.where((a) => a.isFavourite.equals(true));
-    return query.get();
-  }
-
-  Future countFavouriteGames() async {
-    var query = customSelect('select count(*) as count from ${gameTable.actualTableName} '
-        'where ${gameTable.isFavourite.escapedName} = 1');
-    final result = await query.getSingle();
-    return result.data['count'];
+  Future<bool> existLanguages() async {
+    final count = languageTable.iso.count();
+    final query = selectOnly(languageTable)..addColumns([count]);
+    final result = await query.map((row) => row.read(count)).getSingle();
+    return (result ?? 0) > 0;
   }
 }

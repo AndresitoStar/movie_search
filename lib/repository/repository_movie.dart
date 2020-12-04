@@ -12,16 +12,11 @@ class MovieRepository {
   final RestResolver _resolver = RestResolver.getInstance();
 
   static MovieRepository getInstance(BuildContext context) {
-    if (_instance == null)
-      _instance = MovieRepository(Provider.of<MyDatabase>(context, listen: false));
+    if (_instance == null) _instance = MovieRepository(context.read());
     return _instance;
   }
 
   MovieRepository(this.db);
-
-//  MovieRepository(BuildContext context) {
-//    db = Provider.of<MyDatabase>(context, listen: false);
-//  }
 
   Future<SearchResponse> search(String query, {String type, int page}) async {
     return _resolver.search(query, type: type, page: page);
@@ -60,23 +55,40 @@ class MovieRepository {
       return localData;
     }
     final result = await _resolver.getById(id: id, type: type);
-    db.insertAudiovisual(result);
-    return result;
+    await db.insertAudiovisual(result);
+
+    return db.getAudiovisualById(id);
   }
 
-  Future<AudiovisualTableData> getByTrendingId(String trendingId, String type,
-      {String defaultImage}) async {
-    final localData = await db.getAudiovisualByExternalId(trendingId);
-    if (localData != null) {
-      return localData;
+  Future<bool> syncCountries() async {
+    try {
+      final bool = await db.existCountries();
+      if (bool) return true;
+      var countries = await _resolver.getCountries();
+      final dbCountries = countries.entries
+          .map((entry) => CountryTableData(iso: entry.key, name: entry.value))
+          .toList();
+      await db.insertCountries(dbCountries);
+      return true;
+    } catch (e) {
+      print(e);
     }
-    final result = await _resolver.getByTrendingId(trendingId, type);
-    if (result != null) {
-      if (result.image == null || result.image.isEmpty || !result.image.startsWith('http')) {
-        db.insertAudiovisual(result.copyWith(image: defaultImage));
-      } else
-        db.insertAudiovisual(result);
+    return false;
+  }
+
+  Future<bool> syncLanguages() async {
+    try {
+      var bool = await db.existLanguages();
+      if (bool) return true;
+      var countries = await _resolver.getLanguages();
+      final dbLanguages = countries.entries
+          .map((entry) => LanguageTableData(iso: entry.key, name: entry.value))
+          .toList();
+      await db.insertLanguages(dbLanguages);
+      return true;
+    } catch (e) {
+      print(e);
     }
-    return result;
+    return false;
   }
 }

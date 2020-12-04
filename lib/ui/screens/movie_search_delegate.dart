@@ -1,22 +1,46 @@
-import 'dart:collection';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
+import 'package:provider/provider.dart';
+
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
 import 'package:movie_search/ui/widgets/audiovisual_list_item.dart';
-import 'package:provider/provider.dart';
 
 class SearchCategory {
   String label, value;
+
+  SearchCategory(this.label, this.value);
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is SearchCategory && o.value == value;
+  }
+
+  @override
+  int get hashCode => value.hashCode;
 }
 
 class Searcher with ChangeNotifier {
-  Set<SearchCategory> categories;
+  Set<SearchCategory> _categories;
 
-  Searcher({categories}) {
-    this.categories = categories ?? HashSet();
+  Set<SearchCategory> get categories => {..._categories}.toSet();
+
+  SearchCategory actualCategory;
+
+  Searcher() {
+    this.actualCategory = SearchCategory('Todos', null);
+    this._categories =
+        TMDB_API_TYPE.values.map((e) => SearchCategory(e.name, e.type)).toSet();
+    this._categories.add(actualCategory);
+  }
+
+  selecCategory(SearchCategory category) {
+    this.actualCategory = category;
+    notifyListeners();
   }
 
   final RestResolver _resolver = RestResolver.getInstance();
@@ -27,8 +51,9 @@ class Searcher with ChangeNotifier {
 
   int _total = -1;
   int _page = 1;
+  int _totalPage = -1;
 
-  bool get hasMore => _movies.length < _total;
+  bool get hasMore => _movies.length < _total && _page < _totalPage;
 
   String _query;
 
@@ -40,9 +65,11 @@ class Searcher with ChangeNotifier {
         _movies = [];
         _query = '';
       } else {
-        final response = await _resolver.search(query, page: _page);
+        final response = await _resolver.search(query,
+            page: _page, type: actualCategory.value);
         if (response != null) _movies = response.result;
         _total = response.totalResult;
+        _totalPage = response.totalPageResult;
         _query = query;
       }
       notifyListeners();
@@ -53,8 +80,12 @@ class Searcher with ChangeNotifier {
 
   fetchMore(BuildContext context) async {
     _page++;
-    var result = await _resolver.search(_query, page: _page);
-    if (result != null) _movies.addAll(result.result);
+    var result =
+        await _resolver.search(_query, page: _page, type: actualCategory.value);
+    if (result != null) {
+      _movies.addAll(result.result);
+      _totalPage = result.totalPageResult;
+    }
     notifyListeners();
   }
 }
@@ -62,8 +93,6 @@ class Searcher with ChangeNotifier {
 class MovieSearchDelegate extends SearchDelegate {
   Searcher _searcher = Searcher();
   final _debounce = Debounce(milliseconds: 300);
-
-//  MovieSearchDelegate() : super(searchFieldStyle: theme.inputDecorationTheme.hintStyle);
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -88,6 +117,21 @@ class MovieSearchDelegate extends SearchDelegate {
         onPressed: () {
           query = '';
         },
+      ),
+      PopupMenuButton<SearchCategory>(
+        icon: Icon(Icons.filter_alt,
+            color: _searcher.actualCategory.value != null
+                ? Theme.of(context).accentColor
+                : Theme.of(context).iconTheme.color),
+        initialValue: _searcher.actualCategory,
+        onSelected: (category) => _searcher.selecCategory(category),
+        offset: Offset(0, 100),
+        itemBuilder: (context) => _searcher.categories
+            .map((e) => PopupMenuItem<SearchCategory>(
+                  child: Text(e.label),
+                  value: e,
+                ))
+            .toList(),
       ),
 //      MyEasyDynamicThemeBtn()
     ];

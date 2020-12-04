@@ -227,13 +227,10 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                                         : '$URL_IMAGE_MEDIUM${av.imageUrl}',
                                     color: Colors.black12,
                                     colorBlendMode: BlendMode.darken,
-                                    placeholder: (_, __) => Center(
-                                      child: SizedBox(
-                                        height: 50,
-                                        width: 50,
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    ),
+                                    placeholder: (_, __) => CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        imageUrl:
+                                            '$URL_IMAGE_SMALL${av.imageUrl}'),
                                     errorWidget: (ctx, _, __) =>
                                         PlaceholderImage(
                                             height:

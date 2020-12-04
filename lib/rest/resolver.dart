@@ -20,6 +20,10 @@ class RestResolver {
   }
 
   Dio _client;
+  Map<String, dynamic> _baseParams = {
+    'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
+    'language': 'es-ES',
+  };
 
   static RestResolver _instance;
 
@@ -35,40 +39,40 @@ class RestResolver {
     _client.options.receiveTimeout = 3000;
   }
 
-  Future<SearchResponse> search(String query,
-      {String type, @required int page}) async {
+  Future<SearchResponse> search(String query, {String type, @required int page}) async {
     List<AudiovisualProvider> result = [];
     int totalResults = -1;
+    int totalPagesResult = -1;
+    print('page: $page');
 
     try {
       Map<String, String> params = {
-        'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
+        ..._baseParams,
         'query': query,
         'page': page.toString(),
-        'language': 'es-ES'
       };
 
-      var response = await _client.get('search/multi', queryParameters: params);
+      var response = await _client.get('search/${type ?? 'multi'}', queryParameters: params);
       if (response.statusCode == 200) {
         result = [];
         var body = response.data;
         totalResults = body['total_results'];
+        totalPagesResult = body['total_pages'];
         if (totalResults > 0) {
           for (var data in body['results']) {
-            final type = data['media_type'];
-            if (type == 'person')
+            final mediaType = data['media_type'] ?? type;
+            if (mediaType == 'person')
               continue; // TODO quitar para buscar personas
             else {
               AudiovisualProvider av;
-              if (type == 'movie') {
+              if (mediaType == 'movie') {
                 av = AudiovisualProvider.fromJsonTypeMovie(data);
-              } else if (type == 'tv') {
+              } else if (mediaType == 'tv') {
                 av = AudiovisualProvider.fromJsonTypeTv(data);
               }
               if (av != null &&
                   av.sinopsis != null &&
-                  av.yearOriginal != null /*&& av.image != null*/)
-                result.add(av);
+                  av.yearOriginal != null /*&& av.image != null*/) result.add(av);
             }
           }
         }
@@ -80,79 +84,8 @@ class RestResolver {
       print(e);
     }
 
-    return new SearchResponse(result: result, totalResult: totalResults);
-  }
-
-  Future<SearchResponse> searchOld(String query,
-      {String type, @required int page}) async {
-    List<AudiovisualProvider> result = [];
-
-    int totalResults = -1;
-    try {
-      Map<String, String> params = {
-        'apikey': '9eb7fce9',
-        's': query,
-        'r': 'json',
-        'page': page.toString()
-      };
-      if (type != null && type.isNotEmpty) {
-        params = {
-          'apikey': '9eb7fce9',
-          's': query,
-          'r': 'json',
-          'type': type,
-          'page': page.toString()
-        };
-      }
-
-      var client = getDioClient();
-      var response = await client.get('/', queryParameters: params);
-      if (response.statusCode == 200) {
-        result = [];
-        var body = response.data;
-        if ('True' == body['Response'] && int.parse(body['totalResults']) > 0) {
-          totalResults = int.parse(body['totalResults']);
-          for (var a in body['Search']) {
-            if (a['Type'] == 'game') continue;
-            var aa = new AudiovisualProvider(
-                title: a['Title'],
-                id: a['imdbID'],
-                yearOriginal: a['Year'],
-                type: a['Type'],
-                image: a['Poster'],
-                isFavourite: false);
-            result.add(aa);
-          }
-        }
-      } else {
-        print(response.statusCode);
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    return new SearchResponse(result: result, totalResult: totalResults);
-  }
-
-  Future<AudiovisualTableData> getByTrendingId(String id, String type) async {
-    const url = 'api.themoviedb.org';
-
-    Map<String, String> params = {
-      'api_key': '3e56846ee7cfb0b7d870484a9f66218c'
-    };
-    var uri = Uri.https(url, '/3/$type/$id/external_ids', params);
-    try {
-      var response = await http.get(uri);
-      if (response.statusCode == 200) {
-        final body = jsonDecode(response.body);
-//        final body = jsonDecode(DummyData.TRENDING_RESPONSE);
-        final imdbId = body['imdb_id'];
-        return findMovieById(imdbId, externalId: id);
-      }
-    } catch (e) {
-      print(e);
-    }
-    return null;
+    return new SearchResponse(
+        result: result, totalResult: totalResults, totalPageResult: totalPagesResult);
   }
 
   Future<SearchResponse> getTrending(TMDB_API_TYPE type, {int page = 1}) async {
@@ -161,11 +94,7 @@ class RestResolver {
 
     const url = 'api.themoviedb.org';
 
-    Map<String, String> params = {
-      'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
-      'language': 'es-ES',
-      'page': page.toString()
-    };
+    Map<String, String> params = {..._baseParams, 'page': page.toString()};
     var uri = Uri.https(url, '/3/trending/${type.type}/week', params);
     try {
       var response = await http.get(uri);
@@ -194,8 +123,7 @@ class RestResolver {
 
   Future<AudiovisualTableData> getById({String type, String id}) async {
     Map<String, String> params = {
-      'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
-      'language': 'es-ES',
+      ..._baseParams,
       'append_to_response': 'images',
       'include_image_language': 'en,null'
     };
@@ -209,8 +137,7 @@ class RestResolver {
       String duracion;
       if (type == 'movie') {
         av = AudiovisualProvider.fromJsonTypeMovie(data);
-        paises = data['production_countries'] != null &&
-                data['production_countries'].isNotEmpty
+        paises = data['production_countries'] != null && data['production_countries'].isNotEmpty
             ? data['production_countries']
                 ?.map((e) => e['name'])
                 ?.reduce((value, element) => '$value' + ',' + '$element')
@@ -220,15 +147,13 @@ class RestResolver {
       } else if (type == 'tv') {
         av = AudiovisualProvider.fromJsonTypeTv(data);
         paises = data['origin_country'] != null
-            ? data['origin_country']
-                ?.reduce((value, element) => value + ',' + element)
+            ? data['origin_country']?.reduce((value, element) => value + ',' + element)
             : null;
         anno = data['first_air_date'];
         final List episodesRuntime = data["episode_run_time"];
         if (episodesRuntime != null)
-          duracion = episodesRuntime
-              ?.reduce((value, element) => min<num>(value, element))
-              ?.toString();
+          duracion =
+              episodesRuntime?.reduce((value, element) => min<num>(value, element))?.toString();
       } else if (type == 'person') {
         // TODO convertir
         // av = AudiovisualProvider.fromJsonTypeTv(data);
@@ -240,16 +165,15 @@ class RestResolver {
           image: av.image,
           anno: DateTime.tryParse(anno)?.year?.toString(),
           duracion: duracion,
-          productora: data['production_companies'] != null &&
-                  data['production_companies'].isNotEmpty
-              ? data['production_companies']
-                  ?.map((e) => e['name'])
-                  ?.reduce((value, element) => '$value' + ',' + '$element')
-              : null,
+          productora:
+              data['production_companies'] != null && data['production_companies'].isNotEmpty
+                  ? data['production_companies']
+                      ?.map((e) => e['name'])
+                      ?.reduce((value, element) => '$value' + ',' + '$element')
+                  : null,
           idioma: data["original_language"],
           pais: paises,
-          score:
-              await getImdbRating(data["imdb_id"]) ?? '${data['vote_average']}',
+          score: await getImdbRating(data["imdb_id"]) ?? '${data['vote_average']}',
           temp: data['seasons'] != null ? '${data['seasons'].length}' : null,
           capitulos: data['seasons'] != null
               ? data['seasons']
@@ -286,40 +210,47 @@ class RestResolver {
     return null;
   }
 
-  @deprecated
-  Future<AudiovisualTableData> findMovieById(String id,
-      {String externalId}) async {
+  Future<Map<String, String>> getCountries() async {
+    Map<String, String> result = {};
+
     try {
-      const url = 'www.omdbapi.com';
-      var params = {'apikey': '9eb7fce9', 'i': id, 'r': 'json', 'plot': 'full'};
-      var uri = Uri.http(url, '/', params);
-      var response = await http.get(uri);
+      var response = await _client.get('/configuration/countries', queryParameters: _baseParams);
       if (response.statusCode == 200) {
-        var result = jsonDecode(response.body);
-        var fullData = AudiovisualTableData(
-            id: result["imdbID"],
-            externalId: externalId,
-            image: result["Poster"],
-            anno: result["Year"],
-            director: result["Director"],
-            duracion: result["Runtime"],
-            productora: result["Production"],
-            idioma: result["Language"],
-            pais: result["Country"],
-            score: result["imdbRating"],
-            temp: result["totalSeasons"],
-            capitulos: result["Writer"],
-            reparto: result["Actors"],
-            sinopsis: result["Plot"],
-            titulo: result["Title"],
-            category: result["Type"],
-            isFavourite: false,
-            genre: result["Genre"]);
-        return fullData;
+        var body = response.data as List<dynamic>;
+        if (body.isNotEmpty) {
+          result = Map.fromIterable(body,
+              key: (item) => item['iso_3166_1'], value: (item) => item['english_name']);
+        }
+      } else {
+        print(response.statusCode);
+        //TODO LANZAR EXCEPTION
       }
     } catch (e) {
       print(e);
     }
-    return null;
+
+    return result;
+  }
+
+  Future<Map<String, String>> getLanguages() async {
+    Map<String, String> result = {};
+
+    try {
+      var response = await _client.get('/configuration/languages', queryParameters: _baseParams);
+      if (response.statusCode == 200) {
+        var body = response.data as List<dynamic>;
+        if (body.isNotEmpty) {
+          result = Map.fromIterable(body,
+              key: (item) => item['iso_639_1'], value: (item) => item['english_name']);
+        }
+      } else {
+        print(response.statusCode);
+        //TODO LANZAR EXCEPTION
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return result;
   }
 }
