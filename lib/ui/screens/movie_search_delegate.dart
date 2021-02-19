@@ -184,6 +184,7 @@ class MovieSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return buildResults(context);
+    // return buildResults(context);
+    return Container();
   }
 }

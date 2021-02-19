@@ -9,6 +9,7 @@ import 'package:movie_search/repository/repository_movie.dart';
 class AudiovisualProvider with ChangeNotifier {
   final String id;
   final String title;
+  final String titleOriginal;
   String image;
   final String type;
   final num voteAverage;
@@ -41,6 +42,7 @@ class AudiovisualProvider with ChangeNotifier {
   AudiovisualProvider._(this._data,
       {@required this.id,
         @required this.title,
+        @required this.titleOriginal,
         this.yearOriginal,
         this.type,
         this.voteAverage,
@@ -49,6 +51,7 @@ class AudiovisualProvider with ChangeNotifier {
 
   AudiovisualProvider({@required this.id,
     @required this.title,
+    @required this.titleOriginal,
     this.yearOriginal,
     this.type,
     this.sinopsis,
@@ -60,6 +63,7 @@ class AudiovisualProvider with ChangeNotifier {
   AudiovisualProvider.fromJsonTypeTv(Map<String, dynamic> data)
       : this(
     title: data['name'],
+    titleOriginal: data['original_name'],
     id: '${data['id']}',
     yearOriginal: data['first_air_date'],
     voteAverage: data['vote_average'],
@@ -71,6 +75,7 @@ class AudiovisualProvider with ChangeNotifier {
   AudiovisualProvider.fromJsonTypeMovie(Map<String, dynamic> data)
       : this(
     title: data['title'],
+    titleOriginal: data['original_title'],
     id: '${data['id']}',
     yearOriginal: data['release_date'],
     voteAverage: data['vote_average'],
@@ -82,6 +87,7 @@ class AudiovisualProvider with ChangeNotifier {
   AudiovisualProvider.fromData(AudiovisualTableData data)
       : this._(data,
       title: data.titulo,
+      titleOriginal: data.titulo,
       id: data.id,
       yearOriginal: data.anno,
       voteAverage: data.score != null ? double.tryParse(data.score) : null,
@@ -140,9 +146,14 @@ class AudiovisualProvider with ChangeNotifier {
 
   Future findMyData(BuildContext context) async {
     final _repository = MovieRepository.getInstance(context);
-    var result = await _repository.getById(id: id, type: type);
-//    isFavourite = result?.isFavourite;
-    _data = result;
+    AudiovisualTableData result;
+    try {
+      result = await _repository.getById(id: id, type: type);
+      _data = result;
+    } catch (e) {
+      print(e);
+      _data = AudiovisualTableData();
+    }
     notifyListeners();
   }
 

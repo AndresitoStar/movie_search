@@ -13,8 +13,8 @@ class RestResolver {
   Dio getDioClient() {
     Dio dio = new Dio(); // with default Options
     dio.options.baseUrl = 'https://www.omdbapi.com';
-    dio.options.connectTimeout = 5000; //5s
-    dio.options.receiveTimeout = 3000;
+    dio.options.connectTimeout = 20000; //5s
+    dio.options.receiveTimeout = 20000;
 
     return dio;
   }
@@ -35,8 +35,8 @@ class RestResolver {
   RestResolver._() {
     this._client = new Dio(); // with default Options
     _client.options.baseUrl = 'https://api.themoviedb.org/3/';
-    _client.options.connectTimeout = 5000; //5s
-    _client.options.receiveTimeout = 3000;
+    _client.options.connectTimeout = 20000; //5s
+    _client.options.receiveTimeout = 20000;
   }
 
   Future<SearchResponse> search(String query, {String type, @required int page}) async {

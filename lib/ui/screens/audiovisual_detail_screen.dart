@@ -54,9 +54,9 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
               )
             ],
             body: Container(
-//            color: Colors.white,
               child: CustomScrollView(
                 slivers: <Widget>[getContent()],
+                physics: BouncingScrollPhysics(),
               ),
             ),
           ),
@@ -157,7 +157,7 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
               ),
             ),
           ),
-        ]),
+        ],),
       ));
 
   Future<bool> onLikeButtonTap(bool isLiked, BuildContext context) {
@@ -193,19 +193,20 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
             ),
           )
         ],
-        leading: SizedBox(
-          height: 12,
-          width: 12,
-          child: MyCircularButton(
-            color: Colors.white24,
-            icon: Icon(FrinoIcons.f_arrow_left, color: Colors.black87),
+        leading: Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.fromLTRB(10,10,15,5),
+          color: Colors.white38,
+          child: IconButton(
+            color: Colors.black87,
+            icon: Icon(Icons.arrow_back_ios),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
         flexibleSpace: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             return FlexibleSpaceBar(
-              collapseMode: CollapseMode.parallax,
+              collapseMode: CollapseMode.pin,
               centerTitle: false,
               background: Consumer<AudiovisualProvider>(
                   builder: (ctx, av, child) => Hero(
@@ -221,24 +222,45 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
                                     )
                                 : null,
                             child: av.imageUrl != null
-                                ? CachedNetworkImage(
-                                    imageUrl: av.imageLoaded
-                                        ? '$URL_IMAGE_BIG${av.imageUrl}'
-                                        : '$URL_IMAGE_MEDIUM${av.imageUrl}',
-                                    color: Colors.black12,
-                                    colorBlendMode: BlendMode.darken,
-                                    placeholder: (_, __) => CachedNetworkImage(
-                                        fit: BoxFit.cover,
-                                        imageUrl:
-                                            '$URL_IMAGE_SMALL${av.imageUrl}'),
-                                    errorWidget: (ctx, _, __) =>
-                                        PlaceholderImage(
-                                            height:
-                                                MediaQuery.of(ctx).size.height *
+                                ? Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      CachedNetworkImage(
+                                        imageUrl: av.imageLoaded
+                                            ? '$URL_IMAGE_BIG${av.imageUrl}'
+                                            : '$URL_IMAGE_MEDIUM${av.imageUrl}',
+                                        color: Colors.black12,
+                                        colorBlendMode: BlendMode.darken,
+                                        placeholder: (_, __) => CachedNetworkImage(
+                                            fit: BoxFit.cover,
+                                            imageUrl:
+                                                '$URL_IMAGE_SMALL${av.imageUrl}'),
+                                        errorWidget: (ctx, _, __) =>
+                                            PlaceholderImage(
+                                                height: MediaQuery.of(ctx)
+                                                        .size
+                                                        .height *
                                                     0.6),
-                                    fit: BoxFit.cover,
-//                              height: double.infinity,
-                                    width: double.infinity,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                      ),
+                                      Container(
+                                          decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                                colors: [
+                                                  Colors.transparent,
+                                                  Colors.transparent,
+                                                  Colors.transparent,
+                                                  Theme.of(context)
+                                                      .scaffoldBackgroundColor
+                                                ],
+                                              ),
+                                              border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .scaffoldBackgroundColor)))
+                                    ],
                                   )
                                 : PlaceholderImage(
                                     height:
