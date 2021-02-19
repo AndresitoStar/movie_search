@@ -7,12 +7,13 @@ import 'package:movie_search/ui/light.dart';
 import 'package:movie_search/ui/screens/config_splash.dart';
 import 'package:provider/provider.dart';
 
+import 'components/splash/splash_screen.dart';
 import 'data/moor_database.dart';
 import 'ui/screens/onboard.dart';
 
 void main() {
-  SharedPreferencesHelper.wasHereBefore()
-      .then((value) => runApp(EasyDynamicThemeWidget(child: App(wasHereBefore: value))));
+  SharedPreferencesHelper.wasHereBefore().then((value) =>
+      runApp(EasyDynamicThemeWidget(child: App(wasHereBefore: value))));
 }
 
 class App extends StatelessWidget {
@@ -35,9 +36,10 @@ class App extends StatelessWidget {
         theme: LightTheme.theme,
         darkTheme: DarkTheme.theme,
         themeMode: EasyDynamicTheme.of(context).themeMode,
-        routes: Routes.routes,
-        initialRoute: wasHereBefore ? ConfigSplashScreen.route : OnboardScreen.routeName,
-//        home: wasHereBefore ? ConfigSplashScreen() : OnboardScreen(),
+        // routes: Routes.routes,
+        onGenerateRoute: Routes.generateRoute,
+        initialRoute:
+            wasHereBefore ? SplashScreen.route : OnboardScreen.routeName,
       ),
     );
   }

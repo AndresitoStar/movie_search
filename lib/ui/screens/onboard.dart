@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:movie_search/components/splash/splash_screen.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/hex_color.dart';
 
@@ -11,7 +12,8 @@ class OnboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleStyle = Theme.of(context).textTheme.headline4.copyWith(color: Colors.white70);
+    final titleStyle =
+        Theme.of(context).textTheme.headline4.copyWith(color: Colors.white70);
     final pages = [
       PageViewModel(
         title: "",
@@ -67,14 +69,20 @@ class OnboardScreen extends StatelessWidget {
         showSkipButton: true,
         skip: Text(
           'OMITIR',
-          style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white70),
+          style: Theme.of(context)
+              .textTheme
+              .headline6
+              .copyWith(color: Colors.white70),
         ),
         next: const Icon(
           FrinoIcons.f_arrow_right,
           color: Colors.white70,
         ),
-        done: Text("HECHO",
-            style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white70)),
+        done: Text("COMENZAR",
+            style: Theme.of(context)
+                .textTheme
+                .headline6
+                .copyWith(color: Colors.white70)),
         globalBackgroundColor: HexColor('#0A0A0A'),
         dotsDecorator: DotsDecorator(
             size: const Size.square(10.0),
@@ -82,13 +90,15 @@ class OnboardScreen extends StatelessWidget {
             activeColor: Theme.of(context).primaryColor,
             color: Colors.black26,
             spacing: const EdgeInsets.symmetric(horizontal: 3.0),
-            activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0))),
+            activeShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25.0))),
       ),
     );
   }
 
   void navigateToHome(BuildContext context) {
     SharedPreferencesHelper.setFirstTime();
-    Navigator.of(context).pushNamedAndRemoveUntil(ConfigSplashScreen.route, (route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(SplashScreen.route, (route) => false);
   }
 }

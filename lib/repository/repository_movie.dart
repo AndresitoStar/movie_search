@@ -12,7 +12,7 @@ class MovieRepository {
   final RestResolver _resolver = RestResolver.getInstance();
 
   static MovieRepository getInstance(BuildContext context) {
-    if (_instance == null) _instance = MovieRepository(context.read());
+    if (_instance == null) _instance = MovieRepository(context.read<MyDatabase>());
     return _instance;
   }
 

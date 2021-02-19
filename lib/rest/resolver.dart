@@ -9,6 +9,30 @@ import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/util.dart';
 
+abstract class BaseService {
+  Dio clientTMDB;
+  Dio clientOMDB;
+
+  final Map<String, dynamic> _baseParams = {
+    'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
+    'language': 'es-ES',
+  };
+
+  Map<String, dynamic> get baseParams => {..._baseParams};
+
+  BaseService() {
+    clientTMDB = new Dio();
+    clientTMDB.options.baseUrl = 'https://api.themoviedb.org/3/';
+    clientTMDB.options.connectTimeout = 20000; //5s
+    clientTMDB.options.receiveTimeout = 20000;
+
+    clientOMDB = new Dio();
+    clientOMDB.options.baseUrl = 'https://www.omdbapi.com';
+    clientOMDB.options.connectTimeout = 20000;
+    clientOMDB.options.receiveTimeout = 20000;
+  }
+}
+
 class RestResolver {
   Dio getDioClient() {
     Dio dio = new Dio(); // with default Options
@@ -39,7 +63,8 @@ class RestResolver {
     _client.options.receiveTimeout = 20000;
   }
 
-  Future<SearchResponse> search(String query, {String type, @required int page}) async {
+  Future<SearchResponse> search(String query,
+      {String type, @required int page}) async {
     List<AudiovisualProvider> result = [];
     int totalResults = -1;
     int totalPagesResult = -1;
@@ -52,7 +77,8 @@ class RestResolver {
         'page': page.toString(),
       };
 
-      var response = await _client.get('search/${type ?? 'multi'}', queryParameters: params);
+      var response = await _client.get('search/${type ?? 'multi'}',
+          queryParameters: params);
       if (response.statusCode == 200) {
         result = [];
         var body = response.data;
@@ -72,7 +98,8 @@ class RestResolver {
               }
               if (av != null &&
                   av.sinopsis != null &&
-                  av.yearOriginal != null /*&& av.image != null*/) result.add(av);
+                  av.yearOriginal != null /*&& av.image != null*/)
+                result.add(av);
             }
           }
         }
@@ -85,7 +112,9 @@ class RestResolver {
     }
 
     return new SearchResponse(
-        result: result, totalResult: totalResults, totalPageResult: totalPagesResult);
+        result: result,
+        totalResult: totalResults,
+        totalPageResult: totalPagesResult);
   }
 
   Future<SearchResponse> getTrending(TMDB_API_TYPE type, {int page = 1}) async {
@@ -137,7 +166,8 @@ class RestResolver {
       String duracion;
       if (type == 'movie') {
         av = AudiovisualProvider.fromJsonTypeMovie(data);
-        paises = data['production_countries'] != null && data['production_countries'].isNotEmpty
+        paises = data['production_countries'] != null &&
+                data['production_countries'].isNotEmpty
             ? data['production_countries']
                 ?.map((e) => e['name'])
                 ?.reduce((value, element) => '$value' + ',' + '$element')
@@ -147,13 +177,15 @@ class RestResolver {
       } else if (type == 'tv') {
         av = AudiovisualProvider.fromJsonTypeTv(data);
         paises = data['origin_country'] != null
-            ? data['origin_country']?.reduce((value, element) => value + ',' + element)
+            ? data['origin_country']
+                ?.reduce((value, element) => value + ',' + element)
             : null;
         anno = data['first_air_date'];
         final List episodesRuntime = data["episode_run_time"];
         if (episodesRuntime != null)
-          duracion =
-              episodesRuntime?.reduce((value, element) => min<num>(value, element))?.toString();
+          duracion = episodesRuntime
+              ?.reduce((value, element) => min<num>(value, element))
+              ?.toString();
       } else if (type == 'person') {
         // TODO convertir
         // av = AudiovisualProvider.fromJsonTypeTv(data);
@@ -165,15 +197,16 @@ class RestResolver {
           image: av.image,
           anno: DateTime.tryParse(anno)?.year?.toString(),
           duracion: duracion,
-          productora:
-              data['production_companies'] != null && data['production_companies'].isNotEmpty
-                  ? data['production_companies']
-                      ?.map((e) => e['name'])
-                      ?.reduce((value, element) => '$value' + ',' + '$element')
-                  : null,
+          productora: data['production_companies'] != null &&
+                  data['production_companies'].isNotEmpty
+              ? data['production_companies']
+                  ?.map((e) => e['name'])
+                  ?.reduce((value, element) => '$value' + ',' + '$element')
+              : null,
           idioma: data["original_language"],
           pais: paises,
-          score: await getImdbRating(data["imdb_id"]) ?? '${data['vote_average']}',
+          score:
+              await getImdbRating(data["imdb_id"]) ?? '${data['vote_average']}',
           temp: data['seasons'] != null ? '${data['seasons'].length}' : null,
           capitulos: data['seasons'] != null
               ? data['seasons']
@@ -214,12 +247,14 @@ class RestResolver {
     Map<String, String> result = {};
 
     try {
-      var response = await _client.get('/configuration/countries', queryParameters: _baseParams);
+      var response = await _client.get('/configuration/countries',
+          queryParameters: _baseParams);
       if (response.statusCode == 200) {
         var body = response.data as List<dynamic>;
         if (body.isNotEmpty) {
           result = Map.fromIterable(body,
-              key: (item) => item['iso_3166_1'], value: (item) => item['english_name']);
+              key: (item) => item['iso_3166_1'],
+              value: (item) => item['english_name']);
         }
       } else {
         print(response.statusCode);
@@ -236,12 +271,14 @@ class RestResolver {
     Map<String, String> result = {};
 
     try {
-      var response = await _client.get('/configuration/languages', queryParameters: _baseParams);
+      var response = await _client.get('/configuration/languages',
+          queryParameters: _baseParams);
       if (response.statusCode == 200) {
         var body = response.data as List<dynamic>;
         if (body.isNotEmpty) {
           result = Map.fromIterable(body,
-              key: (item) => item['iso_639_1'], value: (item) => item['english_name']);
+              key: (item) => item['iso_639_1'],
+              value: (item) => item['english_name']);
         }
       } else {
         print(response.statusCode);
