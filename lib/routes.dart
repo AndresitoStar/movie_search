@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/components/home/home_screen.dart';
+import 'package:movie_search/components/search/search_screen.dart';
 import 'package:movie_search/components/splash/splash_screen.dart';
-import 'package:movie_search/ui/screens/config_splash.dart';
 import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:movie_search/ui/screens/onboard.dart';
 import 'package:provider/provider.dart';
@@ -8,9 +9,9 @@ import 'package:provider/provider.dart';
 class Routes {
   static final routes = {
     SplashScreen.route: (ctx) => SplashScreen(),
+    HomeScreen.routeName: (ctx) => HomeScreen(),
     Dashboard.routeName: (ctx) => Dashboard(),
-    ConfigSplashScreen.route: (ctx) =>
-        ChangeNotifierProvider.value(value: ConfigSplashViewModel(), child: ConfigSplashScreen()),
+    SearchScreen.routeName: (ctx) => SearchScreen(),
     OnboardScreen.routeName: (ctx) => OnboardScreen(),
   };
 

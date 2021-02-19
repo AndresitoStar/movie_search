@@ -4,7 +4,6 @@ import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/dark.dart';
 import 'package:movie_search/ui/light.dart';
-import 'package:movie_search/ui/screens/config_splash.dart';
 import 'package:provider/provider.dart';
 
 import 'components/splash/splash_screen.dart';

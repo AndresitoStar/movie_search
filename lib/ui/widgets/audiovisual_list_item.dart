@@ -7,12 +7,12 @@ import '../screens/audiovisual_detail_screen.dart';
 
 class AudiovisualListItem extends StatelessWidget {
   final _types = {'movie': 'Película', 'tv': 'Serie', 'person': 'Persona'};
+  final AudiovisualProvider audiovisual;
+
+  AudiovisualListItem({Key key, @required this.audiovisual}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final audiovisual =
-        Provider.of<AudiovisualProvider>(context, listen: false);
-
     return Card(
       elevation: 5,
       margin: const EdgeInsets.all(10),

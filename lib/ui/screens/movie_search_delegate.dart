@@ -1,28 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
+import 'package:movie_search/components/search/search_category.dart';
 import 'package:provider/provider.dart';
 
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
 import 'package:movie_search/ui/widgets/audiovisual_list_item.dart';
-
-class SearchCategory {
-  String label, value;
-
-  SearchCategory(this.label, this.value);
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is SearchCategory && o.value == value;
-  }
-
-  @override
-  int get hashCode => value.hashCode;
-}
 
 class Searcher with ChangeNotifier {
   Set<SearchCategory> _categories;

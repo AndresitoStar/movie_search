@@ -320,7 +320,7 @@ class DarkTheme {
     inputDecorationTheme: InputDecorationTheme(
       labelStyle: TextStyle(
         color: Color(0x80ffffff),
-        fontSize: 12.0,
+        fontSize: 16.0,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,
       ),
@@ -331,7 +331,7 @@ class DarkTheme {
         fontStyle: FontStyle.normal,
       ),
       hintStyle: TextStyle(
-        color: Color(0xffffffff),
+        color: Color(0x80ffffff),
         fontSize: 16.0,
         fontWeight: FontWeight.w400,
         fontStyle: FontStyle.normal,

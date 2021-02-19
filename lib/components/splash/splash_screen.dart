@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:movie_search/components/home/home_screen.dart';
 import 'package:movie_search/components/splash/splash_viewmodel.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/ui/screens/dashboard.dart';
@@ -31,7 +32,7 @@ class SplashScreen extends StatelessWidget {
   _navigateHome(BuildContext context) {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       Navigator.of(context)
-          .pushNamedAndRemoveUntil(Dashboard.routeName, (route) => false);
+          .pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
     });
   }
 }

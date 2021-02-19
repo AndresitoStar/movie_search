@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
+import 'package:movie_search/components/home/home_screen.dart';
+import 'package:movie_search/components/search/search_screen.dart';
 import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:movie_search/ui/screens/favs_screen.dart';
 import 'package:movie_search/ui/screens/movie_search_delegate.dart';
@@ -23,10 +25,12 @@ class MyBottomBar extends StatelessWidget {
       onTap: (i) {
         switch (i) {
           case 0:
-            if (index != 0) Navigator.of(context).popUntil(ModalRoute.withName(Dashboard.routeName));
+            if (index != 0)
+              Navigator.of(context)
+                  .popUntil(ModalRoute.withName(HomeScreen.routeName));
             break;
           case 1:
-            if (index != 1) showSearch(context: context, delegate: MovieSearchDelegate());
+            if (index != 1) goToSearch(context);
             break;
           case 2:
             if (index != 2) goToFavourites(context);
@@ -51,6 +55,10 @@ class MyBottomBar extends StatelessWidget {
         PageRouteBuilder(
             transitionDuration: Duration(milliseconds: 400),
             pageBuilder: (_, __, ___) => FavouriteScreen()));
+  }
+
+  Future goToSearch(BuildContext context) {
+    return Navigator.of(context).pushNamed(SearchScreen.routeName);
   }
 
   Future goToSettings(BuildContext context) {

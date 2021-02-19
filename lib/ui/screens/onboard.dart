@@ -5,8 +5,6 @@ import 'package:movie_search/components/splash/splash_screen.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/hex_color.dart';
 
-import 'config_splash.dart';
-
 class OnboardScreen extends StatelessWidget {
   static String routeName = "Onboard";
 

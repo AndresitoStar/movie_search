@@ -17,11 +17,11 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: appBar == null
-          ? MediaQuery.of(context)
-              .padding
-              .copyWith(left: 0, right: 0, bottom: 0)
-          : null,
+      // padding: appBar == null
+      //     ? MediaQuery.of(context)
+      //         .padding
+      //         .copyWith(left: 0, right: 0, bottom: 0)
+      //     : null,
       color: Theme.of(context).accentColor,
       child: SafeArea(
         top: false,
