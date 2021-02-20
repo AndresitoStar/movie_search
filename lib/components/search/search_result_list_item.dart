@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../screens/audiovisual_detail_screen.dart';
+import '../../ui/screens/audiovisual_detail_screen.dart';
 
 class AudiovisualListItem extends StatelessWidget {
   final _types = {'movie': 'Película', 'tv': 'Serie', 'person': 'Persona'};

@@ -20,13 +20,12 @@ class Routes {
     if (_routes.containsKey(settings.name)) {
       return PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 400),
-        // transitionsBuilder: (_, a, __, c) =>
-        //     FadeTransition(opacity: a, child: c),
+        transitionsBuilder: (_, a, __, c) =>
+            FadeTransition(opacity: a, child: c),
         pageBuilder: (_, __, ___) => Builder(builder: _routes[settings.name]),
         settings: settings,
       );
     }
-    return MaterialPageRoute(
-        settings: settings, builder: (_) => Container());
+    return MaterialPageRoute(settings: settings, builder: (_) => Container());
   }
 }

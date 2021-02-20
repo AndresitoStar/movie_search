@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/components/search/search_viewmodel.dart';
-import 'package:movie_search/ui/widgets/audiovisual_list_item.dart';
-import 'package:stacked/stacked.dart';
 import 'package:provider/provider.dart';
+import 'package:stacked/stacked.dart';
+
+import 'search_result_list_item.dart';
 
 class SearchResults extends StatelessWidget {
   @override

@@ -4,7 +4,6 @@ import 'package:movie_search/components/home/home_screen.dart';
 import 'package:movie_search/components/search/search_screen.dart';
 import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:movie_search/ui/screens/favs_screen.dart';
-import 'package:movie_search/ui/screens/movie_search_delegate.dart';
 import 'package:movie_search/ui/screens/settings.dart';
 
 class MyBottomBar extends StatelessWidget {

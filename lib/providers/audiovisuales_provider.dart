@@ -48,6 +48,7 @@ class AudiovisualListProvider with ChangeNotifier {
     _items = response?.result ?? [];
     notifyListeners();
   }
+
   Future fetchMore(BuildContext context) async {
     _debounce.run(() => _fetchMore(context));
   }
