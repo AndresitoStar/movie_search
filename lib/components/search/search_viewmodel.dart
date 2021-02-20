@@ -21,12 +21,6 @@ class SearchViewModel extends BaseViewModel {
 
   bool get hasMore => _movies.length < _total && _page < _totalPage;
 
-  Set<SearchCategory> _categories;
-
-  Set<SearchCategory> get categories => {..._categories}.toSet();
-
-  SearchCategory actualCategory;
-
   final _debounce = Debounce(milliseconds: 300);
 
   static const String FORM_QUERY = 'formQuery';
@@ -34,27 +28,22 @@ class SearchViewModel extends BaseViewModel {
 
   FormControl<String> get queryControl => this.form.controls[FORM_QUERY];
 
-  FormControl<String> get categoryControl => this.form.controls[FORM_CATEGORY];
+  FormControl<SearchCategory> get categoryControl => this.form.controls[FORM_CATEGORY];
+
+  SearchCategory get actualCategory => categoryControl.value;
 
   SearchViewModel(this._service) {
-    this.actualCategory = SearchCategory.all();
-    this._categories =
-        TMDB_API_TYPE.values.map((e) => SearchCategory(e.name, e.type)).toSet();
-    this._categories.add(actualCategory);
     this.form = fb.group({
       FORM_QUERY: FormControl<String>(value: ''),
       FORM_CATEGORY: FormControl<SearchCategory>(value: SearchCategory.all()),
     });
-    queryControl.valueChanges.listen((event) {
+    final onData = (event) {
       _debounce.run(() {
         search();
       });
-    });
-  }
-
-  selectCategory(SearchCategory category) {
-    this.actualCategory = category;
-    notifyListeners();
+    };
+    queryControl.valueChanges.listen(onData);
+    categoryControl.valueChanges.listen(onData);
   }
 
   search() async {
