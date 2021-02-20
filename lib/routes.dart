@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/components/home/home_screen.dart';
 import 'package:movie_search/components/search/search_screen.dart';
 import 'package:movie_search/components/splash/splash_screen.dart';
+import 'package:movie_search/components/trending/trending_page.dart';
+import 'package:movie_search/components/trending/trending_viewmodel.dart';
 import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:movie_search/ui/screens/onboard.dart';
 import 'package:provider/provider.dart';
 
-class Routes {
-  static final routes = {
-    SplashScreen.route: (ctx) => SplashScreen(),
-    HomeScreen.routeName: (ctx) => HomeScreen(),
-    Dashboard.routeName: (ctx) => Dashboard(),
-    SearchScreen.routeName: (ctx) => SearchScreen(),
-    OnboardScreen.routeName: (ctx) => OnboardScreen(),
-  };
+final routes = {
+  SplashScreen.route: (ctx) => SplashScreen(),
+  HomeScreen.routeName: (ctx) => HomeScreen(),
+  TrendingPage.routeName: (ctx) => TrendingPage(),
+  Dashboard.routeName: (ctx) => Dashboard(),
+  SearchScreen.routeName: (ctx) => SearchScreen(),
+  OnboardScreen.routeName: (ctx) => OnboardScreen(),
+};
 
+class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     Map<String, dynamic> _routes = routes;
     if (_routes.containsKey(settings.name)) {

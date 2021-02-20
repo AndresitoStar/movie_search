@@ -9,7 +9,6 @@ import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/audiovisuales_provider.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/audiovisual_grid_item.dart';
-import 'package:movie_search/ui/widgets/horizontal_list.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:provider/provider.dart';
 
@@ -116,13 +115,6 @@ class _DashboardState extends State<Dashboard> {
                                     mainAxisSize: MainAxisSize.min,
                                     dotsCount: snapshot.data?.length ?? 1,
                                     position: snapshotPages.data.toDouble(),
-                                    // decorator: DotsDecorator(
-                                    //   color: EasyDynamicTheme.of(context).themeMode ==
-                                    //           ThemeMode.light
-                                    //       ? Colors.black12
-                                    //       : Colors.white12, // Inactive color
-                                    //   activeColor: Colors.orangeAccent,
-                                    // ),
                                   );
                                 }),
                           ),
@@ -132,14 +124,6 @@ class _DashboardState extends State<Dashboard> {
                   }),
             ),
           ),
-          ChangeNotifierProvider.value(
-              value: AudiovisualListProviderHelper.getInstance()
-                  .getProvider(GRID_CONTENT.TRENDING_MOVIE),
-              child: HorizontalList(height: width * 0.75)),
-          ChangeNotifierProvider.value(
-              value: AudiovisualListProviderHelper.getInstance()
-                  .getProvider(GRID_CONTENT.TRENDING_TV),
-              child: HorizontalList(height: width * 0.75)),
         ],
       ),
     );

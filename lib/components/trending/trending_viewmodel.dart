@@ -19,7 +19,6 @@ extension ExtensionTitle on TrendingContent {
 }
 
 class TrendingViewModel extends BaseViewModel {
-
   final TrendingContent content;
   final TrendingService _trendingService;
 
@@ -40,6 +39,9 @@ class TrendingViewModel extends BaseViewModel {
   final Debounce _debounce = Debounce(milliseconds: 100);
 
   TrendingViewModel(this.content) : _trendingService = TrendingService();
+
+  TrendingViewModel.forPage(this.content, this._items)
+      : _trendingService = TrendingService();
 
   Future synchronize() async {
     TMDB_API_TYPE type;

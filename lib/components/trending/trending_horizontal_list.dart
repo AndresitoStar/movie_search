@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/components/trending/trending_page.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/audiovisual_grid_item.dart';
@@ -74,5 +75,6 @@ class TrendingHorizontalList extends StatelessWidget {
   }
 
   Future _goToTrendingScreen(
-      BuildContext context, TrendingViewModel viewModel) {}
+          BuildContext context, TrendingViewModel viewModel) =>
+      Navigator.pushNamed(context, TrendingPage.routeName, arguments: viewModel);
 }
