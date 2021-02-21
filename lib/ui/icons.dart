@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frino_icons/frino_icons.dart';
 
 class MyIcons {
@@ -10,4 +11,6 @@ class MyIcons {
   static const IconData search = FrinoIcons.f_search;
   static const IconData more = FrinoIcons.f_more_horizontal;
   static const IconData default_image = FrinoIcons.f_image;
+  static const IconData imdb = FontAwesomeIcons.imdb;
+  static const IconData quality = Icons.high_quality_rounded;
 }

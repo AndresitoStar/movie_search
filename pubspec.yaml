@@ -13,14 +13,13 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.0
+  animations: ^1.1.2
   stacked: 1.7.7
   reactive_forms: 8.0.3
   font_awesome_flutter: 8.4.0
   frino_icons: ^1.0.1
   moor: 3.3.1
   moor_ffi: ^0.8.0
-  provider: ^4.3.1
-  http: ^0.12.1
   cached_network_image: 2.0.0
   rxdart: ^0.23.1
   intl: 0.16.1

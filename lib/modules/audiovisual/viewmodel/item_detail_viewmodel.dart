@@ -5,18 +5,25 @@ import 'package:movie_search/modules/audiovisual/service/service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 
-class ItemGridViewModel<T extends ModelBase> extends FutureViewModel<ModelBase> {
+class ItemDetailViewModel<T extends ModelBase>
+    extends FutureViewModel<ModelBase> {
   final ModelBase _param;
-  final AudiovisualService _audiovisualService;
+  final AudiovisualService _service;
   final MyDatabase _db;
 
-  bool isFavourite = false;
+  ItemDetailViewModel(this._param, this._service, this._db);
+
   bool _highQualityImage = false;
-  String baseImageUrl = URL_IMAGE_SMALL;
+  String baseImageUrl = URL_IMAGE_MEDIUM;
 
   bool get isHighQualityImage => _highQualityImage;
 
-  ItemGridViewModel(this._audiovisualService, this._param, this._db);
+  bool get withImage => _param.image != null;
+
+  String get image => _param.image;
+
+  bool get isFavourite =>
+      data != null && data.data != null ? data.data.isFavourite : false;
 
   @override
   Future<ModelBase> futureToRun() async {
@@ -25,24 +32,28 @@ class ItemGridViewModel<T extends ModelBase> extends FutureViewModel<ModelBase> 
       _db.getAudiovisualById(_param.id),
     ]);
     baseImageUrl = results[0];
-    final dbData = results[1];
-    if (dbData != null) {
-      _param.data = dbData;
-      isFavourite = _param.data.isFavourite;
+    final _dbAv = results[1];
+    if (_dbAv != null) {
+      _param.data = _dbAv;
+      setInitialised(true);
+      return _param;
     }
+    return await _cacheData();
+  }
+
+  Future<ModelBase> _cacheData() async {
+    final av = await _service.getById<T>(id: _param.id, type: _param.type);
+    await _db.insertAudiovisual(av.data);
     setInitialised(true);
-    return _param;
+    return av;
   }
 
   Future<String> _checkImageCachedQuality() async {
     if (await _checkImageCachedExist('$URL_IMAGE_BIG${_param.image}')) {
       _highQualityImage = true;
       return URL_IMAGE_BIG;
-    } else if (await _checkImageCachedExist(
-        '$URL_IMAGE_MEDIUM${_param.image}')) {
-      return URL_IMAGE_MEDIUM;
     }
-    return URL_IMAGE_SMALL;
+    return URL_IMAGE_MEDIUM;
   }
 
   Future<bool> _checkImageCachedExist(String url) async {
@@ -54,25 +65,21 @@ class ItemGridViewModel<T extends ModelBase> extends FutureViewModel<ModelBase> 
     }
   }
 
-  _cacheData() async {
-    final av =
-        await _audiovisualService.getById<T>(id: _param.id, type: _param.type);
-    await _db.insertAudiovisual(av.data);
-    data.data = av.data;
-    onData(av);
-  }
-
   Future toggleFavourite() async {
     setBusy(true);
     try {
       if (data.data == null) await _cacheData();
       await _db.toggleFavouriteAudiovisual(data.data);
-      isFavourite = !isFavourite;
+      initialise();
     } catch (e) {
       setError(e);
     }
     setBusy(false);
-    notifyListeners();
   }
 
+  Future toggleHighQualityImage() async {
+    _highQualityImage = true;
+    baseImageUrl = URL_IMAGE_BIG;
+    notifyListeners();
+  }
 }

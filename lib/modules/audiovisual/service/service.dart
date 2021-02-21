@@ -2,11 +2,18 @@ import 'dart:math';
 
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
-import 'package:movie_search/modules/audiovisual/model/movie.dart';
-import 'package:movie_search/modules/audiovisual/model/serie.dart';
 import 'package:movie_search/rest/resolver.dart';
 
 class AudiovisualService extends BaseService {
+  static AudiovisualService _instance;
+
+  static AudiovisualService getInstance() {
+    if (_instance == null) _instance = AudiovisualService._();
+    return _instance;
+  }
+
+  AudiovisualService._() : super();
+  
   Future<ModelBase> getById<T extends ModelBase>(
       {String type, String id}) async {
     Map<String, String> params = {
