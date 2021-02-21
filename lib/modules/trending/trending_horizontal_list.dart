@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/components/trending/trending_page.dart';
-import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
+import 'package:movie_search/modules/audiovisual/model/base.dart';
+import 'package:movie_search/modules/trending/trending_page.dart';
+import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
-import 'package:movie_search/ui/widgets/audiovisual_grid_item.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
-import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 import 'trending_viewmodel.dart';
 
-class TrendingHorizontalList extends StatelessWidget {
+class TrendingHorizontalList<T extends ModelBase> extends StatelessWidget {
   final TrendingContent content;
   final _defaultLength = 5;
 
@@ -19,7 +19,7 @@ class TrendingHorizontalList extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.width * 0.75;
     return ViewModelBuilder<TrendingViewModel>.reactive(
-      viewModelBuilder: () => TrendingViewModel(this.content),
+      viewModelBuilder: () => TrendingViewModel<T>(this.content),
       onModelReady: (model) => model.synchronize(),
       builder: (context, model, child) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,17 +56,14 @@ class TrendingHorizontalList extends StatelessWidget {
                         ),
                       ),
                     )
-                  : ChangeNotifierProvider<AudiovisualProvider>.value(
-                      value: model.items.length > i ? model.items[i] : null,
-                      child: AspectRatio(
-                        child: model.items.length > i
-                            ? AudiovisualGridItem(trending: true)
-                            : Container(
-                                child: GridItemPlaceholder(),
-                                padding: const EdgeInsets.all(6),
-                              ),
-                        aspectRatio: 8 / 16,
-                      )),
+                  : AspectRatio(
+                      child: model.items.length > i
+                          ? ItemGridView<T>(
+                              audiovisual: model.items[i],
+                            )
+                          : GridItemPlaceholder(),
+                      aspectRatio: 8 / 16,
+                    ),
             ),
           ),
         ],
@@ -75,6 +72,7 @@ class TrendingHorizontalList extends StatelessWidget {
   }
 
   Future _goToTrendingScreen(
-          BuildContext context, TrendingViewModel viewModel) =>
-      Navigator.pushNamed(context, TrendingPage.routeName, arguments: viewModel);
+          BuildContext context, TrendingViewModel<T> viewModel) =>
+      Navigator.push(context,
+          Routes.defaultPageRouteBuilder(TrendingPage<T>(param: viewModel)));
 }

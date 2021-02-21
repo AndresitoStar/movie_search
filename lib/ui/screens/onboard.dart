@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:movie_search/components/splash/splash_screen.dart';
+import 'package:movie_search/modules/splash/splash_screen.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/hex_color.dart';
 

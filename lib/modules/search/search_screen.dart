@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/components/search/search_bar.dart';
-import 'package:movie_search/components/search/search_results.dart';
-import 'package:movie_search/components/search/search_service.dart';
-import 'package:movie_search/components/search/search_viewmodel.dart';
+import 'package:movie_search/modules/search/search_bar.dart';
+import 'package:movie_search/modules/search/search_results.dart';
+import 'package:movie_search/modules/search/search_service.dart';
+import 'package:movie_search/modules/search/search_viewmodel.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:stacked/stacked.dart';
 

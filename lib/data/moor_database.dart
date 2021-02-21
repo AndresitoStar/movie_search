@@ -115,6 +115,7 @@ class MyDatabase extends _$MyDatabase {
     final language = languageTable.name;
     final data = select(audiovisualTable)
       ..where((a) => a.id.equals(id))
+      ..limit(1)
       ..join([
         leftOuterJoin(
           countryTable,

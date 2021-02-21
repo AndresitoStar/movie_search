@@ -9,4 +9,5 @@ class MyIcons {
   static const IconData clear = Icons.clear;
   static const IconData search = FrinoIcons.f_search;
   static const IconData more = FrinoIcons.f_more_horizontal;
+  static const IconData default_image = FrinoIcons.f_image;
 }

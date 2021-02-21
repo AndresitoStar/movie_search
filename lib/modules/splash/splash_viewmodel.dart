@@ -1,4 +1,4 @@
-import 'package:movie_search/components/splash/splash_service.dart';
+import 'package:movie_search/modules/splash/splash_service.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/rest/resolver.dart';
 import 'package:stacked/stacked.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/components/search/search_category.dart';
-import 'package:movie_search/components/search/search_service.dart';
+import 'package:movie_search/modules/search/search_category.dart';
+import 'package:movie_search/modules/search/search_service.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:reactive_forms/reactive_forms.dart';

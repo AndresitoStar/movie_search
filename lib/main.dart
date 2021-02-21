@@ -6,7 +6,7 @@ import 'package:movie_search/ui/dark.dart';
 import 'package:movie_search/ui/light.dart';
 import 'package:provider/provider.dart';
 
-import 'components/splash/splash_screen.dart';
+import 'modules/splash/splash_screen.dart';
 import 'data/moor_database.dart';
 import 'ui/screens/onboard.dart';
 

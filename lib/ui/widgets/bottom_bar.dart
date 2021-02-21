@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
-import 'package:movie_search/components/home/home_screen.dart';
-import 'package:movie_search/components/search/search_screen.dart';
+import 'package:movie_search/modules/home/home_screen.dart';
+import 'package:movie_search/modules/search/search_screen.dart';
 import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:movie_search/ui/screens/favs_screen.dart';
 import 'package:movie_search/ui/screens/settings.dart';

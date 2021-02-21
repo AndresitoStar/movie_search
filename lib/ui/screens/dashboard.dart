@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/providers/audiovisual_single_provider.dart';
-import 'package:movie_search/providers/audiovisuales_provider.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/audiovisual_grid_item.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';

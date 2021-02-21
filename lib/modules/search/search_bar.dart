@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/components/search/search_category.dart';
-import 'package:movie_search/components/search/search_screen.dart';
+import 'package:movie_search/modules/search/search_category.dart';
+import 'package:movie_search/modules/search/search_screen.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:stacked/stacked.dart';
@@ -17,8 +17,10 @@ class SearchBar extends StatelessWidget {
       builder: (context, model, child) => Container(
         height: kToolbarHeight,
         child: Card(
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
           clipBehavior: Clip.hardEdge,
+          elevation: 0,
+          color: Colors.black12,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: ReactiveForm(

@@ -8,55 +8,45 @@ import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/circular_button.dart';
 import 'package:provider/provider.dart';
+import 'package:stacked/stacked.dart';
 
 import '../widgets/default_image.dart';
 
-class AudiovisualDetail extends StatefulWidget {
+class AudiovisualDetail extends StatelessWidget {
   final bool trending;
 
   const AudiovisualDetail({Key key, this.trending}) : super(key: key);
 
   @override
-  _AudiovisualDetailState createState() => _AudiovisualDetailState();
-}
-
-class _AudiovisualDetailState extends State<AudiovisualDetail> {
-  AudiovisualProvider audiovisualProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    audiovisualProvider =
-        Provider.of<AudiovisualProvider>(context, listen: false);
-    Future.delayed(Duration(milliseconds: 100), () async {
-      await audiovisualProvider.findMyData(context);
-      audiovisualProvider.toggleDateReg(context);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).primaryColor,
-      child: SafeArea(
-        top: true,
-        child: Scaffold(
-          body: NestedScrollView(
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) => <Widget>[
-              SliverOverlapAbsorber(
-                handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                sliver: SliverSafeArea(
-                  top: false,
-                  sliver: getAppBar(context),
+    return ViewModelBuilder<AudiovisualProvider>.nonReactive(
+      viewModelBuilder: () => context.read(),
+      onModelReady: (model) async {
+        await model.findMyData(context);
+        model.toggleDateReg(context);
+      },
+      builder: (context, model, _) => Container(
+        color: Theme.of(context).primaryColor,
+        child: SafeArea(
+          top: true,
+          child: Scaffold(
+            body: NestedScrollView(
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) => <Widget>[
+                SliverOverlapAbsorber(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  sliver: SliverSafeArea(
+                    top: false,
+                    sliver: getAppBar(context, model),
+                  ),
+                )
+              ],
+              body: Container(
+                child: CustomScrollView(
+                  slivers: <Widget>[getContent(context, model)],
+                  physics: BouncingScrollPhysics(),
                 ),
-              )
-            ],
-            body: Container(
-              child: CustomScrollView(
-                slivers: <Widget>[getContent()],
-                physics: BouncingScrollPhysics(),
               ),
             ),
           ),
@@ -65,100 +55,101 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
     );
   }
 
-  SliverPadding getContent() => SliverPadding(
-      padding: const EdgeInsets.all(8.0),
-      sliver: SliverList(
-        delegate: SliverChildListDelegate(<Widget>[
-          Card(
-            margin: const EdgeInsets.all(10),
-            elevation: 5,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-              child: Consumer<AudiovisualProvider>(
-                builder: (context, audiovisualProvider, child) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Hero(
-                      tag: 'title-${audiovisualProvider.id}',
-                      child: Material(
-                        color: Colors.transparent,
-                        child: Text(
-                          audiovisualProvider.title,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: audiovisualProvider.data != null,
-                      child: ListTile(
-                        title: Text(
-                            '${audiovisualProvider.data?.anno} / ${audiovisualProvider.data?.genre}'),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 20, right: 20, bottom: 20),
-                      child: Row(
-                        children: [
-                          Icon(FontAwesomeIcons.imdb,
-                              color: Colors.orange, size: 60),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
+  SliverPadding getContent(BuildContext context, AudiovisualProvider model) =>
+      SliverPadding(
+          padding: const EdgeInsets.all(8.0),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(
+              <Widget>[
+                Card(
+                  margin: const EdgeInsets.all(10),
+                  elevation: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Hero(
+                          tag: 'title-${model.id}',
+                          child: Material(
+                            color: Colors.transparent,
                             child: Text(
-                                audiovisualProvider.data?.score ??
-                                    '${audiovisualProvider.voteAverage ?? ''}',
-                                style: Theme.of(context).textTheme.headline4),
+                              model.title,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
                           ),
-                          Expanded(child: Container()),
-                          likeButton(context),
-                        ],
-                      ),
+                        ),
+                        Visibility(
+                          visible: model.data != null,
+                          child: ListTile(
+                            title: Text(
+                                '${model.data?.anno} / ${model.data?.genre}'),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, bottom: 20),
+                          child: Row(
+                            children: [
+                              Icon(FontAwesomeIcons.imdb,
+                                  color: Colors.orange, size: 60),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                    model.data?.score ??
+                                        '${model.voteAverage ?? ''}',
+                                    style:
+                                        Theme.of(context).textTheme.headline4),
+                              ),
+                              Expanded(child: Container()),
+                              likeButton(context),
+                            ],
+                          ),
+                        ),
+                        model.data == null
+                            ? LinearProgressIndicator()
+                            : Container(),
+                        AudiovisualContentHorizontal(
+                            content: model.data?.sinopsis),
+                        AudiovisualContentRow(
+                          label1: 'Pais',
+                          label2: 'Idioma',
+                          value1: model.data?.pais,
+                          value2: model.data?.idioma,
+                        ),
+                        ContentDivider(value: model.data?.director),
+                        AudiovisualContentHorizontal(
+                            label: 'Director', content: model.data?.director),
+                        AudiovisualContentRow(
+                          label1: 'Temporadas',
+                          label2: 'Capitulos',
+                          value1: model.data?.temp,
+                          value2: model.data?.capitulos,
+                        ),
+                        AudiovisualContentRow(
+                          label1: 'Año',
+                          label2: 'Duración',
+                          value1: model.data?.anno,
+                          value2: model.data?.duracion != null
+                              ? '${model.data?.duracion} minutos'
+                              : null,
+                        ),
+                        ContentDivider(value: model.data?.productora),
+                        AudiovisualContentHorizontal(
+                            label: 'Productora',
+                            content: model.data?.productora),
+                        ContentDivider(value: model.data?.reparto),
+                        AudiovisualContentHorizontal(
+                            label: 'Reparto', content: model.data?.reparto),
+                      ],
                     ),
-                    audiovisualProvider.data == null
-                        ? LinearProgressIndicator()
-                        : Container(),
-                    AudiovisualContentHorizontal(
-                        content: audiovisualProvider.data?.sinopsis),
-                    AudiovisualContentRow(
-                      label1: 'Pais',
-                      label2: 'Idioma',
-                      value1: audiovisualProvider.data?.pais,
-                      value2: audiovisualProvider.data?.idioma,
-                    ),
-                    ContentDivider(value: audiovisualProvider.data?.director),
-                    AudiovisualContentHorizontal(
-                        label: 'Director',
-                        content: audiovisualProvider.data?.director),
-                    AudiovisualContentRow(
-                      label1: 'Temporadas',
-                      label2: 'Capitulos',
-                      value1: audiovisualProvider.data?.temp,
-                      value2: audiovisualProvider.data?.capitulos,
-                    ),
-                    AudiovisualContentRow(
-                      label1: 'Año',
-                      label2: 'Duración',
-                      value1: audiovisualProvider.data?.anno,
-                      value2: audiovisualProvider.data?.duracion != null
-                          ? '${audiovisualProvider.data?.duracion} minutos'
-                          : null,
-                    ),
-                    ContentDivider(value: audiovisualProvider.data?.productora),
-                    AudiovisualContentHorizontal(
-                        label: 'Productora',
-                        content: audiovisualProvider.data?.productora),
-                    ContentDivider(value: audiovisualProvider.data?.reparto),
-                    AudiovisualContentHorizontal(
-                        label: 'Reparto',
-                        content: audiovisualProvider.data?.reparto),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],),
-      ));
+          ));
 
   Future<bool> onLikeButtonTap(bool isLiked, BuildContext context) {
     final ScaffoldState scaffoldState =
@@ -171,10 +162,12 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
             : 'Agregado a Mis Favoritos'),
       ));
     }
-    return audiovisualProvider.toggleFavourite(context: context);
+    final model = context.read();
+    return model.toggleFavourite(context: context);
   }
 
-  SliverAppBar getAppBar(BuildContext context) => SliverAppBar(
+  SliverAppBar getAppBar(BuildContext context, AudiovisualProvider model) =>
+      SliverAppBar(
         pinned: false,
         floating: true,
         elevation: 5,
@@ -184,18 +177,16 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
         primary: true,
         automaticallyImplyLeading: false,
         actions: [
-          Consumer<AudiovisualProvider>(
-            builder: (context, value, child) => Visibility(
-              visible: !audiovisualProvider.imageLoaded,
-              child: IconButton(
-                  icon: Icon(Icons.high_quality_rounded),
-                  onPressed: () => audiovisualProvider.toggleLoadImage()),
-            ),
+          Visibility(
+            visible: !model.imageLoaded,
+            child: IconButton(
+                icon: Icon(Icons.high_quality_rounded),
+                onPressed: () => model.toggleLoadImage()),
           )
         ],
         leading: Container(
           alignment: Alignment.center,
-          margin: const EdgeInsets.fromLTRB(10,10,15,5),
+          margin: const EdgeInsets.fromLTRB(10, 10, 15, 5),
           color: Colors.white38,
           child: IconButton(
             color: Colors.black87,
@@ -210,7 +201,7 @@ class _AudiovisualDetailState extends State<AudiovisualDetail> {
               centerTitle: false,
               background: Consumer<AudiovisualProvider>(
                   builder: (ctx, av, child) => Hero(
-                        tag: '${widget.trending}${av.id}',
+                        tag: '$trending${av.id}',
                         child: Material(
                           child: GestureDetector(
                             onTap: av.imageUrl != null

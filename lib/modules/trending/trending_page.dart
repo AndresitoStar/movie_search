@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/components/trending/trending_viewmodel.dart';
-import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
+import 'package:movie_search/modules/audiovisual/model/base.dart';
+import 'package:movie_search/modules/trending/trending_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
-import 'package:movie_search/ui/widgets/audiovisual_grid_item.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
-import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
-class TrendingPage extends StatelessWidget {
-  static String routeName = "/trending";
+class TrendingPage<T extends ModelBase> extends StatelessWidget {
+  // static String routeName = "/trending";
+  final TrendingViewModel param;
+
+  const TrendingPage({Key key,@required this.param}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TrendingViewModel param = ModalRoute.of(context).settings.arguments;
 
     final orientation = MediaQuery.of(context).orientation;
     return ViewModelBuilder<TrendingViewModel>.reactive(
         viewModelBuilder: () =>
-            TrendingViewModel.forPage(param.content, param.items),
+            TrendingViewModel<T>.forPage(param.content, param.items, param.total),
         builder: (context, viewModel, child) => Scaffold(
               appBar: AppBar(
                 title: Text(viewModel.content.title),
@@ -30,19 +31,15 @@ class TrendingPage extends StatelessWidget {
               ),
               body: GridView.builder(
                 padding: const EdgeInsets.all(10.0),
-                itemCount: viewModel.items.length + 10,
+                itemCount: viewModel.items.length + 2,
                 itemBuilder: (ctx, i) => i < viewModel.items.length
-                    ? ChangeNotifierProvider<AudiovisualProvider>.value(
-                        value: viewModel.items[i],
-                        child: AudiovisualGridItem(trending: true))
+                    ? ItemGridView<T>(audiovisual: viewModel.items[i])
                     : viewModel.hasMore
                         ? Builder(
                             builder: (context) {
                               if (i == viewModel.items.length)
                                 viewModel.fetchMore();
-                              return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: GridItemPlaceholder());
+                              return GridItemPlaceholder();
                             },
                           )
                         : Container(),

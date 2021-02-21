@@ -7,59 +7,62 @@ class GridItemPlaceholder extends StatelessWidget {
     final color = Colors.grey;
     final colorBaseValue = Theme.of(context).brightness == Brightness.dark ? 700 : 300;
     final colorHighligthValue = Theme.of(context).brightness == Brightness.dark ? 600 : 100;
-    return Card(
-      elevation: 5,
-      child: Column(
-        children: [
-          Expanded(
-            flex: 5,
-            child: Shimmer.fromColors(
-              baseColor: color[colorBaseValue],
-              highlightColor: color[colorHighligthValue],
-              child: Card(
-                child: SizedBox.expand(),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Center(
+    return Container(
+      padding: const EdgeInsets.all(6),
+      child: Card(
+        elevation: 5,
+        child: Column(
+          children: [
+            Expanded(
+              flex: 5,
               child: Shimmer.fromColors(
                 baseColor: color[colorBaseValue],
                 highlightColor: color[colorHighligthValue],
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 1,
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      color: Colors.white,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 1,
-                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                      color: Colors.white,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 1,
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      color: Colors.white,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 1,
-                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                      color: Colors.white,
-                    ),
-                  ],
+                child: Card(
+                  child: SizedBox.expand(),
                 ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: Shimmer.fromColors(
+                  baseColor: color[colorBaseValue],
+                  highlightColor: color[colorHighligthValue],
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 1,
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        color: Colors.white,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 1,
+                        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        color: Colors.white,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 1,
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        color: Colors.white,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 1,
+                        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
