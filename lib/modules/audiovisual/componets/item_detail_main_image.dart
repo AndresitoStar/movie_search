@@ -53,6 +53,13 @@ class ItemDetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
                         ),
                       ),
                     ),
+                    if (!model.initialised)
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: LinearProgressIndicator(),
+                      )
                   ],
                 )
               : PlaceholderImage(height: mq.size.height * 0.6),

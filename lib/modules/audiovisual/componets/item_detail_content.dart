@@ -36,8 +36,7 @@ class ItemDetailContent extends ViewModelWidget<ItemDetailViewModel> {
                     Visibility(
                       visible: item.data != null,
                       child: ListTile(
-                        title:
-                            Text('${item.data?.anno} / ${item.data?.genre}'),
+                        title: Text('${item.data?.anno} / ${item.data?.genre}'),
                       ),
                     ),
                     Padding(
@@ -49,20 +48,19 @@ class ItemDetailContent extends ViewModelWidget<ItemDetailViewModel> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                                item.data?.score ??
-                                    '${item.voteAverage ?? ''}',
+                                item.data?.score ?? '${item.voteAverage ?? ''}',
                                 style: Theme.of(context).textTheme.headline4),
                           ),
                           Expanded(child: Container()),
-                          ItemDetailLikeButton(),
+                          ItemLikeButton(
+                            id: viewModel.data.id,
+                            type: viewModel.data.type,
+                          ),
                         ],
                       ),
                     ),
-                    item.data == null
-                        ? LinearProgressIndicator()
-                        : Container(),
-                    ContentHorizontal(
-                        content: item.data?.sinopsis),
+                    item.data == null ? LinearProgressIndicator() : Container(),
+                    ContentHorizontal(content: item.data?.sinopsis),
                     ContentRow(
                       label1: 'Pais',
                       label2: 'Idioma',

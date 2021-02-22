@@ -29,12 +29,12 @@ class ItemDetailPage<T extends ModelBase> extends StatelessWidget {
                     child: Text('${model.modelError?.toString()}'),
                   )
                 : CustomScrollView(
-                        slivers: <Widget>[
-                          ItemDetailSliverAppBar(),
-                          if(model.initialised) ItemDetailContent()
-                        ],
-                        physics: ClampingScrollPhysics(),
-                      ),
+                    slivers: <Widget>[
+                      ItemDetailSliverAppBar(),
+                      if (model.initialised) ItemDetailContent(),
+                    ],
+                    physics: ClampingScrollPhysics(),
+                  ),
           ),
         ),
       ),

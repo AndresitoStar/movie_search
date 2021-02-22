@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
+import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
-import 'package:movie_search/ui/screens/favs_screen.dart';
 import 'package:movie_search/ui/screens/settings.dart';
 
 class MyBottomBar extends StatelessWidget {

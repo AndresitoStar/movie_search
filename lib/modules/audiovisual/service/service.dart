@@ -57,7 +57,7 @@ class AudiovisualService extends BaseService {
             : null;
         anno = data['first_air_date'];
         final List episodesRuntime = data["episode_run_time"];
-        if (episodesRuntime != null)
+        if (episodesRuntime != null && episodesRuntime.isNotEmpty)
           duracion = episodesRuntime
               ?.reduce((value, element) => min<num>(value, element))
               ?.toString();

@@ -141,6 +141,12 @@ class MyDatabase extends _$MyDatabase {
         .replace(data.copyWith(isFavourite: !data.isFavourite));
   }
 
+  Future toggleFavouriteAudiovisualById(String id) async {
+    final data = await getAudiovisualById(id);
+    return update(audiovisualTable)
+        .replace(data.copyWith(isFavourite: !data.isFavourite));
+  }
+
   Future toggleDateReg(AudiovisualTableData data) {
     return update(audiovisualTable)
         .replace(data.copyWith(fecha_reg: DateTime.now()));
@@ -187,7 +193,8 @@ class MyDatabase extends _$MyDatabase {
 
   Stream<List<AudiovisualTableData>> watchFavourites() {
     SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
-    query = select(audiovisualTable)..where((tbl) => tbl.isFavourite);
+    query = select(audiovisualTable)
+      ..where((tbl) => tbl.isFavourite.equals(true));
     return query.watch();
   }
 
