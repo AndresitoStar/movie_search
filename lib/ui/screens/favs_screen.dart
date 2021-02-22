@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
 import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/providers/audiovisual_single_provider.dart';
-import 'package:movie_search/ui/widgets/audiovisual_grid_item.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
+import 'package:movie_search/modules/audiovisual/model/movie.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:provider/provider.dart';
 
@@ -45,10 +45,9 @@ class FavouriteScreen extends StatelessWidget {
             return GridView.builder(
               padding: const EdgeInsets.all(10.0),
               itemCount: snapshot.data.length,
-              itemBuilder: (ctx, i) =>
-                  ChangeNotifierProvider<AudiovisualProvider>.value(
-                      value: AudiovisualProvider.fromData(snapshot.data[i]),
-                      child: AudiovisualGridItem(trending: false)),
+              itemBuilder: (ctx, i) {
+                return ItemGridView(audiovisual: Movie()..fromData(snapshot.data[i]));
+              },
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
                   childAspectRatio: 5 / 9,

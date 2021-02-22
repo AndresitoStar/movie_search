@@ -1,4 +1,6 @@
-import 'package:movie_search/providers/audiovisual_single_provider.dart';
+import 'package:movie_search/modules/audiovisual/model/base.dart';
+import 'package:movie_search/modules/audiovisual/model/movie.dart';
+import 'package:movie_search/modules/audiovisual/model/serie.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
 
@@ -6,10 +8,9 @@ class SearchService extends BaseService {
 
   Future<SearchResponse> search(String query,
       {String type, int page = 0}) async {
-    List<AudiovisualProvider> result = [];
+    List<ModelBase> result = [];
     int totalResults = -1;
     int totalPagesResult = -1;
-    print('page: $page');
 
     try {
       Map<String, String> params = {
@@ -31,11 +32,11 @@ class SearchService extends BaseService {
             if (mediaType == 'person')
               continue; // TODO quitar para buscar personas
             else {
-              AudiovisualProvider av;
+              ModelBase av;
               if (mediaType == 'movie') {
-                av = AudiovisualProvider.fromJsonTypeMovie(data);
+                av = Movie()..fromJsonP(data);
               } else if (mediaType == 'tv') {
-                av = AudiovisualProvider.fromJsonTypeTv(data);
+                av = TvShow()..fromJsonP(data);
               }
               if (av != null &&
                   av.sinopsis != null &&

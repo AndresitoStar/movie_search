@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/splash/splash_viewmodel.dart';
-import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:stacked/stacked.dart';
 import 'package:provider/provider.dart';
 

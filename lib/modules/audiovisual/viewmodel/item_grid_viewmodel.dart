@@ -10,7 +10,9 @@ class ItemGridViewModel<T extends ModelBase> extends FutureViewModel<ModelBase> 
   final AudiovisualService _audiovisualService;
   final MyDatabase _db;
 
-  bool isFavourite = false;
+  bool get isFavourite =>
+      data != null && data.data != null ? data.data.isFavourite : false;
+
   bool _highQualityImage = false;
   String baseImageUrl = URL_IMAGE_SMALL;
 
@@ -28,7 +30,6 @@ class ItemGridViewModel<T extends ModelBase> extends FutureViewModel<ModelBase> 
     final dbData = results[1];
     if (dbData != null) {
       _param.data = dbData;
-      isFavourite = _param.data.isFavourite;
     }
     setInitialised(true);
     return _param;
@@ -67,12 +68,11 @@ class ItemGridViewModel<T extends ModelBase> extends FutureViewModel<ModelBase> 
     try {
       if (data.data == null) await _cacheData();
       await _db.toggleFavouriteAudiovisual(data.data);
-      isFavourite = !isFavourite;
     } catch (e) {
       setError(e);
     }
     setBusy(false);
-    notifyListeners();
+    initialise();
   }
 
 }

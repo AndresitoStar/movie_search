@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
+import 'package:movie_search/modules/audiovisual/model/movie.dart';
+import 'package:movie_search/modules/audiovisual/model/serie.dart';
 import 'package:movie_search/rest/resolver.dart';
 
 class AudiovisualService extends BaseService {
@@ -25,7 +27,16 @@ class AudiovisualService extends BaseService {
     var response = await clientTMDB.get('$type/$id', queryParameters: params);
     if (response.statusCode == 200) {
       final data = response.data;
-      T av = ModelBase.fromJson(T, data);
+      ModelBase av;
+      try {
+        av = ModelBase.fromJson(T, data);
+      } catch (e) {
+        if (type == 'movie') {
+          av = Movie()..fromJsonP(data);
+        } else if (type == 'tv') {
+          av = TvShow()..fromJsonP(data);
+        }
+      }
 
       String paises;
       String anno;

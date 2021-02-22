@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
 import 'package:movie_search/modules/splash/splash_screen.dart';
-import 'package:movie_search/modules/trending/trending_page.dart';
-import 'package:movie_search/modules/trending/trending_viewmodel.dart';
-import 'package:movie_search/ui/screens/dashboard.dart';
 import 'package:movie_search/ui/screens/onboard.dart';
-import 'package:provider/provider.dart';
 
 final routes = {
   SplashScreen.route: (ctx) => SplashScreen(),
   HomeScreen.routeName: (ctx) => HomeScreen(),
-  // TrendingPage.routeName: (ctx) => TrendingPage(),
-  Dashboard.routeName: (ctx) => Dashboard(),
   SearchScreen.routeName: (ctx) => SearchScreen(),
   OnboardScreen.routeName: (ctx) => OnboardScreen(),
 };

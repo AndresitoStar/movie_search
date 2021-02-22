@@ -13,4 +13,5 @@ class MyIcons {
   static const IconData default_image = FrinoIcons.f_image;
   static const IconData imdb = FontAwesomeIcons.imdb;
   static const IconData quality = Icons.high_quality_rounded;
+  static const IconData history = FrinoIcons.f_clock;
 }

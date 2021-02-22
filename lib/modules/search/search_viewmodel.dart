@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/search/search_category.dart';
 import 'package:movie_search/modules/search/search_service.dart';
-import 'package:movie_search/providers/audiovisual_single_provider.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:stacked/stacked.dart';
@@ -11,15 +11,15 @@ class SearchViewModel extends BaseViewModel {
   final SearchService _service;
   FormGroup form;
 
-  List<AudiovisualProvider> _movies = [];
+  List<ModelBase> _movies;
 
-  List<AudiovisualProvider> get movies => [..._movies];
+  List<ModelBase> get movies => _movies != null ? [..._movies] : null;
 
   int _total = -1;
   int _page = 1;
   int _totalPage = -1;
 
-  bool get hasMore => _movies.length < _total && _page < _totalPage;
+  bool get hasMore => movies.length < _total && _page < _totalPage;
 
   final _debounce = Debounce(milliseconds: 300);
 
@@ -28,7 +28,8 @@ class SearchViewModel extends BaseViewModel {
 
   FormControl<String> get queryControl => this.form.controls[FORM_QUERY];
 
-  FormControl<SearchCategory> get categoryControl => this.form.controls[FORM_CATEGORY];
+  FormControl<SearchCategory> get categoryControl =>
+      this.form.controls[FORM_CATEGORY];
 
   SearchCategory get actualCategory => categoryControl.value;
 

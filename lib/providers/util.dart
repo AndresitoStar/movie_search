@@ -2,13 +2,12 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'audiovisual_single_provider.dart';
-
 class SearchResponse {
-  final List<AudiovisualProvider> result;
+  final List<ModelBase> result;
   final int totalResult;
   final int totalPageResult;
 
@@ -98,19 +97,42 @@ class SharedPreferencesHelper {
   SharedPreferencesHelper._() {
     _streamForRecent = BehaviorSubject<bool>();
     isActiveRecent().then((value) => _streamForRecent.add(value));
+
+    _streamForSearchHistory = BehaviorSubject<List<String>>();
+    getSearchHistory().then((value) => _streamForSearchHistory.add(value));
   }
 
   StreamController<bool> _streamForRecent;
+  StreamController<List<String>> _streamForSearchHistory;
 
   Stream<bool> get streamForRecent => _streamForRecent.stream;
 
+  Stream<List<String>> get streamForSearchHistory =>
+      _streamForSearchHistory.stream;
+
   Function(bool) get changeActiveRecent => _streamForRecent.sink.add;
 
-  dispose() => _streamForRecent?.close();
+  updateSearchHistory(String query) {
+    getSearchHistory().then((value) {
+      value.add(query);
+      _streamForSearchHistory.sink.add(value);
+      setSearchHistory(value);
+    });
+  }
+
+  dispose() {
+    _streamForRecent?.close();
+    _streamForSearchHistory?.close();
+  }
 
   static Future _setBoolean(String key, bool value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.setBool(key, value);
+  }
+
+  static Future _setList(String key, List value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.setStringList(key, value.toList());
   }
 
   static Future<bool> _getBoolean(String key) async {
@@ -121,6 +143,16 @@ class SharedPreferencesHelper {
       result = prefs.getBool(key);
     } catch (e) {}
     return result ?? false;
+  }
+
+  static Future<List<T>> _getList<T extends Object>(String key) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List result;
+    try {
+      result = prefs.getStringList(key).toSet().toList();
+    } catch (e) {}
+    return result ?? [];
   }
 
   static Future<bool> wasHereBefore() async {
@@ -137,5 +169,13 @@ class SharedPreferencesHelper {
 
   static void setActiveRecent(bool value) async {
     _setBoolean('ACTIVE_RECENT', value);
+  }
+
+  static Future<List<String>> getSearchHistory() async {
+    return _getList<String>('SEARCH_HISTORY');
+  }
+
+  static void setSearchHistory(List<String> value) async {
+    _setList('SEARCH_HISTORY', value);
   }
 }

@@ -18,7 +18,8 @@ class TrendingService extends BaseService {
     Map<String, String> params = {...baseParams, 'page': page.toString()};
 
     try {
-      var response = await clientTMDB.get('trending/$type/week',
+      var response = await clientTMDB.get('trending/$type/day',
+      // var response = await clientTMDB.get('trending/$type/week',
           queryParameters: params);
       if (response.statusCode == 200) {
         result = [];
