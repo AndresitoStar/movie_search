@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
@@ -11,10 +12,12 @@ class ItemDetailViewModel<T extends ModelBase>
   final AudiovisualService _service;
   final MyDatabase _db;
 
-  ItemDetailViewModel(this._param, this._service, this._db);
+  ItemDetailViewModel(this._param, this._service, this._db)
+      : scrollController = ScrollController();
 
   bool _highQualityImage = false;
   String baseImageUrl = URL_IMAGE_MEDIUM;
+  final ScrollController scrollController;
 
   bool get isHighQualityImage => _highQualityImage;
 
@@ -24,6 +27,12 @@ class ItemDetailViewModel<T extends ModelBase>
 
   bool get isFavourite =>
       data != null && data.data != null ? data.data.isFavourite : false;
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Future<ModelBase> futureToRun() async {
@@ -63,18 +72,6 @@ class ItemDetailViewModel<T extends ModelBase>
     } catch (e) {
       return false;
     }
-  }
-
-  Future toggleFavourite() async {
-    setBusy(true);
-    try {
-      if (data.data == null) await _cacheData();
-      await _db.toggleFavouriteAudiovisual(data.data);
-      initialise();
-    } catch (e) {
-      setError(e);
-    }
-    setBusy(false);
   }
 
   Future toggleHighQualityImage() async {

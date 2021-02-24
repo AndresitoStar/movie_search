@@ -12,6 +12,12 @@ class AudiovisualTable extends Table {
 
   TextColumn get titulo => text()();
 
+  TextColumn get originalTitle => text()();
+
+  TextColumn get imageList => text()();
+
+  TextColumn get tagline => text()();
+
   TextColumn get sinopsis => text()();
 
   TextColumn get category => text().nullable()();

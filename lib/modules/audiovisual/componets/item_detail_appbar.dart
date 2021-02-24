@@ -16,7 +16,7 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
       floating: true,
       pinned: true,
       snap: true,
-      expandedHeight: mq.size.height / mq.devicePixelRatio * 2,
+      expandedHeight: mq.size.height * 2/3,
       elevation: 0,
       primary: true,
       automaticallyImplyLeading: false,
@@ -45,15 +45,12 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
 
           return Opacity(
             opacity: opacity,
-            child: Column(
-              children: [
-                Flexible(
-                  child: Container(
-                    width: double.infinity,
-                    child: ItemDetailMainImage(),
-                  ),
-                ),
-              ],
+            child: FlexibleSpaceBar(
+              collapseMode: CollapseMode.pin,
+              background: Container(
+                width: double.infinity,
+                child: ItemDetailMainImage(),
+              ),
             ),
           );
         },

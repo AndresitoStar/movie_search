@@ -9,9 +9,7 @@ import 'package:stacked/stacked.dart';
 class ItemDetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
   @override
   Widget build(BuildContext context, model) {
-    final mq = MediaQuery.of(context);
     return Container(
-      height: mq.size.height / mq.devicePixelRatio * 2,
       color: Theme.of(context).primaryColor,
       child: Material(
         child: GestureDetector(
@@ -19,14 +17,11 @@ class ItemDetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
               ? () => _previewImageDialog(
                   context, '${model.baseImageUrl}${model.image}')
               : null,
-          child: model.withImage
-              ? Stack(
+          child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    CachedNetworkImage(
+                    model.withImage ? CachedNetworkImage(
                       imageUrl: '${model.baseImageUrl}${model.image}',
-                      color: Colors.black12,
-                      colorBlendMode: BlendMode.darken,
                       placeholder: (_, __) => CachedNetworkImage(
                           fit: BoxFit.cover,
                           imageUrl: '$URL_IMAGE_SMALL${model.data?.image}'),
@@ -34,6 +29,8 @@ class ItemDetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
                           height: MediaQuery.of(ctx).size.height * 0.6),
                       fit: BoxFit.cover,
                       width: double.infinity,
+                    ) : Card(
+                      child: PlaceholderImage(height: 250),
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -61,8 +58,7 @@ class ItemDetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
                         child: LinearProgressIndicator(),
                       )
                   ],
-                )
-              : PlaceholderImage(height: mq.size.height * 0.6),
+                ),
         ),
       ),
     );

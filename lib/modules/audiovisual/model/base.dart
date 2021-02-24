@@ -13,6 +13,8 @@ abstract class ModelBase {
   String image;
   AudiovisualTableData data;
 
+  List<String> get imageList => data != null ? data.imageList.split(',') : null;
+
   String get type;
 
   static final _constructors = {
@@ -41,7 +43,7 @@ abstract class ModelBase {
     this.id = data.id;
     this.data = data;
     this.title = data.titulo;
-    this.titleOriginal = data.titulo;
+    this.titleOriginal = data.originalTitle;
     this.voteAverage = num.tryParse(data.score);
     this.yearOriginal = data.anno;
     this.sinopsis = data.sinopsis;

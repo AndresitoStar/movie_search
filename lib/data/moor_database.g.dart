@@ -11,6 +11,9 @@ class AudiovisualTableData extends DataClass
     implements Insertable<AudiovisualTableData> {
   final String id;
   final String titulo;
+  final String originalTitle;
+  final String imageList;
+  final String tagline;
   final String sinopsis;
   final String category;
   final String image;
@@ -31,6 +34,9 @@ class AudiovisualTableData extends DataClass
   AudiovisualTableData(
       {@required this.id,
       @required this.titulo,
+      @required this.originalTitle,
+      @required this.imageList,
+      @required this.tagline,
       @required this.sinopsis,
       this.category,
       this.image,
@@ -59,6 +65,12 @@ class AudiovisualTableData extends DataClass
       id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       titulo:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}titulo']),
+      originalTitle: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}original_title']),
+      imageList: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}image_list']),
+      tagline:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}tagline']),
       sinopsis: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}sinopsis']),
       category: stringType
@@ -100,6 +112,15 @@ class AudiovisualTableData extends DataClass
     }
     if (!nullToAbsent || titulo != null) {
       map['titulo'] = Variable<String>(titulo);
+    }
+    if (!nullToAbsent || originalTitle != null) {
+      map['original_title'] = Variable<String>(originalTitle);
+    }
+    if (!nullToAbsent || imageList != null) {
+      map['image_list'] = Variable<String>(imageList);
+    }
+    if (!nullToAbsent || tagline != null) {
+      map['tagline'] = Variable<String>(tagline);
     }
     if (!nullToAbsent || sinopsis != null) {
       map['sinopsis'] = Variable<String>(sinopsis);
@@ -160,6 +181,15 @@ class AudiovisualTableData extends DataClass
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       titulo:
           titulo == null && nullToAbsent ? const Value.absent() : Value(titulo),
+      originalTitle: originalTitle == null && nullToAbsent
+          ? const Value.absent()
+          : Value(originalTitle),
+      imageList: imageList == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageList),
+      tagline: tagline == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tagline),
       sinopsis: sinopsis == null && nullToAbsent
           ? const Value.absent()
           : Value(sinopsis),
@@ -210,6 +240,9 @@ class AudiovisualTableData extends DataClass
     return AudiovisualTableData(
       id: serializer.fromJson<String>(json['id']),
       titulo: serializer.fromJson<String>(json['titulo']),
+      originalTitle: serializer.fromJson<String>(json['originalTitle']),
+      imageList: serializer.fromJson<String>(json['imageList']),
+      tagline: serializer.fromJson<String>(json['tagline']),
       sinopsis: serializer.fromJson<String>(json['sinopsis']),
       category: serializer.fromJson<String>(json['category']),
       image: serializer.fromJson<String>(json['image']),
@@ -235,6 +268,9 @@ class AudiovisualTableData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'titulo': serializer.toJson<String>(titulo),
+      'originalTitle': serializer.toJson<String>(originalTitle),
+      'imageList': serializer.toJson<String>(imageList),
+      'tagline': serializer.toJson<String>(tagline),
       'sinopsis': serializer.toJson<String>(sinopsis),
       'category': serializer.toJson<String>(category),
       'image': serializer.toJson<String>(image),
@@ -258,6 +294,9 @@ class AudiovisualTableData extends DataClass
   AudiovisualTableData copyWith(
           {String id,
           String titulo,
+          String originalTitle,
+          String imageList,
+          String tagline,
           String sinopsis,
           String category,
           String image,
@@ -278,6 +317,9 @@ class AudiovisualTableData extends DataClass
       AudiovisualTableData(
         id: id ?? this.id,
         titulo: titulo ?? this.titulo,
+        originalTitle: originalTitle ?? this.originalTitle,
+        imageList: imageList ?? this.imageList,
+        tagline: tagline ?? this.tagline,
         sinopsis: sinopsis ?? this.sinopsis,
         category: category ?? this.category,
         image: image ?? this.image,
@@ -301,6 +343,9 @@ class AudiovisualTableData extends DataClass
     return (StringBuffer('AudiovisualTableData(')
           ..write('id: $id, ')
           ..write('titulo: $titulo, ')
+          ..write('originalTitle: $originalTitle, ')
+          ..write('imageList: $imageList, ')
+          ..write('tagline: $tagline, ')
           ..write('sinopsis: $sinopsis, ')
           ..write('category: $category, ')
           ..write('image: $image, ')
@@ -328,48 +373,52 @@ class AudiovisualTableData extends DataClass
       $mrjc(
           titulo.hashCode,
           $mrjc(
-              sinopsis.hashCode,
+              originalTitle.hashCode,
               $mrjc(
-                  category.hashCode,
+                  imageList.hashCode,
                   $mrjc(
-                      image.hashCode,
+                      tagline.hashCode,
                       $mrjc(
-                          genre.hashCode,
+                          sinopsis.hashCode,
                           $mrjc(
-                              anno.hashCode,
+                              category.hashCode,
                               $mrjc(
-                                  pais.hashCode,
+                                  image.hashCode,
                                   $mrjc(
-                                      score.hashCode,
+                                      genre.hashCode,
                                       $mrjc(
-                                          idioma.hashCode,
+                                          anno.hashCode,
                                           $mrjc(
-                                              director.hashCode,
+                                              pais.hashCode,
                                               $mrjc(
-                                                  reparto.hashCode,
+                                                  score.hashCode,
                                                   $mrjc(
-                                                      productora.hashCode,
+                                                      idioma.hashCode,
                                                       $mrjc(
-                                                          temp.hashCode,
+                                                          director.hashCode,
                                                           $mrjc(
-                                                              duracion.hashCode,
+                                                              reparto.hashCode,
                                                               $mrjc(
-                                                                  capitulos
+                                                                  productora
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      fecha_reg
+                                                                      temp
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          externalId
+                                                                          duracion
                                                                               .hashCode,
-                                                                          isFavourite
-                                                                              .hashCode)))))))))))))))))));
+                                                                          $mrjc(
+                                                                              capitulos.hashCode,
+                                                                              $mrjc(fecha_reg.hashCode, $mrjc(externalId.hashCode, isFavourite.hashCode))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is AudiovisualTableData &&
           other.id == this.id &&
           other.titulo == this.titulo &&
+          other.originalTitle == this.originalTitle &&
+          other.imageList == this.imageList &&
+          other.tagline == this.tagline &&
           other.sinopsis == this.sinopsis &&
           other.category == this.category &&
           other.image == this.image &&
@@ -392,6 +441,9 @@ class AudiovisualTableData extends DataClass
 class AudiovisualTableCompanion extends UpdateCompanion<AudiovisualTableData> {
   final Value<String> id;
   final Value<String> titulo;
+  final Value<String> originalTitle;
+  final Value<String> imageList;
+  final Value<String> tagline;
   final Value<String> sinopsis;
   final Value<String> category;
   final Value<String> image;
@@ -412,6 +464,9 @@ class AudiovisualTableCompanion extends UpdateCompanion<AudiovisualTableData> {
   const AudiovisualTableCompanion({
     this.id = const Value.absent(),
     this.titulo = const Value.absent(),
+    this.originalTitle = const Value.absent(),
+    this.imageList = const Value.absent(),
+    this.tagline = const Value.absent(),
     this.sinopsis = const Value.absent(),
     this.category = const Value.absent(),
     this.image = const Value.absent(),
@@ -433,6 +488,9 @@ class AudiovisualTableCompanion extends UpdateCompanion<AudiovisualTableData> {
   AudiovisualTableCompanion.insert({
     @required String id,
     @required String titulo,
+    @required String originalTitle,
+    @required String imageList,
+    @required String tagline,
     @required String sinopsis,
     this.category = const Value.absent(),
     this.image = const Value.absent(),
@@ -452,11 +510,17 @@ class AudiovisualTableCompanion extends UpdateCompanion<AudiovisualTableData> {
     this.isFavourite = const Value.absent(),
   })  : id = Value(id),
         titulo = Value(titulo),
+        originalTitle = Value(originalTitle),
+        imageList = Value(imageList),
+        tagline = Value(tagline),
         sinopsis = Value(sinopsis),
         genre = Value(genre);
   static Insertable<AudiovisualTableData> custom({
     Expression<String> id,
     Expression<String> titulo,
+    Expression<String> originalTitle,
+    Expression<String> imageList,
+    Expression<String> tagline,
     Expression<String> sinopsis,
     Expression<String> category,
     Expression<String> image,
@@ -478,6 +542,9 @@ class AudiovisualTableCompanion extends UpdateCompanion<AudiovisualTableData> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (titulo != null) 'titulo': titulo,
+      if (originalTitle != null) 'original_title': originalTitle,
+      if (imageList != null) 'image_list': imageList,
+      if (tagline != null) 'tagline': tagline,
       if (sinopsis != null) 'sinopsis': sinopsis,
       if (category != null) 'category': category,
       if (image != null) 'image': image,
@@ -501,6 +568,9 @@ class AudiovisualTableCompanion extends UpdateCompanion<AudiovisualTableData> {
   AudiovisualTableCompanion copyWith(
       {Value<String> id,
       Value<String> titulo,
+      Value<String> originalTitle,
+      Value<String> imageList,
+      Value<String> tagline,
       Value<String> sinopsis,
       Value<String> category,
       Value<String> image,
@@ -521,6 +591,9 @@ class AudiovisualTableCompanion extends UpdateCompanion<AudiovisualTableData> {
     return AudiovisualTableCompanion(
       id: id ?? this.id,
       titulo: titulo ?? this.titulo,
+      originalTitle: originalTitle ?? this.originalTitle,
+      imageList: imageList ?? this.imageList,
+      tagline: tagline ?? this.tagline,
       sinopsis: sinopsis ?? this.sinopsis,
       category: category ?? this.category,
       image: image ?? this.image,
@@ -549,6 +622,15 @@ class AudiovisualTableCompanion extends UpdateCompanion<AudiovisualTableData> {
     }
     if (titulo.present) {
       map['titulo'] = Variable<String>(titulo.value);
+    }
+    if (originalTitle.present) {
+      map['original_title'] = Variable<String>(originalTitle.value);
+    }
+    if (imageList.present) {
+      map['image_list'] = Variable<String>(imageList.value);
+    }
+    if (tagline.present) {
+      map['tagline'] = Variable<String>(tagline.value);
     }
     if (sinopsis.present) {
       map['sinopsis'] = Variable<String>(sinopsis.value);
@@ -609,6 +691,9 @@ class AudiovisualTableCompanion extends UpdateCompanion<AudiovisualTableData> {
     return (StringBuffer('AudiovisualTableCompanion(')
           ..write('id: $id, ')
           ..write('titulo: $titulo, ')
+          ..write('originalTitle: $originalTitle, ')
+          ..write('imageList: $imageList, ')
+          ..write('tagline: $tagline, ')
           ..write('sinopsis: $sinopsis, ')
           ..write('category: $category, ')
           ..write('image: $image, ')
@@ -655,6 +740,44 @@ class $AudiovisualTableTable extends AudiovisualTable
   GeneratedTextColumn _constructTitulo() {
     return GeneratedTextColumn(
       'titulo',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _originalTitleMeta =
+      const VerificationMeta('originalTitle');
+  GeneratedTextColumn _originalTitle;
+  @override
+  GeneratedTextColumn get originalTitle =>
+      _originalTitle ??= _constructOriginalTitle();
+  GeneratedTextColumn _constructOriginalTitle() {
+    return GeneratedTextColumn(
+      'original_title',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _imageListMeta = const VerificationMeta('imageList');
+  GeneratedTextColumn _imageList;
+  @override
+  GeneratedTextColumn get imageList => _imageList ??= _constructImageList();
+  GeneratedTextColumn _constructImageList() {
+    return GeneratedTextColumn(
+      'image_list',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _taglineMeta = const VerificationMeta('tagline');
+  GeneratedTextColumn _tagline;
+  @override
+  GeneratedTextColumn get tagline => _tagline ??= _constructTagline();
+  GeneratedTextColumn _constructTagline() {
+    return GeneratedTextColumn(
+      'tagline',
       $tableName,
       false,
     );
@@ -870,6 +993,9 @@ class $AudiovisualTableTable extends AudiovisualTable
   List<GeneratedColumn> get $columns => [
         id,
         titulo,
+        originalTitle,
+        imageList,
+        tagline,
         sinopsis,
         category,
         image,
@@ -910,6 +1036,26 @@ class $AudiovisualTableTable extends AudiovisualTable
           titulo.isAcceptableOrUnknown(data['titulo'], _tituloMeta));
     } else if (isInserting) {
       context.missing(_tituloMeta);
+    }
+    if (data.containsKey('original_title')) {
+      context.handle(
+          _originalTitleMeta,
+          originalTitle.isAcceptableOrUnknown(
+              data['original_title'], _originalTitleMeta));
+    } else if (isInserting) {
+      context.missing(_originalTitleMeta);
+    }
+    if (data.containsKey('image_list')) {
+      context.handle(_imageListMeta,
+          imageList.isAcceptableOrUnknown(data['image_list'], _imageListMeta));
+    } else if (isInserting) {
+      context.missing(_imageListMeta);
+    }
+    if (data.containsKey('tagline')) {
+      context.handle(_taglineMeta,
+          tagline.isAcceptableOrUnknown(data['tagline'], _taglineMeta));
+    } else if (isInserting) {
+      context.missing(_taglineMeta);
     }
     if (data.containsKey('sinopsis')) {
       context.handle(_sinopsisMeta,

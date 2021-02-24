@@ -41,6 +41,9 @@ class AudiovisualService extends BaseService {
       String paises;
       String anno;
       String duracion;
+
+      String tagLine = data['tagline'];
+      String images = _processImages(data['images']);
       if (type == 'movie') {
         paises = data['production_countries'] != null &&
                 data['production_countries'].isNotEmpty
@@ -91,6 +94,12 @@ class AudiovisualService extends BaseService {
           // reparto: data["Actors"],
           sinopsis: av.sinopsis,
           titulo: av.title,
+          originalTitle: av.titleOriginal,
+          tagline: tagLine,
+          imageList: images,
+          fecha_reg: DateTime.now(),
+          director: null,
+          reparto: null,
           category: type,
           isFavourite: false,
           genre: data['genres']
@@ -98,6 +107,21 @@ class AudiovisualService extends BaseService {
               ?.reduce((value, element) => '$value' + ',' + '$element'));
       av.fromData(fullData);
       return av;
+    }
+    return null;
+  }
+
+  String _processImages(Map<String, dynamic> imagesMap) {
+    if (imagesMap == null) return null;
+    try {
+      // final backs = imagesMap['backdrops'] as List;
+      final posters = imagesMap['posters'] as List;
+
+      // final backsImages = backs.map((e) => e['file_path']).join(',');
+      final posterImages = posters.map((e) => e['file_path']).join(',');
+      return '$posterImages';
+    } catch (e) {
+      print(e);
     }
     return null;
   }

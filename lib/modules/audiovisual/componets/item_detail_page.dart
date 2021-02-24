@@ -8,6 +8,7 @@ import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_appbar.dart';
+import 'item_detail_carousel.dart';
 
 class ItemDetailPage<T extends ModelBase> extends StatelessWidget {
   final ModelBase item;
@@ -29,11 +30,15 @@ class ItemDetailPage<T extends ModelBase> extends StatelessWidget {
                     child: Text('${model.modelError?.toString()}'),
                   )
                 : CustomScrollView(
+                    controller: model.scrollController,
                     slivers: <Widget>[
                       ItemDetailSliverAppBar(),
                       if (model.initialised) ItemDetailContent(),
+                      if (model.initialised &&
+                          model.data.imageList != null &&
+                          model.data.imageList.isNotEmpty)
+                        ItemDetailCarouselImages(imageList: model.data.imageList)
                     ],
-                    physics: ClampingScrollPhysics(),
                   ),
           ),
         ),
