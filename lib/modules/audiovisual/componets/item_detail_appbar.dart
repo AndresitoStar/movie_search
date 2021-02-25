@@ -13,9 +13,7 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
     final mq = MediaQuery.of(context);
     final theme = Theme.of(context);
     return SliverAppBar(
-      floating: true,
       pinned: true,
-      snap: true,
       expandedHeight: mq.size.height * 2/3,
       elevation: 0,
       primary: true,
@@ -46,7 +44,7 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
           return Opacity(
             opacity: opacity,
             child: FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
+              collapseMode: CollapseMode.parallax,
               background: Container(
                 width: double.infinity,
                 child: ItemDetailMainImage(),

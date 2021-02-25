@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
+import 'package:movie_search/ui/widgets/dialog_image.dart';
 
 class ItemDetailCarouselImages extends StatelessWidget {
   final List<String> imageList;
@@ -15,17 +16,20 @@ class ItemDetailCarouselImages extends StatelessWidget {
     final items = imageList
         .toSet()
         .map(
-          (imageUrl) => Card(
-            clipBehavior: Clip.hardEdge,
-            color: Theme.of(context).scaffoldBackgroundColor,
-            elevation: 0,
-            child: CachedNetworkImage(
-              imageUrl: '$URL_IMAGE_MEDIUM$imageUrl',
-              placeholder: (_, __) => CachedNetworkImage(
-                  fit: BoxFit.cover, imageUrl: '$URL_IMAGE_SMALL$imageUrl'),
-              errorWidget: (ctx, _, __) => PlaceholderImage(height: 400),
-              fit: BoxFit.fitWidth,
-              width: double.infinity,
+          (imageUrl) => GestureDetector(
+            onTap: () => DialogImage.show(context: context, imageUrl: '$URL_IMAGE_MEDIUM$imageUrl'),
+            child: Card(
+              clipBehavior: Clip.hardEdge,
+              color: Theme.of(context).scaffoldBackgroundColor,
+              elevation: 0,
+              child: CachedNetworkImage(
+                imageUrl: '$URL_IMAGE_MEDIUM$imageUrl',
+                placeholder: (_, __) => CachedNetworkImage(
+                    fit: BoxFit.cover, imageUrl: '$URL_IMAGE_SMALL$imageUrl'),
+                errorWidget: (ctx, _, __) => PlaceholderImage(height: 400),
+                fit: BoxFit.fitWidth,
+                width: double.infinity,
+              ),
             ),
           ),
         )
@@ -41,7 +45,7 @@ class ItemDetailCarouselImages extends StatelessWidget {
               aspectRatio: 16 / 9,
               viewportFraction: 0.7,
               initialPage: 0,
-              enableInfiniteScroll: true,
+              enableInfiniteScroll: false,
               reverse: false,
               autoPlay: true,
               autoPlayInterval: Duration(seconds: 3),
