@@ -17,11 +17,12 @@ class ItemDetailCarouselImages extends StatelessWidget {
         .toSet()
         .map(
           (imageUrl) => GestureDetector(
-            onTap: () => DialogImage.show(context: context, imageUrl: '$URL_IMAGE_MEDIUM$imageUrl'),
+            onTap: () => DialogImage.show(
+                context: context, imageUrl: '$URL_IMAGE_MEDIUM$imageUrl'),
             child: Card(
               clipBehavior: Clip.hardEdge,
               color: Theme.of(context).scaffoldBackgroundColor,
-              elevation: 0,
+              elevation: 5,
               child: CachedNetworkImage(
                 imageUrl: '$URL_IMAGE_MEDIUM$imageUrl',
                 placeholder: (_, __) => CachedNetworkImage(
@@ -34,26 +35,37 @@ class ItemDetailCarouselImages extends StatelessWidget {
           ),
         )
         .toList();
+    final height = 300.0;
     return SliverToBoxAdapter(
-      child: Container(
-        height: 400,
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: CarouselSlider(
-            items: items,
-            options: CarouselOptions(
-              height: 400,
-              aspectRatio: 16 / 9,
-              viewportFraction: 0.7,
-              initialPage: 0,
-              enableInfiniteScroll: false,
-              reverse: false,
-              autoPlay: true,
-              autoPlayInterval: Duration(seconds: 3),
-              autoPlayAnimationDuration: Duration(milliseconds: 800),
-              autoPlayCurve: Curves.fastOutSlowIn,
-              enlargeCenterPage: true,
-              scrollDirection: Axis.horizontal,
-            )),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Divider(indent: 20, endIndent: 20),
+          ListTile(
+              title: Text('Poster\'s',
+                  style: Theme.of(context).textTheme.headline5)),
+          Container(
+            // height: 250,
+            constraints:
+                BoxConstraints(minHeight: height - 100, maxHeight: height + 50),
+            child: CarouselSlider(
+                items: items,
+                options: CarouselOptions(
+                  // height: 250,
+                  viewportFraction: 0.40,
+                  initialPage: 0,
+                  enableInfiniteScroll: false,
+                  disableCenter: true,
+                  reverse: false,
+                  autoPlay: true,
+                  autoPlayInterval: Duration(seconds: 3),
+                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  enlargeCenterPage: false,
+                  scrollDirection: Axis.horizontal,
+                )),
+          ),
+        ],
       ),
     );
   }

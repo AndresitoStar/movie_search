@@ -49,10 +49,10 @@ class PersonItemGridView extends StatelessWidget {
                         child: Material(
                           color: Theme.of(context).cardColor,
                           child: Padding(
-                            padding: EdgeInsets.all(5),
+                            padding: EdgeInsets.all(0),
                             child: ClipRRect(
                               clipBehavior: Clip.hardEdge,
-                              borderRadius: BorderRadius.circular(3),
+                              // borderRadius: BorderRadius.circular(3),
                               child: person.profilePath != null
                                   ? CachedNetworkImage(
                                       imageUrl:

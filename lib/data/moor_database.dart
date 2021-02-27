@@ -303,4 +303,11 @@ class MyDatabase extends _$MyDatabase {
     final result = await query.map((row) => row.read(count)).getSingle();
     return (result ?? 0) > 0;
   }
+
+  Future<List<GenreTableData>> getGenres(String type) async {
+    var query = select(genreTable);
+
+    query.where((a) => a.type.equals(type));
+    return query.get();
+  }
 }

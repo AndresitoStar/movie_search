@@ -61,10 +61,10 @@ class ItemGridView<T extends ModelBase> extends StatelessWidget {
                               ? Theme.of(context).cardColor
                               : Colors.white,
                           child: Padding(
-                            padding: EdgeInsets.all(trending ? 5 : 3),
+                            padding: EdgeInsets.all(0),
                             child: ClipRRect(
                               clipBehavior: Clip.hardEdge,
-                              borderRadius: BorderRadius.circular(3),
+                              // borderRadius: BorderRadius.circular(3),
                               child: audiovisual.image != null
                                   ? CachedNetworkImage(
                                 imageUrl:

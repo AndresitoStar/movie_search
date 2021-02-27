@@ -15,7 +15,7 @@ class AudiovisualService extends BaseService {
   }
 
   AudiovisualService._() : super();
-  
+
   Future<ModelBase> getById<T extends ModelBase>(
       {String type, String id}) async {
     Map<String, String> params = {
@@ -109,6 +109,30 @@ class AudiovisualService extends BaseService {
       return av;
     }
     return null;
+  }
+
+  Future<List<ModelBase>> getRecomendations(String type, String typeId) async {
+    List<ModelBase> result = [];
+    try {
+      var response = await clientTMDB.get('$type/$typeId/recommendations',
+          queryParameters: baseParams);
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final list = data['results'] as List;
+        if (list != null) {
+          for (var i = 0; i < list.length; i++) {
+            ModelBase av;
+            if (type == 'movie') {
+              av = Movie()..fromJsonP(list[i]);
+            } else if (type == 'tv') {
+              av = TvShow()..fromJsonP(list[i]);
+            }
+            result.add(av);
+          }
+        }
+      }
+    } catch (e) {}
+    return result;
   }
 
   String _processImages(Map<String, dynamic> imagesMap) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_content.dart';
-import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:provider/provider.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/service/service.dart';
@@ -9,6 +8,7 @@ import 'package:stacked/stacked.dart';
 
 import 'item_detail_appbar.dart';
 import 'item_detail_carousel.dart';
+import 'item_recomendation_horizontal_list.dart';
 
 class ItemDetailPage<T extends ModelBase> extends StatelessWidget {
   final ModelBase item;
@@ -37,7 +37,8 @@ class ItemDetailPage<T extends ModelBase> extends StatelessWidget {
                       if (model.initialised &&
                           model.data.imageList != null &&
                           model.data.imageList.isNotEmpty)
-                        ItemDetailCarouselImages(imageList: model.data.imageList)
+                        ItemDetailCarouselImages(imageList: model.data.imageList),
+                      if (model.initialised) ItemDetailRecomendationHorizontalList(model.data.type, model.data.id),
                     ],
                   ),
           ),

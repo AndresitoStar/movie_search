@@ -3,12 +3,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frino_icons/frino_icons.dart';
 
 class MyIcons {
+  static const IconData home = FrinoIcons.f_home_simple;
+  static const IconData settings = FrinoIcons.f_settings;
+  static const IconData categories = FrinoIcons.f_dashboard;
+
   static const IconData arrow_left = Icons.arrow_back_ios;
   static const IconData arrow_right = FrinoIcons.f_arrow_right;
   static const IconData favourite_on = Icons.favorite_rounded;
   static const IconData favourite_off = FrinoIcons.f_heart;
   static const IconData clear = Icons.clear;
-  static const IconData search = FrinoIcons.f_search;
+  static const IconData search = FrinoIcons.f_search_2;
   static const IconData more = FrinoIcons.f_more_horizontal;
   static const IconData default_image = FrinoIcons.f_image;
   static const IconData imdb = FontAwesomeIcons.imdb;
@@ -17,4 +21,7 @@ class MyIcons {
   static const IconData people = Icons.group_outlined;
   static const IconData castMale = FrinoIcons.f_male;
   static const IconData castFemale = FrinoIcons.f_female;
+
+  static const IconData movie = FrinoIcons.f_movie_tape;
+  static const IconData tv = FrinoIcons.f_tv;
 }

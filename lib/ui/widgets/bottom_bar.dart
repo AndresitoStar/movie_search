@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frino_icons/frino_icons.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
+import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/screens/settings.dart';
 
 class MyBottomBar extends StatelessWidget {
@@ -39,10 +39,14 @@ class MyBottomBar extends StatelessWidget {
         }
       },
       items: [
-        BottomNavigationBarItem(icon: Icon(FrinoIcons.f_home), label: ''),
-        BottomNavigationBarItem(icon: Icon(FrinoIcons.f_search), label: ''),
-        BottomNavigationBarItem(icon: Icon(FrinoIcons.f_heart), label: ''),
-        BottomNavigationBarItem(icon: Icon(FrinoIcons.f_settings), label: ''),
+        BottomNavigationBarItem(icon: Icon(MyIcons.home), label: ''),
+        BottomNavigationBarItem(icon: Icon(MyIcons.search), label: ''),
+        BottomNavigationBarItem(
+          icon: Icon(MyIcons.favourite_off),
+          label: '',
+          activeIcon: Icon(MyIcons.favourite_on),
+        ),
+        BottomNavigationBarItem(icon: Icon(MyIcons.settings), label: ''),
       ],
     );
   }
