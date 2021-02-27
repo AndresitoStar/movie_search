@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
-import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
+import 'package:movie_search/modules/person/components/person_detail_main_image.dart';
+import 'package:movie_search/modules/person/viewmodel/person_detail_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/circular_button.dart';
 import 'package:stacked/stacked.dart';
 
 import 'dart:math' as math;
 
-class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
+class PersonDetailSliverAppBar extends ViewModelWidget<PersonDetailViewModel> {
   @override
   Widget build(BuildContext context, model) {
     final mq = MediaQuery.of(context);
@@ -47,7 +47,7 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
               collapseMode: CollapseMode.pin,
               background: Container(
                 width: double.infinity,
-                child: DetailMainImage(),
+                child: PersonDetailMainImage(),
               ),
             ),
           );

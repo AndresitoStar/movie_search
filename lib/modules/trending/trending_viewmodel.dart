@@ -73,7 +73,7 @@ class TrendingViewModel<T extends ModelBase> extends BaseViewModel {
 
   Future synchronize() async {
     TrendingResponse response =
-        await _trendingService.getTrending<T>(content.type);
+        await _trendingService.getPopular<T>(content.type);
     _total = response?.totalResult ?? -1;
     _items = response?.result ?? [];
     notifyListeners();
@@ -86,7 +86,7 @@ class TrendingViewModel<T extends ModelBase> extends BaseViewModel {
   Future _fetchMore() async {
     _actualPage++;
     TrendingResponse results =
-        await _trendingService.getTrending<T>(content.type, page: _actualPage);
+        await _trendingService.getPopular<T>(content.type, page: _actualPage);
     _items.addAll(results.result);
     notifyListeners();
   }

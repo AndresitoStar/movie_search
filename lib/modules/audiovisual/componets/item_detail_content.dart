@@ -1,12 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/audiovisual/componets/item_detail_carousel.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
-import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
-import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
 import 'package:movie_search/ui/icons.dart';
-import 'package:movie_search/ui/widgets/default_image.dart';
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_ui_util.dart';
@@ -67,11 +63,6 @@ class ItemDetailContent extends ViewModelWidget<ItemDetailViewModel> {
                               style: Theme.of(context).textTheme.headline4),
                         ),
                         Expanded(child: Container()),
-                        IconButton(
-                          icon: Icon(MyIcons.people),
-                          onPressed: null,
-                          iconSize: 40,
-                        ),
                         ItemLikeButton(
                           id: viewModel.data.id,
                           type: viewModel.data.type,
@@ -91,6 +82,8 @@ class ItemDetailContent extends ViewModelWidget<ItemDetailViewModel> {
                       ),
                     ),
                   ContentHorizontal(content: item.data?.sinopsis),
+                  Divider(),
+                  CreditHorizontalList(item.type, item.id),
                   ContentRow(
                     label1: 'Pais',
                     label2: 'Idioma',
@@ -117,9 +110,6 @@ class ItemDetailContent extends ViewModelWidget<ItemDetailViewModel> {
                   ContentDivider(value: item.data?.productora),
                   ContentHorizontal(
                       label: 'Productora', content: item.data?.productora),
-                  ContentDivider(value: item.data?.reparto),
-                  ContentHorizontal(
-                      label: 'Reparto', content: item.data?.reparto),
                 ],
               ),
             ],

@@ -15,4 +15,6 @@ class MyIcons {
   static const IconData quality = Icons.high_quality_rounded;
   static const IconData history = FrinoIcons.f_clock;
   static const IconData people = Icons.group_outlined;
+  static const IconData castMale = FrinoIcons.f_male;
+  static const IconData castFemale = FrinoIcons.f_female;
 }

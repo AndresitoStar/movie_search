@@ -13,7 +13,14 @@ abstract class ModelBase {
   String image;
   AudiovisualTableData data;
 
-  List<String> get imageList => data != null ? data.imageList.split(',') : null;
+  List<String> get imageList {
+    if (data != null) {
+      final list = data.imageList.split(',');
+      list.removeWhere((element) => element == null || element.isEmpty);
+      return list;
+    }
+    return null;
+  }
 
   String get type;
 
