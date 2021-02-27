@@ -44,7 +44,7 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
           return Opacity(
             opacity: opacity,
             child: FlexibleSpaceBar(
-              collapseMode: CollapseMode.parallax,
+              collapseMode: CollapseMode.pin,
               background: Container(
                 width: double.infinity,
                 child: ItemDetailMainImage(),

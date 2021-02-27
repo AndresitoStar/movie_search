@@ -71,6 +71,14 @@ class CountryTable extends Table {
   TextColumn get name => text()();
 }
 
+class GenreTable extends Table {
+  TextColumn get id => text()();
+
+  TextColumn get name => text()();
+
+  TextColumn get type => text()();
+}
+
 LazyDatabase _openConnection() {
   // the LazyDatabase util lets us find the right location for the file async.
   return LazyDatabase(() async {
@@ -82,12 +90,12 @@ LazyDatabase _openConnection() {
   });
 }
 
-@UseMoor(tables: [AudiovisualTable, LanguageTable, CountryTable])
+@UseMoor(tables: [AudiovisualTable, LanguageTable, CountryTable, GenreTable])
 class MyDatabase extends _$MyDatabase {
   MyDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -279,6 +287,19 @@ class MyDatabase extends _$MyDatabase {
   Future<bool> existLanguages() async {
     final count = languageTable.iso.count();
     final query = selectOnly(languageTable)..addColumns([count]);
+    final result = await query.map((row) => row.read(count)).getSingle();
+    return (result ?? 0) > 0;
+  }
+
+  Future insertGenres(List<GenreTableData> genres) async {
+    await delete(genreTable).go();
+    return batch((b) =>
+        b.insertAll(genreTable, genres, mode: InsertMode.insertOrReplace));
+  }
+
+  Future<bool> existGenres() async {
+    final count = genreTable.id.count();
+    final query = selectOnly(genreTable)..addColumns([count]);
     final result = await query.map((row) => row.read(count)).getSingle();
     return (result ?? 0) > 0;
   }

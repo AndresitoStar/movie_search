@@ -58,4 +58,28 @@ class SplashService extends BaseService {
 
     return result;
   }
+
+  Future<Map<int, String>> getGenres(String type) async {
+    Map<int, String> result = {};
+
+    try {
+      var response = await clientTMDB.get('/genre/$type/list',
+          queryParameters: baseParams);
+      if (response.statusCode == 200) {
+        var body = response.data['genres'] as List<dynamic>;
+        if (body.isNotEmpty) {
+          result = Map.fromIterable(body,
+              key: (item) => item['id'],
+              value: (item) => item['name']);
+        }
+      } else {
+        print(response.statusCode);
+        //TODO LANZAR EXCEPTION
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return result;
+  }
 }

@@ -14,6 +14,8 @@ class SplashViewModel extends FutureViewModel {
     return Future.wait([
       syncCountries(),
       syncLanguages(),
+      syncGenres('movie'),
+      syncGenres('tv'),
     ]);
   }
 
@@ -40,6 +42,21 @@ class SplashViewModel extends FutureViewModel {
           .map((entry) => LanguageTableData(iso: entry.key, name: entry.value))
           .toList();
       await _db.insertLanguages(dbLanguages);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future syncGenres(String type) async {
+    try {
+      var bool = await _db.existGenres();
+      if (bool) return;
+      var genres = await _splashService.getGenres(type);
+      final dbGenres = genres.entries
+          .map((entry) =>
+              GenreTableData(id: entry.key?.toString(), name: entry.value, type: type))
+          .toList();
+      await _db.insertGenres(dbGenres);
     } catch (e) {
       print(e);
     }
