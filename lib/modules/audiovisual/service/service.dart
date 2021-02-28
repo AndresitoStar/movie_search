@@ -32,9 +32,9 @@ class AudiovisualService extends BaseService {
         av = ModelBase.fromJson(T, data);
       } catch (e) {
         if (type == 'movie') {
-          av = Movie()..fromJsonP(data);
+          av = MovieOld()..fromJsonP(data);
         } else if (type == 'tv') {
-          av = TvShow()..fromJsonP(data);
+          av = Serie()..fromJsonP(data);
         }
       }
 
@@ -123,9 +123,9 @@ class AudiovisualService extends BaseService {
           for (var i = 0; i < list.length; i++) {
             ModelBase av;
             if (type == 'movie') {
-              av = Movie()..fromJsonP(list[i]);
+              av = MovieOld()..fromJsonP(list[i]);
             } else if (type == 'tv') {
-              av = TvShow()..fromJsonP(list[i]);
+              av = Serie()..fromJsonP(list[i]);
             }
             result.add(av);
           }

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/person/components/person_detail_appbar.dart';
 import 'package:movie_search/modules/person/components/person_detail_content.dart';
 import 'package:movie_search/modules/person/model/credit.dart';
+import 'package:movie_search/modules/person/model/person.dart';
 import 'package:movie_search/modules/person/viewmodel/person_detail_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class PersonDetailScren extends StatelessWidget {
-  final Cast param;
+  final Person param;
 
   const PersonDetailScren({Key key, @required this.param}) : super(key: key);
 

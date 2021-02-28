@@ -2,12 +2,13 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/service/service.dart';
 import 'package:movie_search/modules/person/model/credit.dart';
+import 'package:movie_search/modules/person/model/person.dart';
 import 'package:movie_search/modules/person/service/service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 
-class PersonItemViewModel extends FutureViewModel<Cast> {
-  final Cast _param;
+class PersonItemViewModel extends FutureViewModel<Person> {
+  final Person _param;
   final PersonService _service;
   final MyDatabase _db;
 
@@ -22,7 +23,7 @@ class PersonItemViewModel extends FutureViewModel<Cast> {
   PersonItemViewModel(this._service, this._param, this._db);
 
   @override
-  Future<Cast> futureToRun() async {
+  Future<Person> futureToRun() async {
     final results = await Future.wait([
       _checkImageCachedQuality(),
       // _db.getAudiovisualById(_param.id),

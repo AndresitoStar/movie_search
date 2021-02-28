@@ -1,14 +1,15 @@
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/model/movie.dart';
 import 'package:movie_search/modules/audiovisual/model/serie.dart';
+import 'package:movie_search/modules/person/model/person.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
 
 class SearchService extends BaseService {
-
   Future<SearchResponse> search(String query,
       {String type, int page = 0}) async {
     List<ModelBase> result = [];
+    List<BaseSearchResult> searchResult = [];
     int totalResults = -1;
     int totalPagesResult = -1;
 
@@ -29,14 +30,22 @@ class SearchService extends BaseService {
         if (totalResults > 0) {
           for (var data in body['results']) {
             final mediaType = data['media_type'] ?? type;
-            if (mediaType == 'person')
-              continue; // TODO quitar para buscar personas
-            else {
+            if (mediaType == 'person') {
+              BaseSearchResult b =
+                  BaseSearchResult.fromPerson(Person.fromJson(data));
+              searchResult.add(b);
+            } else {
               ModelBase av;
+              BaseSearchResult b;
               if (mediaType == 'movie') {
-                av = Movie()..fromJsonP(data);
+                av = MovieOld()..fromJsonP(data);
+                b = BaseSearchResult.fromMovie(Movie.fromJson(data));
               } else if (mediaType == 'tv') {
-                av = TvShow()..fromJsonP(data);
+                av = Serie()..fromJsonP(data);
+                b = BaseSearchResult.fromTv(TvShow.fromJson(data));
+              }
+              if (b != null) {
+                searchResult.add(b);
               }
               if (av != null &&
                   av.sinopsis != null &&
@@ -55,6 +64,7 @@ class SearchService extends BaseService {
 
     return new SearchResponse(
         result: result,
+        searchResult: searchResult,
         totalResult: totalResults,
         totalPageResult: totalPagesResult);
   }

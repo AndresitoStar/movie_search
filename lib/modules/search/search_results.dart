@@ -15,19 +15,19 @@ class SearchResults extends StatelessWidget {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : model.movies == null
+          : model.searchResults == null
               ? SearchHistoryView(
                   onTap: (value) => model.queryControl.value = value)
-              : model.movies.isEmpty
+              : model.searchResults.isEmpty
                   ? Center(child: Text('Sin resultados'))
                   : Scrollbar(
                       child: ListView.builder(
-                          itemCount: model.movies.length + 1,
+                          itemCount: model.searchResults.length + 1,
                           padding: EdgeInsets.zero,
                           physics: BouncingScrollPhysics(),
-                          itemBuilder: (ctx, i) => i < model.movies.length
+                          itemBuilder: (ctx, i) => i < model.searchResults.length
                               ? SearchResultListItem(
-                                  audiovisual: model.movies[i],
+                                  searchResult: model.searchResults[i],
                                   searchCriteria: model.queryControl.value,
                                 )
                               : model.hasMore

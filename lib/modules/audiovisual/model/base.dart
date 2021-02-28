@@ -1,5 +1,7 @@
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/serie.dart';
+import 'package:movie_search/modules/person/model/person.dart';
+import 'package:movie_search/providers/util.dart';
 
 import 'movie.dart';
 
@@ -25,8 +27,8 @@ abstract class ModelBase {
   String get type;
 
   static final _constructors = {
-    Movie: () => Movie(),
-    TvShow: () => TvShow(),
+    MovieOld: () => MovieOld(),
+    Serie: () => Serie(),
   };
 
   static ModelBase fromJson(Type type, Map<String, dynamic> data) {
@@ -56,4 +58,37 @@ abstract class ModelBase {
     this.sinopsis = data.sinopsis;
     this.image = data.image;
   }
+}
+
+class BaseSearchResult {
+  int id;
+  String title;
+  String titleOriginal;
+  String releaseDate;
+  String image;
+  TMDB_API_TYPE type;
+  Person person;
+
+  BaseSearchResult.fromMovie(Movie movie)
+      : id = movie.id,
+        title = movie.title,
+        titleOriginal = movie.originalTitle,
+        releaseDate = movie.releaseDate,
+        image = movie.posterPath,
+        type = TMDB_API_TYPE.MOVIE;
+
+  BaseSearchResult.fromTv(TvShow tv)
+      : id = tv.id,
+        title = tv.name,
+        titleOriginal = tv.originalName,
+        releaseDate = tv.firstAirDate,
+        image = tv.posterPath,
+        type = TMDB_API_TYPE.TV_SHOW;
+
+  BaseSearchResult.fromPerson(Person person)
+      : id = person.id,
+        title = person.name,
+        image = person.profilePath,
+        person = person,
+        type = TMDB_API_TYPE.PERSON;
 }

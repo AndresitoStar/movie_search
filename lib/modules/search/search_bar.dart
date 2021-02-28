@@ -65,7 +65,7 @@ class SearchBar extends StatelessWidget {
                                   offset: Offset(0, 100),
                                   itemBuilder: (context) => SearchCategory.getAll()
                                       .map((e) => PopupMenuItem<SearchCategory>(
-                                      child: Text(e.label), value: e))
+                                      child: Text(e.label ?? e.value ?? '-'), value: e))
                                       .toList()),
                             ),
                           ],

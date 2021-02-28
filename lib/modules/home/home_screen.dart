@@ -26,8 +26,8 @@ class HomeScreen extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  TrendingHorizontalList<Movie>(content: TrendingContent.MOVIE),
-                  TrendingHorizontalList<TvShow>(content: TrendingContent.TV),
+                  TrendingHorizontalList<MovieOld>(content: TrendingContent.MOVIE),
+                  TrendingHorizontalList<Serie>(content: TrendingContent.TV),
                 ],
               ),
             ),

@@ -8,39 +8,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchResponse {
   final List<ModelBase> result;
+  final List<BaseSearchResult> searchResult;
   final int totalResult;
   final int totalPageResult;
 
-  SearchResponse({this.result, this.totalResult, this.totalPageResult});
+  SearchResponse(
+      {this.result, this.totalResult, this.totalPageResult, this.searchResult});
 }
 
 const String URL_IMAGE_SMALL = 'http://image.tmdb.org/t/p/w92';
 const String URL_IMAGE_MEDIUM = 'http://image.tmdb.org/t/p/w342';
 const String URL_IMAGE_BIG = 'http://image.tmdb.org/t/p/w780';
 
-enum FAVOURITE_THINGS { FILMS, SERIES, GAMES }
-
-enum GRID_CONTENT { TRENDING_MOVIE, TRENDING_TV, FAVOURITE }
-
-extension asdasd on GRID_CONTENT {
-  String get title {
-    switch (this) {
-      case GRID_CONTENT.TRENDING_MOVIE:
-        return 'Películas';
-      case GRID_CONTENT.TRENDING_TV:
-        return 'Series';
-      case GRID_CONTENT.FAVOURITE:
-        return 'Favoritos';
-      default:
-        return '';
-    }
-  }
-}
-
-enum TMDB_API_TYPE {
-  MOVIE,
-  TV_SHOW, /* PERSON */
-}
+enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON }
 
 extension tmdb_type on TMDB_API_TYPE {
   String get type {
@@ -49,8 +29,8 @@ extension tmdb_type on TMDB_API_TYPE {
         return 'movie';
       case TMDB_API_TYPE.TV_SHOW:
         return 'tv';
-      // case TMDB_API_TYPE.PERSON:
-      //   return 'person';
+      case TMDB_API_TYPE.PERSON:
+        return 'person';
       default:
         return null;
     }
@@ -62,8 +42,8 @@ extension tmdb_type on TMDB_API_TYPE {
         return 'Películas';
       case TMDB_API_TYPE.TV_SHOW:
         return 'Series';
-      // case TMDB_API_TYPE.PERSON:
-      //   return 'Persona';
+      case TMDB_API_TYPE.PERSON:
+        return 'Persona';
       default:
         return null;
     }

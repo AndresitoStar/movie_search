@@ -8,7 +8,7 @@ import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 
 class PersonDetailViewModel extends FutureViewModel<Person> {
-  final Cast param;
+  final Person param;
   final PersonService _service;
   final MyDatabase _db;
 

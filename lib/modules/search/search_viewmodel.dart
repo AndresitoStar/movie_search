@@ -11,15 +11,15 @@ class SearchViewModel extends BaseViewModel {
   final SearchService _service;
   FormGroup form;
 
-  List<ModelBase> _movies;
+  List<BaseSearchResult> _searchResults;
 
-  List<ModelBase> get movies => _movies != null ? [..._movies] : null;
+  List<BaseSearchResult> get searchResults => _searchResults != null ? [..._searchResults] : null;
 
   int _total = -1;
   int _page = 1;
   int _totalPage = -1;
 
-  bool get hasMore => movies.length < _total && _page < _totalPage;
+  bool get hasMore => searchResults.length < _total && _page < _totalPage;
 
   final _debounce = Debounce(milliseconds: 300);
 
@@ -53,11 +53,13 @@ class SearchViewModel extends BaseViewModel {
       _page = 1;
       if (queryControl.isNullOrEmpty) {
         _total = -1;
-        _movies = [];
+        _searchResults = [];
       } else {
         final response = await _service.search(queryControl.value,
             page: _page, type: actualCategory.value);
-        if (response != null) _movies = response.result;
+        if (response != null) {
+          _searchResults = response.searchResult;
+        }
         _total = response.totalResult;
         _totalPage = response.totalPageResult;
       }
@@ -74,7 +76,7 @@ class SearchViewModel extends BaseViewModel {
     var result = await _service.search(queryControl.value,
         page: _page, type: actualCategory.value);
     if (result != null) {
-      _movies.addAll(result.result);
+      _searchResults.addAll(result.searchResult);
       _totalPage = result.totalPageResult;
     }
     notifyListeners();

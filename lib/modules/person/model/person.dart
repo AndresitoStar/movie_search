@@ -12,7 +12,6 @@ class Person {
   String deathday;
   int id;
   String name;
-  List<String> alsoKnownAs;
   int gender;
   String biography;
   double popularity;
@@ -20,6 +19,7 @@ class Person {
   String profilePath;
   bool adult;
   String imdbId;
+  String character;
 
   String get genderFormated => gender?.toString();
 
@@ -29,12 +29,12 @@ class Person {
       this.deathday,
       this.id,
       this.name,
-      this.alsoKnownAs,
       this.gender,
       this.biography,
       this.popularity,
       this.placeOfBirth,
       this.profilePath,
+      this.character,
       this.adult,
       this.imdbId});
 
@@ -44,7 +44,7 @@ class Person {
     deathday = json['deathday'];
     id = json['id'];
     name = json['name'];
-    alsoKnownAs = json['also_known_as'].cast<String>();
+    character = json['character'];
     gender = json['gender'];
     biography = json['biography'];
     popularity = json['popularity'];
@@ -52,23 +52,5 @@ class Person {
     profilePath = json['profile_path'];
     adult = json['adult'];
     imdbId = json['imdb_id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['birthday'] = this.birthday;
-    data['known_for_department'] = this.knownForDepartment;
-    data['deathday'] = this.deathday;
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['also_known_as'] = this.alsoKnownAs;
-    data['gender'] = this.gender;
-    data['biography'] = this.biography;
-    data['popularity'] = this.popularity;
-    data['place_of_birth'] = this.placeOfBirth;
-    data['profile_path'] = this.profilePath;
-    data['adult'] = this.adult;
-    data['imdb_id'] = this.imdbId;
-    return data;
   }
 }

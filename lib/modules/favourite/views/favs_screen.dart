@@ -55,7 +55,7 @@ class FavouriteScreen extends StatelessWidget {
                         itemCount: snapshot.data.length,
                         itemBuilder: (ctx, i) {
                           return ItemGridView(
-                            audiovisual: Movie()..fromData(snapshot.data[i]),
+                            audiovisual: MovieOld()..fromData(snapshot.data[i]),
                           );
                         },
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

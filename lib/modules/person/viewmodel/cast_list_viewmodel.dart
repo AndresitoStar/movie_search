@@ -1,4 +1,5 @@
 import 'package:movie_search/modules/person/model/credit.dart';
+import 'package:movie_search/modules/person/model/person.dart';
 import 'package:movie_search/modules/person/service/service.dart';
 import 'package:stacked/stacked.dart';
 
@@ -7,9 +8,9 @@ class CastListViewModel extends FutureViewModel {
   final String type;
   final String typeId;
 
-  List<Cast> _items = [];
+  List<Person> _items = [];
 
-  List<Cast> get items => [..._items];
+  List<Person> get items => [..._items];
 
   CastListViewModel(this.type, this.typeId) : _service = PersonService.getInstance();
 

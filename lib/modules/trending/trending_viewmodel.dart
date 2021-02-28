@@ -35,9 +35,9 @@ extension ExtensionTitle on TrendingContent {
   Type get baseType {
     switch (this) {
       case TrendingContent.MOVIE:
-        return Movie().runtimeType;
+        return MovieOld().runtimeType;
       case TrendingContent.TV:
-        return TvShow().runtimeType;
+        return Serie().runtimeType;
     // case TMDB_API_TYPE.PERSON:
     //   return 'person';
       default:

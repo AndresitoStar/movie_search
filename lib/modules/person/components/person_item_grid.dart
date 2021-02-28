@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/person/components/person_detail_screen.dart';
 import 'package:movie_search/modules/person/model/credit.dart';
+import 'package:movie_search/modules/person/model/person.dart';
 import 'package:movie_search/modules/person/service/service.dart';
 import 'package:movie_search/modules/person/viewmodel/person_item_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
@@ -12,7 +13,7 @@ import 'package:stacked/stacked.dart';
 import 'package:provider/provider.dart';
 
 class PersonItemGridView extends StatelessWidget {
-  final Cast person;
+  final Person person;
 
   const PersonItemGridView({Key key, this.person}) : super(key: key);
 
