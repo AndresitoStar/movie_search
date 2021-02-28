@@ -4,13 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_page.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/ui/icons.dart';
 
 class SearchResultListItem extends StatelessWidget {
   final _types = {'movie': 'Película', 'tv': 'Serie', 'person': 'Persona'};
+  final Map<String, IconData> _icons = {
+    'movie': MyIcons.movie,
+    'tv': MyIcons.tv,
+    'person': MyIcons.castMale
+  };
   final ModelBase audiovisual;
   final String searchCriteria;
 
-  SearchResultListItem({Key key, @required this.audiovisual, this.searchCriteria}) : super(key: key);
+  SearchResultListItem(
+      {Key key, @required this.audiovisual, this.searchCriteria})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +34,8 @@ class SearchResultListItem extends StatelessWidget {
         child: ListTile(
           onTap: () {
             if (searchCriteria != null)
-              SharedPreferencesHelper.getInstance().updateSearchHistory(searchCriteria);
+              SharedPreferencesHelper.getInstance()
+                  .updateSearchHistory(searchCriteria);
             open.call();
           },
           title: Hero(
@@ -36,20 +45,21 @@ class SearchResultListItem extends StatelessWidget {
                 child: Text(audiovisual.title,
                     style: Theme.of(context).textTheme.headline6),
               )),
+          leading: Icon(_icons[audiovisual.type]),
+          trailing: Text(
+              '${audiovisual.yearOriginal ?? '-'}',
+              style: Theme.of(context).textTheme.caption),
           subtitle: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(audiovisual.titleOriginal,
                   style: Theme.of(context).textTheme.subtitle1),
-              Text('${_types[audiovisual.type]}/${audiovisual.yearOriginal ?? '-'}',
-                  style: Theme.of(context).textTheme.caption),
             ],
           ),
         ),
       ),
-      openBuilder: (context, close) =>
-          ItemDetailPage(item: this.audiovisual),
+      openBuilder: (context, close) => ItemDetailPage(item: this.audiovisual),
     );
   }
 }
