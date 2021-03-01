@@ -349,17 +349,17 @@ class MyDatabase extends _$MyDatabase {
         b.insertAll(genreTable, genres, mode: InsertMode.insertOrReplace));
   }
 
-  Future<bool> existGenres() async {
+  Future<bool> existGenres(String type) async {
     final count = genreTable.id.count();
-    final query = selectOnly(genreTable)..addColumns([count]);
+    final query = selectOnly(genreTable)
+      ..addColumns([count])
+      ..where(genreTable.type.equals(type));
     final result = await query.map((row) => row.read(count)).getSingle();
     return (result ?? 0) > 0;
   }
 
-  Future<List<GenreTableData>> getGenres(String type) async {
-    var query = select(genreTable);
-
-    query.where((a) => a.type.equals(type));
+  Future<List<GenreTableData>> allGenres(String type) {
+    final query = select(genreTable)..where((m) => m.type.equals(type));
     return query.get();
   }
 //endregion

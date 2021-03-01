@@ -1,3 +1,4 @@
+import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/trending/trending_service.dart';
 import 'package:movie_search/providers/util.dart';
@@ -34,6 +35,7 @@ extension ExtensionTitle on TrendingContent {
 class TrendingViewModel extends BaseViewModel {
   final TrendingContent content;
   final TrendingService _trendingService;
+  final MyDatabase _db;
 
   List<BaseSearchResult> _items = [];
 
@@ -51,16 +53,43 @@ class TrendingViewModel extends BaseViewModel {
 
   final Debounce _debounce = Debounce(milliseconds: 100);
 
-  TrendingViewModel(this.content) : _trendingService = TrendingService();
+  Map<String, bool> filterGenre;
 
-  TrendingViewModel.forPage(this.content, this._items, this._total)
-      : _trendingService = TrendingService();
+  List<int> get activeGenres => filterGenre != null
+      ? filterGenre.entries
+          .where((element) => element.value)
+          .map<int>((e) => int.parse(e.key))
+          .toList()
+      : [];
+
+  List<GenreTableData> _allGenres = [];
+
+  List<String> get activeGenresNames => filterGenre != null
+      ? _allGenres
+          .where((element) => activeGenres.contains(int.tryParse(element.id)))
+          .map<String>((e) => e.name)
+          .toList()
+      : [];
+
+  TrendingViewModel(this.content)
+      : _db = null,
+        _trendingService = TrendingService();
+
+  TrendingViewModel.forPage(this.content, this._items, this._total, this._db)
+      : _trendingService = TrendingService(),
+        filterGenre = {};
 
   Future synchronize() async {
-    SearchResponse response = await _trendingService.getPopular(content.type);
+    setBusy(true);
+    SearchResponse response = await _trendingService.getDiscover(
+      content.type,
+      genres: activeGenres,
+    );
     _total = response?.totalResult ?? -1;
     _items = response?.result ?? [];
-    notifyListeners();
+    _actualPage = 1;
+    _allGenres = await _db.allGenres(content.type);
+    setBusy(false);
   }
 
   Future fetchMore() async {
@@ -69,9 +98,17 @@ class TrendingViewModel extends BaseViewModel {
 
   Future _fetchMore() async {
     _actualPage++;
-    SearchResponse results =
-        await _trendingService.getPopular(content.type, page: _actualPage);
+    SearchResponse results = await _trendingService.getDiscover(
+      content.type,
+      page: _actualPage,
+      genres: activeGenres,
+    );
     _items.addAll(results.result);
     notifyListeners();
+  }
+
+  updateFilters(Map<String, bool> filterGenre) {
+    this.filterGenre = filterGenre;
+    synchronize();
   }
 }

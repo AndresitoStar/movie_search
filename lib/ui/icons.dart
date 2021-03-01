@@ -9,6 +9,8 @@ class MyIcons {
 
   static const IconData arrow_left = Icons.arrow_back_ios;
   static const IconData arrow_right = FrinoIcons.f_arrow_right;
+  static const IconData check = FrinoIcons.f_check;
+  static const IconData clean = FrinoIcons.f_no_access;
   static const IconData favourite_on = Icons.favorite_rounded;
   static const IconData favourite_off = FrinoIcons.f_heart;
   static const IconData clear = Icons.clear;
@@ -24,4 +26,5 @@ class MyIcons {
 
   static const IconData movie = FrinoIcons.f_movie_tape;
   static const IconData tv = FrinoIcons.f_tv;
+  static const IconData filter = FrinoIcons.f_filter;
 }

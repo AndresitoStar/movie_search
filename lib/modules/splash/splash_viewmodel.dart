@@ -49,7 +49,7 @@ class SplashViewModel extends FutureViewModel {
 
   Future syncGenres(String type) async {
     try {
-      var bool = await _db.existGenres();
+      var bool = await _db.existGenres(type);
       if (bool) return;
       var genres = await _splashService.getGenres(type);
       final dbGenres = genres.entries

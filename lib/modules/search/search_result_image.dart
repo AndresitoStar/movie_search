@@ -13,23 +13,29 @@ class SearchResultItemImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return LimitedBox(
       maxHeight: 64,
-      child: imagePath == null ? Container() : AspectRatio(
-          aspectRatio: 9 / 16,
-          child: FutureBuilder<String>(
-              future: _checkImageCachedQuality(),
-              initialData: URL_IMAGE_SMALL,
-              builder: (context, snapshot) {
-                return CachedNetworkImage(
-                  imageUrl: '${snapshot.data}$imagePath',
-                  placeholder: (_, __) => Container(
-                      color: Colors.transparent,
-                      child: Center(child: CircularProgressIndicator())),
-                  errorWidget: (ctx, _, __) => Container(
-                      color: Colors.transparent,
-                      child: Center(child: Icon(MyIcons.default_image))),
-                  fit: BoxFit.cover,
-                );
-              })),
+      child: imagePath == null
+          ? Container(
+              height: 64,
+              padding: const EdgeInsets.only(right: 10),
+              child: Icon(MyIcons.default_image),
+            )
+          : AspectRatio(
+              aspectRatio: 9 / 16,
+              child: FutureBuilder<String>(
+                  future: _checkImageCachedQuality(),
+                  initialData: URL_IMAGE_SMALL,
+                  builder: (context, snapshot) {
+                    return CachedNetworkImage(
+                      imageUrl: '${snapshot.data}$imagePath',
+                      placeholder: (_, __) => Container(
+                          color: Colors.transparent,
+                          child: Center(child: CircularProgressIndicator())),
+                      errorWidget: (ctx, _, __) => Container(
+                          color: Colors.transparent,
+                          child: Center(child: Icon(MyIcons.default_image))),
+                      fit: BoxFit.cover,
+                    );
+                  })),
     );
   }
 
