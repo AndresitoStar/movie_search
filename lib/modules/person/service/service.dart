@@ -1,5 +1,6 @@
+import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/person/model/credit.dart';
-import 'package:movie_search/modules/person/model/person.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
 
 class PersonService extends BaseService {
@@ -25,7 +26,7 @@ class PersonService extends BaseService {
         final body = response.data;
         total = body['total_results'];
         for (var data in body['results']) {
-          Person p = Person.fromJson(data);
+          Person p = ResponseApiParser.personFromJsonApi(data);
           result.add(p);
         }
       }
@@ -33,20 +34,20 @@ class PersonService extends BaseService {
     return PersonListResponse(result: result, totalResult: total);
   }
 
-  Future<Person> getById(String id) async {
+  Future<Person> getById(int id) async {
     try {
       var response =
           await clientTMDB.get('person/$id', queryParameters: baseParams);
       if (response.statusCode == 200) {
         final body = response.data;
-        Person p = Person.fromJson(body);
+        Person p = ResponseApiParser.personFromJsonApi(body);
         return p;
       }
     } catch (e) {}
     return null;
   }
 
-  Future<Credit> getCredits(String type, String typeId) async {
+  Future<Credit> getCredits(String type, int typeId) async {
     try {
       var response = await clientTMDB.get('$type/$typeId/credits',
           queryParameters: baseParams);

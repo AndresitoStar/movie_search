@@ -6,19 +6,17 @@ import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
 
-class TrendingPage<T extends ModelBase> extends StatelessWidget {
-  // static String routeName = "/trending";
+class TrendingPage extends StatelessWidget {
   final TrendingViewModel param;
 
-  const TrendingPage({Key key,@required this.param}) : super(key: key);
+  const TrendingPage({Key key, @required this.param}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     final orientation = MediaQuery.of(context).orientation;
     return ViewModelBuilder<TrendingViewModel>.reactive(
         viewModelBuilder: () =>
-            TrendingViewModel<T>.forPage(param.content, param.items, param.total),
+            TrendingViewModel.forPage(param.content, param.items, param.total),
         builder: (context, viewModel, child) => Scaffold(
               appBar: AppBar(
                 title: Text(viewModel.content.title),
@@ -33,7 +31,7 @@ class TrendingPage<T extends ModelBase> extends StatelessWidget {
                 padding: const EdgeInsets.all(10.0),
                 itemCount: viewModel.items.length + 2,
                 itemBuilder: (ctx, i) => i < viewModel.items.length
-                    ? ItemGridView<T>(audiovisual: viewModel.items[i])
+                    ? ItemGridView(item: viewModel.items[i])
                     : viewModel.hasMore
                         ? Builder(
                             builder: (context) {

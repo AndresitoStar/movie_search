@@ -2,23 +2,51 @@ import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/service/service.dart';
 import 'package:stacked/stacked.dart';
 
-class ItemRecomendationViewModel extends FutureViewModel {
+enum ERecommendationType {
+  Recommendation, Similar
+}
+
+extension recommendation_type on ERecommendationType {
+  String get type {
+    switch (this) {
+      case ERecommendationType.Recommendation:
+        return 'recommendations';
+      case ERecommendationType.Similar:
+        return 'similar';
+      default:
+        return null;
+    }
+  }
+
+  String get name {
+    switch (this) {
+      case ERecommendationType.Recommendation:
+        return 'Recomendaciones';
+      case ERecommendationType.Similar:
+        return 'Similares';
+      default:
+        return null;
+    }
+  }
+}
+
+class ItemRecommendationViewModel extends FutureViewModel {
   final AudiovisualService _service;
   final String type;
-  final String typeId;
+  final int typeId;
+  final ERecommendationType recommendationType;
 
-  List<ModelBase> _items = [];
+  List<BaseSearchResult> _items = [];
 
-  List<ModelBase> get items => [..._items];
+  List<BaseSearchResult> get items => [..._items];
 
-  ItemRecomendationViewModel(this.type, this.typeId)
+  ItemRecommendationViewModel(this.type, this.typeId, this.recommendationType)
       : _service = AudiovisualService.getInstance();
 
   @override
   Future futureToRun() async {
     setBusy(true);
-    final list = await _service.getRecomendations(type, typeId);
-    _items = list;
+    _items.addAll(await _service.getRecommendations(type, typeId, recommendationType));
     setInitialised(true);
     setBusy(false);
   }

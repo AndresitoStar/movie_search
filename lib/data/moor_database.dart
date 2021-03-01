@@ -7,58 +7,6 @@ import 'package:path_provider/path_provider.dart';
 
 part 'moor_database.g.dart';
 
-class AudiovisualTable extends Table {
-  TextColumn get id => text()();
-
-  TextColumn get titulo => text()();
-
-  TextColumn get originalTitle => text()();
-
-  TextColumn get imageList => text()();
-
-  TextColumn get tagline => text()();
-
-  TextColumn get sinopsis => text()();
-
-  TextColumn get category => text().nullable()();
-
-  TextColumn get image => text().nullable()();
-
-  TextColumn get genre => text()();
-
-  TextColumn get anno => text().nullable()();
-
-  TextColumn get pais => text().nullable()();
-
-  TextColumn get score => text().nullable()();
-
-  TextColumn get idioma => text().nullable()();
-
-  TextColumn get director => text().nullable()();
-
-  TextColumn get reparto => text().nullable()();
-
-  TextColumn get productora => text().nullable()();
-
-  TextColumn get temp => text().nullable()();
-
-  TextColumn get duracion => text().nullable()();
-
-  TextColumn get capitulos => text().nullable()();
-
-  DateTimeColumn get fecha_reg => dateTime().nullable()();
-
-  TextColumn get externalId => text().nullable()();
-
-  BoolColumn get isFavourite => boolean().clientDefault(() => false)();
-
-  @override
-  Set<Column> get primaryKey => {id};
-
-  @override
-  String get tableName => 'audiovisualdb';
-}
-
 class LanguageTable extends Table {
   TextColumn get iso => text()();
 
@@ -79,6 +27,145 @@ class GenreTable extends Table {
   TextColumn get type => text()();
 }
 
+@DataClassName("Movie")
+class MovieTable extends Table {
+  IntColumn get id => integer()();
+
+  TextColumn get backdropPath => text().nullable()();
+
+  TextColumn get genres => text().nullable()();
+
+  TextColumn get homepage => text().nullable()();
+
+  TextColumn get imdbId => text().nullable()();
+
+  TextColumn get originalLanguage => text().nullable()();
+
+  TextColumn get originalTitle => text().nullable()();
+
+  TextColumn get overview => text().nullable()();
+
+  RealColumn get popularity => real().nullable()();
+
+  TextColumn get posterPath => text().nullable()();
+
+  TextColumn get productionCompanies => text().nullable()();
+
+  TextColumn get productionCountries => text().nullable()();
+
+  TextColumn get releaseDate => text().nullable()();
+
+  RealColumn get runtime => real().nullable()();
+
+  TextColumn get spokenLanguages => text().nullable()();
+
+  TextColumn get status => text().nullable()();
+
+  TextColumn get tagline => text().nullable()();
+
+  TextColumn get title => text().nullable()();
+
+  BoolColumn get video => boolean().nullable()();
+
+  DateTimeColumn get fecha_reg => dateTime().nullable()();
+
+  TextColumn get externalId => text().nullable()();
+
+  BoolColumn get isFavourite => boolean().clientDefault(() => false)();
+
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName("TvShow")
+class TvShowTable extends Table {
+  IntColumn get id => integer()();
+
+  TextColumn get backdropPath => text().nullable()();
+
+  TextColumn get createdBy => text().nullable()();
+
+  IntColumn get episodeRunTime => integer().nullable()();
+
+  TextColumn get firstAirDate => text().nullable()();
+
+  TextColumn get genres => text().nullable()();
+
+  TextColumn get languages => text().nullable()();
+
+  TextColumn get name => text().nullable()();
+
+  IntColumn get numberOfEpisodes => integer().nullable()();
+
+  IntColumn get numberOfSeasons => integer().nullable()();
+
+  TextColumn get originCountry => text().nullable()();
+
+  TextColumn get originalLanguage => text().nullable()();
+
+  TextColumn get originalName => text().nullable()();
+
+  TextColumn get overview => text().nullable()();
+
+  RealColumn get popularity => real().nullable()();
+
+  TextColumn get posterPath => text().nullable()();
+
+  TextColumn get productionCountries => text().nullable()();
+
+  TextColumn get productionCompanies => text().nullable()();
+
+  TextColumn get spokenLanguages => text().nullable()();
+
+  TextColumn get status => text().nullable()();
+
+  TextColumn get tagline => text().nullable()();
+
+  TextColumn get type => text().nullable()();
+
+  DateTimeColumn get fecha_reg => dateTime().nullable()();
+
+  TextColumn get externalId => text().nullable()();
+
+  BoolColumn get isFavourite => boolean().clientDefault(() => false)();
+
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName("Person")
+class PersonTable extends Table {
+  IntColumn get id => integer()();
+
+  TextColumn get birthday => text().nullable()();
+
+  TextColumn get knownForDepartment => text().nullable()();
+
+  TextColumn get deathday => text().nullable()();
+
+  TextColumn get name => text().nullable()();
+
+  IntColumn get gender => integer().nullable()();
+
+  TextColumn get biography => text().nullable()();
+
+  RealColumn get popularity => real().nullable()();
+
+  TextColumn get placeOfBirth => text().nullable()();
+
+  TextColumn get profilePath => text().nullable()();
+
+  TextColumn get imdbId => text().nullable()();
+
+  TextColumn get character => text().nullable()();
+
+  DateTimeColumn get fecha_reg => dateTime().nullable()();
+
+  TextColumn get externalId => text().nullable()();
+
+  BoolColumn get isFavourite => boolean().clientDefault(() => false)();
+
+  Set<Column> get primaryKey => {id};
+}
+
 LazyDatabase _openConnection() {
   // the LazyDatabase util lets us find the right location for the file async.
   return LazyDatabase(() async {
@@ -90,12 +177,19 @@ LazyDatabase _openConnection() {
   });
 }
 
-@UseMoor(tables: [AudiovisualTable, LanguageTable, CountryTable, GenreTable])
+@UseMoor(tables: [
+  LanguageTable,
+  CountryTable,
+  GenreTable,
+  PersonTable,
+  TvShowTable,
+  MovieTable,
+])
 class MyDatabase extends _$MyDatabase {
   MyDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -112,11 +206,47 @@ class MyDatabase extends _$MyDatabase {
     );
   }
 
-  // MOVIE & SERIES
-  Future insertAudiovisual(AudiovisualTableData data) {
+  //region Movie
+  Future<Movie> getMovieById(int id) async {
+    return (select(movieTable)..where((m) => m.id.equals(id))).getSingle();
+  }
+
+  Future insertMovie(Movie data) {
+    return batch((b) {
+      b.insert(movieTable, data.copyWith(fecha_reg: DateTime.now()),
+          mode: InsertMode.insertOrReplace);
+    });
+  }
+
+  Stream<List<int>> watchFavouritesMovieId() {
+    final query = selectOnly(movieTable)
+      ..addColumns([movieTable.id])
+      ..where(movieTable.isFavourite.equals(true));
+    return query.map((r) => r.read(movieTable.id)).watch();
+  }
+
+  Stream<List<Movie>> watchFavouritesMovie() {
+    final query = select(movieTable)..where((m) => m.isFavourite);
+    return query.watch();
+  }
+
+  Future toggleFavouriteMovie(int id) async {
+    final data = await getMovieById(id);
+    return update(movieTable)
+        .replace(data.copyWith(isFavourite: !data.isFavourite));
+  }
+
+  //endregion
+
+  //region Tv Show
+  Future<TvShow> getTvShowById(int id) async {
+    return (select(tvShowTable)..where((m) => m.id.equals(id))).getSingle();
+  }
+
+  Future insertTvShow(TvShow data) {
     return batch((b) {
       b.insert(
-          audiovisualTable,
+          tvShowTable,
           data.copyWith(
             fecha_reg: DateTime.now(),
           ),
@@ -124,147 +254,63 @@ class MyDatabase extends _$MyDatabase {
     });
   }
 
-  Future<AudiovisualTableData> getAudiovisualById(String id) async {
-    final country = countryTable.name;
-    final language = languageTable.name;
-    final data = select(audiovisualTable)
-      ..where((a) => a.id.equals(id))
-      ..limit(1)
-      ..join([
-        leftOuterJoin(
-          countryTable,
-          audiovisualTable.pais.equalsExp(countryTable.iso),
-        ),
-        leftOuterJoin(
-          languageTable,
-          audiovisualTable.idioma.equalsExp(languageTable.iso),
-        )
-      ])
-      ..addColumns([country, language]).map((row) {
-        final d = row.readTable(audiovisualTable).copyWith(
-              idioma: row.read(language),
-              pais: row.read(country) ?? '-',
-            );
-        return d;
-      });
-    return data.getSingle();
+  Stream<List<int>> watchFavouritesTvShowId() {
+    final query = selectOnly(tvShowTable)
+      ..addColumns([tvShowTable.id])
+      ..where(tvShowTable.isFavourite.equals(true));
+    return query.map((r) => r.read(tvShowTable.id)).watch();
   }
 
-  Future toggleFavouriteAudiovisual(AudiovisualTableData data) {
-    return update(audiovisualTable)
+  Future toggleFavouriteTvShow(int id) async {
+    final data = await getTvShowById(id);
+    return update(tvShowTable)
         .replace(data.copyWith(isFavourite: !data.isFavourite));
   }
 
-  Future toggleFavouriteAudiovisualById(String id) async {
-    final data = await getAudiovisualById(id);
-    return update(audiovisualTable)
+  Stream<List<TvShow>> watchFavouritesTvShow() {
+    final query = select(tvShowTable)..where((m) => m.isFavourite);
+    return query.watch();
+  }
+
+  //endregion
+
+  //region Person
+  Future<Person> getPersonById(int id) async {
+    return (select(personTable)..where((m) => m.id.equals(id))).getSingle();
+  }
+
+  Future insertPerson(Person data) {
+    return batch((b) {
+      b.insert(
+          personTable,
+          data.copyWith(
+            fecha_reg: DateTime.now(),
+          ),
+          mode: InsertMode.insertOrReplace);
+    });
+  }
+
+  Stream<List<int>> watchFavouritesPersonId() {
+    final query = selectOnly(personTable)
+      ..addColumns([personTable.id])
+      ..where(personTable.isFavourite.equals(true));
+    return query.map((r) => r.read(personTable.id)).watch();
+  }
+
+  Future toggleFavouritePerson(int id) async {
+    final data = await getPersonById(id);
+    return update(personTable)
         .replace(data.copyWith(isFavourite: !data.isFavourite));
   }
 
-  Future toggleDateReg(AudiovisualTableData data) {
-    return update(audiovisualTable)
-        .replace(data.copyWith(fecha_reg: DateTime.now()));
-  }
-
-  Future cleanAudiovisualData() {
-    return delete(audiovisualTable).go();
-  }
-
-//  Future<AudiovisualTableData> getAudiovisualById(String id) async {
-//    var query = select(audiovisualTable);
-//    query.where((a) => a.id.equals(id));
-//    return await query.getSingle();
-//  }
-
-  Future<AudiovisualTableData> getAudiovisualByTitle(String title) async {
-    var query = select(audiovisualTable);
-    query.where((a) => a.titulo.equals(title));
-    return await query.getSingle();
-  }
-
-  Future<AudiovisualTableData> getAudiovisualByExternalId(
-      String trendingId) async {
-    try {
-      var query = select(audiovisualTable);
-      query.where((a) => a.externalId.equals(trendingId));
-      return await query.getSingle();
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }
-
-  Stream<List<AudiovisualTableData>> watchDashboard() {
-    SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
-    query = select(audiovisualTable)
-      ..limit(10)
-      ..where((tbl) => tbl.image.like('N/A').not())
-      ..orderBy([
-        (r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)
-      ]);
+  Stream<List<Person>> watchFavouritesPerson() {
+    final query = select(personTable)..where((m) => m.isFavourite);
     return query.watch();
   }
 
-  Stream<List<AudiovisualTableData>> watchFavourites() {
-    SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
-    query = select(audiovisualTable)
-      ..where((tbl) => tbl.isFavourite.equals(true));
-    return query.watch();
-  }
+  //endregion
 
-  Stream<List<String>> watchFavouritesId() {
-    final query = selectOnly(audiovisualTable)
-      ..addColumns([audiovisualTable.id])
-      ..where(audiovisualTable.isFavourite.equals(true));
-    return query.map((r) => r.read(audiovisualTable.id)).watch();
-  }
-
-  Future<List<AudiovisualTableData>> getAllMovies() async {
-    SimpleSelectStatement<$AudiovisualTableTable, AudiovisualTableData> query;
-    query = select(audiovisualTable)
-      ..limit(15)
-      ..where((tbl) => tbl.image.like('N/A').not())
-      ..orderBy([
-        (r) => OrderingTerm(expression: r.fecha_reg, mode: OrderingMode.desc)
-      ]);
-    return query.get();
-  }
-
-  Future getFavouritesAudiovisual(String type) async {
-    var query = select(audiovisualTable);
-
-    query.where((a) => a.category.equals(type) & a.isFavourite.equals(true));
-    return query.get();
-  }
-
-  Future getFavRandomWallpaper(String type) async {
-    // SELECT * FROM table ORDER BY RANDOM() LIMIT 1;
-    var query =
-        customSelect('select image from ${audiovisualTable.actualTableName} '
-            'where ${audiovisualTable.category.escapedName} = \'$type\' '
-            'and ${audiovisualTable.isFavourite.escapedName} = 1 '
-            'order by RANDOM() LIMIT 1');
-    final result = await query.getSingle();
-    return result.data['count'];
-  }
-
-  Future<bool> isAudiovisualFav(String id) async {
-    var query = select(audiovisualTable);
-    query.where((a) => a.id.equals(id));
-    var av = await query.getSingle();
-    if (av == null) return false;
-    return av.isFavourite;
-  }
-
-  Future countFavouriteMovies(String type) async {
-    var query = customSelect(
-        'select count(*) as count from ${audiovisualTable.actualTableName} '
-        'where ${audiovisualTable.category.escapedName} = \'$type\' '
-        'and ${audiovisualTable.isFavourite.escapedName} = 1');
-    final result = await query.getSingle();
-    return result.data['count'];
-  }
-
+  //region Countries
   Future insertCountries(List<CountryTableData> countries) async {
     await delete(countryTable).go();
     return batch((b) =>
@@ -278,6 +324,9 @@ class MyDatabase extends _$MyDatabase {
     return (result ?? 0) > 0;
   }
 
+  //endregion
+
+  //region Languages
   Future insertLanguages(List<LanguageTableData> languages) async {
     await delete(languageTable).go();
     return batch((b) => b.insertAll(languageTable, languages,
@@ -291,6 +340,9 @@ class MyDatabase extends _$MyDatabase {
     return (result ?? 0) > 0;
   }
 
+  //endregion
+
+  //region Genres
   Future insertGenres(List<GenreTableData> genres) async {
     await delete(genreTable).go();
     return batch((b) =>
@@ -310,4 +362,6 @@ class MyDatabase extends _$MyDatabase {
     query.where((a) => a.type.equals(type));
     return query.get();
   }
+//endregion
+
 }

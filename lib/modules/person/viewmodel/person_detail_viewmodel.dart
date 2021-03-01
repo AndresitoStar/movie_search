@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/modules/person/model/credit.dart';
-import 'package:movie_search/modules/person/model/person.dart';
 import 'package:movie_search/modules/person/service/service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
@@ -26,8 +24,7 @@ class PersonDetailViewModel extends FutureViewModel<Person> {
 
   String get image => param.profilePath;
 
-  // bool get isFavourite =>
-  //     data != null && data.data != null ? data.data.isFavourite : false;
+  bool get isFavourite => data != null ? data.isFavourite : false;
 
   @override
   void dispose() {
@@ -39,26 +36,21 @@ class PersonDetailViewModel extends FutureViewModel<Person> {
   Future<Person> futureToRun() async {
     final results = await Future.wait([
       _checkImageCachedQuality(),
-      // _db.getPersonById(_param.id),
-      _service.getById(param.id.toString())
+      _cacheData(),
     ]);
     baseImageUrl = results[0];
-    // final _dbAv = results[1];
-    // if (_dbAv != null) {
-    //   _param.data = _dbAv;
-    //   setInitialised(true);
-    //   return _param;
-    // }
-    // return await _cacheData();
     setInitialised(true);
     return results[1];
   }
 
   Future<Person> _cacheData() async {
-    // final av = await _service.getById<T>(id: _param.id, type: _param.type);
-    // await _db.insertAudiovisual(av.data);
-    // setInitialised(true);
-    // return av;
+    final _dbAv = await _db.getPersonById(param.id);
+    if (_dbAv != null) {
+      return _dbAv;
+    }
+    final av = await _service.getById(param.id);
+    await _db.insertPerson(av);
+    return av;
   }
 
   Future<String> _checkImageCachedQuality() async {

@@ -8,10 +8,18 @@ class FavouritesViewModel extends BaseViewModel {
 
   FavouritesViewModel(this._db);
 
-  Stream<List<AudiovisualTableData>> get stream => _db.watchFavourites();
+  Stream<List<Movie>> get streamMovies => _db.watchFavouritesMovie();
+  Stream<List<TvShow>> get streamTvShow => _db.watchFavouritesTvShow();
+  Stream<List<Person>> get streamPerson => _db.watchFavouritesPerson();
 
   initialize() {
-    stream.listen((event) {
+    streamMovies.listen((event) {
+      notifyListeners();
+    });
+    streamTvShow.listen((event) {
+      notifyListeners();
+    });
+    streamPerson.listen((event) {
       notifyListeners();
     });
     setInitialised(true);

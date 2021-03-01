@@ -1,9 +1,7 @@
-import 'dart:math';
-
-import 'package:movie_search/data/moor_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
-import 'package:movie_search/modules/audiovisual/model/movie.dart';
-import 'package:movie_search/modules/audiovisual/model/serie.dart';
+import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
 
 class AudiovisualService extends BaseService {
@@ -16,138 +14,45 @@ class AudiovisualService extends BaseService {
 
   AudiovisualService._() : super();
 
-  Future<ModelBase> getById<T extends ModelBase>(
-      {String type, String id}) async {
+  Future<dynamic> getById({@required String type,@required int id}) async {
     Map<String, String> params = {
       ...baseParams,
-      'append_to_response': 'images',
       'include_image_language': 'en,null'
     };
 
     var response = await clientTMDB.get('$type/$id', queryParameters: params);
     if (response.statusCode == 200) {
       final data = response.data;
-      ModelBase av;
-      try {
-        av = ModelBase.fromJson(T, data);
-      } catch (e) {
-        if (type == 'movie') {
-          av = MovieOld()..fromJsonP(data);
-        } else if (type == 'tv') {
-          av = Serie()..fromJsonP(data);
-        }
-      }
-
-      String paises;
-      String anno;
-      String duracion;
-
-      String tagLine = data['tagline'];
-      String images = _processImages(data['images']);
-      if (type == 'movie') {
-        paises = data['production_countries'] != null &&
-                data['production_countries'].isNotEmpty
-            ? data['production_countries']
-                ?.map((e) => e['name'])
-                ?.reduce((value, element) => '$value' + ',' + '$element')
-            : null;
-        anno = data['release_date'];
-        duracion = '${data["runtime"]}';
+      if (type == 'person') {
+        return ResponseApiParser.personFromJsonApi(data);
+      } else if (type == 'movie') {
+        return ResponseApiParser.movieFromJsonApi(data);
       } else if (type == 'tv') {
-        paises = data['origin_country'] != null
-            ? data['origin_country']
-                ?.reduce((value, element) => value + ',' + element)
-            : null;
-        anno = data['first_air_date'];
-        final List episodesRuntime = data["episode_run_time"];
-        if (episodesRuntime != null && episodesRuntime.isNotEmpty)
-          duracion = episodesRuntime
-              ?.reduce((value, element) => min<num>(value, element))
-              ?.toString();
-      } else if (type == 'person') {
-        // TODO converti
+        return ResponseApiParser.tvFromJsonApi(data);
       }
-
-      var fullData = AudiovisualTableData(
-          id: av.id,
-          externalId: av.id,
-          image: av.image,
-          anno: DateTime.tryParse(anno)?.year?.toString(),
-          duracion: duracion,
-          productora: data['production_companies'] != null &&
-                  data['production_companies'].isNotEmpty
-              ? data['production_companies']
-                  ?.map((e) => e['name'])
-                  ?.reduce((value, element) => '$value' + ',' + '$element')
-              : null,
-          idioma: data["original_language"],
-          pais: paises,
-          score: await _getImdbRating(data["imdb_id"]) ??
-              '${data['vote_average']}',
-          temp: data['seasons'] != null ? '${data['seasons'].length}' : null,
-          capitulos: data['seasons'] != null
-              ? data['seasons']
-                  .map((e) => e['episode_count'])
-                  ?.reduce((value, element) => value + element)
-                  .toString()
-              : null,
-          // reparto: data["Actors"],
-          sinopsis: av.sinopsis,
-          titulo: av.title,
-          originalTitle: av.titleOriginal,
-          tagline: tagLine,
-          imageList: images,
-          fecha_reg: DateTime.now(),
-          director: null,
-          reparto: null,
-          category: type,
-          isFavourite: false,
-          genre: data['genres']
-              ?.map((e) => e['name'])
-              ?.reduce((value, element) => '$value' + ',' + '$element'));
-      av.fromData(fullData);
-      return av;
     }
     return null;
   }
 
-  Future<List<ModelBase>> getRecomendations(String type, String typeId) async {
-    List<ModelBase> result = [];
+  Future<List<BaseSearchResult>> getRecommendations(
+      String type, int typeId, ERecommendationType recommendationType) async {
+    List<BaseSearchResult> result = [];
     try {
-      var response = await clientTMDB.get('$type/$typeId/recommendations',
+      var response = await clientTMDB.get('$type/$typeId/${recommendationType.type}',
           queryParameters: baseParams);
       if (response.statusCode == 200) {
         final data = response.data;
         final list = data['results'] as List;
         if (list != null) {
           for (var i = 0; i < list.length; i++) {
-            ModelBase av;
-            if (type == 'movie') {
-              av = MovieOld()..fromJsonP(list[i]);
-            } else if (type == 'tv') {
-              av = Serie()..fromJsonP(list[i]);
-            }
-            result.add(av);
+            BaseSearchResult b = BaseSearchResult.fromJson(type, list[i]);
+            if (b != null) result.add(b);
           }
         }
       }
-    } catch (e) {}
-    return result;
-  }
-
-  String _processImages(Map<String, dynamic> imagesMap) {
-    if (imagesMap == null) return null;
-    try {
-      // final backs = imagesMap['backdrops'] as List;
-      final posters = imagesMap['posters'] as List;
-
-      // final backsImages = backs.map((e) => e['file_path']).join(',');
-      final posterImages = posters.map((e) => e['file_path']).join(',');
-      return '$posterImages';
     } catch (e) {
-      print(e);
     }
-    return null;
+    return result;
   }
 
   Future<String> _getImdbRating(String imdbId) async {

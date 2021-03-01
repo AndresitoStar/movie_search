@@ -18,7 +18,7 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
       elevation: 0,
       primary: true,
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
+      // backgroundColor: Colors.transparent,
       leading: MyCircularButton(
         icon: Icon(MyIcons.arrow_left),
         onPressed: () => Navigator.of(context).pop(),
@@ -43,12 +43,15 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
 
           return Opacity(
             opacity: opacity,
-            child: FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
-              background: Container(
-                width: double.infinity,
-                child: DetailMainImage(),
-              ),
+            child: Column(
+              children: [
+                Flexible(
+                  child: Container(
+                    width: double.infinity,
+                    child: DetailMainImage(),
+                  ),
+                ),
+              ],
             ),
           );
         },

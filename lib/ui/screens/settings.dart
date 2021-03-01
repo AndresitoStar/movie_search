@@ -60,17 +60,17 @@ class SettingsScreen extends StatelessWidget {
                   //       }),
                   // ),
                   // Divider(),
-                  ListTile(
-                    onTap: () => db.cleanAudiovisualData(),
-                    title: Text('Borrar datos de cache',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(fontWeight: FontWeight.normal)),
-                    trailing: IconButton(
-                        icon: Icon(FrinoIcons.f_eraser),
-                        onPressed: () => db.cleanAudiovisualData()),
-                  ),
+                  // ListTile(
+                  //   onTap: () => db.cleanAudiovisualData(),
+                  //   title: Text('Borrar datos de cache',
+                  //       style: Theme.of(context)
+                  //           .textTheme
+                  //           .headline6
+                  //           .copyWith(fontWeight: FontWeight.normal)),
+                  //   trailing: IconButton(
+                  //       icon: Icon(FrinoIcons.f_eraser),
+                  //       onPressed: () => db.cleanAudiovisualData()),
+                  // ),
                   Divider(),
                   ListTile(
                     onTap: () => showAbout(context),

@@ -5,13 +5,12 @@ import 'package:movie_search/modules/audiovisual/service/service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 
-class ItemGridViewModel<T extends ModelBase> extends FutureViewModel<ModelBase> {
-  final ModelBase _param;
+class ItemGridViewModel extends FutureViewModel<BaseSearchResult> {
+  final BaseSearchResult _param;
   final AudiovisualService _audiovisualService;
   final MyDatabase _db;
 
-  bool get isFavourite =>
-      data != null && data.data != null ? data.data.isFavourite : false;
+  bool get isFavourite => data != null ? data.isFavourite : false;
 
   bool _highQualityImage = false;
   String baseImageUrl = URL_IMAGE_SMALL;
@@ -21,16 +20,16 @@ class ItemGridViewModel<T extends ModelBase> extends FutureViewModel<ModelBase> 
   ItemGridViewModel(this._audiovisualService, this._param, this._db);
 
   @override
-  Future<ModelBase> futureToRun() async {
+  Future<BaseSearchResult> futureToRun() async {
     final results = await Future.wait([
       _checkImageCachedQuality(),
-      _db.getAudiovisualById(_param.id),
+      // _db.getAudiovisualById(_param.id),
     ]);
     baseImageUrl = results[0];
-    final dbData = results[1];
-    if (dbData != null) {
-      _param.data = dbData;
-    }
+    // final dbData = results[1];
+    // if (dbData != null) {
+      // _param.data = dbData;
+    // }
     setInitialised(true);
     return _param;
   }
@@ -57,22 +56,21 @@ class ItemGridViewModel<T extends ModelBase> extends FutureViewModel<ModelBase> 
 
   _cacheData() async {
     final av =
-        await _audiovisualService.getById<T>(id: _param.id, type: _param.type);
-    await _db.insertAudiovisual(av.data);
-    data.data = av.data;
+        await _audiovisualService.getById(id: _param.id, type: _param.type.type);
+    // await _db.insertAudiovisual(av.data);
+    // data.data = av.data;
     onData(av);
   }
 
   Future toggleFavourite() async {
     setBusy(true);
     try {
-      if (data.data == null) await _cacheData();
-      await _db.toggleFavouriteAudiovisual(data.data);
+      // if (data.data == null) await _cacheData();
+      // await _db.toggleFavouriteAudiovisual(data.data);
     } catch (e) {
       setError(e);
     }
     setBusy(false);
     initialise();
   }
-
 }

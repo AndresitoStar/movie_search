@@ -36,24 +36,27 @@ class ContentRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Visibility(
         visible: value1 != null && value2 != null,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ContentDivider(value: value1),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ContentHorizontal(
-                      label: label1, content: value1),
-                ),
-                Expanded(
-                  child: ContentHorizontal(
-                      label: label2, content: value2),
-                ),
-              ],
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ContentDivider(value: value1),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ContentHorizontal(
+                        label: label1, content: value1),
+                  ),
+                  Expanded(
+                    child: ContentHorizontal(
+                        label: label2, content: value2),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ));
   }
 }
@@ -61,8 +64,9 @@ class ContentRow extends StatelessWidget {
 class ContentHorizontal extends StatelessWidget {
   final String label;
   final String content;
+  final double padding;
 
-  const ContentHorizontal({Key key, this.label, this.content})
+  const ContentHorizontal({Key key, this.label, this.content, this.padding = 0})
       : super(key: key);
 
   @override
@@ -70,6 +74,7 @@ class ContentHorizontal extends StatelessWidget {
     return Visibility(
       visible: content != null && content.isNotEmpty && content != 'N/A',
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: padding),
         child: ListTile(
           title: label != null
               ? Text(label,

@@ -58,7 +58,7 @@ class SearchViewModel extends BaseViewModel {
         final response = await _service.search(queryControl.value,
             page: _page, type: actualCategory.value);
         if (response != null) {
-          _searchResults = response.searchResult;
+          _searchResults = response.result;
         }
         _total = response.totalResult;
         _totalPage = response.totalPageResult;
@@ -76,7 +76,7 @@ class SearchViewModel extends BaseViewModel {
     var result = await _service.search(queryControl.value,
         page: _page, type: actualCategory.value);
     if (result != null) {
-      _searchResults.addAll(result.searchResult);
+      _searchResults.addAll(result.result);
       _totalPage = result.totalPageResult;
     }
     notifyListeners();

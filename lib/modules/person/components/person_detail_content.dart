@@ -5,7 +5,7 @@ import 'package:stacked/stacked.dart';
 
 class PersonDetailContent extends ViewModelWidget<PersonDetailViewModel> {
   @override
-  Widget build(BuildContext context, viewModel) {
+  Widget build(BuildContext context, PersonDetailViewModel viewModel) {
     final item = viewModel.data;
     return SliverPadding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),

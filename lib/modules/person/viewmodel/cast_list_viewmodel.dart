@@ -1,12 +1,11 @@
-import 'package:movie_search/modules/person/model/credit.dart';
-import 'package:movie_search/modules/person/model/person.dart';
+import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/person/service/service.dart';
 import 'package:stacked/stacked.dart';
 
 class CastListViewModel extends FutureViewModel {
   final PersonService _service;
   final String type;
-  final String typeId;
+  final int typeId;
 
   List<Person> _items = [];
 

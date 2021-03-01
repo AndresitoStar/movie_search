@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/audiovisual/model/movie.dart';
-import 'package:movie_search/modules/audiovisual/model/serie.dart';
 import 'package:movie_search/modules/home/home_search_bar.dart';
 import 'package:movie_search/modules/trending/trending_horizontal_list.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
@@ -26,8 +24,8 @@ class HomeScreen extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  TrendingHorizontalList<MovieOld>(content: TrendingContent.MOVIE),
-                  TrendingHorizontalList<Serie>(content: TrendingContent.TV),
+                  TrendingHorizontalList(content: TrendingContent.MOVIE),
+                  TrendingHorizontalList(content: TrendingContent.TV),
                 ],
               ),
             ),

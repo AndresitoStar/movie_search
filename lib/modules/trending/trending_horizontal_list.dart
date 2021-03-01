@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
-import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/trending/trending_page.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
@@ -9,7 +8,7 @@ import 'package:stacked/stacked.dart';
 
 import 'trending_viewmodel.dart';
 
-class TrendingHorizontalList<T extends ModelBase> extends StatelessWidget {
+class TrendingHorizontalList extends StatelessWidget {
   final TrendingContent content;
   final _defaultLength = 5;
 
@@ -19,7 +18,7 @@ class TrendingHorizontalList<T extends ModelBase> extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.width * 0.75;
     return ViewModelBuilder<TrendingViewModel>.reactive(
-      viewModelBuilder: () => TrendingViewModel<T>(this.content),
+      viewModelBuilder: () => TrendingViewModel(this.content),
       onModelReady: (model) => model.synchronize(),
       builder: (context, model, child) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -58,8 +57,8 @@ class TrendingHorizontalList<T extends ModelBase> extends StatelessWidget {
                     )
                   : AspectRatio(
                       child: model.items.length > i
-                          ? ItemGridView<T>(
-                              audiovisual: model.items[i],
+                          ? ItemGridView(
+                              item: model.items[i],
                             )
                           : GridItemPlaceholder(),
                       aspectRatio: 8 / 16,
@@ -72,7 +71,7 @@ class TrendingHorizontalList<T extends ModelBase> extends StatelessWidget {
   }
 
   Future _goToTrendingScreen(
-          BuildContext context, TrendingViewModel<T> viewModel) =>
+          BuildContext context, TrendingViewModel viewModel) =>
       Navigator.push(context,
-          Routes.defaultPageRouteBuilder(TrendingPage<T>(param: viewModel)));
+          Routes.defaultPageRouteBuilder(TrendingPage(param: viewModel)));
 }

@@ -6,7 +6,7 @@ import 'package:stacked/stacked.dart';
 
 class CreditHorizontalList extends StatelessWidget {
   final String type;
-  final String typeId;
+  final int typeId;
 
   const CreditHorizontalList(this.type, this.typeId, {Key key})
       : super(key: key);
@@ -17,38 +17,40 @@ class CreditHorizontalList extends StatelessWidget {
       viewModelBuilder: () => CastListViewModel(this.type, this.typeId),
       builder: (context, model, _) {
         final height = MediaQuery.of(context).size.width * 0.75;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ListTile(
-                title: Text('Reparto',
-                    style: Theme.of(context).textTheme.headline5)),
-            Container(
-              constraints: BoxConstraints(
-                  minHeight: height - 100, maxHeight: height + 50),
-              child: model.isBusy
-                  ? ListView.builder(
-                      physics: ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 3,
-                      itemBuilder: (ctx, i) => AspectRatio(
-                        child: GridItemPlaceholder(),
-                        aspectRatio: 8 / 16,
+        return SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ListTile(
+                  title: Text('Reparto',
+                      style: Theme.of(context).textTheme.headline5)),
+              Container(
+                constraints: BoxConstraints(
+                    minHeight: height - 100, maxHeight: height + 50),
+                child: model.isBusy
+                    ? ListView.builder(
+                        physics: ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 3,
+                        itemBuilder: (ctx, i) => AspectRatio(
+                          child: GridItemPlaceholder(),
+                          aspectRatio: 8 / 16,
+                        ),
+                      )
+                    : ListView.builder(
+                        physics: ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: model.items.length,
+                        itemBuilder: (ctx, i) => AspectRatio(
+                          child: PersonItemGridView(person: model.items[i]),
+                          aspectRatio: 8 / 16,
+                        ),
                       ),
-                    )
-                  : ListView.builder(
-                      physics: ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: model.items.length,
-                      itemBuilder: (ctx, i) => AspectRatio(
-                        child: PersonItemGridView(person: model.items[i]),
-                        aspectRatio: 8 / 16,
-                      ),
-                    ),
-            ),
-          ],
+              ),
+            ],
+          ),
         );
       },
     );

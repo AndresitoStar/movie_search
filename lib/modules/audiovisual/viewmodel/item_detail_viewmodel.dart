@@ -6,14 +6,14 @@ import 'package:movie_search/modules/audiovisual/service/service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 
-class ItemDetailViewModel<T extends ModelBase>
-    extends FutureViewModel<ModelBase> {
-  final ModelBase _param;
+class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
+  final BaseSearchResult _param;
   final AudiovisualService _service;
   final MyDatabase _db;
 
-  ItemDetailViewModel(this._param, this._service, this._db)
-      : scrollController = ScrollController();
+  ItemDetailViewModel(this._param, this._db)
+      : _service = AudiovisualService.getInstance(),
+        scrollController = ScrollController();
 
   bool _highQualityImage = false;
   String baseImageUrl = URL_IMAGE_MEDIUM;
@@ -25,9 +25,6 @@ class ItemDetailViewModel<T extends ModelBase>
 
   String get image => _param.image;
 
-  bool get isFavourite =>
-      data != null && data.data != null ? data.data.isFavourite : false;
-
   @override
   void dispose() {
     scrollController.dispose();
@@ -35,26 +32,37 @@ class ItemDetailViewModel<T extends ModelBase>
   }
 
   @override
-  Future<ModelBase> futureToRun() async {
+  Future<BaseSearchResult> futureToRun() async {
     final results = await Future.wait([
       _checkImageCachedQuality(),
-      _db.getAudiovisualById(_param.id),
+      _cacheData(),
     ]);
     baseImageUrl = results[0];
-    final _dbAv = results[1];
-    if (_dbAv != null) {
-      _param.data = _dbAv;
-      setInitialised(true);
-      return _param;
-    }
-    return await _cacheData();
+    setInitialised(true);
+    return results[1];
   }
 
-  Future<ModelBase> _cacheData() async {
-    final av = await _service.getById<T>(id: _param.id, type: _param.type);
-    await _db.insertAudiovisual(av.data);
-    setInitialised(true);
-    return av;
+  Future<BaseSearchResult> _cacheData() async {
+    if (_param.type == TMDB_API_TYPE.MOVIE) {
+      final _dbMovie = await _db.getMovieById(_param.id);
+      if (_dbMovie != null) {
+        return BaseSearchResult.fromMovie(_dbMovie);
+      }
+      final Movie movie =
+          await _service.getById(id: _param.id, type: _param.type.type);
+      _db.insertMovie(movie);
+      return BaseSearchResult.fromMovie(movie);
+    } else if (_param.type == TMDB_API_TYPE.TV_SHOW) {
+      final _dbTv = await _db.getTvShowById(_param.id);
+      if (_dbTv != null) {
+        return BaseSearchResult.fromTv(_dbTv);
+      }
+      final TvShow tv =
+          await _service.getById(id: _param.id, type: _param.type.type);
+      _db.insertTvShow(tv);
+      return BaseSearchResult.fromTv(tv);
+    }
+    return _param;
   }
 
   Future<String> _checkImageCachedQuality() async {

@@ -1,6 +1,4 @@
 import 'package:movie_search/modules/audiovisual/model/base.dart';
-import 'package:movie_search/modules/audiovisual/model/movie.dart';
-import 'package:movie_search/modules/audiovisual/model/serie.dart';
 import 'package:movie_search/modules/trending/trending_service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
@@ -31,28 +29,15 @@ extension ExtensionTitle on TrendingContent {
         return null;
     }
   }
-
-  Type get baseType {
-    switch (this) {
-      case TrendingContent.MOVIE:
-        return MovieOld().runtimeType;
-      case TrendingContent.TV:
-        return Serie().runtimeType;
-    // case TMDB_API_TYPE.PERSON:
-    //   return 'person';
-      default:
-        return null;
-    }
-  }
 }
 
-class TrendingViewModel<T extends ModelBase> extends BaseViewModel {
+class TrendingViewModel extends BaseViewModel {
   final TrendingContent content;
   final TrendingService _trendingService;
 
-  List<ModelBase> _items = [];
+  List<BaseSearchResult> _items = [];
 
-  List<ModelBase> get items => [..._items];
+  List<BaseSearchResult> get items => [..._items];
 
   bool get hasMore => _items.length < _total;
 
@@ -72,8 +57,7 @@ class TrendingViewModel<T extends ModelBase> extends BaseViewModel {
       : _trendingService = TrendingService();
 
   Future synchronize() async {
-    TrendingResponse response =
-        await _trendingService.getPopular<T>(content.type);
+    SearchResponse response = await _trendingService.getPopular(content.type);
     _total = response?.totalResult ?? -1;
     _items = response?.result ?? [];
     notifyListeners();
@@ -85,8 +69,8 @@ class TrendingViewModel<T extends ModelBase> extends BaseViewModel {
 
   Future _fetchMore() async {
     _actualPage++;
-    TrendingResponse results =
-        await _trendingService.getPopular<T>(content.type, page: _actualPage);
+    SearchResponse results =
+        await _trendingService.getPopular(content.type, page: _actualPage);
     _items.addAll(results.result);
     notifyListeners();
   }

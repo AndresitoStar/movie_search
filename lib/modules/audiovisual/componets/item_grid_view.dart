@@ -12,15 +12,15 @@ import 'package:stacked/stacked.dart';
 
 import 'item_detail_page.dart';
 
-class ItemGridView<T extends ModelBase> extends StatelessWidget {
+class ItemGridView extends StatelessWidget {
   final bool trending;
   final bool showData;
   final bool withThemeColor;
-  final ModelBase audiovisual;
+  final BaseSearchResult item;
 
   const ItemGridView(
       {Key key,
-      @required this.audiovisual,
+      @required this.item,
       this.trending = true,
       this.showData = true,
       this.withThemeColor = true})
@@ -29,8 +29,8 @@ class ItemGridView<T extends ModelBase> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ItemGridViewModel>.reactive(
-      viewModelBuilder: () => ItemGridViewModel<T>(
-          AudiovisualService.getInstance(), this.audiovisual, context.read()),
+      viewModelBuilder: () => ItemGridViewModel(
+          AudiovisualService.getInstance(), this.item, context.read()),
       disposeViewModel: true,
       builder: (context, model, child) {
         if (!model.initialised) return GridItemPlaceholder();
@@ -44,7 +44,9 @@ class ItemGridView<T extends ModelBase> extends StatelessWidget {
             margin: const EdgeInsets.all(10),
             elevation: 5,
             clipBehavior: Clip.hardEdge,
-            color: withThemeColor ? Theme.of(context).cardTheme.color : Colors.white,
+            color: withThemeColor
+                ? Theme.of(context).cardTheme.color
+                : Colors.white,
             child: GestureDetector(
               onTap: open,
               child: Column(
@@ -55,7 +57,7 @@ class ItemGridView<T extends ModelBase> extends StatelessWidget {
                   Expanded(
                       flex: 5,
                       child: Hero(
-                        tag: '$trending${audiovisual.id}',
+                        tag: '$trending${item.id}',
                         child: Material(
                           color: withThemeColor
                               ? Theme.of(context).cardColor
@@ -65,20 +67,22 @@ class ItemGridView<T extends ModelBase> extends StatelessWidget {
                             child: ClipRRect(
                               clipBehavior: Clip.hardEdge,
                               // borderRadius: BorderRadius.circular(3),
-                              child: audiovisual.image != null
+                              child: item.image != null
                                   ? CachedNetworkImage(
-                                imageUrl:
-                                '${model.baseImageUrl}${audiovisual.image}',
-                                placeholder: (_, __) => Container(
-                                    color: Colors.transparent,
-                                    child: Center(
-                                        child: CircularProgressIndicator())),
-                                errorWidget: (ctx, _, __) => Container(
-                                    color: Colors.transparent,
-                                    child: Center(
-                                        child: Icon(MyIcons.default_image))),
-                                fit: BoxFit.cover,
-                              )
+                                      imageUrl:
+                                          '${model.baseImageUrl}${item.image}',
+                                      placeholder: (_, __) => Container(
+                                          color: Colors.transparent,
+                                          child: Center(
+                                              child:
+                                                  CircularProgressIndicator())),
+                                      errorWidget: (ctx, _, __) => Container(
+                                          color: Colors.transparent,
+                                          child: Center(
+                                              child:
+                                                  Icon(MyIcons.default_image))),
+                                      fit: BoxFit.cover,
+                                    )
                                   : Container(),
                             ),
                           ),
@@ -92,21 +96,21 @@ class ItemGridView<T extends ModelBase> extends StatelessWidget {
                             bottom: 12,
                             left: 12,
                             child: Text(
-                              '${trending ? audiovisual.voteAverage : audiovisual.data.score ?? ''}',
+                              '${item.voteAverage}',
                               style: Theme.of(context).textTheme.subtitle1,
                             )),
                         Positioned(
                           bottom: 0,
                           right: 0,
                           child: ItemLikeButton(
-                            id: audiovisual.id,
-                            type: audiovisual.type,
+                            id: item.id,
+                            type: item.type,
                             iconSize: 24,
                           ),
                         ),
                         ListTile(
                           title: Text(
-                            audiovisual.title ?? '' + '\n',
+                            item.title ?? '' + '\n',
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
@@ -124,11 +128,9 @@ class ItemGridView<T extends ModelBase> extends StatelessWidget {
             ),
           ),
           onClosed: (data) => model.initialise(),
-          openBuilder: (context, close) =>
-              ItemDetailPage<T>(item: this.audiovisual),
+          openBuilder: (context, close) => ItemDetailPage(item: this.item),
         );
       },
     );
   }
-
 }

@@ -1,9 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/person/components/person_detail_screen.dart';
-import 'package:movie_search/modules/person/model/credit.dart';
-import 'package:movie_search/modules/person/model/person.dart';
 import 'package:movie_search/modules/person/service/service.dart';
 import 'package:movie_search/modules/person/viewmodel/person_item_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
@@ -110,7 +109,7 @@ class PersonItemGridView extends StatelessWidget {
             ),
           ),
           onClosed: (data) => model.initialise(),
-          openBuilder: (context, close) => PersonDetailScren(param: person),
+          openBuilder: (context, close) => PersonDetailScreen(param: person),
         );
       },
     );
