@@ -1,6 +1,8 @@
 on:
   push:
    branches: [ master]
+   tags:
+    - '*'
 name: Build Release
 jobs:
   build-apk:
