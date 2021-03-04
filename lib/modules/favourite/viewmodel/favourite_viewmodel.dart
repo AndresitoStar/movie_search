@@ -1,5 +1,4 @@
 import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:stacked/stacked.dart';
 
 class FavouritesViewModel extends BaseViewModel {
@@ -13,15 +12,15 @@ class FavouritesViewModel extends BaseViewModel {
   Stream<List<Person>> get streamPerson => _db.watchFavouritesPerson();
 
   initialize() {
-    streamMovies.listen((event) {
-      notifyListeners();
-    });
-    streamTvShow.listen((event) {
-      notifyListeners();
-    });
-    streamPerson.listen((event) {
-      notifyListeners();
-    });
+    // streamMovies.listen((event) {
+    //   notifyListeners();
+    // });
+    // streamTvShow.listen((event) {
+    //   notifyListeners();
+    // });
+    // streamPerson.listen((event) {
+    //   notifyListeners();
+    // });
     setInitialised(true);
   }
 }

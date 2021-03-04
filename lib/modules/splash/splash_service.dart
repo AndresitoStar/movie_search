@@ -1,7 +1,6 @@
 import 'package:movie_search/rest/resolver.dart';
 
 class SplashService extends BaseService {
-
   static SplashService _instance;
 
   static SplashService getInstance() {
@@ -10,6 +9,54 @@ class SplashService extends BaseService {
   }
 
   SplashService._() : super();
+
+  Future<bool> checkIsDeviceEnable(String deviceId, {String email}) async {
+    try {
+      final response =
+          await parseClient.get('/classes/devices', queryParameters: {
+        'where': {"deviceId": deviceId},
+      });
+      final results = response.data['results'] as List;
+      if (results.isNotEmpty) {
+        final config = results[0]['isEnabled'] as bool;
+        return config;
+      } else {
+        await insertMyDevice(deviceId);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
+  }
+
+  Future updateMyDevice(String deviceId, String email) async {
+    try {
+      final response =
+          await parseClient.get('/classes/devices', queryParameters: {
+        'where': {"deviceId": deviceId},
+      });
+      final results = response.data['results'] as List;
+      if (results.isNotEmpty) {
+        final id = results[0]['objectId'] as String;
+        return parseClient.put('/classes/devices/$id', data: {
+          "email": email,
+        });
+      }
+    } catch (e) {}
+  }
+
+  Future insertMyDevice(String deviceId) async {
+    try {
+      return parseClient.post('/classes/devices', data: {
+        "deviceId": deviceId,
+      }, queryParameters: {
+        ...baseParseParams,
+        "Content-Type": 'application/json',
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<Map<String, String>> getCountries() async {
     Map<String, String> result = {};
@@ -69,8 +116,7 @@ class SplashService extends BaseService {
         var body = response.data['genres'] as List<dynamic>;
         if (body.isNotEmpty) {
           result = Map.fromIterable(body,
-              key: (item) => item['id'],
-              value: (item) => item['name']);
+              key: (item) => item['id'], value: (item) => item['name']);
         }
       } else {
         print(response.statusCode);

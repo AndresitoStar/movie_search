@@ -156,8 +156,9 @@ class ResponseApiParser {
       }
       if (json['episode_run_time'] != null) {
         final list = json['episode_run_time'] as List<dynamic>;
-        episodesRuntime =
-            list?.reduce((value, element) => min<num>(value, element));
+        if (list.isNotEmpty)
+          episodesRuntime =
+              list?.reduce((value, element) => min<num>(value, element));
       }
       return TvShow(
         createdBy: createdBy,

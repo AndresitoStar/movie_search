@@ -41,15 +41,15 @@ class ContentRow extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ContentDivider(value: value1),
+              ContentDivider(value: 'value1'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
+                  if (value1 != null && value1.isNotEmpty) Expanded(
                     child: ContentHorizontal(
                         label: label1, content: value1),
                   ),
-                  Expanded(
+                  if (value2 != null && value2.isNotEmpty) Expanded(
                     child: ContentHorizontal(
                         label: label2, content: value2),
                   ),

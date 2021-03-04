@@ -6,6 +6,7 @@ import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/service/service.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_grid_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
+import 'package:movie_search/ui/widgets/default_image.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
@@ -44,9 +45,14 @@ class ItemGridView extends StatelessWidget {
             margin: const EdgeInsets.all(10),
             elevation: 5,
             clipBehavior: Clip.hardEdge,
-            color: withThemeColor
-                ? Theme.of(context).cardTheme.color
-                : Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(5),
+                bottomRight: Radius.circular(5),
+                // topLeft: Radius.circular(8),
+              ),
+            ),
             child: GestureDetector(
               onTap: open,
               child: Column(
@@ -56,17 +62,14 @@ class ItemGridView extends StatelessWidget {
                 children: [
                   Expanded(
                       flex: 5,
-                      child: Hero(
-                        tag: '$trending${item.id}',
-                        child: Material(
-                          color: withThemeColor
-                              ? Theme.of(context).cardColor
-                              : Colors.white,
-                          child: Padding(
-                            padding: EdgeInsets.all(0),
-                            child: ClipRRect(
-                              clipBehavior: Clip.hardEdge,
-                              // borderRadius: BorderRadius.circular(3),
+                      child: Material(
+                        color: withThemeColor
+                            ? Theme.of(context).cardColor
+                            : Colors.white,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Container(
                               child: item.image != null
                                   ? CachedNetworkImage(
                                       imageUrl:
@@ -83,9 +86,43 @@ class ItemGridView extends StatelessWidget {
                                                   Icon(MyIcons.default_image))),
                                       fit: BoxFit.cover,
                                     )
-                                  : Container(),
+                                  : PlaceholderImage(),
                             ),
-                          ),
+                            if (item.year != null)
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text(
+                                    '${item.year}',
+                                    style: TextStyle(color: Colors.black87),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .accentColor
+                                        .withOpacity(0.8),
+                                    borderRadius: BorderRadius.only(
+                                        bottomRight: Radius.circular(10)),
+                                  ),
+                                ),
+                              ),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                child: Icon(MyIcons.iconFromType(item.type),color: Colors.black87),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .accentColor
+                                      .withOpacity(0.8),
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10)),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       )),
                   Expanded(
@@ -105,7 +142,7 @@ class ItemGridView extends StatelessWidget {
                           child: ItemLikeButton(
                             id: item.id,
                             type: item.type,
-                            iconSize: 24,
+                            iconSize: 20,
                           ),
                         ),
                         ListTile(

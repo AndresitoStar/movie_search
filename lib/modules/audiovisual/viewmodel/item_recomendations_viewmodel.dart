@@ -2,9 +2,7 @@ import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/service/service.dart';
 import 'package:stacked/stacked.dart';
 
-enum ERecommendationType {
-  Recommendation, Similar
-}
+enum ERecommendationType { Recommendation, Similar, Credit }
 
 extension recommendation_type on ERecommendationType {
   String get type {
@@ -24,6 +22,8 @@ extension recommendation_type on ERecommendationType {
         return 'Recomendaciones';
       case ERecommendationType.Similar:
         return 'Similares';
+      case ERecommendationType.Credit:
+        return 'Participaciones';
       default:
         return null;
     }
@@ -46,7 +46,11 @@ class ItemRecommendationViewModel extends FutureViewModel {
   @override
   Future futureToRun() async {
     setBusy(true);
-    _items.addAll(await _service.getRecommendations(type, typeId, recommendationType));
+    if (recommendationType == ERecommendationType.Credit)
+      _items.addAll(
+          await _service.getPersonCombinedCredits(typeId));
+    _items.addAll(
+        await _service.getRecommendations(type, typeId, recommendationType));
     setInitialised(true);
     setBusy(false);
   }

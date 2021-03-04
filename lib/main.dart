@@ -30,15 +30,16 @@ class App extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        title: 'Melon App',
+        title: 'Buscador de Peliculas y Series',
         debugShowCheckedModeBanner: false,
         theme: LightTheme.theme,
         darkTheme: DarkTheme.theme,
         themeMode: EasyDynamicTheme.of(context).themeMode,
         // routes: Routes.routes,
         onGenerateRoute: Routes.generateRoute,
-        initialRoute:
-            wasHereBefore ? SplashScreen.route : OnboardScreen.routeName,
+        initialRoute: true || wasHereBefore
+            ? SplashScreen.route
+            : OnboardScreen.routeName,
       ),
     );
   }

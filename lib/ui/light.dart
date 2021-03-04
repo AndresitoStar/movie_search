@@ -343,8 +343,6 @@ class LightTheme {
         fontStyle: FontStyle.normal,
       ),
       isDense: false,
-      contentPadding:
-          EdgeInsets.only(top: 12.0, bottom: 12.0, left: 0.0, right: 0.0),
       isCollapsed: false,
       prefixStyle: TextStyle(
         color: Color(0xdd000000),
@@ -366,12 +364,16 @@ class LightTheme {
       ),
       filled: false,
       fillColor: Color(0x00000000),
-      errorBorder: InputBorder.none,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 10.0,
+        vertical: 8.0,
+      ),
       focusedBorder: InputBorder.none,
-      focusedErrorBorder: InputBorder.none,
-      disabledBorder: InputBorder.none,
       enabledBorder: InputBorder.none,
       border: InputBorder.none,
+      errorBorder: InputBorder.none,
+      focusedErrorBorder: InputBorder.none,
+      disabledBorder: InputBorder.none,
     ),
     iconTheme: IconThemeData(
       color: Color(0xdd000000),

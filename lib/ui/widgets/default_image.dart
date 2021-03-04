@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frino_icons/frino_icons.dart';
 
 class PlaceholderImage extends StatelessWidget {
   final double height;
@@ -13,7 +12,18 @@ class PlaceholderImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      child: Center(child: Icon(FrinoIcons.f_image, size: height / 3)),
+      child: LayoutBuilder(
+        // builder: (context, constraint) => Icon(
+        //   MyIcons.default_image,
+        //   color: Colors.grey.shade100,
+        //   size: constraint.biggest.width,
+        // ),
+        builder: (context, constraint) => Image.asset(
+          'assets/images/placeholder.jpg',
+          height: constraint.biggest.height,
+          fit: BoxFit.cover,
+        ),
+      ),
       height: height,
     );
   }

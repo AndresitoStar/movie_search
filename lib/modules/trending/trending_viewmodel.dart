@@ -88,7 +88,7 @@ class TrendingViewModel extends BaseViewModel {
     _total = response?.totalResult ?? -1;
     _items = response?.result ?? [];
     _actualPage = 1;
-    _allGenres = await _db.allGenres(content.type);
+    if (_db != null) _allGenres = await _db.allGenres(content.type);
     setBusy(false);
   }
 

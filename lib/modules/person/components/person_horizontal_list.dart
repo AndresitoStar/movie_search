@@ -17,6 +17,11 @@ class CreditHorizontalList extends StatelessWidget {
       viewModelBuilder: () => CastListViewModel(this.type, this.typeId),
       builder: (context, model, _) {
         final height = MediaQuery.of(context).size.width * 0.75;
+        if (!model.initialised || model.isBusy)
+          return SliverToBoxAdapter(
+              child: Container(child: LinearProgressIndicator()));
+        if (model.items.length == 0)
+          return SliverToBoxAdapter(child: Container());
         return SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

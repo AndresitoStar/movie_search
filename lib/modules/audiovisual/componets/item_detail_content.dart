@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
-import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:stacked/stacked.dart';
@@ -15,6 +13,11 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
     final item = viewModel.data;
     final dynamic data =
         item.type == TMDB_API_TYPE.MOVIE ? item.movie : item.tvShow;
+    final Map<TMDB_API_TYPE, IconData> _typeIcons = {
+      TMDB_API_TYPE.MOVIE: MyIcons.movie,
+      TMDB_API_TYPE.TV_SHOW: MyIcons.tv,
+      TMDB_API_TYPE.PERSON: MyIcons.castMale
+    };
     return SliverList(
       delegate: SliverChildListDelegate(
         <Widget>[
@@ -36,6 +39,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
               ),
             ),
           ),
+          Text(item.type.name, textAlign: TextAlign.center),
           Visibility(
             visible: item.titleOriginal != item.title,
             child: Padding(
@@ -65,13 +69,13 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
               ],
             ),
           ),
-          if (item.genres != null)
+          if (item.genres != null && item.genres.isNotEmpty)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Wrap(
                 alignment: WrapAlignment.center,
                 spacing: 8,
-                children: item.genres
+                children: item.genres.where((element) => element.isNotEmpty)
                     .map((e) => Chip(
                           label: Text(e),
                           elevation: 3,
@@ -89,16 +93,16 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
   List<Widget> _overviewAndTagline(BuildContext context, dynamic data) {
     return [
       // if (data.tagline != null && data.tagline.isNotEmpty)
-        ListTile(
-          title: Text(
-            data.tagline ?? '',
-            style: Theme.of(context)
-                .textTheme
-                .caption
-                .copyWith(fontSize: 16, fontStyle: FontStyle.italic),
-            textAlign: TextAlign.center,
-          ),
+      ListTile(
+        title: Text(
+          data.tagline ?? '',
+          style: Theme.of(context)
+              .textTheme
+              .caption
+              .copyWith(fontSize: 16, fontStyle: FontStyle.italic),
+          textAlign: TextAlign.center,
         ),
+      ),
       ContentHorizontal(content: data.overview),
       Divider(indent: 8, endIndent: 8),
     ];

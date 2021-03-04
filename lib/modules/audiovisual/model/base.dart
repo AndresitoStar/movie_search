@@ -29,6 +29,8 @@ class BaseSearchResult {
               ? tvShow.genres.split(',')
               : null;
 
+  int get year => releaseDate != null ? DateTime.tryParse(releaseDate)?.year : null; 
+
   BaseSearchResult.fromMovie(Movie movie)
       : id = movie.id,
         title = movie.title,

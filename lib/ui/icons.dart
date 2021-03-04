@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frino_icons/frino_icons.dart';
+import 'package:movie_search/providers/util.dart';
 
 class MyIcons {
   static const IconData home = FrinoIcons.f_home_simple;
@@ -16,7 +17,7 @@ class MyIcons {
   static const IconData clear = Icons.clear;
   static const IconData search = FrinoIcons.f_search_2;
   static const IconData more = FrinoIcons.f_more_horizontal;
-  static const IconData default_image = FrinoIcons.f_image;
+  static const IconData default_image = Icons.photo;
   static const IconData imdb = FontAwesomeIcons.imdb;
   static const IconData quality = Icons.high_quality_rounded;
   static const IconData history = FrinoIcons.f_clock;
@@ -27,4 +28,11 @@ class MyIcons {
   static const IconData movie = FrinoIcons.f_movie_tape;
   static const IconData tv = FrinoIcons.f_tv;
   static const IconData filter = FrinoIcons.f_filter;
+
+  static IconData iconFromType(TMDB_API_TYPE type) {
+    if (type == TMDB_API_TYPE.MOVIE) return movie;
+    if (type == TMDB_API_TYPE.TV_SHOW) return tv;
+    if (type == TMDB_API_TYPE.PERSON) return castMale;
+    return null;
+  }
 }

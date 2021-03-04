@@ -10,6 +10,7 @@ class HomeSearchBar extends StatelessWidget {
       pinned: false,
       snap: true,
       elevation: 3,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       flexibleSpace: Container(
         height: kToolbarHeight,
         child: Card(

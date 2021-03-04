@@ -27,8 +27,8 @@ class TrendingPage extends StatelessWidget {
                   // backgroundColor: Theme.of(context).primaryColor,
                   titleSpacing: 0,
                   actions: [
-                    ElevatedButton(
-                      child: Icon(
+                    IconButton(
+                      icon: Icon(
                         MyIcons.filter,
                         color: viewModel.activeGenres.length > 0
                             ? theme.accentColor
@@ -118,6 +118,16 @@ class TrendingPage extends StatelessWidget {
                             icon: Icon(MyIcons.clean),
                             onPressed: () => model.clear(),
                           ),
+                          IconButton(
+                            onPressed: () =>
+                                Navigator.of(context).pop(model.filterGenre),
+                            icon: Icon(MyIcons.check, size: 32),
+                          ),
+                          IconButton(
+                            color: Colors.red,
+                            onPressed: () => Navigator.of(context).pop(),
+                            icon: Icon(MyIcons.clear),
+                          ),
                         ],
                       ),
                     ),
@@ -141,27 +151,6 @@ class TrendingPage extends StatelessWidget {
                             .toList(),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        RaisedButton.icon(
-                          color: Colors.green,
-                          onPressed: () =>
-                              Navigator.of(context).pop(model.filterGenre),
-                          icon: Icon(MyIcons.check),
-                          label: Text('Aplicar'),
-                        ),
-                        SizedBox(width: 10),
-                        RaisedButton.icon(
-                          color: Colors.red,
-                          onPressed: () => Navigator.of(context).pop(),
-                          icon: Icon(MyIcons.clear),
-                          label: Text('Cancelar'),
-                        ),
-                        SizedBox(width: 10),
-                      ],
-                    ),
-                    SizedBox(width: 20),
                   ],
                 ),
               ),

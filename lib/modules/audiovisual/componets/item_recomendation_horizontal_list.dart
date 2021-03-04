@@ -8,10 +8,11 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
   final String type;
   final int typeId;
   final ERecommendationType recommendationType;
+  final bool sliver;
 
   const ItemDetailRecommendationHorizontalList(
       this.type, this.typeId, this.recommendationType,
-      {Key key})
+      {Key key, this.sliver = true})
       : super(key: key);
 
   @override
@@ -21,47 +22,49 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
           this.type, this.typeId, this.recommendationType),
       builder: (context, model, _) {
         final height = MediaQuery.of(context).size.width * 0.75;
-        return SliverToBoxAdapter(
-          child: !model.initialised
-              ? Container(height: 10, color: Colors.red,)
-              : model.isBusy
-                  ? LinearProgressIndicator()
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Divider(indent: 8,endIndent: 8),
-                        ListTile(
-                            title: Text(recommendationType.name,
-                                style: Theme.of(context).textTheme.headline5)),
-                        Container(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          constraints: BoxConstraints(
-                              minHeight: height - 100, maxHeight: height + 50),
-                          child: model.isBusy
-                              ? ListView.builder(
-                                  physics: ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 3,
-                                  itemBuilder: (ctx, i) => AspectRatio(
-                                    child: GridItemPlaceholder(),
-                                    aspectRatio: 8 / 16,
-                                  ),
-                                )
-                              : ListView.builder(
-                                  physics: ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: model.items.length,
-                                  itemBuilder: (ctx, i) => AspectRatio(
-                                    child: ItemGridView(item: model.items[i]),
-                                    aspectRatio: 8 / 16,
-                                  ),
+        final child = !model.initialised
+            ? Container(
+                height: 10,
+                child: LinearProgressIndicator(),
+              )
+            : model.isBusy
+                ? LinearProgressIndicator()
+                : model.items.length > 0 ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Divider(indent: 8, endIndent: 8),
+                      ListTile(
+                          title: Text(recommendationType.name,
+                              style: Theme.of(context).textTheme.headline5)),
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        constraints: BoxConstraints(
+                            minHeight: height - 100, maxHeight: height + 50),
+                        child: model.isBusy
+                            ? ListView.builder(
+                                physics: ClampingScrollPhysics(),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 3,
+                                itemBuilder: (ctx, i) => AspectRatio(
+                                  child: GridItemPlaceholder(),
+                                  aspectRatio: 8 / 16,
                                 ),
-                        ),
-                      ],
-                    ),
-        );
+                              )
+                            : ListView.builder(
+                                physics: ClampingScrollPhysics(),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: model.items.length,
+                                itemBuilder: (ctx, i) => AspectRatio(
+                                  child: ItemGridView(item: model.items[i]),
+                                  aspectRatio: 8 / 16,
+                                ),
+                              ),
+                      ),
+                    ],
+                  ) : Container();
+        return sliver ? SliverToBoxAdapter(child: child) : child;
       },
     );
   }
