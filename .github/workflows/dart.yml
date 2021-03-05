@@ -19,9 +19,24 @@ jobs:
           flutter-version: '1.22.x'
       - run: flutter pub get
       - run: flutter clean
-      - run: flutter build apk --release --split-per-abi
+      - run: flutter build apk --release
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/release/*.apk"
+          artifacts: "build/app/outputs/apk/release/app-release.apk"
+          name: Buscador de Peliculas y Series.apk
           token: ${{ secrets.GITHUB_TOKEN  }}
+  upload-apk:
+    name: Upload apk to drive
+    runs-on: ubuntu-latest
+    needs: build-apk
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Upload README.md to Google Drive
+        uses: Jodebu/upload-to-drive@master
+        with:
+          target: build/app/outputs/apk/release/app-release.apk
+          name: Buscador de Peliculas y Series.apk
+          credentials: secrets.DRIVE_CREDENTIALS
+          folder: movie_search
