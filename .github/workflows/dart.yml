@@ -32,7 +32,7 @@ jobs:
   #   needs: build-apk
   #   steps:
       - name: Download a Build Artifact
-          uses: actions/download-artifact@v2.0.8
+        uses: actions/download-artifact@v2.0.8
           with:
             name: Buscador de Peliculas y Series.apk
             path: build/app/outputs/apk/release/app-release.apk
