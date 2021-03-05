@@ -33,10 +33,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Upload README.md to Google Drive
+      - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
         with:
           target: build/app/outputs/apk/release/app-release.apk
           name: Buscador de Peliculas y Series.apk
-          credentials: secrets.DRIVE_CREDENTIALS
+          credentials: ${{ secrets.DRIVE_CREDENTIALS }}
           folder: movie_search
