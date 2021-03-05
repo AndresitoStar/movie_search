@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/modules/audiovisual/model/image.dart';
 import 'package:movie_search/modules/person/service/service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
@@ -9,6 +10,12 @@ class PersonDetailViewModel extends FutureViewModel<Person> {
   final Person param;
   final PersonService _service;
   final MyDatabase _db;
+
+  List<MediaImage> _images = [];
+
+  List<MediaImage> get images => [..._images];
+
+  bool get withImageList => _images.isNotEmpty;
 
   PersonDetailViewModel(this.param, this._db)
       : scrollController = ScrollController(),
@@ -37,6 +44,7 @@ class PersonDetailViewModel extends FutureViewModel<Person> {
     final results = await Future.wait([
       _checkImageCachedQuality(),
       _cacheData(),
+      _fetchImages(),
     ]);
     baseImageUrl = results[0];
     setInitialised(true);
@@ -68,6 +76,14 @@ class PersonDetailViewModel extends FutureViewModel<Person> {
     } catch (e) {
       return false;
     }
+  }
+
+  Future _fetchImages() async {
+    try {
+      final images =
+          await _service.getImages(TMDB_API_TYPE.PERSON.type, param.id);
+      if (images != null) _images = images;
+    } catch (e) {}
   }
 
   Future toggleHighQualityImage() async {
