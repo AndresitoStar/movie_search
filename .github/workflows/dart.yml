@@ -19,13 +19,13 @@ jobs:
           flutter-version: '1.22.x'
       - run: flutter pub get
       - run: flutter clean
-      - run: flutter build apk --release --split-per-abi
-  #     - name: Create a Release APK
-  #       uses: ncipollo/release-action@v1
-  #       with:
-  #         artifacts: "build/app/outputs/apk/release/app-release.apk"
-  #         name: Buscador de Peliculas y Series.apk
-  #         token: ${{ secrets.GITHUB_TOKEN  }}
+      - run: flutter build apk --release --target-platform android-arm,android-arm64
+      - name: Create a Release APK
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/app-release.apk"
+          name: Buscador de Peliculas y Series.apk
+          token: ${{ secrets.GITHUB_TOKEN  }}
   # upload-apk:
   #   name: Upload apk to drive
   #   runs-on: ubuntu-latest
@@ -34,12 +34,13 @@ jobs:
     - name: Download a Build Artifact
         uses: actions/download-artifact@v2.0.8
         with:
-          path: # optional
+          name: Buscador de Peliculas y Series.apk
+          path: build/app/outputs/apk/release/app-release.apk
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
         with:
-          target: pubspec.yaml
+          target: Buscador de Peliculas y Series.apk
           credentials: ${{ secrets.DRIVE_CREDENTIALS }}
           folder: movie_search
