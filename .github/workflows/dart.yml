@@ -34,7 +34,7 @@ jobs:
       - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
         with:
-          target: build/app/outputs/flutter-apk
+          target: /build/app/outputs/flutter-apk/
           name: Buscador de Peliculas y Series.apk
           credentials: ${{ secrets.DRIVE_CREDENTIALS }}
           folder: movie_search
