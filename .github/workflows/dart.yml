@@ -41,20 +41,20 @@ jobs:
         uses: Jodebu/upload-to-drive@master
         with:
           target: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-          name: Buscador_${{ steps.semvers.outputs.patch }}_arm64_v8a.apk
+          # name: Buscador_${{ steps.semvers.outputs.patch }}_arm64_v8a.apk
           credentials: ${{ secrets.DRIVE_CREDENTIALS }}
           folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
       - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
         with:
           target: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-          name: Buscador_${{ steps.semvers.outputs.patch }}_armeabi_v7a.apk
+          # name: Buscador_${{ steps.semvers.outputs.patch }}_armeabi_v7a.apk
           credentials: ${{ secrets.DRIVE_CREDENTIALS }}
           folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
       - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
         with:
           target: build/app/outputs/flutter-apk/app-x86_64-release.apk
-          name: Buscador_${{ steps.semvers.outputs.patch }}_x86_64.apk
+          # name: Buscador_${{ steps.semvers.outputs.patch }}_x86_64.apk
           credentials: ${{ secrets.DRIVE_CREDENTIALS }}
           folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
