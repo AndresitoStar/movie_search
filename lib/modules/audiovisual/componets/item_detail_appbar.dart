@@ -46,10 +46,7 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
             child: Column(
               children: [
                 Flexible(
-                  child: Container(
-                    width: double.infinity,
-                    child: DetailMainImage(),
-                  ),
+                  child: DetailMainImage(),
                 ),
               ],
             ),

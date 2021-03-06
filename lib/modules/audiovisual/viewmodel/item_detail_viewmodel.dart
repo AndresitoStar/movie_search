@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/data/moor_database.dart';
@@ -22,7 +24,7 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
 
   List<MediaImage> _images = [];
 
-  List<MediaImage> get images => [..._images];
+  List<String> get images => [image,..._images.map((e) => e.filePath).toList()];
 
   bool get isHighQualityImage => _highQualityImage;
 
@@ -32,9 +34,14 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
 
   String get image => _param.image;
 
+  int currentImage = 0;
+
+  Timer timer;
+
   @override
   void dispose() {
     scrollController.dispose();
+    timer?.cancel();
     super.dispose();
   }
 
@@ -93,9 +100,15 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
   Future _fetchImages() async {
     try {
       final images = await _service.getImages(_param.type.type, _param.id);
-      if (images != null) _images = images;
-    } catch (e) {
-    }
+      if (images != null && images.isNotEmpty) {
+        _images.addAll(images);
+        timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
+          currentImage =
+              currentImage == images.length - 1 ? 0 : currentImage + 1;
+          notifyListeners();
+        });
+      }
+    } catch (e) {}
   }
 
   Future toggleHighQualityImage() async {

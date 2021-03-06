@@ -65,6 +65,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
                       style: Theme.of(context).textTheme.headline4),
                 ),
                 Expanded(child: Container()),
+                if (item.movie != null && item.movie.video) Icon(Icons.video_call),
                 ItemLikeButton(id: item.id, type: viewModel.data.type),
               ],
             ),
