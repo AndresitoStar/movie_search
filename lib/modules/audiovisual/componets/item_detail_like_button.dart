@@ -33,11 +33,7 @@ class ItemLikeButton extends StatelessWidget {
                   initialData: [],
                   builder: (context, snapshot) {
                     return IconButton(
-                      icon: Icon(
-                        snapshot.data.contains(id)
-                            ? MyIcons.favourite_on
-                            : MyIcons.favourite_off,
-                      ),
+                      icon: Icon(MyIcons.favourite_on),
                       iconSize: this.iconSize,
                       color:
                           snapshot.data.contains(id) ? Colors.red : Colors.grey,

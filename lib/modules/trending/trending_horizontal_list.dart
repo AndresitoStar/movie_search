@@ -59,9 +59,10 @@ class TrendingHorizontalList extends StatelessWidget {
                       child: model.items.length > i
                           ? ItemGridView(
                               item: model.items[i],
+                              showData: false,
                             )
                           : GridItemPlaceholder(),
-                      aspectRatio: 8 / 16,
+                      aspectRatio: 8 / 15,
                     ),
             ),
           ),

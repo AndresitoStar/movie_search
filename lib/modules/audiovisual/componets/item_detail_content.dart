@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
+import 'package:movie_search/modules/imdb_rating/components/imdb_rating.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:stacked/stacked.dart';
@@ -58,14 +59,26 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
             child: Row(
               children: [
-                Icon(MyIcons.imdb, color: Colors.orange, size: 60),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('${item.voteAverage}',
-                      style: Theme.of(context).textTheme.headline4),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(MyIcons.people, size: 30),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('${item.voteAverage}',
+                              style: Theme.of(context).textTheme.headline6),
+                        ),
+                      ],
+                    ),
+                    ImbdbRatingView(item.id, item.type.type,
+                    imdbId: item.movie?.imdbId),
+                  ],
                 ),
                 Expanded(child: Container()),
-                if (item.movie != null && item.movie.video) Icon(Icons.video_call),
+                if (item.movie != null && item.movie.video)
+                  Icon(Icons.video_call),
                 ItemLikeButton(id: item.id, type: viewModel.data.type),
               ],
             ),
@@ -76,7 +89,8 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
               child: Wrap(
                 alignment: WrapAlignment.center,
                 spacing: 8,
-                children: item.genres.where((element) => element.isNotEmpty)
+                children: item.genres
+                    .where((element) => element.isNotEmpty)
                     .map((e) => Chip(
                           label: Text(e),
                           elevation: 3,

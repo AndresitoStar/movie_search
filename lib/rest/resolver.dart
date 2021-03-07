@@ -13,12 +13,12 @@ abstract class BaseService {
 
   Map<String, dynamic> get baseParams => {..._baseParams};
 
-  final Map<String, dynamic> _baseParseParams = {
+  final Map<String, dynamic> _baseParseHeaders = {
     'X-Parse-Application-Id': 'gvoaJEkVpRdAftO8vI9uKQZZA6m7llGC05QkQBa1',
     'X-Parse-REST-API-Key': '7BYTnyTQt9Pw1XEpSF0k6ygIF4f0VxXUnKcOdVSC',
   };
 
-  Map<String, dynamic> get baseParseParams => {..._baseParseParams};
+  Map<String, dynamic> get baseParseParams => {..._baseParseHeaders};
 
   BaseService() {
     clientTMDB = new Dio();
@@ -30,12 +30,13 @@ abstract class BaseService {
     clientOMDB.options.baseUrl = 'https://www.omdbapi.com';
     clientOMDB.options.connectTimeout = 20000;
     clientOMDB.options.receiveTimeout = 20000;
+    clientOMDB.options.queryParameters = {"apikey": "9eb7fce9"};
 
     parseClient = new Dio();
     parseClient.options.baseUrl = 'https://parseapi.back4app.com/parse/';
     parseClient.options.connectTimeout = 20000; //5s
     parseClient.options.receiveTimeout = 20000;
-    parseClient.options.headers = _baseParseParams;
+    parseClient.options.headers = _baseParseHeaders;
   }
 
   Future<List<MediaImage>> getImages(String type, int typeId) async {

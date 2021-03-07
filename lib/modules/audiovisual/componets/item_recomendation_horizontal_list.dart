@@ -58,7 +58,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                                 itemCount: model.items.length,
                                 itemBuilder: (ctx, i) => AspectRatio(
                                   child: ItemGridView(item: model.items[i]),
-                                  aspectRatio: 8 / 16,
+                                  aspectRatio: 8 / 15,
                                 ),
                               ),
                       ),

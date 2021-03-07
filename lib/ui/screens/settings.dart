@@ -11,7 +11,6 @@ import 'package:package_info/package_info.dart';
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final db = Provider.of<MyDatabase>(context, listen: false);
     return CustomScaffold(
       appBar: AppBar(
         title: Text('Ajustes'),
@@ -20,6 +19,8 @@ class SettingsScreen extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         titleSpacing: 0,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       bottomBarIndex: 3,
       body: Column(
@@ -71,7 +72,7 @@ class SettingsScreen extends StatelessWidget {
                   //       icon: Icon(FrinoIcons.f_eraser),
                   //       onPressed: () => db.cleanAudiovisualData()),
                   // ),
-                  Divider(),
+                  // Divider(),
                   ListTile(
                     onTap: () => showAbout(context),
                     title: Text('Acerca de...',

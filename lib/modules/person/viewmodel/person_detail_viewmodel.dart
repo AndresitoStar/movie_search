@@ -51,6 +51,17 @@ class PersonDetailViewModel extends FutureViewModel<Person> {
     return results[1];
   }
 
+  String age() {
+    if (dataReady && data.birthday != null) {
+      DateTime birth = DateTime.parse(data.birthday);
+      DateTime death = data.deathday != null ? DateTime.parse(data.deathday) : DateTime.now();
+
+      final age = death.difference(birth).inDays / 365.25;
+      return age.floor().toStringAsFixed(0);
+    }
+    return null;
+  }
+
   Future<Person> _cacheData() async {
     final _dbAv = await _db.getPersonById(param.id);
     if (_dbAv != null) {

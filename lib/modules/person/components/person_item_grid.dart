@@ -80,16 +80,12 @@ class PersonItemGridView extends StatelessWidget {
                             bottom: 5,
                             right: 5,
                             child: CircleAvatar(
-                              radius: 21,
-                              backgroundColor: Colors.black,
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Colors.white,
-                                child: ItemLikeButton(
-                                  id: person.id,
-                                  type: TMDB_API_TYPE.PERSON,
-                                  iconSize: 24,
-                                ),
+                              radius: 20,
+                              backgroundColor: Colors.white12,
+                              child: ItemLikeButton(
+                                id: person.id,
+                                type: TMDB_API_TYPE.PERSON,
+                                iconSize: 24,
                               ),
                             ),
                           )
@@ -101,19 +97,22 @@ class PersonItemGridView extends StatelessWidget {
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
-                          fontSize: 16, color: Theme.of(context).accentColor),
+                      style: Theme.of(context).textTheme.subtitle2.copyWith(
+                          fontSize: 18,)
                     ),
-                    subtitle: Text(
-                      '${person?.character ?? ''}' ?? '',
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle2
-                          .copyWith(fontSize: 14, fontStyle: FontStyle.italic),
-                    ),
+                    subtitle: person?.character == null
+                        ? null
+                        : Text(
+                            '${person?.character ?? ''}' ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle2
+                                .copyWith(
+                                    fontSize: 13, fontStyle: FontStyle.italic),
+                          ),
                   )
                 ],
               ),

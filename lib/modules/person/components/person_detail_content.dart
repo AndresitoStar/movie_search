@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_ui_util.dart';
-import 'package:movie_search/modules/audiovisual/componets/item_recomendation_horizontal_list.dart';
-import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
 import 'package:movie_search/modules/person/viewmodel/person_detail_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
@@ -29,15 +28,25 @@ class PersonDetailContent extends ViewModelWidget<PersonDetailViewModel> {
                   ),
                 ),
               ),
-              if (item.birthday != null)
-                Text(
-                    '${item.birthday ?? ''} - ${item.deathday ?? 'actualidad'}',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.subtitle1),
-              // Text( //TODO Edad
-              //     '${item.birthday ?? ''} - ${item.deathday ?? 'actualidad'}',
-              //     textAlign: TextAlign.center,
-              //     style: Theme.of(context).textTheme.subtitle1),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  if (item.birthday != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            '${item.birthday ?? ''} - ${item.deathday ?? 'actualidad'}',
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.subtitle1),
+                        Text('Edad: ${viewModel.age()} años',
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.subtitle1),
+                      ],
+                    ),
+                  ItemLikeButton(id: item.id, type: TMDB_API_TYPE.PERSON, iconSize: 45),
+                ],
+              ),
               ContentDivider(value: item.biography),
               ContentHorizontal(content: item.biography),
               ContentRow(

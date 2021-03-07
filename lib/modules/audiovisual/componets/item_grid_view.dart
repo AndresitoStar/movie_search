@@ -61,7 +61,6 @@ class ItemGridView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Expanded(
-                      flex: 5,
                       child: Material(
                         color: withThemeColor
                             ? Theme.of(context).cardColor
@@ -69,7 +68,8 @@ class ItemGridView extends StatelessWidget {
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            Container(
+                            AspectRatio(
+                              aspectRatio: 9 / 16,
                               child: item.image != null
                                   ? CachedNetworkImage(
                                       imageUrl:
@@ -88,7 +88,7 @@ class ItemGridView extends StatelessWidget {
                                     )
                                   : PlaceholderImage(),
                             ),
-                            if (item.year != null)
+                            if (showData && item.year != null)
                               Positioned(
                                 top: 0,
                                 left: 0,
@@ -107,57 +107,49 @@ class ItemGridView extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            Positioned(
-                              top: 0,
-                              right: 0,
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                child: Icon(MyIcons.iconFromType(item.type),color: Colors.black87),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .accentColor
-                                      .withOpacity(0.8),
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(10)),
+                            if (showData)
+                              Positioned(
+                                top: 0,
+                                right: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Icon(MyIcons.iconFromType(item.type),
+                                      color: Colors.black87),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .accentColor
+                                        .withOpacity(0.8),
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10)),
+                                  ),
                                 ),
                               ),
-                            ),
+                            Positioned(
+                              bottom: 5,
+                              right: 5,
+                              child: CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.white12,
+                                child: ItemLikeButton(
+                                  id: item.id,
+                                  type: item.type,
+                                  iconSize: 24,
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       )),
-                  Expanded(
-                    flex: 2,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                            bottom: 12,
-                            left: 12,
-                            child: Text(
-                              '${item.voteAverage}',
-                              style: Theme.of(context).textTheme.subtitle1,
-                            )),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: ItemLikeButton(
-                            id: item.id,
-                            type: item.type,
-                            iconSize: 20,
-                          ),
-                        ),
-                        ListTile(
-                          title: Text(
-                            item.title ?? '' + '\n',
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .copyWith(fontSize: 16),
-                          ),
-                        ),
-                      ],
+                  ListTile(
+                    title: Text(
+                      item.title ?? '' + '\n',
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(fontSize: 16),
                     ),
                   )
                 ],
