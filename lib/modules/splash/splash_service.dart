@@ -10,7 +10,7 @@ class SplashService extends BaseService {
 
   SplashService._() : super();
 
-  Future<bool> checkIsDeviceEnable(String deviceId, {String email}) async {
+  Future<bool> checkIsDeviceEnable(String deviceId) async {
     try {
       final response =
           await parseClient.get('/classes/devices', queryParameters: {
@@ -29,7 +29,8 @@ class SplashService extends BaseService {
     return false;
   }
 
-  Future updateMyDevice(String deviceId, String email) async {
+  Future updateMyDevice(
+      String deviceId, {String email, String phoneModel}) async {
     try {
       final response =
           await parseClient.get('/classes/devices', queryParameters: {
@@ -39,7 +40,8 @@ class SplashService extends BaseService {
       if (results.isNotEmpty) {
         final id = results[0]['objectId'] as String;
         return parseClient.put('/classes/devices/$id', data: {
-          "email": email,
+          if (email != null) "email": email,
+          "phone_model": phoneModel,
         });
       }
     } catch (e) {}

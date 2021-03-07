@@ -36,16 +36,21 @@ class SplashViewModel extends FutureViewModel {
   }
 
   Future validate() async {
+    setBusy(true);
     AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
+    String phoneModel = '${androidInfo.brand} ${androidInfo.model}';
+    await _splashService.updateMyDevice(androidInfo.androidId, phoneModel: phoneModel);
     final isEnabled =
         await _splashService.checkIsDeviceEnable(androidInfo.androidId);
     setInitialised(isEnabled);
+    setBusy(false);
   }
 
   Future sendData() async {
     setBusy(true);
     AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
-    await _splashService.updateMyDevice(androidInfo.androidId, email);
+    String phoneModel = '${androidInfo.brand} ${androidInfo.model}';
+    await _splashService.updateMyDevice(androidInfo.androidId, email: email, phoneModel: phoneModel);
     setBusy(false);
     form.reset();
   }

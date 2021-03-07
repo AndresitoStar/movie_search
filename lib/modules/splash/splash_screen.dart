@@ -45,6 +45,7 @@ class SplashScreen extends StatelessWidget {
             SizedBox(height: 20),
             ReactiveTextField(
               formControlName: 'email',
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5.0),
@@ -89,11 +90,17 @@ class SplashScreen extends StatelessWidget {
               },
             ),
             SizedBox(height: 20),
-            ReactiveFormConsumer(
-              builder: (context, formGroup, child) => RaisedButton(
-                onPressed: formGroup.valid ? () => model.sendData() : null,
-                child: Text('Solicitar'),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                RaisedButton(onPressed: () => model.validate(), child: Text('Actualizar')),
+                ReactiveFormConsumer(
+                  builder: (context, formGroup, child) => RaisedButton(
+                    onPressed: formGroup.valid ? () => model.sendData() : null,
+                    child: Text('Solicitar acceso'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
