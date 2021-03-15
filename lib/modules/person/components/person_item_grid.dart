@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/person/components/person_detail_screen.dart';
-import 'package:movie_search/modules/person/service/service.dart';
 import 'package:movie_search/modules/person/viewmodel/person_item_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
-
-import 'package:provider/provider.dart';
 
 class PersonItemGridView extends StatelessWidget {
   final Person person;
@@ -21,8 +18,7 @@ class PersonItemGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<PersonItemViewModel>.reactive(
-      viewModelBuilder: () => PersonItemViewModel(
-          PersonService.getInstance(), this.person, context.read()),
+      viewModelBuilder: () => PersonItemViewModel(this.person),
       disposeViewModel: true,
       builder: (context, model, child) {
         if (!model.initialised) return GridItemPlaceholder();

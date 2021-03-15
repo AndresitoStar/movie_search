@@ -11,7 +11,6 @@ class PersonDetailSliverAppBar extends ViewModelWidget<PersonDetailViewModel> {
   @override
   Widget build(BuildContext context, model) {
     final mq = MediaQuery.of(context);
-    final theme = Theme.of(context);
     return SliverAppBar(
       pinned: true,
       expandedHeight: mq.size.height * 2/3,

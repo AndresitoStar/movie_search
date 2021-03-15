@@ -1,11 +1,8 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
-import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
-import 'package:provider/provider.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingsScreen extends StatelessWidget {

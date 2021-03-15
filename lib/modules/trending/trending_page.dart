@@ -92,7 +92,6 @@ class TrendingPage extends StatelessWidget {
 
   showFilters(
       BuildContext context, String type, TrendingViewModel viewModel) async {
-    final theme = Theme.of(context);
     final result = await showModalBottomSheet<Map<String, bool>>(
       context: context,
       isDismissible: false,
@@ -137,16 +136,14 @@ class TrendingPage extends StatelessWidget {
                         alignment: WrapAlignment.start,
                         spacing: 16,
                         children: model.genres
-                            .map((e) => RaisedButton(
+                            .map((e) => ElevatedButton(
                                   onPressed: () => model.toggle(e.id),
-                                  shape: RoundedRectangleBorder(
+                                  style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                  ),
+                                  ))),
                                   child: Text(e.name),
-                                  color: model.filterGenre != null &&
-                                          model.filterGenre[e.id]
-                                      ? theme.accentColor
-                                      : theme.cardColor,
                                 ))
                             .toList(),
                       ),

@@ -10,7 +10,7 @@ class Credit {
   Credit.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     if (json['cast'] != null) {
-      cast = List<Person>();
+      cast = <Person>[];
       json['cast'].forEach((v) {
         cast.add(ResponseApiParser.personFromJsonApi(v));
       });

@@ -14,11 +14,6 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
     final item = viewModel.data;
     final dynamic data =
         item.type == TMDB_API_TYPE.MOVIE ? item.movie : item.tvShow;
-    final Map<TMDB_API_TYPE, IconData> _typeIcons = {
-      TMDB_API_TYPE.MOVIE: MyIcons.movie,
-      TMDB_API_TYPE.TV_SHOW: MyIcons.tv,
-      TMDB_API_TYPE.PERSON: MyIcons.castMale
-    };
     return SliverList(
       delegate: SliverChildListDelegate(
         <Widget>[
@@ -40,7 +35,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
               ),
             ),
           ),
-          Text(item.type.name, textAlign: TextAlign.center),
+          Text('${item.type.name}, ${item.status ?? ''}', textAlign: TextAlign.center),
           Visibility(
             visible: item.titleOriginal != item.title,
             child: Padding(
@@ -79,7 +74,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
                 Expanded(child: Container()),
                 if (item.movie != null && item.movie.video)
                   Icon(Icons.video_call),
-                ItemLikeButton(id: item.id, type: viewModel.data.type),
+                ItemLikeButton(id: item.id, type: viewModel.data.type, iconSize: 42),
               ],
             ),
           ),

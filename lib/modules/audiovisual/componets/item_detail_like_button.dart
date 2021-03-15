@@ -33,7 +33,9 @@ class ItemLikeButton extends StatelessWidget {
                   initialData: [],
                   builder: (context, snapshot) {
                     return IconButton(
-                      icon: Icon(MyIcons.favourite_on),
+                      icon: Icon(snapshot.data.contains(id)
+                          ? MyIcons.favourite_on
+                          : MyIcons.favourite_off),
                       iconSize: this.iconSize,
                       color:
                           snapshot.data.contains(id) ? Colors.red : Colors.grey,
@@ -48,11 +50,9 @@ class ItemLikeButton extends StatelessWidget {
 
   _onLikeButtonTap(
       BuildContext context, ItemLikeButtonViewModel model, bool isLiked) async {
-    final ScaffoldState scaffoldState =
-        context.findRootAncestorStateOfType<ScaffoldState>();
     await model.toggleFavourite(id);
-    if (scaffoldState != null) {
-      scaffoldState.showSnackBar(SnackBar(
+    if (context.scaffoldMessenger != null) {
+      context.scaffoldMessenger.showSnackBar(SnackBar(
         duration: Duration(seconds: 1),
         content: Text(isLiked
             ? 'Eliminado de Mis Favoritos'

@@ -11,8 +11,6 @@ import 'package:movie_search/providers/util.dart';
 import 'item_detail_appbar.dart';
 import 'item_recomendation_horizontal_list.dart';
 
-import 'dart:math' as math;
-
 class ItemDetailPage extends StatelessWidget {
   final BaseSearchResult item;
 

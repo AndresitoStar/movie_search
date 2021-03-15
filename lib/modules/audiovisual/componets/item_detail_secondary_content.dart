@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
-import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
 import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/ui/icons.dart';
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_ui_util.dart';

@@ -86,17 +86,4 @@ class AudiovisualService extends BaseService {
     return result;
   }
 
-  Future<String> _getImdbRating(String imdbId) async {
-    try {
-      var params = {'apikey': '9eb7fce9', 'i': imdbId, 'r': 'json'};
-      var response = await clientOMDB.get('/', queryParameters: params);
-      if (response.statusCode == 200) {
-        var result = response.data;
-        return result["imdbRating"];
-      }
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
 }

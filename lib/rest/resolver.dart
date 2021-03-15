@@ -6,6 +6,8 @@ abstract class BaseService {
   Dio clientOMDB;
   Dio parseClient;
 
+  static const _DEFAULT_TIMEOUT = 5 * 1000;
+
   final Map<String, dynamic> _baseParams = {
     'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
     'language': 'es-ES',
@@ -23,19 +25,19 @@ abstract class BaseService {
   BaseService() {
     clientTMDB = new Dio();
     clientTMDB.options.baseUrl = 'https://api.themoviedb.org/3/';
-    clientTMDB.options.connectTimeout = 20000; //5s
-    clientTMDB.options.receiveTimeout = 20000;
+    clientTMDB.options.connectTimeout = _DEFAULT_TIMEOUT; //5s
+    clientTMDB.options.receiveTimeout = _DEFAULT_TIMEOUT;
 
     clientOMDB = new Dio();
     clientOMDB.options.baseUrl = 'https://www.omdbapi.com';
-    clientOMDB.options.connectTimeout = 20000;
-    clientOMDB.options.receiveTimeout = 20000;
+    clientOMDB.options.connectTimeout = _DEFAULT_TIMEOUT;
+    clientOMDB.options.receiveTimeout = _DEFAULT_TIMEOUT;
     clientOMDB.options.queryParameters = {"apikey": "9eb7fce9"};
 
     parseClient = new Dio();
     parseClient.options.baseUrl = 'https://parseapi.back4app.com/parse/';
-    parseClient.options.connectTimeout = 20000; //5s
-    parseClient.options.receiveTimeout = 20000;
+    parseClient.options.connectTimeout = _DEFAULT_TIMEOUT; //5s
+    parseClient.options.receiveTimeout = _DEFAULT_TIMEOUT;
     parseClient.options.headers = _baseParseHeaders;
   }
 

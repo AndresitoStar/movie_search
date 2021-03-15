@@ -11,25 +11,22 @@ class OnboardScreen extends StatelessWidget {
       _getPage(
         context: context,
         assetImage: 'assets/images/o_1.webp',
-        index: 0,
         text: 'DESCUBRE',
       ),
       _getPage(
         context: context,
         assetImage: 'assets/images/o_2.webp',
-        index: 0,
         text: 'DISFRUTA',
       ),
       _getPage(
         context: context,
         assetImage: 'assets/images/o_3.webp',
-        index: 0,
         text: 'COLECCIONA',
+        last: true,
       ),
     ];
     return Scaffold(
       body: PageView.builder(
-        
         itemBuilder: (context, i) => pages[i],
         itemCount: pages.length,
       ),
@@ -37,7 +34,10 @@ class OnboardScreen extends StatelessWidget {
   }
 
   Widget _getPage(
-      {BuildContext context, String assetImage, String text, int index}) {
+      {BuildContext context,
+      String assetImage,
+      String text,
+      bool last = false}) {
     return Container(
       color: Color(0xff141414),
       child: Stack(
@@ -61,6 +61,16 @@ class OnboardScreen extends StatelessWidget {
                   .copyWith(color: Colors.white70),
             ),
           ),
+          if (last)
+            Positioned(
+              right: 10,
+              bottom: 10,
+              child: ElevatedButton(
+                onPressed: () => navigateToHome(context),
+                child: Text('Comenzar'),
+                style: ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
+              ),
+            ),
         ],
       ),
     );

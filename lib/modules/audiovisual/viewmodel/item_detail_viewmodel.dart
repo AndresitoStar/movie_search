@@ -54,28 +54,32 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
     ]);
     baseImageUrl = results[0];
     setInitialised(true);
-    return results[1];
+    return results[1] ?? _param;
   }
 
   Future<BaseSearchResult> _cacheData() async {
-    if (_param.type == TMDB_API_TYPE.MOVIE) {
-      final _dbMovie = await _db.getMovieById(_param.id);
-      if (_dbMovie != null) {
-        return BaseSearchResult.fromMovie(_dbMovie);
+    try {
+      if (_param.type == TMDB_API_TYPE.MOVIE) {
+        final _dbMovie = await _db.getMovieById(_param.id);
+        if (_dbMovie != null) {
+          return BaseSearchResult.fromMovie(_dbMovie);
+        }
+        final Movie movie =
+            await _service.getById(id: _param.id, type: _param.type.type);
+        _db.insertMovie(movie);
+        return BaseSearchResult.fromMovie(movie);
+      } else if (_param.type == TMDB_API_TYPE.TV_SHOW) {
+        final _dbTv = await _db.getTvShowById(_param.id);
+        if (_dbTv != null) {
+          return BaseSearchResult.fromTv(_dbTv);
+        }
+        final TvShow tv =
+            await _service.getById(id: _param.id, type: _param.type.type);
+        _db.insertTvShow(tv);
+        return BaseSearchResult.fromTv(tv);
       }
-      final Movie movie =
-          await _service.getById(id: _param.id, type: _param.type.type);
-      _db.insertMovie(movie);
-      return BaseSearchResult.fromMovie(movie);
-    } else if (_param.type == TMDB_API_TYPE.TV_SHOW) {
-      final _dbTv = await _db.getTvShowById(_param.id);
-      if (_dbTv != null) {
-        return BaseSearchResult.fromTv(_dbTv);
-      }
-      final TvShow tv =
-          await _service.getById(id: _param.id, type: _param.type.type);
-      _db.insertTvShow(tv);
-      return BaseSearchResult.fromTv(tv);
+    } catch (err) {
+      print(err);
     }
     return _param;
   }
@@ -108,7 +112,9 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
           notifyListeners();
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future toggleHighQualityImage() async {

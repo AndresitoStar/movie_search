@@ -11,7 +11,7 @@ class SplashService extends BaseService {
   SplashService._() : super();
 
   Future<bool> checkIsDeviceEnable(String deviceId) async {
-    try {
+    // try {
       final response =
           await parseClient.get('/classes/devices', queryParameters: {
         'where': {"deviceId": deviceId},
@@ -23,15 +23,16 @@ class SplashService extends BaseService {
       } else {
         await insertMyDevice(deviceId);
       }
-    } catch (e) {
-      print(e);
-    }
+    // }
+    // catch (e) {
+      // print(e);
+    // }
     return false;
   }
 
   Future updateMyDevice(
       String deviceId, {String email, String phoneModel}) async {
-    try {
+    // try {
       final response =
           await parseClient.get('/classes/devices', queryParameters: {
         'where': {"deviceId": deviceId},
@@ -44,26 +45,26 @@ class SplashService extends BaseService {
           "phone_model": phoneModel,
         });
       }
-    } catch (e) {}
+    // } catch (e) {}
   }
 
   Future insertMyDevice(String deviceId) async {
-    try {
+    // try {
       return parseClient.post('/classes/devices', data: {
         "deviceId": deviceId,
       }, queryParameters: {
         ...baseParseParams,
         "Content-Type": 'application/json',
       });
-    } catch (e) {
-      print(e);
-    }
+    // } catch (e) {
+    //   print(e);
+    // }
   }
 
   Future<Map<String, String>> getCountries() async {
     Map<String, String> result = {};
 
-    try {
+    // try {
       var response = await clientTMDB.get('/configuration/countries',
           queryParameters: baseParams);
       if (response.statusCode == 200) {
@@ -77,9 +78,9 @@ class SplashService extends BaseService {
         print(response.statusCode);
         //TODO LANZAR EXCEPTION
       }
-    } catch (e) {
-      print(e);
-    }
+    // } catch (e) {
+    //   print(e);
+    // }
 
     return result;
   }
@@ -87,7 +88,7 @@ class SplashService extends BaseService {
   Future<Map<String, String>> getLanguages() async {
     Map<String, String> result = {};
 
-    try {
+    // try {
       var response = await clientTMDB.get('/configuration/languages',
           queryParameters: baseParams);
       if (response.statusCode == 200) {
@@ -97,13 +98,13 @@ class SplashService extends BaseService {
               key: (item) => item['iso_639_1'],
               value: (item) => item['english_name']);
         }
-      } else {
-        print(response.statusCode);
+      // } else {
+      //   print(response.statusCode);
         //TODO LANZAR EXCEPTION
       }
-    } catch (e) {
-      print(e);
-    }
+    // } catch (e) {
+      // print(e);
+    // }
 
     return result;
   }
@@ -111,7 +112,7 @@ class SplashService extends BaseService {
   Future<Map<int, String>> getGenres(String type) async {
     Map<int, String> result = {};
 
-    try {
+    // try {
       var response = await clientTMDB.get('/genre/$type/list',
           queryParameters: baseParams);
       if (response.statusCode == 200) {
@@ -124,9 +125,9 @@ class SplashService extends BaseService {
         print(response.statusCode);
         //TODO LANZAR EXCEPTION
       }
-    } catch (e) {
-      print(e);
-    }
+    // } catch (e) {
+      // print(e);
+    // }
 
     return result;
   }

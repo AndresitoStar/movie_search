@@ -49,7 +49,7 @@ class ResponseApiParser {
       String genres, productionCompanies, productionCountries, spokenLanguages;
       if (json['genres'] != null) {
         try {
-          final list = List<Genres>();
+          final list = <Genres>[];
           json['genres'].forEach((v) {
             list.add(Genres.fromJson(v));
           });
@@ -58,7 +58,7 @@ class ResponseApiParser {
       }
       if (json['production_companies'] != null) {
         try {
-          final list = List<ProductionCompanies>();
+          final list = <ProductionCompanies>[];
           json['production_companies'].forEach((v) {
             list.add(ProductionCompanies.fromJson(v));
           });
@@ -67,7 +67,7 @@ class ResponseApiParser {
       }
       if (json['production_countries'] != null) {
         try {
-          final list = List<ProductionCountries>();
+          final list = <ProductionCountries>[];
           json['production_countries'].forEach((v) {
             list.add(ProductionCountries.fromJson(v));
           });
@@ -76,7 +76,7 @@ class ResponseApiParser {
       }
       if (json['spoken_languages'] != null) {
         try {
-          final list = List<SpokenLanguages>();
+          final list = <SpokenLanguages>[];
           json['spoken_languages'].forEach((v) {
             list.add(SpokenLanguages.fromJson(v));
           });
@@ -120,35 +120,35 @@ class ResponseApiParser {
           spokenLanguages;
       int episodesRuntime;
       if (json['created_by'] != null) {
-        final list = List<String>();
+        final list = <String>[];
         json['created_by'].forEach((v) {
           list.add(CreatedBy.fromJson(v).name);
         });
         createdBy = list.join(', ');
       }
       if (json['genres'] != null) {
-        final list = List<String>();
+        final list = <String>[];
         json['genres'].forEach((v) {
           list.add(Genres.fromJson(v).name);
         });
         genres = list?.join(', ');
       }
       if (json['production_companies'] != null) {
-        final list = List<String>();
+        final list = <String>[];
         json['production_companies'].forEach((v) {
           list.add(ProductionCompanies.fromJson(v).name);
         });
         productionCompanies = list.join(', ');
       }
       if (json['production_countries'] != null) {
-        final list = List<String>();
+        final list = <String>[];
         json['production_countries'].forEach((v) {
           list.add(ProductionCountries.fromJson(v).name);
         });
         productionCountries = list.join(', ');
       }
       if (json['spoken_languages'] != null) {
-        final list = List<String>();
+        final list = <String>[];
         json['spoken_languages'].forEach((v) {
           list.add(SpokenLanguages.fromJson(v).englishName);
         });
@@ -190,9 +190,13 @@ class ResponseApiParser {
   }
 }
 
-const String URL_IMAGE_SMALL = 'http://image.tmdb.org/t/p/w92';
-const String URL_IMAGE_MEDIUM = 'http://image.tmdb.org/t/p/w342';
-const String URL_IMAGE_BIG = 'http://image.tmdb.org/t/p/w780';
+const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w92';
+const String URL_IMAGE_MEDIUM = 'https://image.tmdb.org/t/p/w342';
+const String URL_IMAGE_BIG = 'https://image.tmdb.org/t/p/w780';
+
+extension snackbar_extension on BuildContext {
+  ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
+}
 
 enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON }
 

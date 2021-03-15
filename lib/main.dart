@@ -37,7 +37,7 @@ class App extends StatelessWidget {
         themeMode: EasyDynamicTheme.of(context).themeMode,
         // routes: Routes.routes,
         onGenerateRoute: Routes.generateRoute,
-        initialRoute: true || wasHereBefore
+        initialRoute: wasHereBefore
             ? SplashScreen.route
             : OnboardScreen.routeName,
       ),

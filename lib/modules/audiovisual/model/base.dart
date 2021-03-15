@@ -21,6 +21,12 @@ class BaseSearchResult {
               ? tvShow.isFavourite
               : false;
 
+  String get status => type == TMDB_API_TYPE.MOVIE && movie != null
+          ? _parseStatus(movie.status)
+          : type == TMDB_API_TYPE.TV_SHOW && tvShow != null
+              ? _parseStatus(tvShow.status)
+              : null;
+
   List<String> get genres => type == TMDB_API_TYPE.PERSON
       ? null
       : type == TMDB_API_TYPE.MOVIE && movie != null
@@ -69,6 +75,25 @@ class BaseSearchResult {
     } else if (mediaType == 'tv') {
       return BaseSearchResult.fromTv(ResponseApiParser.tvFromJsonApi(data));
     }
+    return null;
+  }
+
+  static String _parseStatus(String value) {
+    switch (value) {
+      case 'Rumored':
+        return 'Rumores';
+      case 'Planned':
+        return 'Planificada';
+      case 'In Production':
+        return 'En Producción';
+      case 'Post Production':
+        return 'Post Production';
+      case 'Released':
+        return 'Estrenada';
+      case 'Canceled':
+        return 'Cancelada';
+    }
+
     return null;
   }
 }

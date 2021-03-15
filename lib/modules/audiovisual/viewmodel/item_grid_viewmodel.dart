@@ -1,14 +1,10 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
-import 'package:movie_search/modules/audiovisual/service/service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 
 class ItemGridViewModel extends FutureViewModel<BaseSearchResult> {
   final BaseSearchResult _param;
-  final AudiovisualService _audiovisualService;
-  final MyDatabase _db;
 
   bool get isFavourite => data != null ? data.isFavourite : false;
 
@@ -17,7 +13,7 @@ class ItemGridViewModel extends FutureViewModel<BaseSearchResult> {
 
   bool get isHighQualityImage => _highQualityImage;
 
-  ItemGridViewModel(this._audiovisualService, this._param, this._db);
+  ItemGridViewModel(this._param);
 
   @override
   Future<BaseSearchResult> futureToRun() async {
@@ -52,14 +48,6 @@ class ItemGridViewModel extends FutureViewModel<BaseSearchResult> {
     } catch (e) {
       return false;
     }
-  }
-
-  _cacheData() async {
-    final av =
-        await _audiovisualService.getById(id: _param.id, type: _param.type.type);
-    // await _db.insertAudiovisual(av.data);
-    // data.data = av.data;
-    onData(av);
   }
 
   Future toggleFavourite() async {

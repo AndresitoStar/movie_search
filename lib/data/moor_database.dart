@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
-import 'package:moor_ffi/moor_ffi.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -189,7 +189,7 @@ class MyDatabase extends _$MyDatabase {
   MyDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration {
@@ -208,7 +208,7 @@ class MyDatabase extends _$MyDatabase {
 
   //region Movie
   Future<Movie> getMovieById(int id) async {
-    return (select(movieTable)..where((m) => m.id.equals(id))).getSingle();
+    return (select(movieTable)..where((m) => m.id.equals(id))).getSingleOrNull();
   }
 
   Future insertMovie(Movie data) {
@@ -240,7 +240,10 @@ class MyDatabase extends _$MyDatabase {
 
   //region Tv Show
   Future<TvShow> getTvShowById(int id) async {
-    return (select(tvShowTable)..where((m) => m.id.equals(id))).getSingle();
+    return (select(tvShowTable)
+          ..where((m) => m.id.equals(id))
+          ..limit(1))
+        .getSingleOrNull();
   }
 
   Future insertTvShow(TvShow data) {
@@ -276,7 +279,7 @@ class MyDatabase extends _$MyDatabase {
 
   //region Person
   Future<Person> getPersonById(int id) async {
-    return (select(personTable)..where((m) => m.id.equals(id))).getSingle();
+    return (select(personTable)..where((m) => m.id.equals(id))).getSingleOrNull();
   }
 
   Future insertPerson(Person data) {
@@ -320,7 +323,7 @@ class MyDatabase extends _$MyDatabase {
   Future<bool> existCountries() async {
     final count = countryTable.iso.count();
     final query = selectOnly(countryTable)..addColumns([count]);
-    final result = await query.map((row) => row.read(count)).getSingle();
+    final result = await query.map((row) => row.read(count)).getSingleOrNull();
     return (result ?? 0) > 0;
   }
 
@@ -336,7 +339,7 @@ class MyDatabase extends _$MyDatabase {
   Future<bool> existLanguages() async {
     final count = languageTable.iso.count();
     final query = selectOnly(languageTable)..addColumns([count]);
-    final result = await query.map((row) => row.read(count)).getSingle();
+    final result = await query.map((row) => row.read(count)).getSingleOrNull();
     return (result ?? 0) > 0;
   }
 
@@ -354,7 +357,7 @@ class MyDatabase extends _$MyDatabase {
     final query = selectOnly(genreTable)
       ..addColumns([count])
       ..where(genreTable.type.equals(type));
-    final result = await query.map((row) => row.read(count)).getSingle();
+    final result = await query.map((row) => row.read(count)).getSingleOrNull();
     return (result ?? 0) > 0;
   }
 

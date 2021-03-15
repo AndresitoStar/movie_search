@@ -1,10 +1,11 @@
 import 'package:device_info/device_info.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/splash/splash_service.dart';
+import 'package:movie_search/rest/safe_executor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:stacked/stacked.dart';
 
-class SplashViewModel extends FutureViewModel {
+class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
   final MyDatabase _db;
   final SplashService _splashService;
 
@@ -26,13 +27,13 @@ class SplashViewModel extends FutureViewModel {
 
   @override
   Future futureToRun() async {
-    return Future.wait([
+    return safeExecute(() => Future.wait([
       validate(),
       syncCountries(),
       syncLanguages(),
       syncGenres('movie'),
       syncGenres('tv'),
-    ]);
+    ]));
   }
 
   Future validate() async {
