@@ -1,4 +1,5 @@
 import 'package:device_info/device_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/splash/splash_service.dart';
 import 'package:movie_search/rest/safe_executor.dart';
@@ -28,19 +29,25 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
   @override
   Future futureToRun() async {
     return safeExecute(() => Future.wait([
-      validate(),
-      syncCountries(),
-      syncLanguages(),
-      syncGenres('movie'),
-      syncGenres('tv'),
-    ]));
+          validate(),
+          syncCountries(),
+          syncLanguages(),
+          syncGenres('movie'),
+          syncGenres('tv'),
+        ]));
   }
 
   Future validate() async {
     setBusy(true);
+    if (kIsWeb) {
+      setInitialised(true);
+      setBusy(false);
+      return;
+    }
     AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
     String phoneModel = '${androidInfo.brand} ${androidInfo.model}';
-    await _splashService.updateMyDevice(androidInfo.androidId, phoneModel: phoneModel);
+    await _splashService.updateMyDevice(androidInfo.androidId,
+        phoneModel: phoneModel);
     final isEnabled =
         await _splashService.checkIsDeviceEnable(androidInfo.androidId);
     setInitialised(isEnabled);
@@ -51,7 +58,8 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
     setBusy(true);
     AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
     String phoneModel = '${androidInfo.brand} ${androidInfo.model}';
-    await _splashService.updateMyDevice(androidInfo.androidId, email: email, phoneModel: phoneModel);
+    await _splashService.updateMyDevice(androidInfo.androidId,
+        email: email, phoneModel: phoneModel);
     setBusy(false);
     form.reset();
   }

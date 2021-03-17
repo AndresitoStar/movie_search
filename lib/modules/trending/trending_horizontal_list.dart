@@ -16,54 +16,54 @@ class TrendingHorizontalList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.width * 0.75;
     return ViewModelBuilder<TrendingViewModel>.reactive(
       viewModelBuilder: () => TrendingViewModel(this.content),
       onModelReady: (model) => model.synchronize(),
-      builder: (context, model, child) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      builder: (context, model, child) => Stack(
+        fit: StackFit.expand,
         children: [
-          ListTile(
-            title: Text(
-              model.content.title,
-              style: Theme.of(context).textTheme.headline5,
-            ),
-            trailing: IconButton(
-                icon: Icon(MyIcons.arrow_right),
-                color: Theme.of(context).iconTheme.color,
-                onPressed: () => _goToTrendingScreen(context, model)),
-          ),
-          Container(
-            constraints:
-                BoxConstraints(minHeight: height - 100, maxHeight: height + 50),
-            child: ListView.builder(
-              physics: ClampingScrollPhysics(),
-              shrinkWrap: true,
+          Positioned(
+              left: 10,
+              child: Text(content.title,
+                  style: Theme.of(context).textTheme.headline5)),
+          Positioned(
+            top: 30,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              itemCount: /*list.length*/ _defaultLength + 1,
-              itemBuilder: (ctx, i) => i == _defaultLength
-                  ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: FloatingActionButton(
-                          child: Icon(MyIcons.more),
-                          heroTag: 'more${model.content}',
-                          elevation: 0,
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(context).iconTheme.color,
-                          onPressed: () => _goToTrendingScreen(context, model),
-                        ),
+              physics: ClampingScrollPhysics(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (model.items.length > 0)
+                    ...model.items
+                        .sublist(0, _defaultLength)
+                        .map((e) => AspectRatio(
+                            aspectRatio: 9 / 16,
+                            child: ItemGridView(item: e, showData: false)))
+                        .toList(),
+                  if (model.items.length == 0)
+                    ...[1, 1, 1, 1, 1]
+                        .map((e) => AspectRatio(
+                            aspectRatio: 9 / 16, child: GridItemPlaceholder()))
+                        .toList(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: FloatingActionButton(
+                        child: Icon(MyIcons.more),
+                        heroTag: 'more${model.content}',
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Theme.of(context).iconTheme.color,
+                        onPressed: () => _goToTrendingScreen(context, model),
                       ),
-                    )
-                  : AspectRatio(
-                      child: model.items.length > i
-                          ? ItemGridView(
-                              item: model.items[i],
-                              showData: false,
-                            )
-                          : GridItemPlaceholder(),
-                      aspectRatio: 8 / 15,
                     ),
+                  )
+                ],
+              ),
             ),
           ),
         ],

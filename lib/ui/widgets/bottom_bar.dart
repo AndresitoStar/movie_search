@@ -15,10 +15,10 @@ class MyBottomBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: index,
       showSelectedLabels: false,
-      elevation: 10,
+      elevation: 0,
       showUnselectedLabels: false,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Theme.of(context).cardColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       iconSize: 30,
       onTap: (i) {
         switch (i) {

@@ -24,8 +24,9 @@ class TrendingPage extends StatelessWidget {
               child: Scaffold(
                 appBar: AppBar(
                   title: Text(viewModel.content.title),
-                  // backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   titleSpacing: 0,
+                  elevation: 0,
                   actions: [
                     IconButton(
                       icon: Icon(
@@ -41,7 +42,6 @@ class TrendingPage extends StatelessWidget {
                   bottom: viewModel.activeGenres.length > 0
                       ? PreferredSize(
                           preferredSize: Size.fromHeight(kToolbarHeight),
-                          // child: Container(color: Colors.red,),
                           child: Container(
                             height: kToolbarHeight,
                             child: ListView.separated(
@@ -69,7 +69,8 @@ class TrendingPage extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         itemCount: viewModel.items.length + 2,
                         itemBuilder: (ctx, i) => i < viewModel.items.length
-                            ? ItemGridView(item: viewModel.items[i])
+                            ? ItemGridView(
+                                item: viewModel.items[i], showData: false)
                             : viewModel.hasMore
                                 ? Builder(
                                     builder: (context) {
@@ -114,15 +115,18 @@ class TrendingPage extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
+                            iconSize: 20,
                             icon: Icon(MyIcons.clean),
                             onPressed: () => model.clear(),
                           ),
                           IconButton(
+                            iconSize: 32,
                             onPressed: () =>
                                 Navigator.of(context).pop(model.filterGenre),
-                            icon: Icon(MyIcons.check, size: 32),
+                            icon: Icon(MyIcons.check, color: Colors.green),
                           ),
                           IconButton(
+                            iconSize: 32,
                             color: Colors.red,
                             onPressed: () => Navigator.of(context).pop(),
                             icon: Icon(MyIcons.clear),
@@ -139,10 +143,15 @@ class TrendingPage extends StatelessWidget {
                             .map((e) => ElevatedButton(
                                   onPressed: () => model.toggle(e.id),
                                   style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              model.filterGenre[e.id]
+                                                  ? Colors.orange
+                                                  : Colors.black45),
                                       shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ))),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ))),
                                   child: Text(e.name),
                                 ))
                             .toList(),

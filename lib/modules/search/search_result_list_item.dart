@@ -30,7 +30,8 @@ class SearchResultListItem extends StatelessWidget {
       closedElevation: 0.0,
       openElevation: 0.0,
       closedBuilder: (context, open) => Card(
-        elevation: 5,
+        elevation: 0,
+        color: Theme.of(context).cardColor.withOpacity(0.15),
         clipBehavior: Clip.hardEdge,
         margin: const EdgeInsets.all(10),
         child: GestureDetector(
@@ -41,24 +42,33 @@ class SearchResultListItem extends StatelessWidget {
             open.call();
           },
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Icon(_icons[searchResult.type]),
-              ),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(searchResult.title,
-                        style: Theme.of(context).textTheme.headline6),
-                    if (searchResult.titleOriginal != null)
-                      Text(searchResult.titleOriginal,
-                          style: Theme.of(context).textTheme.subtitle1),
+                    // Icon(_icons[searchResult.type]),
+                    Container(
+                      color: Theme.of(context).cardColor,
+                      padding: const EdgeInsets.all(5),
+                      child: Text(searchResult.type.name),
+                    ),
+                    ListTile(
+                      title: Text(searchResult.title,
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                            color: Theme.of(context).accentColor,
+                          )),
+                      subtitle: searchResult.titleOriginal != null
+                          ? Text(searchResult.titleOriginal,
+                              style: Theme.of(context).textTheme.subtitle1)
+                          : null,
+                    ),
                   ],
                 ),
               ),
+              Container(height: 120),
               SearchResultItemImage(searchResult.image),
             ],
           ),

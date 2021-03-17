@@ -1,4 +1,4 @@
-package com.example.movie_search
+package com.tko.movie_search
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
+import 'package:movie_search/ui/widgets/default_image.dart';
 
 class SearchResultItemImage extends StatelessWidget {
   final String imagePath;
@@ -12,13 +13,9 @@ class SearchResultItemImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LimitedBox(
-      maxHeight: 64,
+      maxHeight: 120,
       child: imagePath == null
-          ? Container(
-              height: 64,
-              padding: const EdgeInsets.only(right: 10),
-              child: Icon(MyIcons.default_image),
-            )
+          ? PlaceholderImage()
           : AspectRatio(
               aspectRatio: 9 / 16,
               child: FutureBuilder<String>(

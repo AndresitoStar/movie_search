@@ -9,8 +9,14 @@ class ItemLikeButton extends StatelessWidget {
   final double iconSize;
   final int id;
   final TMDB_API_TYPE type;
+  final bool showDisabled;
 
-  ItemLikeButton({this.iconSize = 32, @required this.id, @required this.type});
+  ItemLikeButton({
+    this.iconSize = 32,
+    this.showDisabled = true,
+    @required this.id,
+    @required this.type,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +38,15 @@ class ItemLikeButton extends StatelessWidget {
                   stream: model.stream,
                   initialData: [],
                   builder: (context, snapshot) {
+                    if (!snapshot.data.contains(id) && !this.showDisabled) {
+                      return Container();
+                    }
                     return IconButton(
                       icon: Icon(snapshot.data.contains(id)
                           ? MyIcons.favourite_on
                           : MyIcons.favourite_off),
                       iconSize: this.iconSize,
+                      padding: EdgeInsets.zero,
                       color:
                           snapshot.data.contains(id) ? Colors.red : Colors.grey,
                       onPressed: () {

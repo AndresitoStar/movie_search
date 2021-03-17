@@ -32,7 +32,7 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'Buscador de Peliculas y Series',
         debugShowCheckedModeBanner: false,
-        theme: LightTheme.theme,
+        theme: DarkTheme.theme,
         darkTheme: DarkTheme.theme,
         themeMode: EasyDynamicTheme.of(context).themeMode,
         // routes: Routes.routes,

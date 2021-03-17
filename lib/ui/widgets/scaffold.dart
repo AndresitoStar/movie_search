@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'bottom_bar.dart';
+import 'dart:ui' as ui;
 
 class CustomScaffold extends StatelessWidget {
   final int bottomBarIndex;
@@ -16,20 +17,29 @@ class CustomScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // padding: appBar == null
-      //     ? MediaQuery.of(context)
-      //         .padding
-      //         .copyWith(left: 0, right: 0, bottom: 0)
-      //     : null,
-      color: Theme.of(context).accentColor,
-      child: SafeArea(
-        top: false,
-        child: Scaffold(
-          appBar: appBar,
-          bottomNavigationBar: MyBottomBar(index: bottomBarIndex),
-          body: body,
-        ),
+    return SafeArea(
+      top: false,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white
+            ),
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+              child: Container(
+                decoration:
+                    BoxDecoration(color: Colors.black.withOpacity(0.2)),
+              ),
+            ),
+          ),
+          Scaffold(
+            appBar: appBar,
+            bottomNavigationBar: MyBottomBar(index: bottomBarIndex),
+            body: body,
+          ),
+        ],
       ),
     );
   }

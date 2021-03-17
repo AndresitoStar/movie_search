@@ -20,7 +20,7 @@ class ImbdbRatingView extends StatelessWidget {
         children: [
           child,
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: model.initialised || model.isBusy
                 ? CircularProgressIndicator(strokeWidth: 1)
                 : Text('${model.data?.toStringAsFixed(1) ?? '-'}',

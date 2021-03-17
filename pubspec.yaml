@@ -23,7 +23,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.4.1
   path_provider:
   path:
-  ffi: ^1.0.0
+  # ffi: ^1.0.0
   cached_network_image: 2.5.1
   rxdart: ^0.23.1
   intl: 0.17.0

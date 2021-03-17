@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
 import 'package:path/path.dart' as p;
@@ -169,8 +170,9 @@ class PersonTable extends Table {
 LazyDatabase _openConnection() {
   // the LazyDatabase util lets us find the right location for the file async.
   return LazyDatabase(() async {
-    // put the database file, called db.sqlite here, into the documents folder
-    // for your app.
+    // if (kIsWeb) {
+    //   return WebDatabase('file');
+    // }
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'database.db'));
     return VmDatabase(file);
@@ -208,7 +210,8 @@ class MyDatabase extends _$MyDatabase {
 
   //region Movie
   Future<Movie> getMovieById(int id) async {
-    return (select(movieTable)..where((m) => m.id.equals(id))).getSingleOrNull();
+    return (select(movieTable)..where((m) => m.id.equals(id)))
+        .getSingleOrNull();
   }
 
   Future insertMovie(Movie data) {
@@ -279,7 +282,8 @@ class MyDatabase extends _$MyDatabase {
 
   //region Person
   Future<Person> getPersonById(int id) async {
-    return (select(personTable)..where((m) => m.id.equals(id))).getSingleOrNull();
+    return (select(personTable)..where((m) => m.id.equals(id)))
+        .getSingleOrNull();
   }
 
   Future insertPerson(Person data) {

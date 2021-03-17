@@ -24,6 +24,7 @@ class MyIcons {
   static const IconData people = Icons.group_outlined;
   static const IconData castMale = FrinoIcons.f_male;
   static const IconData castFemale = FrinoIcons.f_female;
+  static const IconData star = FrinoIcons.f_star_filled;
 
   static const IconData movie = FrinoIcons.f_movie_tape;
   static const IconData tv = FrinoIcons.f_tv;

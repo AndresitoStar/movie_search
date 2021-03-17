@@ -35,7 +35,8 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
               ),
             ),
           ),
-          Text('${item.type.name}, ${item.status ?? ''}', textAlign: TextAlign.center),
+          Text('${item.type.name}, ${item.status ?? ''}',
+              textAlign: TextAlign.center),
           Visibility(
             visible: item.titleOriginal != item.title,
             child: Padding(
@@ -54,27 +55,26 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
             child: Row(
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Icon(MyIcons.people, size: 30),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('${item.voteAverage}',
-                              style: Theme.of(context).textTheme.headline6),
-                        ),
-                      ],
+                    Icon(MyIcons.star, size: 18),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('${item.voteAverage}',
+                          style: Theme.of(context).textTheme.headline6),
                     ),
-                    ImbdbRatingView(item.id, item.type.type,
-                    imdbId: item.movie?.imdbId),
+                    ImbdbRatingView(
+                      item.id,
+                      item.type.type,
+                      imdbId: item.movie?.imdbId,
+                    )
                   ],
                 ),
                 Expanded(child: Container()),
                 if (item.movie != null && item.movie.video)
                   Icon(Icons.video_call),
-                ItemLikeButton(id: item.id, type: viewModel.data.type, iconSize: 42),
+                ItemLikeButton(
+                    id: item.id, type: viewModel.data.type, iconSize: 42),
               ],
             ),
           ),
