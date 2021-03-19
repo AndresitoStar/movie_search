@@ -35,7 +35,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
               ),
             ),
           ),
-          Text('${item.type.name}, ${item.status ?? ''}',
+          Text('${item.type.nameSingular}, ${item.status ?? ''}',
               textAlign: TextAlign.center),
           Visibility(
             visible: item.titleOriginal != item.title,

@@ -11,6 +11,7 @@ abstract class BaseService {
   final Map<String, dynamic> _baseParams = {
     'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
     'language': 'es-ES',
+    'include_adult': 'false',
   };
 
   Map<String, dynamic> get baseParams => {..._baseParams};

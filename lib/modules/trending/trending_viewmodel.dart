@@ -6,6 +6,8 @@ import 'package:stacked/stacked.dart';
 
 enum TrendingContent { MOVIE, TV }
 
+enum TrendingType { DAY, WEEK }
+
 extension ExtensionTitle on TrendingContent {
   String get title {
     switch (this) {
@@ -55,6 +57,20 @@ class TrendingViewModel extends BaseViewModel {
 
   Map<String, bool> filterGenre;
 
+  int year;
+
+  updateYear(int year) {
+    this.year = year;
+    synchronize();
+  }
+
+  TrendingType trendingType = TrendingType.DAY;
+
+  updateTrendingType(TrendingType trendingType) {
+    this.trendingType = trendingType;
+    synchronize();
+  }
+
   List<int> get activeGenres => filterGenre != null
       ? filterGenre.entries
           .where((element) => element.value)
@@ -84,6 +100,7 @@ class TrendingViewModel extends BaseViewModel {
     SearchResponse response = await _trendingService.getDiscover(
       content.type,
       genres: activeGenres,
+      year: year,
     );
     _total = response?.totalResult ?? -1;
     _items = response?.result ?? [];
@@ -102,6 +119,7 @@ class TrendingViewModel extends BaseViewModel {
       content.type,
       page: _actualPage,
       genres: activeGenres,
+      year: year,
     );
     _items.addAll(results.result);
     notifyListeners();

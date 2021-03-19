@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
@@ -26,15 +28,15 @@ class SettingsScreen extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  ListTile(
-                    title: Text('Tema',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(fontWeight: FontWeight.normal)),
-                    trailing: EasyDynamicThemeBtn(),
-                  ),
-                  Divider(),
+                  // ListTile(
+                  //   title: Text('Tema',
+                  //       style: Theme.of(context)
+                  //           .textTheme
+                  //           .headline6
+                  //           .copyWith(fontWeight: FontWeight.normal)),
+                  //   trailing: EasyDynamicThemeBtn(),
+                  // ),
+                  // Divider(),
                   // ListTile(
                   //   title: Text('Mostrar recientes',
                   //       style: Theme.of(context)
@@ -90,30 +92,37 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Future showAbout(BuildContext context) {
-    return PackageInfo.fromPlatform().then((info) => showDialog(
-          context: context,
-          barrierColor:
-              EasyDynamicTheme.of(context).themeMode == ThemeMode.light
-                  ? Colors.black54
-                  : Colors.white54,
-          builder: (context) => SimpleDialog(
-              title: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/ic_launcher.png'),
-                ),
-                title: Text(info.appName),
-              ),
-              children: [
-                ListTile(
-                  title: Text('Desarrollador'),
-                  subtitle: Text('Ing. Andrés Forns Jusino'),
-                ),
-                ListTile(
-                  title: Text('Version'),
-                  subtitle: Text('${info.version}'),
-                )
-              ]),
-        ));
+  showAbout(BuildContext context) {
+    if (Platform.isWindows)
+      _showInfoDialog(context, 'Buscador de Peliculas', '2.0.0');
+    else
+      PackageInfo.fromPlatform()
+          .then((info) => _showInfoDialog(context, info.appName, info.version));
+  }
+
+  _showInfoDialog(BuildContext context, String appName, String version) {
+    showDialog(
+      context: context,
+      barrierColor: EasyDynamicTheme.of(context).themeMode == ThemeMode.light
+          ? Colors.black54
+          : Colors.white54,
+      builder: (context) => SimpleDialog(
+          title: ListTile(
+            leading: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/ic_launcher.png'),
+            ),
+            title: Text(appName),
+          ),
+          children: [
+            ListTile(
+              title: Text('Desarrollador'),
+              subtitle: Text('Ing. Andrés Forns Jusino'),
+            ),
+            ListTile(
+              title: Text('Version'),
+              subtitle: Text(version),
+            )
+          ]),
+    );
   }
 }

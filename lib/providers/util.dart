@@ -221,6 +221,19 @@ extension tmdb_type on TMDB_API_TYPE {
       case TMDB_API_TYPE.TV_SHOW:
         return 'Series';
       case TMDB_API_TYPE.PERSON:
+        return 'Personas';
+      default:
+        return null;
+    }
+  }
+
+  String get nameSingular {
+    switch (this) {
+      case TMDB_API_TYPE.MOVIE:
+        return 'Película';
+      case TMDB_API_TYPE.TV_SHOW:
+        return 'Serie';
+      case TMDB_API_TYPE.PERSON:
         return 'Persona';
       default:
         return null;

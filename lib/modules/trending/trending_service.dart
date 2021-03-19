@@ -59,12 +59,13 @@ class TrendingService extends BaseService {
   }
 
   Future<SearchResponse> getDiscover(String type,
-      {int page = 1, List<int> genres}) async {
+      {int page = 1, List<int> genres, int year}) async {
     List<BaseSearchResult> result = [];
     int total = 0;
     Map<String, String> params = {
       ...baseParams,
       if (genres != null && genres.isNotEmpty) 'with_genres': genres.join(','),
+      if (year != null) 'year': year.toString(),
       'page': page.toString(),
     };
 

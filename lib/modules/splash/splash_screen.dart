@@ -14,7 +14,7 @@ class SplashScreen extends StatelessWidget {
     return ViewModelBuilder<SplashViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         body: model.hasError
-            ? _buildError(context)
+            ? _buildError(context, model)
             : model.isBusy
                 ? _buildBusyIndicator()
                 : model.initialised
@@ -28,16 +28,21 @@ class SplashScreen extends StatelessWidget {
     );
   }
 
-  _buildError(BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Icon(Icons.network_locked, size: 160),
-          SizedBox(height: 20),
-          Text('Parece que ocurrio un error, verifica que tengas conexión a Internet.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6),
-        ],
+  _buildError(BuildContext context, SplashViewModel model) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.network_locked, size: 160),
+            SizedBox(height: 20),
+            Text(
+                'Parece que ocurrio un error, verifica que tengas conexión a Internet.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline6),
+            SizedBox(height: 20),
+            _buildUpdateBtn(model)
+          ],
+        ),
       );
 
   _buildBusyIndicator() => Center(child: CircularProgressIndicator());
@@ -105,9 +110,7 @@ class SplashScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                    onPressed: () => model.validate(),
-                    child: Text('Actualizar')),
+                _buildUpdateBtn(model),
                 ReactiveFormConsumer(
                   builder: (context, formGroup, child) => ElevatedButton(
                     onPressed: formGroup.valid ? () => model.sendData() : null,
@@ -121,6 +124,9 @@ class SplashScreen extends StatelessWidget {
       ),
     );
   }
+
+  _buildUpdateBtn(SplashViewModel model) => ElevatedButton(
+      onPressed: () => model.validate(), child: Text('Actualizar'));
 
   _navigateHome(BuildContext context) {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {

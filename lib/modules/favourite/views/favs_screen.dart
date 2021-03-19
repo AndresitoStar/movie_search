@@ -1,3 +1,4 @@
+import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
@@ -34,11 +35,36 @@ class FavouriteScreen extends StatelessWidget {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   titleSpacing: 0,
-                  bottom: TabBar(tabs: [
-                    Tab(text: 'Peliculas', icon: Icon(MyIcons.movie)),
-                    Tab(text: 'Series', icon: Icon(MyIcons.tv)),
-                    Tab(text: 'Personas', icon: Icon(MyIcons.castMale)),
-                  ]),
+                  bottom: TabBar(
+                    tabs: [
+                      Tab(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text("Peliculas"),
+                        ),
+                      ),
+                      Tab(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text("Series"),
+                        ),
+                      ),
+                      Tab(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text("Personas"),
+                        ),
+                      ),
+                    ],
+                    indicatorSize: TabBarIndicatorSize.label,
+                    labelColor: Colors.white,
+                    labelStyle: Theme.of(context).textTheme.headline6,
+                    indicator: BubbleTabIndicator(
+                      indicatorHeight: 25.0,
+                      indicatorColor: Theme.of(context).accentColor,
+                      tabBarIndicatorSize: TabBarIndicatorSize.label,
+                    ),
+                  ),
                 ),
               ];
             },

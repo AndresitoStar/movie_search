@@ -10,7 +10,7 @@ import 'trending_viewmodel.dart';
 
 class TrendingHorizontalList extends StatelessWidget {
   final TrendingContent content;
-  final _defaultLength = 5;
+  final _defaultLength = 15;
 
   const TrendingHorizontalList({Key key, this.content}) : super(key: key);
 
@@ -24,10 +24,20 @@ class TrendingHorizontalList extends StatelessWidget {
         children: [
           Positioned(
               left: 10,
-              child: Text(content.title,
-                  style: Theme.of(context).textTheme.headline5)),
+              right: 10,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(content.title,
+                        style: Theme.of(context).textTheme.headline5),
+                  ),
+                  IconButton(
+                      icon: Icon(MyIcons.arrow_right),
+                      onPressed: () => _goToTrendingScreen(context, model))
+                ],
+              )),
           Positioned(
-            top: 30,
+            top: 45,
             bottom: 0,
             left: 0,
             right: 0,

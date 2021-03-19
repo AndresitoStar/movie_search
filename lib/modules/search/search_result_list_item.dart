@@ -53,7 +53,7 @@ class SearchResultListItem extends StatelessWidget {
                     Container(
                       color: Theme.of(context).cardColor,
                       padding: const EdgeInsets.all(5),
-                      child: Text(searchResult.type.name),
+                      child: Text(searchResult.type.nameSingular),
                     ),
                     ListTile(
                       title: Text(searchResult.title,

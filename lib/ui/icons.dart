@@ -29,6 +29,7 @@ class MyIcons {
   static const IconData movie = FrinoIcons.f_movie_tape;
   static const IconData tv = FrinoIcons.f_tv;
   static const IconData filter = FrinoIcons.f_filter;
+  static const IconData calendar = FrinoIcons.f_calendar;
 
   static IconData iconFromType(TMDB_API_TYPE type) {
     if (type == TMDB_API_TYPE.MOVIE) return movie;

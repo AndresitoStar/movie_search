@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:movie_search/data/moor_database.dart';
@@ -39,7 +41,7 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
 
   Future validate() async {
     setBusy(true);
-    if (kIsWeb) {
+    if (kIsWeb || Platform.isWindows) {
       setInitialised(true);
       setBusy(false);
       return;
