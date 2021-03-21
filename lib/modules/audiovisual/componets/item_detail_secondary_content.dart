@@ -7,19 +7,22 @@ import 'package:stacked/stacked.dart';
 import 'item_detail_ui_util.dart';
 
 class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
+  final bool isSliver;
+
+  ItemDetailSecondaryContent({this.isSliver = true});
+
   @override
   Widget build(BuildContext context, viewModel) {
     final item = viewModel.data;
-    return SliverList(
-      delegate: SliverChildListDelegate(
-        <Widget>[
-          if (item.type == TMDB_API_TYPE.MOVIE)
-            ..._movieContentWidgets(context, item.movie),
-          if (item.type == TMDB_API_TYPE.TV_SHOW)
-            ..._tvShowsContentWidgets(context, item.tvShow),
-        ],
-      ),
-    );
+    final children = <Widget>[
+      if (item.type == TMDB_API_TYPE.MOVIE)
+        ..._movieContentWidgets(context, item.movie),
+      if (item.type == TMDB_API_TYPE.TV_SHOW)
+        ..._tvShowsContentWidgets(context, item.tvShow),
+    ];
+    return isSliver
+        ? SliverList(delegate: SliverChildListDelegate(children))
+        : Column(children: children);
   }
 
   List<Widget> _movieContentWidgets(BuildContext context, Movie movie) {

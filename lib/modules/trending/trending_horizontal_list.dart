@@ -76,6 +76,44 @@ class TrendingHorizontalList extends StatelessWidget {
               ),
             ),
           ),
+          Positioned(
+            left: 0,
+            bottom: 10,
+            top: 55,
+            child: Container(
+              width: 20,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                  colors: [
+                    Colors.transparent,
+                    Theme.of(context).scaffoldBackgroundColor,
+                  ],
+                ),
+                border: Border.all(color: Colors.transparent),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            bottom: 10,
+            top: 55,
+            child: Container(
+              width: 20,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colors.transparent,
+                    Theme.of(context).scaffoldBackgroundColor,
+                  ],
+                ),
+                border: Border.all(color: Colors.transparent),
+              ),
+            ),
+          ),
         ],
       ),
     );

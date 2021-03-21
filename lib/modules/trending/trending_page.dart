@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
@@ -15,7 +17,6 @@ class TrendingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final orientation = MediaQuery.of(context).orientation;
     final theme = Theme.of(context);
     return ViewModelBuilder<TrendingViewModel>.reactive(
         viewModelBuilder: () => TrendingViewModel.forPage(
@@ -91,14 +92,18 @@ class TrendingPage extends StatelessWidget {
                                   )
                                 : Container(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                orientation == Orientation.portrait ? 2 : 3,
+                            crossAxisCount: getColumns(context),
                             childAspectRatio: 5 / 9,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10),
                       ),
               ),
             ));
+  }
+
+  int getColumns(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return (width ~/ 150).clamp(1, 8);
   }
 
   showYearFilter(BuildContext context, TrendingViewModel viewModel) async {
@@ -158,6 +163,7 @@ class TrendingPage extends StatelessWidget {
         builder: (context, model, _) => model.isBusy
             ? Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
+                padding: const EdgeInsets.only(bottom: 10),
                 child: Column(
                   children: [
                     ListTile(
@@ -193,6 +199,7 @@ class TrendingPage extends StatelessWidget {
                       child: Wrap(
                         alignment: WrapAlignment.start,
                         spacing: 16,
+                        runSpacing: 20,
                         children: model.genres
                             .map((e) => ElevatedButton(
                                   onPressed: () => model.toggle(e.id),

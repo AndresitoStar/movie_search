@@ -8,6 +8,10 @@ import 'package:movie_search/ui/widgets/dialog_image.dart';
 import 'package:stacked/stacked.dart';
 
 class PersonDetailMainImage extends ViewModelWidget<PersonDetailViewModel> {
+  final bool landscape;
+
+  PersonDetailMainImage({this.landscape = false});
+
   @override
   Widget build(BuildContext context, PersonDetailViewModel model) {
     return Container(
@@ -27,6 +31,7 @@ class PersonDetailMainImage extends ViewModelWidget<PersonDetailViewModel> {
                       enableInfiniteScroll: false,
                       disableCenter: true,
                       reverse: false,
+                      
                       autoPlay: true,
                       autoPlayInterval: Duration(seconds: 3),
                       autoPlayAnimationDuration: Duration(milliseconds: 100),
@@ -42,8 +47,10 @@ class PersonDetailMainImage extends ViewModelWidget<PersonDetailViewModel> {
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                  begin: landscape ? Alignment.centerLeft : Alignment.topCenter,
+                  end: landscape
+                      ? Alignment.centerRight
+                      : Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
                     Colors.transparent,
@@ -51,10 +58,7 @@ class PersonDetailMainImage extends ViewModelWidget<PersonDetailViewModel> {
                     Theme.of(context).scaffoldBackgroundColor
                   ],
                 ),
-                border: Border(
-                  bottom: BorderSide(
-                      color: Theme.of(context).scaffoldBackgroundColor),
-                ),
+                border: Border.all(color: Theme.of(context).scaffoldBackgroundColor),
               ),
             ),
             if (!model.initialised)
@@ -81,6 +85,7 @@ class PersonImageWidget extends ViewModelWidget<PersonDetailViewModel> {
   @override
   Widget build(BuildContext context, model) {
     return GestureDetector(
+      onLongPress: () => model.toggleHighQualityImage(),
       onTap: () => DialogImage.show(
           context: context, imageUrl: '${model.baseImageUrl}$imagePath'),
       child: CachedNetworkImage(

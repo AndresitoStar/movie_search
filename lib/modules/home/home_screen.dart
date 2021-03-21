@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/home/home_search_bar.dart';
@@ -13,27 +15,43 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final applyLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape &&
+            Platform.isAndroid;
+
     return ViewModelBuilder<HomeScreenViewModel>.reactive(
       viewModelBuilder: () => HomeScreenViewModel(),
-      builder: (context, model, _) => CustomScaffold(
-        bottomBarIndex: 0,
-        body: SafeArea(
-          child: Column(
-            children: [
-              HomeSearchBar(),
-              Expanded(
-                child: TrendingHorizontalList(content: TrendingContent.MOVIE),
-              ),
-              Divider(),
-              SizedBox(height: 10),
-              Expanded(
-                child: TrendingHorizontalList(content: TrendingContent.TV),
-              ),
-              SizedBox(height: 10),
-            ],
+      builder: (context, model, _) {
+        final child = Column(children: [
+          HomeSearchBar(),
+          if (!applyLandscape)
+            Expanded(
+                child: TrendingHorizontalList(content: TrendingContent.MOVIE)),
+          if (applyLandscape)
+            Container(
+              height: 300,
+              child: TrendingHorizontalList(content: TrendingContent.MOVIE),
+            ),
+          Divider(),
+          SizedBox(height: 10),
+          if (!applyLandscape)
+            Expanded(
+              child: TrendingHorizontalList(content: TrendingContent.TV),
+            ),
+          if (applyLandscape)
+            Container(
+              height: 300,
+              child: TrendingHorizontalList(content: TrendingContent.TV),
+            ),
+          SizedBox(height: 10),
+        ]);
+        return CustomScaffold(
+          bottomBarIndex: 0,
+          body: SafeArea(
+            child: applyLandscape ? SingleChildScrollView(child: child) : child,
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

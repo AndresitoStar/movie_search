@@ -44,9 +44,11 @@ class SearchResultListItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SearchResultItemImage(searchResult.image),
+              Container(height: 120),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Icon(_icons[searchResult.type]),
@@ -57,19 +59,19 @@ class SearchResultListItem extends StatelessWidget {
                     ),
                     ListTile(
                       title: Text(searchResult.title,
+                          textAlign: TextAlign.end,
                           style: Theme.of(context).textTheme.headline6.copyWith(
-                            color: Theme.of(context).accentColor,
-                          )),
+                                color: Theme.of(context).accentColor,
+                              )),
                       subtitle: searchResult.titleOriginal != null
                           ? Text(searchResult.titleOriginal,
+                              textAlign: TextAlign.end,
                               style: Theme.of(context).textTheme.subtitle1)
                           : null,
                     ),
                   ],
                 ),
               ),
-              Container(height: 120),
-              SearchResultItemImage(searchResult.image),
             ],
           ),
         ),

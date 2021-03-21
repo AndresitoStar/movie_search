@@ -13,7 +13,8 @@ class SearchViewModel extends BaseViewModel {
 
   List<BaseSearchResult> _searchResults;
 
-  List<BaseSearchResult> get searchResults => _searchResults != null ? [..._searchResults] : null;
+  List<BaseSearchResult> get searchResults =>
+      _searchResults != null ? [..._searchResults] : null;
 
   int _total = -1;
   int _page = 1;

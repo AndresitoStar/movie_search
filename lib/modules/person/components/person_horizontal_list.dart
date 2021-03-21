@@ -7,8 +7,10 @@ import 'package:stacked/stacked.dart';
 class CreditHorizontalList extends StatelessWidget {
   final String type;
   final int typeId;
+  final bool isSliver;
 
-  const CreditHorizontalList(this.type, this.typeId, {Key key})
+  const CreditHorizontalList(this.type, this.typeId,
+      {Key key, this.isSliver = true})
       : super(key: key);
 
   @override
@@ -16,47 +18,50 @@ class CreditHorizontalList extends StatelessWidget {
     return ViewModelBuilder<CastListViewModel>.reactive(
       viewModelBuilder: () => CastListViewModel(this.type, this.typeId),
       builder: (context, model, _) {
-        final height = MediaQuery.of(context).size.width * 0.75;
-        if (!model.initialised || model.isBusy)
-          return SliverToBoxAdapter(
-              child: Container(child: LinearProgressIndicator()));
-        if (model.items.length == 0)
-          return SliverToBoxAdapter(child: Container());
-        return SliverToBoxAdapter(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ListTile(
-                  title: Text('Reparto',
-                      style: Theme.of(context).textTheme.headline5)),
-              Container(
-                constraints: BoxConstraints(
-                    minHeight: height - 100, maxHeight: height + 50),
-                child: model.isBusy
-                    ? ListView.builder(
-                        physics: ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 3,
-                        itemBuilder: (ctx, i) => AspectRatio(
-                          child: GridItemPlaceholder(),
-                          aspectRatio: 8 / 16,
-                        ),
-                      )
-                    : ListView.builder(
-                        physics: ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: model.items.length,
-                        itemBuilder: (ctx, i) => AspectRatio(
-                          child: PersonItemGridView(person: model.items[i]),
-                          aspectRatio: 8 / 16,
-                        ),
+        final height = 300.0;
+        final child = !model.initialised || model.isBusy
+            ? Container(child: LinearProgressIndicator())
+            : model.items.length == 0
+                ? Container()
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ListTile(
+                          title: Text('Reparto',
+                              style: Theme.of(context).textTheme.headline5)),
+                      Container(
+                        constraints: BoxConstraints(
+                            minHeight: height, maxHeight: height + 50),
+                        child: model.isBusy
+                            ? ListView.builder(
+                                physics: ClampingScrollPhysics(),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 3,
+                                itemBuilder: (ctx, i) => AspectRatio(
+                                  child: GridItemPlaceholder(),
+                                  aspectRatio: 8 / 16,
+                                ),
+                              )
+                            : ListView.builder(
+                                physics: ClampingScrollPhysics(),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: model.items.length,
+                                itemBuilder: (ctx, i) => AspectRatio(
+                                  child: PersonItemGridView(
+                                      person: model.items[i]),
+                                  aspectRatio: 8 / 16,
+                                ),
+                              ),
                       ),
-              ),
-            ],
-          ),
-        );
+                    ],
+                  );
+        return isSliver
+            ? SliverToBoxAdapter(
+                child: child,
+              )
+            : Container(child: child);
       },
     );
   }

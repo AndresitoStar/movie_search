@@ -39,6 +39,7 @@ class SearchBar extends StatelessWidget {
               Expanded(
                 child: ReactiveTextField(
                   formControl: model.queryControl,
+                  cursorColor: Colors.white,
                   decoration: InputDecoration(
                     hintText: 'Buscar...',
                     hintStyle: TextStyle(fontSize: 20),
@@ -47,7 +48,7 @@ class SearchBar extends StatelessWidget {
                       children: [
                         IconButton(
                           icon: Icon(MyIcons.clear),
-                          onPressed: () => model.queryControl.reset(),
+                          onPressed: () => model.queryControl.reset(value: ''),
                         ),
                         ReactiveFormField<SearchCategory>(
                           formControl: model.categoryControl,

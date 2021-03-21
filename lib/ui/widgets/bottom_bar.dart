@@ -39,14 +39,15 @@ class MyBottomBar extends StatelessWidget {
         }
       },
       items: [
-        BottomNavigationBarItem(icon: Icon(MyIcons.home), label: ''),
-        BottomNavigationBarItem(icon: Icon(MyIcons.search), label: ''),
+        BottomNavigationBarItem(icon: Icon(MyIcons.home), label: '', tooltip: 'Inicio'),
+        BottomNavigationBarItem(icon: Icon(MyIcons.search), label: '', tooltip: 'Buscar'),
         BottomNavigationBarItem(
           icon: Icon(MyIcons.favourite_off),
           label: '',
           activeIcon: Icon(MyIcons.favourite_on),
+          tooltip: 'Favoritos'
         ),
-        BottomNavigationBarItem(icon: Icon(MyIcons.settings), label: ''),
+        BottomNavigationBarItem(icon: Icon(MyIcons.settings), label: '', tooltip: 'Ajustes'),
       ],
     );
   }

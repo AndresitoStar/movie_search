@@ -21,7 +21,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
       viewModelBuilder: () => ItemRecommendationViewModel(
           this.type, this.typeId, this.recommendationType),
       builder: (context, model, _) {
-        final height = MediaQuery.of(context).size.width * 0.75;
+        final height = 300.0;
         final child = !model.initialised
             ? Container(
                 height: 10,
@@ -39,7 +39,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.only(bottom: 20),
                         constraints: BoxConstraints(
-                            minHeight: height - 100, maxHeight: height + 50),
+                            minHeight: height, maxHeight: height + 50),
                         child: model.isBusy
                             ? ListView.builder(
                                 physics: ClampingScrollPhysics(),

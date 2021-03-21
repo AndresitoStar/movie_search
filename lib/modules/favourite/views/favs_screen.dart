@@ -24,7 +24,7 @@ class FavouriteScreen extends StatelessWidget {
             headerSliverBuilder: (context, value) {
               return [
                 SliverAppBar(
-                  floating: true,
+                  floating: false,
                   snap: false,
                   pinned: true,
                   elevation: 3,
@@ -95,7 +95,7 @@ class FavouriteScreen extends StatelessWidget {
             itemBuilder: (ctx, i) => ItemGridView(
                 item: BaseSearchResult.fromMovie(snapshot.data[i])),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                crossAxisCount: getColumns(context),
                 childAspectRatio: 5 / 9,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10),
@@ -115,7 +115,7 @@ class FavouriteScreen extends StatelessWidget {
             itemBuilder: (ctx, i) =>
                 ItemGridView(item: BaseSearchResult.fromTv(snapshot.data[i])),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                crossAxisCount: getColumns(context),
                 childAspectRatio: 5 / 9,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10),
@@ -136,7 +136,7 @@ class FavouriteScreen extends StatelessWidget {
             itemBuilder: (ctx, i) =>
                 PersonItemGridView(person: snapshot.data[i]),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                crossAxisCount: getColumns(context),
                 childAspectRatio: 5 / 9,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10),
@@ -155,5 +155,10 @@ class FavouriteScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  int getColumns(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return (width ~/ 160).clamp(1, 8);
   }
 }

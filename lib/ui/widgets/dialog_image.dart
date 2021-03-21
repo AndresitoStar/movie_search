@@ -67,7 +67,7 @@ class _DialogImageState extends State<DialogImage> {
             ),
           ),
           Positioned(
-            left: 0,
+            right: 0,
             top: 0,
             child: MyCircularButton(
               icon: Icon(MyIcons.clear),

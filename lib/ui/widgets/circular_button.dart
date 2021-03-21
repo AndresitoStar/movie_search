@@ -14,7 +14,7 @@ class MyCircularButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget button = Container(
       margin: const EdgeInsets.all(8),
-      padding: const EdgeInsets.only(left: 5),
+      // padding: const EdgeInsets.only(left: 5),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.3),

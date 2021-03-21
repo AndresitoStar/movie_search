@@ -7,6 +7,10 @@ import 'package:movie_search/ui/widgets/dialog_image.dart';
 import 'package:stacked/stacked.dart';
 
 class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
+  final bool landscape;
+
+  DetailMainImage({this.landscape = false});
+
   @override
   Widget build(BuildContext context, model) {
     return Container(
@@ -33,8 +37,10 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                  begin: landscape ? Alignment.centerLeft : Alignment.topCenter,
+                  end: landscape
+                      ? Alignment.centerRight
+                      : Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
                     Colors.transparent,
@@ -42,10 +48,7 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
                     Theme.of(context).scaffoldBackgroundColor
                   ],
                 ),
-                border: Border(
-                  bottom: BorderSide(
-                      color: Theme.of(context).scaffoldBackgroundColor),
-                ),
+                border: Border.all(color: Theme.of(context).scaffoldBackgroundColor),
               ),
             ),
             if (!model.initialised)

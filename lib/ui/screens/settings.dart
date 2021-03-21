@@ -11,16 +11,6 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      appBar: AppBar(
-        title: Text('Ajustes'),
-        leading: IconButton(
-          icon: Icon(MyIcons.arrow_left),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        titleSpacing: 0,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       bottomBarIndex: 3,
       body: Column(
         children: [
@@ -28,6 +18,16 @@ class SettingsScreen extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  AppBar(
+                    title: Text('Ajustes'),
+                    leading: IconButton(
+                      icon: Icon(MyIcons.arrow_left),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    titleSpacing: 0,
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                  ),
                   // ListTile(
                   //   title: Text('Tema',
                   //       style: Theme.of(context)

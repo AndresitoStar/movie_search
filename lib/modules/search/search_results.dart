@@ -15,30 +15,58 @@ class SearchResults extends StatelessWidget {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : model.searchResults == null
+          : model.searchResults == null ||
+                  (model.searchResults.isEmpty &&
+                      model.queryControl?.value != null &&
+                      model.queryControl.value.isEmpty)
               ? SearchHistoryView(
                   onTap: (value) => model.queryControl.value = value)
               : model.searchResults.isEmpty
                   ? Center(child: Text('Sin resultados'))
                   : Scrollbar(
-                      child: ListView.builder(
+                      child: GridView.builder(
                           itemCount: model.searchResults.length + 1,
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                  // crossAxisCount: getColumns(context),
+                                  maxCrossAxisExtent: 600,
+                                  mainAxisExtent: 200,
+                                  childAspectRatio: MediaQuery.of(context)
+                                          .size
+                                          .width /
+                                      (MediaQuery.of(context).size.height / 4),
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10),
                           padding: EdgeInsets.zero,
                           physics: BouncingScrollPhysics(),
-                          itemBuilder: (ctx, i) => i < model.searchResults.length
-                              ? SearchResultListItem(
-                                  searchResult: model.searchResults[i],
-                                  searchCriteria: model.queryControl.value,
-                                )
-                              : model.hasMore
-                                  ? Builder(
-                                      builder: (context) {
-                                        model.fetchMore(context);
-                                        return LinearProgressIndicator();
-                                      },
+                          itemBuilder: (ctx, i) =>
+                              i < model.searchResults.length
+                                  ? SearchResultListItem(
+                                      searchResult: model.searchResults[i],
+                                      searchCriteria: model.queryControl.value,
                                     )
-                                  : Container()),
+                                  : model.hasMore
+                                      ? Builder(
+                                          builder: (context) {
+                                            model.fetchMore(context);
+                                            return SizedBox(
+                                              height: 10,
+                                              child: LinearProgressIndicator(),
+                                            );
+                                          },
+                                        )
+                                      : Container()),
                     ),
     );
+  }
+
+  int getColumns(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    int columns = 1;
+
+    if (width > 750) {
+      columns = 2;
+    }
+    return columns;
   }
 }
