@@ -22,12 +22,6 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
         icon: Icon(MyIcons.arrow_left),
         onPressed: () => Navigator.of(context).pop(),
       ),
-      actions: [
-        MyCircularButton(
-          icon: Icon(MyIcons.quality),
-          onPressed: () => model.toggleHighQualityImage(),
-        )
-      ],
       flexibleSpace: LayoutBuilder(
         builder: (context, c) {
           final settings = context

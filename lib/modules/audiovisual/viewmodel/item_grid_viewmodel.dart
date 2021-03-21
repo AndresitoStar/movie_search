@@ -10,6 +10,7 @@ class ItemGridViewModel extends FutureViewModel<BaseSearchResult> {
 
   bool _highQualityImage = false;
   String baseImageUrl = URL_IMAGE_SMALL;
+  bool over = false;
 
   bool get isHighQualityImage => _highQualityImage;
 
@@ -28,6 +29,11 @@ class ItemGridViewModel extends FutureViewModel<BaseSearchResult> {
     // }
     setInitialised(true);
     return _param;
+  }
+
+  toggleOver(bool value) {
+    over = value;
+    notifyListeners();
   }
 
   Future<String> _checkImageCachedQuality() async {

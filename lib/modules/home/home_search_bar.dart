@@ -23,8 +23,8 @@ class HomeSearchBar extends StatelessWidget {
               readOnly: true,
               decoration: InputDecoration(
                 hintText: 'Buscar...',
-                hintStyle: TextStyle(fontSize: 20),
-                contentPadding: EdgeInsets.zero,
+                hintStyle: const TextStyle(fontSize: 20),
+                contentPadding: const EdgeInsets.only(bottom: 8, left: 10),
               ),
               onTap: () => _onPressed(context),
             ),

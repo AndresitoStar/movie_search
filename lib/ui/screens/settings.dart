@@ -8,6 +8,7 @@ import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingsScreen extends StatelessWidget {
+  static String routeName = "/settings";
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(

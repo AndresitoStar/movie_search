@@ -31,14 +31,14 @@ class PersonDetailMainImage extends ViewModelWidget<PersonDetailViewModel> {
                       enableInfiniteScroll: false,
                       disableCenter: true,
                       reverse: false,
-                      
                       autoPlay: true,
                       autoPlayInterval: Duration(seconds: 3),
                       autoPlayAnimationDuration: Duration(milliseconds: 100),
                       autoPlayCurve: Curves.bounceIn,
                       enlargeCenterPage: false,
                       scrollDirection: Axis.horizontal,
-                    ))
+                    ),
+                  )
                 : model.withImage
                     ? PersonImageWidget(model.image)
                     : Card(
@@ -58,7 +58,8 @@ class PersonDetailMainImage extends ViewModelWidget<PersonDetailViewModel> {
                     Theme.of(context).scaffoldBackgroundColor
                   ],
                 ),
-                border: Border.all(color: Theme.of(context).scaffoldBackgroundColor),
+                border: Border.all(
+                    color: Theme.of(context).scaffoldBackgroundColor),
               ),
             ),
             if (!model.initialised)

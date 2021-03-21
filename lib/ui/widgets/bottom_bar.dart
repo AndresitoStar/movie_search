@@ -53,11 +53,7 @@ class MyBottomBar extends StatelessWidget {
   }
 
   Future goToFavourites(BuildContext context) {
-    return Navigator.push(
-        context,
-        PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 400),
-            pageBuilder: (_, __, ___) => FavouriteScreen()));
+    return Navigator.of(context).pushNamed(FavouriteScreen.routeName);
   }
 
   Future goToSearch(BuildContext context) {
@@ -65,10 +61,6 @@ class MyBottomBar extends StatelessWidget {
   }
 
   Future goToSettings(BuildContext context) {
-    return Navigator.push(
-        context,
-        PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 400),
-            pageBuilder: (_, __, ___) => SettingsScreen()));
+    return Navigator.of(context).pushNamed(SettingsScreen.routeName);
   }
 }

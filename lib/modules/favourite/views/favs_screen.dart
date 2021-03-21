@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class FavouriteScreen extends StatelessWidget {
+  static String routeName = "/favourite";
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<FavouritesViewModel>.nonReactive(

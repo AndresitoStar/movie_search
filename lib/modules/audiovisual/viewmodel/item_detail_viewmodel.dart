@@ -24,7 +24,8 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
 
   List<MediaImage> _images = [];
 
-  List<String> get images => [image,..._images.map((e) => e.filePath).toList()];
+  List<String> get images =>
+      [image, ..._images.map((e) => e.filePath).toSet().toList()];
 
   bool get isHighQualityImage => _highQualityImage;
 
@@ -37,6 +38,7 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
   int currentImage = 0;
 
   Timer timer;
+  bool pauseTimer = false;
 
   @override
   void dispose() {
@@ -55,6 +57,11 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
     baseImageUrl = results[0];
     setInitialised(true);
     return results[1] ?? _param;
+  }
+
+  togglePauseTimer() {
+    pauseTimer = !pauseTimer;
+    notifyListeners();
   }
 
   Future<BaseSearchResult> _cacheData() async {
@@ -107,8 +114,9 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
       if (images != null && images.isNotEmpty) {
         _images.addAll(images);
         timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
-          currentImage =
-              currentImage == images.length - 1 ? 0 : currentImage + 1;
+          if (!pauseTimer)
+            currentImage =
+                currentImage == images.length - 1 ? 0 : currentImage + 1;
           notifyListeners();
         });
       }

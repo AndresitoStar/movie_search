@@ -196,6 +196,13 @@ const String URL_IMAGE_BIG = 'https://image.tmdb.org/t/p/w780';
 
 extension snackbar_extension on BuildContext {
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
+
+  void showSnackbar(String message) => ScaffoldMessenger.of(this).showSnackBar(
+        SnackBar(
+          duration: Duration(seconds: 1),
+          content: Text(message),
+        ),
+      );
 }
 
 enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON }

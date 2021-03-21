@@ -8,7 +8,7 @@ class MyIcons {
   static const IconData settings = FrinoIcons.f_settings;
   static const IconData categories = FrinoIcons.f_dashboard;
 
-  static const IconData arrow_left = Icons.arrow_back_ios;
+  static const IconData arrow_left = FrinoIcons.f_arrow_left;
   static const IconData arrow_right = FrinoIcons.f_arrow_right;
   static const IconData check = FrinoIcons.f_check;
   static const IconData clean = FrinoIcons.f_no_access;
@@ -30,6 +30,10 @@ class MyIcons {
   static const IconData tv = FrinoIcons.f_tv;
   static const IconData filter = FrinoIcons.f_filter;
   static const IconData calendar = FrinoIcons.f_calendar;
+
+  static const IconData download = FrinoIcons.f_download;
+
+  static const IconData error = Icons.warning;
 
   static IconData iconFromType(TMDB_API_TYPE type) {
     if (type == TMDB_API_TYPE.MOVIE) return movie;
