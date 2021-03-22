@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/imdb_rating/components/imdb_rating.dart';
+import 'package:movie_search/modules/video/video_button.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:stacked/stacked.dart';
@@ -67,7 +68,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
               ],
             ),
             Expanded(child: Container()),
-            if (item.movie != null && item.movie.video) Icon(Icons.video_call),
+            VideoButton(param: item),
             ItemLikeButton(
                 id: item.id, type: viewModel.data.type, iconSize: 42),
           ],

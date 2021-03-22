@@ -132,6 +132,7 @@ class Video {
   String site;
   int size;
   String type;
+  bool get isYoutube => site != null && site.toLowerCase().trim() == 'youtube';
 
   Video(
       {this.id,

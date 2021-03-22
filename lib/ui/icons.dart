@@ -25,15 +25,14 @@ class MyIcons {
   static const IconData castMale = FrinoIcons.f_male;
   static const IconData castFemale = FrinoIcons.f_female;
   static const IconData star = FrinoIcons.f_star_filled;
-
   static const IconData movie = FrinoIcons.f_movie_tape;
   static const IconData tv = FrinoIcons.f_tv;
   static const IconData filter = FrinoIcons.f_filter;
   static const IconData calendar = FrinoIcons.f_calendar;
-
   static const IconData download = Icons.file_download;
-
   static const IconData error = Icons.warning;
+  static const IconData video = Icons.ondemand_video_rounded;
+  static const IconData youtube = FontAwesomeIcons.youtube;
 
   static IconData iconFromType(TMDB_API_TYPE type) {
     if (type == TMDB_API_TYPE.MOVIE) return movie;

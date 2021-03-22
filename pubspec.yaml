@@ -37,7 +37,8 @@ dependencies:
   smooth_page_indicator: 0.3.0-nullsafety.0
   shimmer: ^1.1.2
   package_info: ^0.4.1
-  bubble_tab_indicator: 0.1.6 
+  bubble_tab_indicator: 0.1.6
+  url_launcher: ^6.0.2
 
 dev_dependencies:
   flutter_test:
