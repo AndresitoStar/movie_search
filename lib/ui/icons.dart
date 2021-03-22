@@ -31,7 +31,7 @@ class MyIcons {
   static const IconData filter = FrinoIcons.f_filter;
   static const IconData calendar = FrinoIcons.f_calendar;
 
-  static const IconData download = FrinoIcons.f_download;
+  static const IconData download = Icons.file_download;
 
   static const IconData error = Icons.warning;
 

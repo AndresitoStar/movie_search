@@ -27,7 +27,7 @@ class TrendingPage extends StatelessWidget {
                   title: Text(viewModel.content.title),
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   titleSpacing: 0,
-                  elevation: 0,
+                  elevation: 5,
                   actions: [
                     if (viewModel.content == TrendingContent.MOVIE)
                       IconButton(

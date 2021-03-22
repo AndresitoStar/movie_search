@@ -34,6 +34,13 @@ class SearchViewModel extends BaseViewModel {
 
   SearchCategory get actualCategory => categoryControl.value;
 
+  bool showFilter = false;
+
+  toggleFilter() {
+    showFilter = !showFilter;
+    notifyListeners();
+  }
+
   SearchViewModel(this._service) {
     this.form = fb.group({
       FORM_QUERY: FormControl<String>(value: ''),

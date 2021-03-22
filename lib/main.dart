@@ -51,7 +51,6 @@ class App extends StatelessWidget {
         theme: DarkTheme.theme,
         darkTheme: DarkTheme.theme,
         themeMode: EasyDynamicTheme.of(context).themeMode,
-        // routes: Routes.routes,
         onGenerateRoute: Routes.generateRoute,
         initialRoute:
             wasHereBefore ? SplashScreen.route : OnboardScreen.routeName,

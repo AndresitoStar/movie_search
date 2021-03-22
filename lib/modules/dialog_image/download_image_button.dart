@@ -6,7 +6,6 @@ import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/circular_button.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:movie_search/providers/util.dart';
 
@@ -30,7 +29,6 @@ class ImageDownloadButton extends StatelessWidget {
                       icon: Icon(MyIcons.error, color: Colors.red))
                   : MyCircularButton(
                       icon: Icon(MyIcons.download),
-                      color: Theme.of(context).accentColor,
                       onPressed: () => _downloadImage(context, model),
                     )
           : Container(),
