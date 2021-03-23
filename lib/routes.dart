@@ -16,13 +16,12 @@ final routes = {
 };
 
 class Routes {
-  static final defaultTransition = (BuildContext context,
-      Animation<double> animation, Animation<double> animationq, Widget child) {
-    return FadeTransition(
-      opacity: animation,
-      child: child,
-    );
-  };
+  static final defaultTransition = (context, Animation<double> animation,
+          Animation<double> secondary, Widget child) =>
+      FadeTransition(
+        opacity: animation,
+        child: child,
+      );
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     Map<String, dynamic> _routes = routes;

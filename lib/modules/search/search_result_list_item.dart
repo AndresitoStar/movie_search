@@ -6,14 +6,8 @@ import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/person/components/person_detail_screen.dart';
 import 'package:movie_search/modules/search/search_result_image.dart';
 import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/ui/icons.dart';
 
 class SearchResultListItem extends StatelessWidget {
-  final Map<TMDB_API_TYPE, IconData> _icons = {
-    TMDB_API_TYPE.MOVIE: MyIcons.movie,
-    TMDB_API_TYPE.TV_SHOW: MyIcons.tv,
-    TMDB_API_TYPE.PERSON: MyIcons.castMale
-  };
   final BaseSearchResult searchResult;
   final String searchCriteria;
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'bottom_bar.dart';
-import 'dart:ui' as ui;
 
 import 'lateral_bar.dart';
 

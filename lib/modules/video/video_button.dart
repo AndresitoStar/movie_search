@@ -3,7 +3,6 @@ import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/video/dialog_video.dart';
 import 'package:movie_search/modules/video/video_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
-import 'package:movie_search/ui/widgets/circular_button.dart';
 import 'package:stacked/stacked.dart';
 import 'package:movie_search/providers/util.dart';
 

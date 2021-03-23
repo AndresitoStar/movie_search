@@ -2,7 +2,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/trending/trending_page.dart';
-import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
@@ -89,9 +88,4 @@ class TrendingHorizontalList extends StatelessWidget {
       ),
     );
   }
-
-  Future _goToTrendingScreen(
-          BuildContext context, TrendingViewModel viewModel) =>
-      Navigator.push(context,
-          Routes.defaultPageRouteBuilder(TrendingPage(param: viewModel)));
 }
