@@ -17,12 +17,10 @@ class SplashScreen extends StatelessWidget {
             ? _buildError(context, model)
             : model.isBusy
                 ? _buildBusyIndicator()
-                : model.initialised
-                    ? Builder(builder: (context) {
+                : Builder(builder: (context) {
                         _navigateHome(context);
                         return _buildBusyIndicator();
-                      })
-                    : _buildEmailRequestData(model, context),
+                      }),
       ),
       viewModelBuilder: () => SplashViewModel(context.read()),
     );
@@ -45,7 +43,25 @@ class SplashScreen extends StatelessWidget {
         ),
       );
 
-  _buildBusyIndicator() => Center(child: CircularProgressIndicator());
+  _buildBusyIndicator() => Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/ic_launcher.png',
+              width: 200,
+            ),
+            SizedBox(height: 64),
+            SizedBox(
+              height: 60,
+              width: 60,
+              child: CircularProgressIndicator(strokeWidth: 1),
+            ),
+          ],
+        ),
+      );
 
   _buildEmailRequestData(SplashViewModel model, BuildContext ctx) {
     return Padding(

@@ -4,6 +4,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/splash/splash_service.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/safe_executor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:stacked/stacked.dart';
@@ -13,6 +14,8 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
   final SplashService _splashService;
 
   FormGroup form;
+
+  bool wasHereBefore = false;
 
   String get email => this.form.controls['email'].value;
 
@@ -30,13 +33,21 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
 
   @override
   Future futureToRun() async {
-    return safeExecute(() => Future.wait([
-          validate(),
+    setBusy(true);
+    await safeExecute(() => Future.wait([
+          // validate(),
           syncCountries(),
           syncLanguages(),
           syncGenres('movie'),
           syncGenres('tv'),
-        ]));
+          // checkWasHereBefore(),
+        ])).then((value) => checkWasHereBefore());
+  }
+
+  Future checkWasHereBefore() async {
+    wasHereBefore = await SharedPreferencesHelper.wasHereBefore();
+    setInitialised(true);
+    setBusy(false);
   }
 
   Future validate() async {

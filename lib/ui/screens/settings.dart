@@ -16,76 +16,22 @@ class SettingsScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  AppBar(
-                    title: Text('Ajustes'),
-                    leading: IconButton(
-                      icon: Icon(MyIcons.arrow_left),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    titleSpacing: 0,
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                AppBar(
+                  title: Text('Acerca de'),
+                  leading: IconButton(
+                    icon: Icon(MyIcons.arrow_left),
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
-                  // ListTile(
-                  //   title: Text('Tema',
-                  //       style: Theme.of(context)
-                  //           .textTheme
-                  //           .headline6
-                  //           .copyWith(fontWeight: FontWeight.normal)),
-                  //   trailing: EasyDynamicThemeBtn(),
-                  // ),
-                  // Divider(),
-                  // ListTile(
-                  //   title: Text('Mostrar recientes',
-                  //       style: Theme.of(context)
-                  //           .textTheme
-                  //           .headline6
-                  //           .copyWith(fontWeight: FontWeight.normal)),
-                  //   trailing: StreamBuilder<bool>(
-                  //       stream: SharedPreferencesHelper.getInstance().streamForRecent,
-                  //       builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  //         return snapshot.data != null
-                  //             ? Switch(
-                  //                 value: snapshot.data,
-                  //                 inactiveTrackColor: Colors.grey.shade600,
-                  //                 onChanged: (value) {
-                  //                   SharedPreferencesHelper.setActiveRecent(value);
-                  //                   return SharedPreferencesHelper.getInstance()
-                  //                       .changeActiveRecent(value);
-                  //                 },
-                  //               )
-                  //             : CircularProgressIndicator();
-                  //       }),
-                  // ),
-                  // Divider(),
-                  // ListTile(
-                  //   onTap: () => db.cleanAudiovisualData(),
-                  //   title: Text('Borrar datos de cache',
-                  //       style: Theme.of(context)
-                  //           .textTheme
-                  //           .headline6
-                  //           .copyWith(fontWeight: FontWeight.normal)),
-                  //   trailing: IconButton(
-                  //       icon: Icon(FrinoIcons.f_eraser),
-                  //       onPressed: () => db.cleanAudiovisualData()),
-                  // ),
-                  // Divider(),
-                  ListTile(
-                    onTap: () => showAbout(context),
-                    title: Text('Acerca de...',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(fontWeight: FontWeight.normal)),
-                    trailing: IconButton(
-                        icon: Icon(FrinoIcons.f_information),
-                        onPressed: () => showAbout(context)),
-                  ),
-                ],
-              ),
+                  titleSpacing: 0,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                ),
+                Expanded(
+                    child: _getInfo(context, 'Buscador de Peliculas', '2.0.0')),
+              ],
             ),
           ),
         ],
@@ -93,37 +39,26 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  showAbout(BuildContext context) {
-    if (Platform.isWindows)
-      _showInfoDialog(context, 'Buscador de Peliculas', '2.0.0');
-    else
-      PackageInfo.fromPlatform()
-          .then((info) => _showInfoDialog(context, info.appName, info.version));
-  }
-
-  _showInfoDialog(BuildContext context, String appName, String version) {
-    showDialog(
-      context: context,
-      barrierColor: EasyDynamicTheme.of(context).themeMode == ThemeMode.light
-          ? Colors.black54
-          : Colors.white54,
-      builder: (context) => SimpleDialog(
-          title: ListTile(
-            leading: CircleAvatar(
-              backgroundImage: AssetImage('assets/images/ic_launcher.png'),
-            ),
-            title: Text(appName),
-          ),
-          children: [
-            ListTile(
-              title: Text('Desarrollador'),
-              subtitle: Text('Ing. Andrés Forns Jusino'),
-            ),
-            ListTile(
-              title: Text('Version'),
-              subtitle: Text(version),
-            )
-          ]),
+  _getInfo(BuildContext context, String appName, String version) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset('assets/images/ic_launcher.png', width: 150, height: 150),
+        SizedBox(height: 50),
+        Text(appName,
+            style:
+                theme.textTheme.headline4.copyWith(color: theme.accentColor)),
+        SizedBox(height: 30),
+        Text('Desarrollador',
+            style: theme.textTheme.subtitle2.copyWith(color: theme.hintColor)),
+        Text('Ing. Andrés Forns Jusino', style: theme.textTheme.headline6),
+        SizedBox(height: 30),
+        Text('Version',
+            style: theme.textTheme.subtitle2.copyWith(color: theme.hintColor)),
+        Text(version, style: theme.textTheme.headline6),
+      ],
     );
   }
 }

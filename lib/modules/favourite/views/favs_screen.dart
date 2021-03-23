@@ -57,14 +57,15 @@ class FavouriteScreen extends StatelessWidget {
                         ),
                       ),
                     ],
-                    indicatorSize: TabBarIndicatorSize.label,
-                    labelColor: Colors.white,
+                    // indicatorSize: TabBarIndicatorSize.label,
+                    unselectedLabelColor: Colors.white70,
+                    labelColor: Theme.of(context).accentColor,
                     labelStyle: Theme.of(context).textTheme.headline6,
-                    indicator: BubbleTabIndicator(
-                      indicatorHeight: 25.0,
-                      indicatorColor: Theme.of(context).accentColor,
-                      tabBarIndicatorSize: TabBarIndicatorSize.label,
-                    ),
+                    // indicator: BubbleTabIndicator(
+                    //   indicatorHeight: 25.0,
+                    //   indicatorColor: Theme.of(context).accentColor,
+                    //   tabBarIndicatorSize: TabBarIndicatorSize.label,
+                    // ),
                   ),
                 ),
               ];

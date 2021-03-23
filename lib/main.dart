@@ -11,14 +11,13 @@ import 'package:sqlite3/open.dart';
 
 import 'data/moor_database.dart';
 import 'modules/splash/splash_screen.dart';
-import 'ui/screens/onboard.dart';
 
 void main() {
   if (Platform.isWindows) {
     _configureSqliteOnWindows();
   }
   SharedPreferencesHelper.wasHereBefore().then((value) =>
-      runApp(EasyDynamicThemeWidget(child: App(wasHereBefore: value))));
+      runApp(EasyDynamicThemeWidget(child: App())));
 }
 
 _configureSqliteOnWindows() {
@@ -32,9 +31,6 @@ DynamicLibrary _openOnWindows() {
 }
 
 class App extends StatelessWidget {
-  final bool wasHereBefore;
-
-  const App({Key key, @required this.wasHereBefore}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +48,7 @@ class App extends StatelessWidget {
         darkTheme: DarkTheme.theme,
         themeMode: EasyDynamicTheme.of(context).themeMode,
         onGenerateRoute: Routes.generateRoute,
-        initialRoute:
-            wasHereBefore ? SplashScreen.route : OnboardScreen.routeName,
+        initialRoute: SplashScreen.route,
       ),
     );
   }
