@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/main.dart';
 import 'package:movie_search/modules/home/home_search_bar.dart';
 import 'package:movie_search/modules/trending/trending_horizontal_list.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
+import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:stacked/stacked.dart';
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/main.dart';
 
 import 'bottom_bar.dart';
 
@@ -19,7 +20,6 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
-
     return SafeArea(
       top: false,
       child: Stack(
@@ -32,7 +32,6 @@ class CustomScaffold extends StatelessWidget {
                 ? Row(
                     children: [
                       Center(child: MyLateralBar(index: bottomBarIndex)),
-                      VerticalDivider(),
                       Expanded(child: body)
                     ],
                   )

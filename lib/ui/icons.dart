@@ -33,6 +33,9 @@ class MyIcons {
   static const IconData error = Icons.warning;
   static const IconData video = Icons.ondemand_video_rounded;
   static const IconData youtube = FontAwesomeIcons.youtube;
+  static const IconData drawerHamburger = FrinoIcons.f_menu;
+  static const IconData maximize = Icons.crop_square;
+  static const IconData minimize = Icons.minimize;
 
   static IconData iconFromType(TMDB_API_TYPE type) {
     if (type == TMDB_API_TYPE.MOVIE) return movie;

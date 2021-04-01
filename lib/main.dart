@@ -12,12 +12,25 @@ import 'package:sqlite3/open.dart';
 import 'data/moor_database.dart';
 import 'modules/splash/splash_screen.dart';
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+
+final GlobalKey<ScaffoldState> drawerKey = new GlobalKey<ScaffoldState>();
+
 void main() {
   if (Platform.isWindows) {
     _configureSqliteOnWindows();
   }
-  SharedPreferencesHelper.wasHereBefore().then((value) =>
-      runApp(EasyDynamicThemeWidget(child: App())));
+  SharedPreferencesHelper.wasHereBefore()
+      .then((value) => runApp(EasyDynamicThemeWidget(child: App())));
+
+  doWhenWindowReady(() {
+    final initialSize = Size(400, 710);
+    appWindow.minSize = initialSize;
+    appWindow.size = initialSize;
+    appWindow.alignment = Alignment.center;
+    appWindow.show();
+    appWindow.maximize();
+  });
 }
 
 _configureSqliteOnWindows() {
@@ -31,7 +44,6 @@ DynamicLibrary _openOnWindows() {
 }
 
 class App extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

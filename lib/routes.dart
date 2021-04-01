@@ -5,6 +5,7 @@ import 'package:movie_search/modules/search/search_screen.dart';
 import 'package:movie_search/modules/splash/splash_screen.dart';
 import 'package:movie_search/ui/screens/onboard.dart';
 import 'package:movie_search/ui/screens/settings.dart';
+import 'package:movie_search/ui/widgets/windows_bar.dart';
 
 final routes = {
   SplashScreen.route: (ctx) => SplashScreen(),
@@ -29,19 +30,16 @@ class Routes {
       return PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 100),
         transitionsBuilder: defaultTransition,
-        pageBuilder: (_, __, ___) => Builder(builder: _routes[settings.name]),
+        pageBuilder: (_, __, ___) => Column(
+          children: [
+            WindowsBar(),
+            Expanded(child: Builder(builder: _routes[settings.name])),
+          ],
+        ),
         settings: settings,
       );
     }
     return MaterialPageRoute(settings: settings, builder: (_) => Container());
   }
 
-  static PageRoute defaultPageRouteBuilder(Widget child,
-          {RouteSettings settings}) =>
-      PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 400),
-        transitionsBuilder: defaultTransition,
-        pageBuilder: (_, __, ___) => Builder(builder: (_) => child),
-        settings: settings,
-      );
 }
