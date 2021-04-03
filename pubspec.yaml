@@ -29,7 +29,7 @@ dependencies:
   intl: 0.17.0
   flutter_cache_manager: ^2.1.2
   device_info: 0.4.2+10
-  dio: 4.0.0-beta7
+  dio: 4.0.0
   extended_image: 3.0.0
   easy_dynamic_theme: ^2.0.0
   carousel_slider: ^2.3.1
