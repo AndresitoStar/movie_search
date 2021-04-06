@@ -40,6 +40,11 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
   Timer timer;
   bool pauseTimer = false;
 
+  togglePauseTimer() {
+    pauseTimer = !pauseTimer;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     scrollController.dispose();
@@ -57,11 +62,6 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
     baseImageUrl = results[0];
     setInitialised(true);
     return results[1] ?? _param;
-  }
-
-  togglePauseTimer() {
-    pauseTimer = !pauseTimer;
-    notifyListeners();
   }
 
   Future<BaseSearchResult> _cacheData() async {
