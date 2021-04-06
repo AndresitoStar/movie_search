@@ -10,8 +10,10 @@ jobs:
     name: send default message
     runs-on: ubuntu-latest
     steps:
-      - uses: appleboy/telegram-action@master
+      - uses: naiw1023/notify-telegram@v0.0.2
+        if: always()
         with:
-          to: ${{ secrets.TELEGRAM_TO }}
+          chat: ${{ secrets.TELEGRAM_TO }} # user id or channel name secret
+          status: ${{ job.status }} # do not modify this line
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: Cuaq! MadafaKa!
