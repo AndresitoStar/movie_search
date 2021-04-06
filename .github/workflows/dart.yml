@@ -23,7 +23,7 @@ jobs:
   uploading:
     name: Uploading to Google Drive
     runs-on: ubuntu-latest
-    needs: [build-apk, versionig]
+    needs: [build-apk]
     steps:
       - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
