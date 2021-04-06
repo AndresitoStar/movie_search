@@ -20,11 +20,11 @@ jobs:
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build apk --release --split-per-abi
-  uploading:
-    name: Uploading to Google Drive
-    runs-on: ubuntu-latest
-    needs: [build-apk]
-    steps:
+  # uploading:
+  #   name: Uploading to Google Drive
+  #   runs-on: ubuntu-latest
+  #   needs: [build-apk]
+  #   steps:
       - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
         id: v8a
