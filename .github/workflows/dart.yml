@@ -1,16 +1,11 @@
-# on:
-#   push:
+on:
+  push:
 #    branches: [ master]
-#     tags:
-#     - '*'
+    tags:
+    - '*'
 name: Build Release
 jobs:
   build-apk:
-    on:
-    push:
-    # branches: [ master]
-        tags:
-        - '*'
     name: Build APK
     runs-on: ubuntu-latest
     steps:
@@ -63,12 +58,3 @@ jobs:
           # name: Buscador_${{ steps.semvers.outputs.patch }}_x86_64.apk
           credentials: ${{ secrets.DRIVE_CREDENTIALS }}
           folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
-
-  send-notification:
-    on: [push]
-    name: send default message
-    uses: appleboy/telegram-action@master
-    with:
-      to: ${{ secrets.TELEGRAM_TO }}
-      token: ${{ secrets.TELEGRAM_TOKEN }}
-      message: Cuaq! MadafaKa!
