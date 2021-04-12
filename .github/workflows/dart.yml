@@ -54,5 +54,3 @@ jobs:
           message: |
             Nueva version: Buscador de Peliculas y Series, by Ing. Andrés Forns Jusino
             ${{ steps.v8a.outputs.link }}
-            ${{ steps.v7a.outputs.link }}
-            ${{ steps.x86.outputs.link }}
