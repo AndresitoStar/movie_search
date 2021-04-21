@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/dark.dart';
+import 'package:movie_search/ui/widgets/windows_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:sqlite3/open.dart';
 
@@ -44,6 +45,7 @@ DynamicLibrary _openOnWindows() {
 }
 
 class App extends StatelessWidget {
+  final navigatorKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -53,14 +55,25 @@ class App extends StatelessWidget {
           dispose: (context, db) => db.close(),
         )
       ],
-      child: MaterialApp(
-        title: 'Buscador de Peliculas y Series',
-        debugShowCheckedModeBanner: false,
-        theme: DarkTheme.theme,
-        darkTheme: DarkTheme.theme,
-        themeMode: EasyDynamicTheme.of(context).themeMode,
-        onGenerateRoute: Routes.generateRoute,
-        initialRoute: SplashScreen.route,
+      child: Scaffold(
+        
+        body: Column(
+          children: [
+            WindowsBar(),
+            Expanded(
+              child: MaterialApp(
+                navigatorKey: navigatorKey,
+                title: 'Buscador de Peliculas y Series',
+                debugShowCheckedModeBanner: false,
+                theme: DarkTheme.theme,
+                darkTheme: DarkTheme.theme,
+                themeMode: EasyDynamicTheme.of(context).themeMode,
+                onGenerateRoute: Routes.generateRoute,
+                initialRoute: SplashScreen.route,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
