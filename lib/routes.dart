@@ -32,7 +32,7 @@ class Routes {
         transitionsBuilder: defaultTransition,
         pageBuilder: (_, __, ___) => Column(
           children: [
-            // WindowsBar(),
+            WindowsBar(),
             Expanded(child: Builder(builder: _routes[settings.name])),
           ],
         ),

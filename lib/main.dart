@@ -21,8 +21,7 @@ void main() {
   if (Platform.isWindows) {
     _configureSqliteOnWindows();
   }
-  SharedPreferencesHelper.wasHereBefore()
-      .then((value) => runApp(EasyDynamicThemeWidget(child: App())));
+  SharedPreferencesHelper.wasHereBefore().then((value) => runApp(App()));
 
   doWhenWindowReady(() {
     final initialSize = Size(400, 710);
@@ -49,32 +48,22 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        Provider<MyDatabase>(
-          create: (context) => MyDatabase(),
-          dispose: (context, db) => db.close(),
-        )
-      ],
-      child: Scaffold(
-        
-        body: Column(
-          children: [
-            WindowsBar(),
-            Expanded(
-              child: MaterialApp(
-                navigatorKey: navigatorKey,
-                title: 'Buscador de Peliculas y Series',
-                debugShowCheckedModeBanner: false,
-                theme: DarkTheme.theme,
-                darkTheme: DarkTheme.theme,
-                themeMode: EasyDynamicTheme.of(context).themeMode,
-                onGenerateRoute: Routes.generateRoute,
-                initialRoute: SplashScreen.route,
-              ),
-            ),
-          ],
+        providers: [
+          Provider<MyDatabase>(
+            create: (context) => MyDatabase(),
+            dispose: (context, db) => db.close(),
+          )
+        ],
+        child: MaterialApp(
+          navigatorKey: navigatorKey,
+          title: 'Buscador de Peliculas y Series',
+          debugShowCheckedModeBanner: false,
+          theme: DarkTheme.theme,
+          darkTheme: DarkTheme.theme,
+          themeMode: ThemeMode.dark,
+          onGenerateRoute: Routes.generateRoute,
+          initialRoute: SplashScreen.route,
         ),
-      ),
     );
   }
 }
