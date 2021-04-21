@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
@@ -10,9 +12,9 @@ import 'trending_viewmodel.dart';
 
 class TrendingHorizontalList extends StatelessWidget {
   final TrendingContent content;
-  final _defaultLength = 15;
+  final _defaultLength = Platform.isWindows ? 15 : 5;
 
-  const TrendingHorizontalList({Key key, this.content}) : super(key: key);
+  TrendingHorizontalList({Key key, this.content}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

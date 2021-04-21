@@ -277,7 +277,7 @@ class SharedPreferencesHelper {
     isActiveRecent().then((value) => _streamForRecent.add(value));
 
     _streamForSearchHistory = BehaviorSubject<List<String>>();
-    getSearchHistory().then((value) => _streamForSearchHistory.add(value));
+    getSearchHistory().then((value) => _streamForSearchHistory.add(value.reversed.toList()));
   }
 
   StreamController<bool> _streamForRecent;
@@ -293,7 +293,7 @@ class SharedPreferencesHelper {
   updateSearchHistory(String query) {
     getSearchHistory().then((value) {
       value.add(query);
-      _streamForSearchHistory.sink.add(value);
+      _streamForSearchHistory.sink.add(value.reversed.toList());
       setSearchHistory(value);
     });
   }
