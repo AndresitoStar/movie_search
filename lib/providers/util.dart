@@ -308,6 +308,11 @@ class SharedPreferencesHelper {
     return await prefs.setBool(key, value);
   }
 
+  static Future _setString(String key, String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.setString(key, value);
+  }
+
   static Future _setList(String key, List value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.setStringList(key, value.toList());
@@ -321,6 +326,15 @@ class SharedPreferencesHelper {
       result = prefs.getBool(key);
     } catch (e) {}
     return result ?? false;
+  }
+
+  static Future<String> _getString(String key) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      return prefs.getString(key);
+    } catch (e) {}
+    return null;
   }
 
   static Future<List<T>> _getList<T extends Object>(String key) async {
@@ -355,5 +369,21 @@ class SharedPreferencesHelper {
 
   static void setSearchHistory(List<String> value) async {
     _setList('SEARCH_HISTORY', value);
+  }
+
+  static Future<String> getFlexSchemaColor() async {
+    return _getString('SCHEME_COLOR');
+  }
+
+  static void setFlexSchemaColor(String value) async {
+    _setString('SCHEME_COLOR', value);
+  }
+
+  static Future<String> getBrightness() async {
+    return _getString('Brightness');
+  }
+
+  static void setBrightness(String value) async {
+    _setString('Brightness', value);
   }
 }

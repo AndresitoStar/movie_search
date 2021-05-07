@@ -47,9 +47,7 @@ class HomeScreen extends StatelessWidget {
         ]);
         return CustomScaffold(
           bottomBarIndex: 0,
-          body: SafeArea(
-            child: applyLandscape ? SingleChildScrollView(child: child) : child,
-          ),
+          body: applyLandscape ? SingleChildScrollView(child: child) : child,
         );
       },
     );

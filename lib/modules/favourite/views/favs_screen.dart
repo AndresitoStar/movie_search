@@ -28,8 +28,8 @@ class FavouriteScreen extends StatelessWidget {
                   floating: false,
                   snap: false,
                   pinned: true,
-                  elevation: 3,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  // elevation: 0,
+                  backgroundColor: Theme.of(context).primaryColor,
                   title: Text('Favoritos'),
                   leading: IconButton(
                     icon: Icon(MyIcons.arrow_left),
@@ -58,9 +58,12 @@ class FavouriteScreen extends StatelessWidget {
                       ),
                     ],
                     // indicatorSize: TabBarIndicatorSize.label,
-                    unselectedLabelColor: Colors.white70,
+                    indicator: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                    ),
+                    // unselectedLabelColor: Theme.of(context).shadowColor,
                     labelColor: Theme.of(context).accentColor,
-                    labelStyle: Theme.of(context).textTheme.headline6,
+                    // labelStyle: Theme.of(context).textTheme.headline6,
                     // indicator: BubbleTabIndicator(
                     //   indicatorHeight: 25.0,
                     //   indicatorColor: Theme.of(context).accentColor,

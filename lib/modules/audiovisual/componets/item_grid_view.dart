@@ -87,11 +87,10 @@ class ItemGridView extends StatelessWidget {
                               padding: const EdgeInsets.all(8),
                               child: Text(
                                 '${item.year}',
-                                style: TextStyle(color: Colors.black87),
                               ),
                               decoration: BoxDecoration(
                                 color: Theme.of(context)
-                                    .accentColor
+                                    .scaffoldBackgroundColor
                                     .withOpacity(0.8),
                                 borderRadius: BorderRadius.only(
                                     bottomRight: Radius.circular(10)),
@@ -104,11 +103,10 @@ class ItemGridView extends StatelessWidget {
                             right: 0,
                             child: Container(
                               padding: const EdgeInsets.all(8),
-                              child: Icon(MyIcons.iconFromType(item.type),
-                                  color: Colors.black87),
+                              child: Icon(MyIcons.iconFromType(item.type)),
                               decoration: BoxDecoration(
                                 color: Theme.of(context)
-                                    .accentColor
+                                    .scaffoldBackgroundColor
                                     .withOpacity(0.8),
                                 borderRadius: BorderRadius.only(
                                     bottomLeft: Radius.circular(10)),

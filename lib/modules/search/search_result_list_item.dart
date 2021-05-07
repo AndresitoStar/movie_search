@@ -24,9 +24,12 @@ class SearchResultListItem extends StatelessWidget {
       closedElevation: 0.0,
       openElevation: 0.0,
       closedBuilder: (context, open) => Card(
-        elevation: 0,
-        color: Theme.of(context).cardColor.withOpacity(0.15),
+        elevation: 5,
+        // color: Theme.of(context).cardColor.withOpacity(0.15),
         clipBehavior: Clip.hardEdge,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         margin: const EdgeInsets.all(10),
         child: GestureDetector(
           onTap: () {
