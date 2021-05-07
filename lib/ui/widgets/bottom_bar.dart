@@ -18,7 +18,9 @@ class MyBottomBar extends StatelessWidget {
       elevation: 0,
       showUnselectedLabels: false,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).primaryColor,
+      selectedIconTheme: IconThemeData(color: Colors.white),
+      unselectedIconTheme: IconThemeData(color: Colors.white30),
       iconSize: 30,
       onTap: (i) {
         switch (i) {
@@ -39,15 +41,17 @@ class MyBottomBar extends StatelessWidget {
         }
       },
       items: [
-        BottomNavigationBarItem(icon: Icon(MyIcons.home), label: '', tooltip: 'Inicio'),
-        BottomNavigationBarItem(icon: Icon(MyIcons.search), label: '', tooltip: 'Buscar'),
         BottomNavigationBarItem(
-          icon: Icon(MyIcons.favourite_off),
-          label: '',
-          activeIcon: Icon(MyIcons.favourite_on),
-          tooltip: 'Favoritos'
-        ),
-        BottomNavigationBarItem(icon: Icon(MyIcons.settings), label: '', tooltip: 'Ajustes'),
+            icon: Icon(MyIcons.home), label: '', tooltip: 'Inicio'),
+        BottomNavigationBarItem(
+            icon: Icon(MyIcons.search), label: '', tooltip: 'Buscar'),
+        BottomNavigationBarItem(
+            icon: Icon(MyIcons.favourite_off),
+            label: '',
+            activeIcon: Icon(MyIcons.favourite_on),
+            tooltip: 'Favoritos'),
+        BottomNavigationBarItem(
+            icon: Icon(MyIcons.settings), label: '', tooltip: 'Ajustes'),
       ],
     );
   }

@@ -5,31 +5,34 @@ import 'package:movie_search/ui/icons.dart';
 class HomeSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      clipBehavior: Clip.hardEdge,
-      elevation: 0,
-      color: Theme.of(context).cardColor.withOpacity(0.28),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => _onPressed(context),
-            icon: Icon(MyIcons.search),
-            iconSize: 20,
-          ),
-          Expanded(
-            child: TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                hintText: 'Buscar...',
-                hintStyle: const TextStyle(fontSize: 20),
-                contentPadding: const EdgeInsets.only(bottom: 8, left: 10),
+    return AppBar(
+      toolbarHeight: kToolbarHeight + 10,
+      automaticallyImplyLeading: false,
+      backgroundColor: Theme.of(context).primaryColor,
+      titleSpacing: 0,
+      title: Container(
+        clipBehavior: Clip.hardEdge,
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: TextField(
+          readOnly: true,
+          decoration: InputDecoration(
+            prefix: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                MyIcons.search,
+                size: 20,
+                color: Colors.white,
               ),
-              onTap: () => _onPressed(context),
             ),
-          )
-        ],
+            hintText: 'Buscar...',
+            hintStyle: const TextStyle(fontSize: 20, color: Colors.white38),
+            contentPadding: const EdgeInsets.only(bottom: 5, left: 10),
+          ),
+          onTap: () => _onPressed(context),
+        ),
       ),
     );
   }

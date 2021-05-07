@@ -19,83 +19,76 @@ class TrendingPage extends StatelessWidget {
     return ViewModelBuilder<TrendingViewModel>.reactive(
         viewModelBuilder: () => TrendingViewModel.forPage(
             param.content, param.items, param.total, context.read()),
-        builder: (context, viewModel, child) => SafeArea(
-              child: Scaffold(
-                appBar: AppBar(
-                  title: Text(viewModel.content.title),
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  titleSpacing: 0,
-                  elevation: 5,
-                  actions: [
-                    if (viewModel.content == TrendingContent.MOVIE)
-                      IconButton(
-                        icon: Icon(
-                          MyIcons.calendar,
-                          color: viewModel.year != null
-                              ? theme.accentColor
-                              : theme.iconTheme.color,
-                        ),
-                        onPressed: () => showYearFilter(context, viewModel),
-                      ),
+        builder: (context, viewModel, child) => Scaffold(
+              appBar: AppBar(
+                title: Text(viewModel.content.title),
+                backgroundColor: Theme.of(context).primaryColor,
+                titleSpacing: 0,
+                elevation: 5,
+                actions: [
+                  if (viewModel.content == TrendingContent.MOVIE)
                     IconButton(
                       icon: Icon(
-                        MyIcons.filter,
-                        color: viewModel.activeGenres.length > 0
-                            ? theme.accentColor
-                            : theme.iconTheme.color,
+                        MyIcons.calendar,
                       ),
-                      onPressed: () =>
-                          showFilters(context, param.content.type, viewModel),
+                      onPressed: () => showYearFilter(context, viewModel),
                     ),
-                  ],
-                  bottom: viewModel.activeGenres.length > 0
-                      ? PreferredSize(
-                          preferredSize: Size.fromHeight(kToolbarHeight),
-                          child: Container(
-                            height: kToolbarHeight,
-                            child: ListView.separated(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              physics: ClampingScrollPhysics(),
-                              separatorBuilder: (context, index) =>
-                                  Container(width: 10),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: viewModel.activeGenresNames.length,
-                              itemBuilder: (context, i) => Chip(
-                                  label: Text(viewModel.activeGenresNames[i])),
-                            ),
-                          ),
-                        )
-                      : null,
-                  leading: IconButton(
-                    icon: Icon(MyIcons.arrow_left),
-                    onPressed: () => Navigator.of(context).pop(),
+                  IconButton(
+                    icon: Icon(
+                      viewModel.activeGenres.length > 0
+                          ? Icons.filter_list_alt
+                          : MyIcons.filter,
+                    ),
+                    onPressed: () =>
+                        showFilters(context, param.content.type, viewModel),
                   ),
+                ],
+                bottom: viewModel.activeGenres.length > 0
+                    ? PreferredSize(
+                        preferredSize: Size.fromHeight(kToolbarHeight),
+                        child: Container(
+                          height: kToolbarHeight,
+                          child: ListView.separated(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            physics: ClampingScrollPhysics(),
+                            separatorBuilder: (context, index) =>
+                                Container(width: 10),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: viewModel.activeGenresNames.length,
+                            itemBuilder: (context, i) => Chip(
+                                label: Text(viewModel.activeGenresNames[i])),
+                          ),
+                        ),
+                      )
+                    : null,
+                leading: IconButton(
+                  icon: Icon(MyIcons.arrow_left),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
-                body: viewModel.isBusy
-                    ? Center(child: CircularProgressIndicator())
-                    : GridView.builder(
-                        padding: const EdgeInsets.all(10.0),
-                        itemCount: viewModel.items.length + 2,
-                        itemBuilder: (ctx, i) => i < viewModel.items.length
-                            ? ItemGridView(
-                                item: viewModel.items[i], showData: false)
-                            : viewModel.hasMore
-                                ? Builder(
-                                    builder: (context) {
-                                      if (i == viewModel.items.length)
-                                        viewModel.fetchMore();
-                                      return GridItemPlaceholder();
-                                    },
-                                  )
-                                : Container(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: getColumns(context),
-                            childAspectRatio: 5 / 9,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10),
-                      ),
               ),
+              body: viewModel.isBusy
+                  ? Center(child: CircularProgressIndicator())
+                  : GridView.builder(
+                      padding: const EdgeInsets.all(10.0),
+                      itemCount: viewModel.items.length + 2,
+                      itemBuilder: (ctx, i) => i < viewModel.items.length
+                          ? ItemGridView(
+                              item: viewModel.items[i], showData: false)
+                          : viewModel.hasMore
+                              ? Builder(
+                                  builder: (context) {
+                                    if (i == viewModel.items.length)
+                                      viewModel.fetchMore();
+                                    return GridItemPlaceholder();
+                                  },
+                                )
+                              : Container(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: getColumns(context),
+                          childAspectRatio: 5 / 9,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10),
+                    ),
             ));
   }
 
@@ -114,10 +107,10 @@ class TrendingPage extends StatelessWidget {
             TextButton(
               onPressed: () => Navigator.pop(context, false),
               child: Text('Limpiar'),
-              style: ButtonStyle(
-                foregroundColor:
-                    MaterialStateProperty.all<Color>(Colors.white70),
-              ),
+              // style: ButtonStyle(
+              //   foregroundColor:
+              //       MaterialStateProperty.all<Color>(Colors.white70),
+              // ),
               // style: ButtonStyle(textStyle),
             ),
             TextButton(
@@ -152,6 +145,7 @@ class TrendingPage extends StatelessWidget {
       BuildContext context, String type, TrendingViewModel viewModel) async {
     final result = await showModalBottomSheet<Map<String, bool>>(
       context: context,
+      backgroundColor: Theme.of(context).primaryColor,
       isDismissible: false,
       builder: (BuildContext context) =>
           ViewModelBuilder<TrendingFilterViewModel>.reactive(
@@ -201,16 +195,12 @@ class TrendingPage extends StatelessWidget {
                         children: model.genres
                             .map((e) => ElevatedButton(
                                   onPressed: () => model.toggle(e.id),
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              model.filterGenre[e.id]
-                                                  ? Colors.orange
-                                                  : Colors.black45),
-                                      shape: MaterialStateProperty.all(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ))),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: model.filterGenre[e.id]
+                                        ? Theme.of(context).primaryColorDark
+                                        : Theme.of(context).primaryColorDark.withOpacity(0.35),
+                                    elevation: model.filterGenre[e.id] ? 5 : 0,
+                                  ),
                                   child: Text(e.name),
                                 ))
                             .toList(),

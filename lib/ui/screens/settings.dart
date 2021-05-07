@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:frino_icons/frino_icons.dart';
+import 'package:movie_search/modules/themes/theme_selector.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingsScreen extends StatelessWidget {
   static String routeName = "/settings";
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -26,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   titleSpacing: 0,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: Theme.of(context).primaryColor,
                   elevation: 0,
                 ),
                 Expanded(
@@ -46,10 +48,20 @@ class SettingsScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image.asset('assets/images/ic_launcher.png', width: 150, height: 150),
-        SizedBox(height: 50),
+        SizedBox(height: 30),
         Text(appName,
             style:
                 theme.textTheme.headline4.copyWith(color: theme.accentColor)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: Icon(Icons.color_lens_rounded),
+              onPressed: () => ThemeSelectorDialog.show(context),
+            ),
+            EasyDynamicThemeBtn()
+          ],
+        ),
         SizedBox(height: 30),
         Text('Desarrollador',
             style: theme.textTheme.subtitle2.copyWith(color: theme.hintColor)),

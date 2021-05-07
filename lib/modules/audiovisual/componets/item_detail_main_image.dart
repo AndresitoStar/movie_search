@@ -61,7 +61,7 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
                     color: Theme.of(context).scaffoldBackgroundColor),
               ),
             ),
-            Positioned(
+            if (model.withImage || model.withImageList) Positioned(
               right: 55,
               top: 5,
               child: ImageDownloadButton(

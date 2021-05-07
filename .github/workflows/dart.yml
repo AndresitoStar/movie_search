@@ -1,8 +1,8 @@
 on:
   push:
-  #  branches: [ master]
+    #    branches: [ master]
     tags:
-    - '*'
+      - "*"
 name: Build Release
 jobs:
   build-apk:
@@ -16,45 +16,41 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
-          flutter-version: '2.0.1'
+          flutter-version: "2.0.1"
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build apk --release --split-per-abi
-      #VERSIONING
-      - name: 'Get Previous tag'
-        id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-      - name: 'Get next minor version'
-        id: semvers
-        uses: "WyriHaximus/github-action-next-semvers@v1"
-        with:
-          version: ${{ steps.previoustag.outputs.tag }}
-      - name: 'Create new milestone'
-        id: createmilestone
-        uses: "WyriHaximus/github-action-create-milestone@v1"
-        with:
-          title: ${{ steps.semvers.outputs.patch }}
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      #UPLOADING
+  # uploading:
+  #   name: Uploading to Google Drive
+  #   runs-on: ubuntu-latest
+  #   needs: [build-apk]
+  #   steps:
       - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
+        id: v8a
         with:
           target: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-          # name: Buscador_${{ steps.semvers.outputs.patch }}_arm64_v8a.apk
           credentials: ${{ secrets.DRIVE_CREDENTIALS }}
           folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
       - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
+        id: v7a
         with:
           target: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-          # name: Buscador_${{ steps.semvers.outputs.patch }}_armeabi_v7a.apk
           credentials: ${{ secrets.DRIVE_CREDENTIALS }}
           folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
       - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
+        id: x86
         with:
           target: build/app/outputs/flutter-apk/app-x86_64-release.apk
-          # name: Buscador_${{ steps.semvers.outputs.patch }}_x86_64.apk
           credentials: ${{ secrets.DRIVE_CREDENTIALS }}
           folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
+      - name: Send Telegram Notification
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Nueva version: Buscador de Peliculas y Series, by Ing. Andrés Forns Jusino
+            ${{ steps.v8a.outputs.link }}
