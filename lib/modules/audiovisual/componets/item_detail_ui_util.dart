@@ -45,14 +45,14 @@ class ContentRow extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (value1 != null && value1.isNotEmpty) Expanded(
-                    child: ContentHorizontal(
-                        label: label1, content: value1),
-                  ),
-                  if (value2 != null && value2.isNotEmpty) Expanded(
-                    child: ContentHorizontal(
-                        label: label2, content: value2),
-                  ),
+                  if (value1 != null && value1.isNotEmpty)
+                    Expanded(
+                      child: ContentHorizontal(label: label1, content: value1),
+                    ),
+                  if (value2 != null && value2.isNotEmpty)
+                    Expanded(
+                      child: ContentHorizontal(label: label2, content: value2),
+                    ),
                 ],
               ),
             ],
@@ -71,17 +71,20 @@ class ContentHorizontal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Visibility(
       visible: content != null && content.isNotEmpty && content != 'N/A',
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: padding),
         child: ListTile(
           title: label != null
-              ? Text(label,
-              style: Theme.of(context)
-                  .textTheme
-                  .caption
-                  .copyWith(fontWeight: FontWeight.bold))
+              ? Text(
+                  label,
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: primaryColor,
+                      ),
+                )
               : null,
           subtitle: Text(content != null && content.isNotEmpty ? content : '',
               style: Theme.of(context).textTheme.subtitle1),

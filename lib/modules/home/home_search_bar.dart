@@ -5,10 +5,14 @@ import 'package:movie_search/ui/icons.dart';
 class HomeSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
+
     return AppBar(
       toolbarHeight: kToolbarHeight + 10,
       automaticallyImplyLeading: false,
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: landscape
+          ? Theme.of(context).scaffoldBackgroundColor
+          : Theme.of(context).primaryColor,
       titleSpacing: 0,
       title: Container(
         clipBehavior: Clip.hardEdge,
@@ -18,8 +22,9 @@ class HomeSearchBar extends StatelessWidget {
         ),
         child: TextField(
           readOnly: true,
+          autofocus: true,
           decoration: InputDecoration(
-            prefix: Padding(
+            prefix: Container(
               padding: const EdgeInsets.all(8.0),
               child: Icon(
                 MyIcons.search,

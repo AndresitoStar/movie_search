@@ -65,6 +65,7 @@ class ItemDetailPage extends StatelessWidget {
         ),
         Expanded(
           child: SingleChildScrollView(
+            physics: PageScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
             controller: model.scrollController,
             child: Column(

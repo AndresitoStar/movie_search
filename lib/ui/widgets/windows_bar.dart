@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class WindowsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).hintColor;
-    final primaryColor45 = Theme.of(context).accentColor.withOpacity(0.45);
+    final windowsBarColor = Theme.of(context).primaryColor;
+    final primaryColor = Theme.of(context).primaryColorLight;
+    final primaryColor45 = Theme.of(context).accentTextTheme.subtitle1.color;
     final buttonColors = WindowButtonColors(
       iconNormal: primaryColor45,
       mouseOver: primaryColor,
@@ -27,18 +28,18 @@ class WindowsBar extends StatelessWidget {
       margin: EdgeInsets.zero,
       child: Container(
         height: kToolbarHeight,
+        color: windowsBarColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Expanded(
-              child: WindowTitleBarBox(
-                child: MoveWindow(
-                  child: ListTile(
-                    title: Text(
+              child: MoveWindow(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 15),
+                  child: Text(
                       'Buscador de Peliculas y Series',
-                      style: TextStyle(color: Colors.grey),
+                      style: Theme.of(context).accentTextTheme.subtitle1,
                     ),
-                  ),
                 ),
               ),
             ),

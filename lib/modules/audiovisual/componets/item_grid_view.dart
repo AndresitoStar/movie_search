@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
@@ -43,6 +44,7 @@ class ItemGridView extends StatelessWidget {
           transitionDuration: Duration(milliseconds: 400),
           closedElevation: 0.0,
           openElevation: 0.0,
+          middleColor: Colors.red,
           closedBuilder: (context, open) => Stack(
             children: [
               MouseRegion(
@@ -166,7 +168,10 @@ class ItemGridView extends StatelessWidget {
             ],
           ),
           onClosed: (data) => model.initialise(),
-          openBuilder: (context, close) => ItemDetailPage(item: this.item),
+          openBuilder: (context, close) => Container(
+            child: ItemDetailPage(item: this.item),
+            margin: const EdgeInsets.only(top: 56),
+          ),
         );
       },
     );

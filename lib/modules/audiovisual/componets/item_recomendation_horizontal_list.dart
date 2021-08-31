@@ -29,41 +29,48 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
               )
             : model.isBusy
                 ? LinearProgressIndicator()
-                : model.items.length > 0 ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Divider(indent: 8, endIndent: 8),
-                      ListTile(
-                          title: Text(recommendationType.name,
-                              style: Theme.of(context).textTheme.headline5)),
-                      Container(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        constraints: BoxConstraints(
-                            minHeight: height, maxHeight: height + 50),
-                        child: model.isBusy
-                            ? ListView.builder(
-                                physics: ClampingScrollPhysics(),
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 3,
-                                itemBuilder: (ctx, i) => AspectRatio(
-                                  child: GridItemPlaceholder(),
-                                  aspectRatio: 8 / 16,
-                                ),
-                              )
-                            : ListView.builder(
-                                physics: ClampingScrollPhysics(),
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: model.items.length,
-                                itemBuilder: (ctx, i) => AspectRatio(
-                                  child: ItemGridView(item: model.items[i]),
-                                  aspectRatio: 8 / 15,
-                                ),
+                : model.items.length > 0
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Divider(indent: 8, endIndent: 8),
+                          ListTile(
+                            title: Text(
+                              recommendationType.name,
+                              style: Theme.of(context).textTheme.headline5.copyWith(
+                                color: Theme.of(context).primaryColor,
                               ),
-                      ),
-                    ],
-                  ) : Container();
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            constraints: BoxConstraints(
+                                minHeight: height, maxHeight: height + 50),
+                            child: model.isBusy
+                                ? ListView.builder(
+                                    physics: ClampingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 3,
+                                    itemBuilder: (ctx, i) => AspectRatio(
+                                      child: GridItemPlaceholder(),
+                                      aspectRatio: 8 / 16,
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    physics: ClampingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: model.items.length,
+                                    itemBuilder: (ctx, i) => AspectRatio(
+                                      child: ItemGridView(item: model.items[i]),
+                                      aspectRatio: 8 / 15,
+                                    ),
+                                  ),
+                          ),
+                        ],
+                      )
+                    : Container();
         return sliver ? SliverToBoxAdapter(child: child) : child;
       },
     );

@@ -5,10 +5,15 @@ import 'package:stacked/stacked.dart';
 
 class ThemeViewModel extends BaseViewModel {
   FlexScheme _flexColor;
+  final ThemeMode themeMode;
+  bool drawerOpened = false;
 
   FlexScheme get flexColor => _flexColor;
 
-  final ThemeMode themeMode;
+  toggleOpenDrawer() {
+    drawerOpened = !drawerOpened;
+    notifyListeners();
+  }
 
   ThemeViewModel(this._flexColor, {this.themeMode});
 

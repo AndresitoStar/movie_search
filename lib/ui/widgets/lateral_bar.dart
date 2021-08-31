@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
+import 'package:movie_search/modules/themes/theme_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/screens/settings.dart';
 import 'package:stacked/stacked.dart';
+import 'package:provider/provider.dart';
 
 class MyLateralBar extends StatelessWidget {
   final int index;
@@ -15,12 +17,13 @@ class MyLateralBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ViewModelBuilder<LateralBarViewModel>.reactive(
-      viewModelBuilder: () => LateralBarViewModel(),
+    return ViewModelBuilder<ThemeViewModel>.reactive(
+      viewModelBuilder: () => context.read(),
+      disposeViewModel: false,
       builder: (context, model, _) => AnimatedContainer(
         duration: Duration(milliseconds: 200),
-        width: model.opened ? 160 : 50,
-        color: Colors.black12,
+        width: model.drawerOpened ? 160 : 50,
+        color: theme.primaryColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -31,7 +34,7 @@ class MyLateralBar extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: IconButton(
                   icon: Icon(MyIcons.drawerHamburger),
-                  onPressed: () => model.toggle(),
+                  onPressed: () => model.toggleOpenDrawer(),
                 ),
               ),
             ),
@@ -48,61 +51,77 @@ class MyLateralBar extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(MyIcons.home),
-                              tooltip: 'Inicio',
-                              color:
-                                  index == 0 ? theme.accentColor : Colors.white,
-                              onPressed: () => _onTap(context, 0),
-                            ),
-                            if (model.opened) SizedBox(width: 20),
-                            if (model.opened) drawerText(context, 'Inicio', 0)
-                          ],
+                        Container(
+                          color: index == 0
+                              ? Theme.of(context).primaryColorDark
+                              :  Colors.transparent,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(MyIcons.home),
+                                tooltip: 'Inicio',
+                                color: Theme.of(context).primaryColorLight,
+                                onPressed: () => _onTap(context, 0),
+                              ),
+                              if (model.drawerOpened) SizedBox(width: 5),
+                              if (model.drawerOpened) drawerText(context, 'Inicio', 0)
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(MyIcons.search),
-                              tooltip: 'Buscar',
-                              color:
-                                  index == 1 ? theme.accentColor : Colors.white,
-                              onPressed: () => _onTap(context, 1),
-                            ),
-                            if (model.opened) SizedBox(width: 20),
-                            if (model.opened) drawerText(context, 'Buscar', 1)
-                          ],
+                        Container(
+                          color: index == 1
+                              ? Theme.of(context).primaryColorDark
+                              : Colors.transparent,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(MyIcons.search),
+                                tooltip: 'Buscar',
+                                color: Theme.of(context).primaryColorLight,
+                                onPressed: () => _onTap(context, 1),
+                              ),
+                              if (model.drawerOpened) SizedBox(width: 5),
+                              if (model.drawerOpened) drawerText(context, 'Buscar', 1)
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(MyIcons.favourite_off),
-                              onPressed: () => _onTap(context, 2),
-                              color:
-                                  index == 2 ? theme.accentColor : Colors.white,
-                              tooltip: 'Favoritos',
-                            ),
-                            if (model.opened) SizedBox(width: 20),
-                            if (model.opened)
-                              drawerText(context, 'Favoritos', 2)
-                          ],
+                        Container(
+                          color: index == 2
+                              ? Theme.of(context).primaryColorDark
+                              :  Colors.transparent,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(MyIcons.favourite_off),
+                                onPressed: () => _onTap(context, 2),
+                                color: Theme.of(context).primaryColorLight,
+                                tooltip: 'Favoritos',
+                              ),
+                              if (model.drawerOpened) SizedBox(width: 5),
+                              if (model.drawerOpened)
+                                drawerText(context, 'Favoritos', 2)
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(MyIcons.settings),
-                              tooltip: 'Ajustes',
-                              color:
-                                  index == 3 ? theme.accentColor : Colors.white,
-                              onPressed: () => _onTap(context, 3),
-                            ),
-                            if (model.opened) SizedBox(width: 20),
-                            if (model.opened) drawerText(context, 'Ajustes', 3)
-                          ],
+                        Container(
+                          color: index == 3
+                              ? Theme.of(context).primaryColorDark
+                              :  Colors.transparent,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(MyIcons.settings),
+                                tooltip: 'Ajustes',
+                                color: Theme.of(context).primaryColorLight,
+                                onPressed: () => _onTap(context, 3),
+                              ),
+                              if (model.drawerOpened) SizedBox(width: 5),
+                              if (model.drawerOpened) drawerText(context, 'Ajustes', 3)
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20),
                       ],
@@ -157,19 +176,8 @@ class MyLateralBar extends StatelessWidget {
           child: Text(
             text.toUpperCase(),
             style: Theme.of(context).textTheme.headline6.copyWith(
-                color: this.index == index
-                    ? Theme.of(context).accentColor
-                    : Colors.white),
+                color: Theme.of(context).primaryColorLight),
           ),
         ),
       );
-}
-
-class LateralBarViewModel extends BaseViewModel {
-  bool opened = false;
-
-  toggle() {
-    opened = !opened;
-    notifyListeners();
-  }
 }

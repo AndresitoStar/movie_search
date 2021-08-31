@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/modules/bottom_bar/bottom_bar_viewmodel.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
@@ -24,8 +25,9 @@ class Routes {
         child: child,
       );
 
-  static Route<dynamic> generateRoute(RouteSettings settings) {
+  static Route<dynamic> generateRoute(BuildContext context, RouteSettings settings) {
     Map<String, dynamic> _routes = routes;
+    BottomBarViewModel.changePageData(context, settings.name);
     if (_routes.containsKey(settings.name)) {
       return PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 100),

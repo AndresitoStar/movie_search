@@ -12,8 +12,11 @@ import 'package:stacked/stacked.dart';
 
 class FavouriteScreen extends StatelessWidget {
   static String routeName = "/favourite";
+
   @override
   Widget build(BuildContext context) {
+    final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
+
     return ViewModelBuilder<FavouritesViewModel>.nonReactive(
       onModelReady: (model) => model.initialize(),
       builder: (context, model, _) => DefaultTabController(
@@ -29,13 +32,16 @@ class FavouriteScreen extends StatelessWidget {
                   snap: false,
                   pinned: true,
                   // elevation: 0,
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: landscape
+                      ? Theme.of(context).scaffoldBackgroundColor
+                      : Theme.of(context).primaryColor,
                   title: Text('Favoritos'),
                   leading: IconButton(
                     icon: Icon(MyIcons.arrow_left),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   titleSpacing: 0,
+                  toolbarHeight: landscape ? 0 : kToolbarHeight,
                   bottom: TabBar(
                     tabs: [
                       Tab(
@@ -57,18 +63,18 @@ class FavouriteScreen extends StatelessWidget {
                         ),
                       ),
                     ],
-                    // indicatorSize: TabBarIndicatorSize.label,
-                    indicator: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                    ),
-                    // unselectedLabelColor: Theme.of(context).shadowColor,
-                    labelColor: Theme.of(context).accentColor,
-                    // labelStyle: Theme.of(context).textTheme.headline6,
-                    // indicator: BubbleTabIndicator(
-                    //   indicatorHeight: 25.0,
-                    //   indicatorColor: Theme.of(context).accentColor,
-                    //   tabBarIndicatorSize: TabBarIndicatorSize.label,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    // indicator: BoxDecoration(
+                    //   color: Theme.of(context).primaryColorLight,
                     // ),
+                    // unselectedLabelColor: Theme.of(context).shadowColor,
+                    // labelColor: Theme.of(context).primaryColorLight,
+                    // labelStyle: Theme.of(context).textTheme.headline6,
+                    indicator: BubbleTabIndicator(
+                      indicatorHeight: 25.0,
+                      indicatorColor: Theme.of(context).primaryColorDark,
+                      tabBarIndicatorSize: TabBarIndicatorSize.label,
+                    ),
                   ),
                 ),
               ];

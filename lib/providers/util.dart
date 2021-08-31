@@ -190,7 +190,8 @@ class ResponseApiParser {
   }
 }
 
-const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w92';
+const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w342';
+// const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w92';
 const String URL_IMAGE_MEDIUM = 'https://image.tmdb.org/t/p/w342';
 const String URL_IMAGE_BIG = 'https://image.tmdb.org/t/p/w780';
 
@@ -267,28 +268,28 @@ class SharedPreferencesHelper {
   static SharedPreferencesHelper _instance;
 
   static SharedPreferencesHelper getInstance() {
-    if (_instance == null || _instance._streamForRecent.isClosed)
+    if (_instance == null || _instance._streamForHighQuality.isClosed)
       _instance = SharedPreferencesHelper._();
     return _instance;
   }
 
   SharedPreferencesHelper._() {
-    _streamForRecent = BehaviorSubject<bool>();
-    isActiveRecent().then((value) => _streamForRecent.add(value));
+    _streamForHighQuality = BehaviorSubject<bool>();
+    isHighQuality().then((value) => _streamForHighQuality.add(value));
 
     _streamForSearchHistory = BehaviorSubject<List<String>>();
     getSearchHistory().then((value) => _streamForSearchHistory.add(value.reversed.toList()));
   }
 
-  StreamController<bool> _streamForRecent;
+  StreamController<bool> _streamForHighQuality;
   StreamController<List<String>> _streamForSearchHistory;
 
-  Stream<bool> get streamForRecent => _streamForRecent.stream;
+  Stream<bool> get streamForHighQuality => _streamForHighQuality.stream;
 
   Stream<List<String>> get streamForSearchHistory =>
       _streamForSearchHistory.stream;
 
-  Function(bool) get changeActiveRecent => _streamForRecent.sink.add;
+  Function(bool) get changeHighQuality => _streamForHighQuality.sink.add;
 
   updateSearchHistory(String query) {
     getSearchHistory().then((value) {
@@ -299,7 +300,7 @@ class SharedPreferencesHelper {
   }
 
   dispose() {
-    _streamForRecent?.close();
+    _streamForHighQuality?.close();
     _streamForSearchHistory?.close();
   }
 
@@ -355,12 +356,12 @@ class SharedPreferencesHelper {
     return _setBoolean('WAS_HERE_BEFORE', true);
   }
 
-  static Future<bool> isActiveRecent() async {
-    return _getBoolean('ACTIVE_RECENT');
+  static Future<bool> isHighQuality() async {
+    return _getBoolean('IMAGE_QUALITY');
   }
 
-  static void setActiveRecent(bool value) async {
-    _setBoolean('ACTIVE_RECENT', value);
+  static void setHighQuality(bool value) async {
+    _setBoolean('IMAGE_QUALITY', value);
   }
 
   static Future<List<String>> getSearchHistory() async {

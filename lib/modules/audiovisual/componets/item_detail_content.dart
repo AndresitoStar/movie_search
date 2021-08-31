@@ -86,7 +86,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
                 .map((e) => Chip(
                       label: Text(e),
                       elevation: 3,
-                      backgroundColor: Theme.of(context).cardColor,
+                      backgroundColor: Theme.of(context).primaryColor,
                     ))
                 .toList(),
           ),

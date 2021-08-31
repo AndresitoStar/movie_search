@@ -27,8 +27,13 @@ class CreditHorizontalList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       ListTile(
-                          title: Text('Reparto',
-                              style: Theme.of(context).textTheme.headline5)),
+                        title: Text(
+                          'Reparto',
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                        ),
+                      ),
                       Container(
                         constraints: BoxConstraints(
                             minHeight: height, maxHeight: height + 50),

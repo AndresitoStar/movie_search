@@ -13,6 +13,8 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
+
     return CustomScaffold(
       bottomBarIndex: 3,
       body: Column(
@@ -21,16 +23,17 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                AppBar(
-                  title: Text('Acerca de'),
-                  leading: IconButton(
-                    icon: Icon(MyIcons.arrow_left),
-                    onPressed: () => Navigator.of(context).pop(),
+                if (!landscape)
+                  AppBar(
+                    title: Text('Acerca de'),
+                    leading: IconButton(
+                      icon: Icon(MyIcons.arrow_left),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    titleSpacing: 0,
+                    backgroundColor: Theme.of(context).primaryColor,
+                    elevation: 0,
                   ),
-                  titleSpacing: 0,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  elevation: 0,
-                ),
                 Expanded(
                     child: _getInfo(context, 'Buscador de Peliculas', '2.0.0')),
               ],
@@ -59,7 +62,11 @@ class SettingsScreen extends StatelessWidget {
               icon: Icon(Icons.color_lens_rounded),
               onPressed: () => ThemeSelectorDialog.show(context),
             ),
-            EasyDynamicThemeBtn()
+            EasyDynamicThemeBtn(),
+            IconButton(
+              icon: Icon(Icons.high_quality),
+              onPressed: () => _showImageQualityDialog(context),
+            ),
           ],
         ),
         SizedBox(height: 30),
@@ -71,6 +78,21 @@ class SettingsScreen extends StatelessWidget {
             style: theme.textTheme.subtitle2.copyWith(color: theme.hintColor)),
         Text(version, style: theme.textTheme.headline6),
       ],
+    );
+  }
+
+  _showImageQualityDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Calidad de Imagenes',
+          textAlign: TextAlign.center,
+        ),
+        content: Row(
+
+        ),
+      ),
     );
   }
 }

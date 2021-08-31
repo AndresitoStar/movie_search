@@ -19,6 +19,8 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
+
     return ViewModelBuilder<SearchViewModel>.nonReactive(
       viewModelBuilder: () => context.read(),
       onModelReady: (model) => this.onLoad(model),
@@ -26,7 +28,9 @@ class SearchBar extends StatelessWidget {
         automaticallyImplyLeading: false,
         toolbarHeight: kToolbarHeight + 10,
         titleSpacing: 0,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: landscape
+            ? Theme.of(context).scaffoldBackgroundColor
+            : Theme.of(context).primaryColor,
         title: ReactiveForm(
           formGroup: model.form,
           child: Container(
