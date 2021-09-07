@@ -37,7 +37,6 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
 
   int currentImage = 0;
 
-  Timer timer;
   bool pauseTimer = false;
 
   togglePauseTimer() {
@@ -45,10 +44,14 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
     notifyListeners();
   }
 
+  changeCurrentImage(int current) {
+    this.currentImage = current;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     scrollController.dispose();
-    timer?.cancel();
     super.dispose();
   }
 
@@ -113,12 +116,12 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
       final images = await _service.getImages(_param.type.type, _param.id);
       if (images != null && images.isNotEmpty) {
         _images.addAll(images);
-        timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
-          if (!pauseTimer)
-            currentImage =
-                currentImage == images.length - 1 ? 0 : currentImage + 1;
-          notifyListeners();
-        });
+        // timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
+        //   if (!pauseTimer)
+        //     currentImage =
+        //         currentImage == images.length - 1 ? 0 : currentImage + 1;
+        //   notifyListeners();
+        // });
       }
     } catch (e) {
       print(e);

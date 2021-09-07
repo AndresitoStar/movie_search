@@ -13,13 +13,15 @@ class ItemDetailSliverAppBar extends ViewModelWidget<ItemDetailViewModel> {
     final mq = MediaQuery.of(context);
     return SliverAppBar(
       pinned: true,
-      expandedHeight: mq.size.height * 2/3,
+      expandedHeight: mq.size.height * 2 / 3,
       elevation: 0,
-      primary: true,
       automaticallyImplyLeading: false,
       // backgroundColor: Colors.transparent,
       leading: MyCircularButton(
-        icon: Icon(MyIcons.arrow_left),
+        icon: Icon(
+          MyIcons.arrow_left,
+          color: Theme.of(context).colorScheme.onBackground,
+        ),
         onPressed: () => Navigator.of(context).pop(),
       ),
       flexibleSpace: LayoutBuilder(

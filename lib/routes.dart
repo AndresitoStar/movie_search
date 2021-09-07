@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/bottom_bar/bottom_bar_viewmodel.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
@@ -25,23 +26,35 @@ class Routes {
         child: child,
       );
 
-  static Route<dynamic> generateRoute(BuildContext context, RouteSettings settings) {
+  static Route<dynamic> defaultRoute(RouteSettings settings, Widget child) {
+    return PageRouteBuilder(
+      transitionDuration: Duration(milliseconds: 400),
+      pageBuilder: (_, __, ___) => SafeArea(
+          top: false,
+          bottom: false,
+          child: Builder(builder: (context) => child)),
+      settings: settings,
+    );
+  }
+
+  static Route<dynamic> generateRoute(
+      BuildContext context, RouteSettings settings) {
     Map<String, dynamic> _routes = routes;
-    BottomBarViewModel.changePageData(context, settings.name);
     if (_routes.containsKey(settings.name)) {
       return PageRouteBuilder(
         transitionDuration: Duration(milliseconds: 100),
         transitionsBuilder: defaultTransition,
-        pageBuilder: (_, __, ___) => Column(
-          children: [
-            WindowsBar(),
-            Expanded(child: Builder(builder: _routes[settings.name])),
-          ],
-        ),
+        pageBuilder: (_, __, ___) => Platform.isAndroid || Platform.isIOS
+            ? Builder(builder: _routes[settings.name])
+            : Column(
+                children: [
+                  WindowsBar(),
+                  Expanded(child: Builder(builder: _routes[settings.name])),
+                ],
+              ),
         settings: settings,
       );
     }
     return MaterialPageRoute(settings: settings, builder: (_) => Container());
   }
-
 }

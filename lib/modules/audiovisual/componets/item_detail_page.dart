@@ -24,17 +24,19 @@ class ItemDetailPage extends StatelessWidget {
     return ViewModelBuilder<ItemDetailViewModel>.reactive(
       viewModelBuilder: () => ItemDetailViewModel(item, context.read()),
       builder: (context, model, _) => Container(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
           top: true,
           child: Scaffold(
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.startFloat,
-            floatingActionButton: landscape ? FloatingActionButton.extended(
-              onPressed: () => Navigator.of(context).pop(),
-              label: Text('ATRAS'),
-              icon: Icon(MyIcons.arrow_left),
-            ) : null,
+            floatingActionButton: landscape
+                ? FloatingActionButton.extended(
+                    onPressed: () => Navigator.of(context).pop(),
+                    label: Text('ATRAS'),
+                    icon: Icon(MyIcons.arrow_left),
+                  )
+                : null,
             body: model.hasError
                 ? Center(
                     child: Text('${model.modelError?.toString()}'),
@@ -65,7 +67,7 @@ class ItemDetailPage extends StatelessWidget {
         ),
         Expanded(
           child: SingleChildScrollView(
-            physics: PageScrollPhysics(),
+            // physics: PageScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
             controller: model.scrollController,
             child: Column(

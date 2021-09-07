@@ -4,6 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/trending/trending_page.dart';
+import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
@@ -21,13 +22,8 @@ class TrendingHorizontalList extends StatelessWidget {
     return ViewModelBuilder<TrendingViewModel>.reactive(
       viewModelBuilder: () => TrendingViewModel(this.content),
       onModelReady: (model) => model.synchronize(),
-      builder: (context, model, child) => OpenContainer(
-        closedColor: Colors.transparent,
-        openColor: Colors.transparent,
-        middleColor: Colors.transparent,
-        openElevation: 0.0,
-        closedElevation: 0.0,
-        closedBuilder: (context, action) => Stack(
+      builder: (context, model, child) => Container(
+        child: Stack(
           fit: StackFit.expand,
           children: [
             Positioned(
@@ -40,7 +36,9 @@ class TrendingHorizontalList extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline5),
                     ),
                     IconButton(
-                        icon: Icon(MyIcons.arrow_right), onPressed: action)
+                      icon: Icon(MyIcons.arrow_right),
+                      onPressed: () => _onPressed(context, model),
+                    )
                   ],
                 )),
             Positioned(
@@ -76,7 +74,7 @@ class TrendingHorizontalList extends StatelessWidget {
                           elevation: 0,
                           backgroundColor: Colors.transparent,
                           foregroundColor: Theme.of(context).iconTheme.color,
-                          onPressed: action,
+                          onPressed: () => _onPressed(context, model),
                         ),
                       ),
                     )
@@ -86,8 +84,10 @@ class TrendingHorizontalList extends StatelessWidget {
             ),
           ],
         ),
-        openBuilder: (context, action) => TrendingPage(param: model),
       ),
     );
   }
+
+  _onPressed(BuildContext context, model) => Navigator.of(context)
+      .push(Routes.defaultRoute(null, TrendingPage(param: model)));
 }

@@ -19,7 +19,7 @@ class MyCircularButton extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color:
-            color ?? Colors.black45,
+            color ?? Theme.of(context).colorScheme.background.withOpacity(0.5),
       ),
       child: IconButton(
         icon: icon,

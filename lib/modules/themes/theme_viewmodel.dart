@@ -28,11 +28,17 @@ class ThemeViewModel extends BaseViewModel {
   ThemeData get theme => FlexColorScheme.light(
         scheme: flexColor,
         fontFamily: 'Dosis',
+        transparentStatusBar: true,
+        appBarElevation: 0,
+        appBarStyle: FlexAppBarStyle.background,
       ).toTheme.copyWith(inputDecorationTheme: baseTheme);
 
   ThemeData get darkTheme => FlexColorScheme.dark(
         scheme: flexColor,
         fontFamily: 'Dosis',
+        transparentStatusBar: true,
+        appBarElevation: 0,
+        appBarStyle: FlexAppBarStyle.background,
       ).toTheme.copyWith(inputDecorationTheme: baseTheme);
 
   InputDecorationTheme get baseTheme => InputDecorationTheme(

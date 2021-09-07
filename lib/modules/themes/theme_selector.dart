@@ -18,31 +18,34 @@ class ThemeSelectorDialog extends StatelessWidget {
     final ThemeViewModel viewModel = Provider.of(context);
     bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
     return AlertDialog(
-      title: Text('Color'),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 15).copyWith(top: 10),
+      title: Text('Color principal'),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 15).copyWith(top: 10),
       content: SingleChildScrollView(
         child: Column(
           children: [
             if (FlexScheme.values.isNotEmpty)
               Wrap(
-                spacing: 5,
+                spacing: 8,
                 runSpacing: 10,
                 children: FlexScheme.values
                     .map((e) => FlexColor.schemes.containsKey(e)
-                    ? ElevatedButton(
-                  child: Text(''),
-                  style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
-                    primary: isDarkModeOn
-                        ? FlexColor.schemes[e].dark.primary
-                        : FlexColor.schemes[e].light.primary,
-                  ),
-                  onPressed: () {
-                    viewModel.setColor(e);
-                    Navigator.of(context).pop();
-                  },
-                )
-                    : Container())
+                        ? ElevatedButton(
+                            child: e == viewModel.flexColor
+                                ? Icon(Icons.check)
+                                : SizedBox.shrink(),
+                            style: ElevatedButton.styleFrom(
+                              shape: CircleBorder(),
+                              primary: isDarkModeOn
+                                  ? FlexColor.schemes[e].dark.primary
+                                  : FlexColor.schemes[e].light.primary,
+                            ),
+                            onPressed: () {
+                              viewModel.setColor(e);
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        : Container())
                     .toList(),
               )
           ],

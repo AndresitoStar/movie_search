@@ -18,9 +18,6 @@ class MyBottomBar extends StatelessWidget {
       elevation: 0,
       showUnselectedLabels: false,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Theme.of(context).primaryColor,
-      selectedIconTheme: IconThemeData(color: Colors.white),
-      unselectedIconTheme: IconThemeData(color: Colors.white30),
       iconSize: 30,
       onTap: (i) {
         switch (i) {

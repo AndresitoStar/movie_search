@@ -25,36 +25,41 @@ class SearchBar extends StatelessWidget {
       viewModelBuilder: () => context.read(),
       onModelReady: (model) => this.onLoad(model),
       builder: (context, model, child) => AppBar(
+        leading: IconButton(
+          icon: Icon(MyIcons.arrow_left),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         automaticallyImplyLeading: false,
         toolbarHeight: kToolbarHeight + 10,
         titleSpacing: 0,
-        backgroundColor: landscape
-            ? Theme.of(context).scaffoldBackgroundColor
-            : Theme.of(context).primaryColor,
+        primary: true,
         title: ReactiveForm(
           formGroup: model.form,
           child: Container(
             clipBehavior: Clip.hardEdge,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
+            margin: const EdgeInsets.only(right: 10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(20),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
             ),
             child: ReactiveTextField(
               formControl: model.queryControl,
-              cursorColor: Colors.white,
+              cursorColor: Theme.of(context).colorScheme.onBackground,
               autocorrect: false,
-              style: TextStyle(fontSize: 20, color: Colors.white70),
+              style: TextStyle(
+                fontSize: 20,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
               decoration: InputDecoration(
                 prefix: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Icon(
                     MyIcons.search,
                     size: 20,
-                    color: Colors.white,
                   ),
                 ),
                 hintText: 'Buscar...',
-                hintStyle: TextStyle(fontSize: 20, color: Colors.white38),
+                hintStyle: TextStyle(fontSize: 20),
                 suffixIcon: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

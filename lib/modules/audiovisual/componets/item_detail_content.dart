@@ -86,7 +86,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
                 .map((e) => Chip(
                       label: Text(e),
                       elevation: 3,
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Colors.transparent,
                     ))
                 .toList(),
           ),
@@ -107,7 +107,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
       // if (data.tagline != null && data.tagline.isNotEmpty)
       ListTile(
         title: Text(
-          data.tagline ?? '',
+          data.tagline ?? '--',
           style: Theme.of(context)
               .textTheme
               .caption

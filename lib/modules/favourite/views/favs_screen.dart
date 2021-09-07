@@ -32,9 +32,7 @@ class FavouriteScreen extends StatelessWidget {
                   snap: false,
                   pinned: true,
                   // elevation: 0,
-                  backgroundColor: landscape
-                      ? Theme.of(context).scaffoldBackgroundColor
-                      : Theme.of(context).primaryColor,
+                  primary: true,
                   title: Text('Favoritos'),
                   leading: IconButton(
                     icon: Icon(MyIcons.arrow_left),

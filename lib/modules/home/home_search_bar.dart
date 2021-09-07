@@ -1,6 +1,9 @@
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
 import 'package:movie_search/ui/icons.dart';
+import 'package:movie_search/ui/screens/settings.dart';
 
 class HomeSearchBar extends StatelessWidget {
   @override
@@ -10,15 +13,22 @@ class HomeSearchBar extends StatelessWidget {
     return AppBar(
       toolbarHeight: kToolbarHeight + 10,
       automaticallyImplyLeading: false,
-      backgroundColor: landscape
-          ? Theme.of(context).scaffoldBackgroundColor
-          : Theme.of(context).primaryColor,
+      primary: true,
       titleSpacing: 0,
+      actions: [
+        IconButton(
+            onPressed: () => _goToFavourites(context),
+            icon: Icon(MyIcons.favourite_off)),
+        IconButton(
+            onPressed: () => _goToSettings(context),
+            icon: Icon(MyIcons.settings)),
+      ],
       title: Container(
         clipBehavior: Clip.hardEdge,
-        margin: const EdgeInsets.symmetric(horizontal: 10),
+        margin: const EdgeInsets.only(left: 10),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
         ),
         child: TextField(
           readOnly: true,
@@ -26,14 +36,9 @@ class HomeSearchBar extends StatelessWidget {
           decoration: InputDecoration(
             prefix: Container(
               padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                MyIcons.search,
-                size: 20,
-                color: Colors.white,
-              ),
+              child: Icon(MyIcons.search, size: 20),
             ),
             hintText: 'Buscar...',
-            hintStyle: const TextStyle(fontSize: 20, color: Colors.white38),
             contentPadding: const EdgeInsets.only(bottom: 5, left: 10),
           ),
           onTap: () => _onPressed(context),
@@ -42,7 +47,12 @@ class HomeSearchBar extends StatelessWidget {
     );
   }
 
-  _onPressed(BuildContext context) {
-    Navigator.of(context).pushNamed(SearchScreen.routeName);
-  }
+  _onPressed(BuildContext context) =>
+      Navigator.of(context).pushNamed(SearchScreen.routeName);
+
+  _goToFavourites(BuildContext context) =>
+      Navigator.of(context).pushNamed(FavouriteScreen.routeName);
+
+  _goToSettings(BuildContext context) =>
+      Navigator.of(context).pushNamed(SettingsScreen.routeName);
 }

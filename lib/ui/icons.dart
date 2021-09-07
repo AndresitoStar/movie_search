@@ -8,8 +8,8 @@ class MyIcons {
   static const IconData settings = FrinoIcons.f_settings;
   static const IconData categories = FrinoIcons.f_dashboard;
 
-  static const IconData arrow_left = FrinoIcons.f_arrow_left;
-  static const IconData arrow_right = FrinoIcons.f_arrow_right;
+  static const IconData arrow_left = Icons.arrow_back_ios_new_rounded;
+  static const IconData arrow_right = Icons.arrow_forward_ios_rounded;
   static const IconData check = FrinoIcons.f_check;
   static const IconData clean = FrinoIcons.f_no_access;
   static const IconData favourite_on = Icons.favorite_rounded;

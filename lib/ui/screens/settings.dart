@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:frino_icons/frino_icons.dart';
 import 'package:movie_search/modules/themes/theme_selector.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
-import 'package:package_info/package_info.dart';
 
 class SettingsScreen extends StatelessWidget {
   static String routeName = "/settings";
@@ -31,7 +27,6 @@ class SettingsScreen extends StatelessWidget {
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                     titleSpacing: 0,
-                    backgroundColor: Theme.of(context).primaryColor,
                     elevation: 0,
                   ),
                 Expanded(
@@ -63,10 +58,10 @@ class SettingsScreen extends StatelessWidget {
               onPressed: () => ThemeSelectorDialog.show(context),
             ),
             EasyDynamicThemeBtn(),
-            IconButton(
-              icon: Icon(Icons.high_quality),
-              onPressed: () => _showImageQualityDialog(context),
-            ),
+            // IconButton(
+            //   icon: Icon(Icons.high_quality),
+            //   onPressed: () => _showImageQualityDialog(context),
+            // ),
           ],
         ),
         SizedBox(height: 30),
@@ -89,9 +84,7 @@ class SettingsScreen extends StatelessWidget {
           'Calidad de Imagenes',
           textAlign: TextAlign.center,
         ),
-        content: Row(
-
-        ),
+        content: Row(),
       ),
     );
   }

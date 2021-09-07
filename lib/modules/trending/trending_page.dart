@@ -22,9 +22,9 @@ class TrendingPage extends StatelessWidget {
         builder: (context, viewModel, child) => Scaffold(
               appBar: AppBar(
                 title: Text(viewModel.content.title),
-                backgroundColor: Theme.of(context).primaryColor,
+                primary: true,
                 titleSpacing: 0,
-                elevation: 5,
+                elevation: 0,
                 actions: [
                   if (viewModel.content == TrendingContent.MOVIE)
                     IconButton(
@@ -145,7 +145,7 @@ class TrendingPage extends StatelessWidget {
       BuildContext context, String type, TrendingViewModel viewModel) async {
     final result = await showModalBottomSheet<Map<String, bool>>(
       context: context,
-      backgroundColor: Theme.of(context).primaryColor,
+      // backgroundColor: Theme.of(context).primaryColor,
       isDismissible: false,
       builder: (BuildContext context) =>
           ViewModelBuilder<TrendingFilterViewModel>.reactive(
@@ -193,16 +193,30 @@ class TrendingPage extends StatelessWidget {
                         spacing: 16,
                         runSpacing: 20,
                         children: model.genres
-                            .map((e) => ElevatedButton(
-                                  onPressed: () => model.toggle(e.id),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: model.filterGenre[e.id]
-                                        ? Theme.of(context).primaryColorDark
-                                        : Theme.of(context).primaryColorDark.withOpacity(0.35),
-                                    elevation: model.filterGenre[e.id] ? 5 : 0,
-                                  ),
-                                  child: Text(e.name),
-                                ))
+                            .map(
+                              (e) => ElevatedButton(
+                                onPressed: () => model.toggle(e.id),
+                                style: ElevatedButton.styleFrom(
+                                  primary: model.filterGenre[e.id]
+                                      ? Theme.of(context).primaryColorDark
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .background,
+                                  elevation: 5,
+                                ),
+                                child: Text(
+                                  e.name,
+                                  style: TextStyle(
+                                      color: model.filterGenre[e.id]
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .onBackground),
+                                ),
+                              ),
+                            )
                             .toList(),
                       ),
                     ),

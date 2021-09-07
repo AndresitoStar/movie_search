@@ -22,20 +22,21 @@ class BaseSearchResult {
               : false;
 
   String get status => type == TMDB_API_TYPE.MOVIE && movie != null
-          ? _parseStatus(movie.status)
-          : type == TMDB_API_TYPE.TV_SHOW && tvShow != null
-              ? _parseStatus(tvShow.status)
-              : null;
+      ? _parseStatus(movie.status)
+      : type == TMDB_API_TYPE.TV_SHOW && tvShow != null
+          ? _parseStatus(tvShow.status)
+          : null;
 
   List<String> get genres => type == TMDB_API_TYPE.PERSON
       ? null
       : type == TMDB_API_TYPE.MOVIE && movie != null
           ? movie.genres.split(',')
-          : type == TMDB_API_TYPE.TV_SHOW && tvShow != null
+          : type == TMDB_API_TYPE.TV_SHOW && tvShow?.genres != null
               ? tvShow.genres.split(',')
               : null;
 
-  int get year => releaseDate != null ? DateTime.tryParse(releaseDate)?.year : null; 
+  int get year =>
+      releaseDate != null ? DateTime.tryParse(releaseDate)?.year : null;
 
   BaseSearchResult.fromMovie(Movie movie)
       : id = movie.id,

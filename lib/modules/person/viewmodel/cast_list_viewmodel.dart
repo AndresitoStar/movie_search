@@ -11,15 +11,16 @@ class CastListViewModel extends FutureViewModel {
 
   List<Person> get items => [..._items];
 
-  CastListViewModel(this.type, this.typeId) : _service = PersonService.getInstance();
+  CastListViewModel(this.type, this.typeId)
+      : _service = PersonService.getInstance();
 
   @override
   Future futureToRun() async {
+    print('type: $type, typeId: $typeId');
     setBusy(true);
     final credit = await _service.getCredits(type, typeId);
     _items = credit.cast;
     setInitialised(true);
     setBusy(false);
   }
-
 }
