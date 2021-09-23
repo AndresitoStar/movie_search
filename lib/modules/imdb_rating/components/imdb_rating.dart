@@ -8,14 +8,25 @@ class ImbdbRatingView extends StatelessWidget {
   final int tmdbId;
   final String type;
 
-  ImbdbRatingView(this.tmdbId, this.type, {this.imdbId});
+  ImbdbRatingView(this.tmdbId, this.type, {Key key, this.imdbId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ImdbRatingViewModel>.reactive(
-      viewModelBuilder: () =>
-          ImdbRatingViewModel(this.tmdbId, this.type, imdbId: this.imdbId),
-      staticChild: Icon(MyIcons.imdb, color: Colors.orange, size: 30),
+      viewModelBuilder: () => ImdbRatingViewModel(this.tmdbId, this.type, imdbId: this.imdbId),
+      staticChild: Container(
+        child: Icon(MyIcons.imdb, color: Colors.orange, size: 30),
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            colors: [
+              Theme.of(context).colorScheme.background,
+              Theme.of(context).colorScheme.background,
+              Theme.of(context).colorScheme.background,
+              Colors.transparent,
+            ],
+          ),
+        ),
+      ),
       builder: (context, model, child) => Row(
         children: [
           child,
@@ -23,8 +34,7 @@ class ImbdbRatingView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: model.initialised || model.isBusy
                 ? CircularProgressIndicator(strokeWidth: 1)
-                : Text('${model.data?.toStringAsFixed(1) ?? '-'}',
-                    style: Theme.of(context).textTheme.headline6),
+                : Text('${model.data?.toStringAsFixed(1) ?? '-'}', style: Theme.of(context).textTheme.headline6),
           ),
         ],
       ),

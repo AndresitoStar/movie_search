@@ -52,7 +52,7 @@ class TrendingHorizontalList extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (model.items.length > 0)
+                    if (model.items.length >= _defaultLength)
                       ...model.items
                           .sublist(0, _defaultLength)
                           .map((e) => AspectRatio(

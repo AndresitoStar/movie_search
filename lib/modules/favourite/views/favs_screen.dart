@@ -93,43 +93,45 @@ class FavouriteScreen extends StatelessWidget {
 
   Widget _favouriteMoviePage(
       BuildContext context, FavouritesViewModel viewModel) {
-    return StreamBuilder<List<Movie>>(
-        stream: viewModel.streamMovies,
-        initialData: [],
-        builder: (context, snapshot) {
-          if (snapshot.data.length == 0) return _buildEmptyList('Peliculas');
-          return GridView.builder(
-            padding: const EdgeInsets.all(10.0),
-            itemCount: snapshot.data.length,
-            itemBuilder: (ctx, i) => ItemGridView(
-                item: BaseSearchResult.fromMovie(snapshot.data[i])),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: getColumns(context),
-                childAspectRatio: 5 / 9,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-          );
-        });
+    return Container();
+    // return StreamBuilder<List<Movie>>(
+    //     stream: viewModel.streamMovies,
+    //     initialData: [],
+    //     builder: (context, snapshot) {
+    //       if (snapshot.data.length == 0) return _buildEmptyList('Peliculas');
+    //       return GridView.builder(
+    //         padding: const EdgeInsets.all(10.0),
+    //         itemCount: snapshot.data.length,
+    //         itemBuilder: (ctx, i) => ItemGridView(
+    //             item: BaseSearchResult.fromMovie(snapshot.data[i])),
+    //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    //             crossAxisCount: getColumns(context),
+    //             childAspectRatio: 5 / 9,
+    //             crossAxisSpacing: 10,
+    //             mainAxisSpacing: 10),
+    //       );
+    //     });
   }
 
   Widget _favouriteTvPage(BuildContext context, FavouritesViewModel viewModel) {
-    return StreamBuilder<List<TvShow>>(
-        stream: viewModel.streamTvShow,
-        initialData: [],
-        builder: (context, snapshot) {
-          if (snapshot.data.length == 0) return _buildEmptyList('Series');
-          return GridView.builder(
-            padding: const EdgeInsets.all(10.0),
-            itemCount: snapshot.data.length,
-            itemBuilder: (ctx, i) =>
-                ItemGridView(item: BaseSearchResult.fromTv(snapshot.data[i])),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: getColumns(context),
-                childAspectRatio: 5 / 9,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-          );
-        });
+    return Container();
+    // return StreamBuilder<List<TvShow>>(
+    //     stream: viewModel.streamTvShow,
+    //     initialData: [],
+    //     builder: (context, snapshot) {
+    //       if (snapshot.data.length == 0) return _buildEmptyList('Series');
+    //       return GridView.builder(
+    //         padding: const EdgeInsets.all(10.0),
+    //         itemCount: snapshot.data.length,
+    //         itemBuilder: (ctx, i) =>
+    //             ItemGridView(item: BaseSearchResult.fromTv(snapshot.data[i])),
+    //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    //             crossAxisCount: getColumns(context),
+    //             childAspectRatio: 5 / 9,
+    //             crossAxisSpacing: 10,
+    //             mainAxisSpacing: 10),
+    //       );
+    //     });
   }
 
   Widget _favouritePersonPage(

@@ -13,31 +13,33 @@ class VideoButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: ViewModelBuilder<VideoViewModel>.reactive(
-        viewModelBuilder: () => VideoViewModel(param.type.type, param.id),
-        builder: (context, model, _) => model.isBusy
-            ? Container(
-                height: 30,
-                width: 30,
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                child: CircularProgressIndicator.adaptive(strokeWidth: 1),
-              )
-            : model.hasError
-                ? Icon(MyIcons.error)
-                : !model.hasVideos
-                    ? Container()
-                    : IconButton(
-                        color: Colors.red,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        icon: Icon(MyIcons.youtube),
-                        onPressed: () => DialogVideo.show(
-                          context: context,
-                          videos: model.videos,
-                          dialogTitle: param.title,
-                        ),
-                      ),
+    return ViewModelBuilder<VideoViewModel>.reactive(
+      viewModelBuilder: () => VideoViewModel(param.type.type, param.id),
+      builder: (context, model, _) => TextButton.icon(
+        onPressed: !model.isBusy && !model.hasError && model.hasVideos
+            ? () => DialogVideo.show(
+                  context: context,
+                  videos: model.videos,
+                  dialogTitle: param.title,
+                )
+            : null,
+        icon: Icon(
+          MyIcons.youtube,
+          color: !model.isBusy && !model.hasError && model.hasVideos ? Colors.red : Theme.of(context).hintColor,
+        ),
+        label: Text('Ver Trailers'),
+        // child: model.isBusy
+        //     ? Container(
+        //         height: 24,
+        //         width: 24,
+        //         margin: const EdgeInsets.symmetric(horizontal: 8),
+        //         child: CircularProgressIndicator.adaptive(strokeWidth: 1),
+        //       )
+        //     : Row(
+        //         mainAxisSize: MainAxisSize.min,
+        //         children: [
+        //         ],
+        //       ),
       ),
     );
   }

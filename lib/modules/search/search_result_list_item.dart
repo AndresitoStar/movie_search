@@ -36,7 +36,7 @@ class SearchResultListItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SearchResultItemImage(searchResult.image),
+            SearchResultItemImage(searchResult.posterImage),
             Container(height: 120),
             Expanded(
               child: Column(

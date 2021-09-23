@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_collection.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
@@ -16,35 +17,41 @@ final routes = {
   FavouriteScreen.routeName: (ctx) => FavouriteScreen(),
   SettingsScreen.routeName: (ctx) => SettingsScreen(),
   OnboardScreen.routeName: (ctx) => OnboardScreen(),
+  ItemCollectionScreen.route: (ctx) => ItemCollectionScreen(),
 };
 
 class Routes {
-  static final defaultTransition = (context, Animation<double> animation,
-          Animation<double> secondary, Widget child) =>
-      FadeTransition(
-        opacity: animation,
-        child: child,
-      );
+  static const Duration _transitionDuration = Duration(milliseconds: 400);
+
+  static _getTransitions(String name, context, Animation<double> animation, Animation<double> secondary, Widget child) {
+    switch (name) {
+      case SearchScreen.routeName:
+      case SettingsScreen.routeName:
+        return SlideTransition(
+          position: Tween(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0)).animate(animation),
+          child: child,
+        );
+        break;
+    }
+    return FadeTransition(opacity: animation, child: child);
+  }
 
   static Route<dynamic> defaultRoute(RouteSettings settings, Widget child) {
     return PageRouteBuilder(
-      transitionDuration: Duration(milliseconds: 400),
-      pageBuilder: (_, __, ___) => SafeArea(
-          top: false,
-          bottom: false,
-          child: Builder(builder: (context) => child)),
+      transitionDuration: _transitionDuration,
+      pageBuilder: (_, __, ___) => SafeArea(top: false, bottom: false, child: Builder(builder: (context) => child)),
       settings: settings,
     );
   }
 
-  static Route<dynamic> generateRoute(
-      BuildContext context, RouteSettings settings) {
+  static Route<dynamic> generateRoute(BuildContext context, RouteSettings settings) {
     Map<String, dynamic> _routes = routes;
     if (_routes.containsKey(settings.name)) {
       return PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 100),
-        transitionsBuilder: defaultTransition,
-        pageBuilder: (_, __, ___) => Platform.isAndroid || Platform.isIOS
+        transitionDuration: _transitionDuration,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            _getTransitions(settings.name, context, animation, secondaryAnimation, child),
+        pageBuilder: (_, __, ___) => Platform.isAndroid || Platform.isIOS || Platform.isLinux
             ? Builder(builder: _routes[settings.name])
             : Column(
                 children: [

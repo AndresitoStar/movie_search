@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/person/components/person_item_grid.dart';
 import 'package:movie_search/modules/person/viewmodel/cast_list_viewmodel.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
@@ -48,16 +49,8 @@ class CreditHorizontalList extends StatelessWidget {
                                   aspectRatio: 8 / 16,
                                 ),
                               )
-                            : ListView.builder(
-                                physics: ClampingScrollPhysics(),
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: model.items.length,
-                                itemBuilder: (ctx, i) => AspectRatio(
-                                  child: PersonItemGridView(
-                                      person: model.items[i]),
-                                  aspectRatio: 8 / 16,
-                                ),
+                            : PersonHorizontalList(
+                                items: model.items,
                               ),
                       ),
                     ],
@@ -68,6 +61,29 @@ class CreditHorizontalList extends StatelessWidget {
               )
             : Container(child: child);
       },
+    );
+  }
+}
+
+class PersonHorizontalList extends StatelessWidget {
+  const PersonHorizontalList({
+    Key key,
+    @required this.items,
+  }) : super(key: key);
+
+  final List<Person> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: ClampingScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      itemCount: items.length,
+      itemBuilder: (ctx, i) => AspectRatio(
+        child: PersonItemGridView(person: items[i]),
+        aspectRatio: 8 / 16,
+      ),
     );
   }
 }

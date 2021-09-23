@@ -13,7 +13,8 @@ class MyIcons {
   static const IconData check = FrinoIcons.f_check;
   static const IconData clean = FrinoIcons.f_no_access;
   static const IconData favourite_on = Icons.favorite_rounded;
-  static const IconData favourite_off = FrinoIcons.f_heart;
+  static const IconData favourite_off = Icons.favorite_border_rounded;
+  static const IconData favourite_home_bar = FrinoIcons.f_heart;
   static const IconData clear = Icons.clear;
   static const IconData search = FrinoIcons.f_search_2;
   static const IconData more = FrinoIcons.f_more_horizontal;

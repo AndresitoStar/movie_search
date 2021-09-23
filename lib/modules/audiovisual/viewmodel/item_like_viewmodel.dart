@@ -15,22 +15,16 @@ class ItemLikeButtonViewModel extends BaseViewModel {
         _audiovisualService = AudiovisualService.getInstance();
 
   Stream<List<int>> get stream {
-    if (type == TMDB_API_TYPE.MOVIE)
-      return _db.watchFavouritesMovieId();
-    else if (type == TMDB_API_TYPE.TV_SHOW)
-      return _db.watchFavouritesTvShowId();
+    if (type == TMDB_API_TYPE.MOVIE || type == TMDB_API_TYPE.TV_SHOW)
+      return SharedPreferencesHelper.getInstance().streamForFavorite;
     else if (type == TMDB_API_TYPE.PERSON)
       return _db.watchFavouritesPersonId();
     return null;
   }
 
   initialize() {
-    if (type == TMDB_API_TYPE.MOVIE)
-      _db.watchFavouritesMovieId().listen((event) {
-        notifyListeners();
-      });
-    else if (type == TMDB_API_TYPE.TV_SHOW)
-      _db.watchFavouritesTvShowId().listen((event) {
+    if (type == TMDB_API_TYPE.MOVIE || type == TMDB_API_TYPE.TV_SHOW)
+      SharedPreferencesHelper.getInstance().streamForFavorite.listen((event) {
         notifyListeners();
       });
     else if (type == TMDB_API_TYPE.PERSON)
@@ -43,12 +37,8 @@ class ItemLikeButtonViewModel extends BaseViewModel {
   Future toggleFavourite(int id) async {
     setBusy(true);
     try {
-      if (type == TMDB_API_TYPE.MOVIE) {
-        if (await _db.getMovieById(id) == null) await _cacheData(id);
-        await _db.toggleFavouriteMovie(id);
-      } else if (type == TMDB_API_TYPE.TV_SHOW) {
-        if (await _db.getTvShowById(id) == null) await _cacheData(id);
-        await _db.toggleFavouriteTvShow(id);
+      if (type == TMDB_API_TYPE.MOVIE || type == TMDB_API_TYPE.TV_SHOW) {
+        await SharedPreferencesHelper.getInstance().toggleFavorite(id);
       } else if (type == TMDB_API_TYPE.PERSON) {
         if (await _db.getPersonById(id) == null) await _cacheData(id);
         await _db.toggleFavouritePerson(id);

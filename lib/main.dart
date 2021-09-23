@@ -5,6 +5,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ import 'modules/themes/theme_viewmodel.dart';
 final GlobalKey<ScaffoldState> drawerKey = new GlobalKey<ScaffoldState>();
 
 void main() async {
+  await initializeDateFormatting("es_ES", null);
   if (Platform.isWindows) {
     _configureSqliteOnWindows();
   } else if (Platform.isLinux) {
@@ -34,7 +36,7 @@ void main() async {
       appWindow.size = initialSize;
       appWindow.alignment = Alignment.center;
       appWindow.show();
-      appWindow.maximize();
+      // appWindow.maximize();
     });
   }
 }

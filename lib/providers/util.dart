@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/model/serie.dart';
@@ -113,11 +114,7 @@ class ResponseApiParser {
 
   static TvShow tvFromJsonApi(Map<String, dynamic> json) {
     try {
-      String createdBy,
-          genres,
-          productionCompanies,
-          productionCountries,
-          spokenLanguages;
+      String createdBy, genres, productionCompanies, productionCountries, spokenLanguages;
       int episodesRuntime;
       if (json['created_by'] != null) {
         final list = <String>[];
@@ -156,9 +153,7 @@ class ResponseApiParser {
       }
       if (json['episode_run_time'] != null) {
         final list = json['episode_run_time'] as List<dynamic>;
-        if (list.isNotEmpty)
-          episodesRuntime =
-              list?.reduce((value, element) => min<num>(value, element));
+        if (list.isNotEmpty) episodesRuntime = list?.reduce((value, element) => min<num>(value, element));
       }
       return TvShow(
         createdBy: createdBy,
@@ -204,6 +199,10 @@ extension snackbar_extension on BuildContext {
           content: Text(message),
         ),
       );
+}
+
+extension DateFormatter on DateTime {
+  String get format => DateFormat('dd MMMM yyyy', Locale('es', 'ES').toString()).format(this);
 }
 
 enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON }
@@ -268,8 +267,7 @@ class SharedPreferencesHelper {
   static SharedPreferencesHelper _instance;
 
   static SharedPreferencesHelper getInstance() {
-    if (_instance == null || _instance._streamForHighQuality.isClosed)
-      _instance = SharedPreferencesHelper._();
+    if (_instance == null || _instance._streamForHighQuality.isClosed) _instance = SharedPreferencesHelper._();
     return _instance;
   }
 
@@ -279,15 +277,20 @@ class SharedPreferencesHelper {
 
     _streamForSearchHistory = BehaviorSubject<List<String>>();
     getSearchHistory().then((value) => _streamForSearchHistory.add(value.reversed.toList()));
+
+    _streamForFavorite = BehaviorSubject<List<int>>();
+    getFavouriteList().then((value) => _streamForFavorite.add(value));
   }
 
   StreamController<bool> _streamForHighQuality;
   StreamController<List<String>> _streamForSearchHistory;
+  StreamController<List<int>> _streamForFavorite;
 
   Stream<bool> get streamForHighQuality => _streamForHighQuality.stream;
 
-  Stream<List<String>> get streamForSearchHistory =>
-      _streamForSearchHistory.stream;
+  Stream<List<String>> get streamForSearchHistory => _streamForSearchHistory.stream;
+
+  Stream<List<int>> get streamForFavorite => _streamForFavorite.stream;
 
   Function(bool) get changeHighQuality => _streamForHighQuality.sink.add;
 
@@ -299,9 +302,21 @@ class SharedPreferencesHelper {
     });
   }
 
+  toggleFavorite(int id) {
+    getFavouriteList().then((list) {
+      if (list.contains(id))
+        list.remove(id);
+      else
+        list.add(id);
+      _streamForFavorite.sink.add(list);
+      setFavouriteList(list);
+    });
+  }
+
   dispose() {
     _streamForHighQuality?.close();
     _streamForSearchHistory?.close();
+    _streamForFavorite?.close();
   }
 
   static Future _setBoolean(String key, bool value) async {
@@ -316,7 +331,7 @@ class SharedPreferencesHelper {
 
   static Future _setList(String key, List value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return await prefs.setStringList(key, value.toList());
+    return await prefs.setStringList(key, value.map((e) => '$e').toList());
   }
 
   static Future<bool> _getBoolean(String key) async {
@@ -370,6 +385,15 @@ class SharedPreferencesHelper {
 
   static void setSearchHistory(List<String> value) async {
     _setList('SEARCH_HISTORY', value);
+  }
+
+  static Future<List<int>> getFavouriteList() async {
+    final list = await _getList<String>('FAVORITE');
+    return list.map((e) => int.tryParse(e)).toList();
+  }
+
+  static void setFavouriteList(List<int> value) async {
+    _setList('FAVORITE', value);
   }
 
   static Future<String> getFlexSchemaColor() async {

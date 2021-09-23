@@ -31,7 +31,10 @@ class ThemeViewModel extends BaseViewModel {
         transparentStatusBar: true,
         appBarElevation: 0,
         appBarStyle: FlexAppBarStyle.background,
-      ).toTheme.copyWith(inputDecorationTheme: baseTheme);
+      ).toTheme.copyWith(
+            inputDecorationTheme: baseTheme,
+            elevatedButtonTheme: baseElevatedButtonThemeData,
+          );
 
   ThemeData get darkTheme => FlexColorScheme.dark(
         scheme: flexColor,
@@ -39,7 +42,20 @@ class ThemeViewModel extends BaseViewModel {
         transparentStatusBar: true,
         appBarElevation: 0,
         appBarStyle: FlexAppBarStyle.background,
-      ).toTheme.copyWith(inputDecorationTheme: baseTheme);
+      ).toTheme.copyWith(
+            inputDecorationTheme: baseTheme,
+            elevatedButtonTheme: baseElevatedButtonThemeData,
+          );
+
+  final OutlinedBorder _buttonsBorder = RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(15),
+  );
+
+  ElevatedButtonThemeData get baseElevatedButtonThemeData =>
+      ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+        shape: _buttonsBorder,
+      ));
 
   InputDecorationTheme get baseTheme => InputDecorationTheme(
         isDense: false,

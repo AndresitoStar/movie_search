@@ -1,9 +1,21 @@
+import 'package:movie_search/data/moor_database.dart';
+
 import 'movie.dart';
+
+abstract class Logo {
+  final String name;
+  final num id;
+  final String logoPath;
+  final String originCountry;
+
+  Logo({this.name, this.id, this.logoPath, this.originCountry});
+}
 
 class TvApi {
   TvApi({
     this.backdropPath,
     this.createdBy,
+    this.createdByPerson,
     this.episodeRunTime,
     this.firstAirDate,
     this.genres,
@@ -36,11 +48,12 @@ class TvApi {
   });
   final String backdropPath;
   final List<CreatedBy> createdBy;
-  final List<int> episodeRunTime;
+  final List<Person> createdByPerson;
+  final List<num> episodeRunTime;
   final String firstAirDate;
   final List<Genres> genres;
   final String homepage;
-  final int id;
+  final num id;
   final bool inProduction;
   final List<String> languages;
   final String lastAirDate;
@@ -48,13 +61,13 @@ class TvApi {
   final String name;
   final Null nextEpisodeToAir;
   final List<Networks> networks;
-  final int numberOfEpisodes;
-  final int numberOfSeasons;
+  final num numberOfEpisodes;
+  final num numberOfSeasons;
   final List<String> originCountry;
   final String originalLanguage;
   final String originalName;
   final String overview;
-  final double popularity;
+  final num popularity;
   final String posterPath;
   final List<ProductionCompanies> productionCompanies;
   final List<ProductionCountries> productionCountries;
@@ -63,49 +76,80 @@ class TvApi {
   final String status;
   final String tagline;
   final String type;
-  final double voteAverage;
-  final int voteCount;
+  final num voteAverage;
+  final num voteCount;
 
   TvApi.fromJson(Map<String, dynamic> json)
       : backdropPath = json['backdrop_path'],
-        createdBy = List.from(json['created_by'])
-            .map((e) => CreatedBy.fromJson(e))
-            .toList(),
-        episodeRunTime = List.castFrom<dynamic, int>(json['episode_run_time']),
+        createdBy = json['created_by'] == null
+            ? null
+            : List.from(json['created_by'])
+                .map((e) => CreatedBy.fromJson(e))
+                .toList(),
+        createdByPerson = json['created_by'] == null
+            ? null
+            : List.from(json['created_by']).map((e) {
+                final c = CreatedBy.fromJson(e);
+                return Person(
+                  id: c.id,
+                  name: c.name,
+                  profilePath: c.profilePath,
+                );
+              }).toList(),
+        episodeRunTime = json['episode_run_time'] == null
+            ? null
+            : List.castFrom<dynamic, num>(json['episode_run_time']),
         firstAirDate = json['first_air_date'],
-        genres =
-            List.from(json['genres']).map((e) => Genres.fromJson(e)).toList(),
+        genres = json['genres'] == null
+            ? null
+            : List.from(json['genres']).map((e) => Genres.fromJson(e)).toList(),
         homepage = json['homepage'],
         id = json['id'],
         inProduction = json['in_production'],
-        languages = List.castFrom<dynamic, String>(json['languages']),
+        languages = json['languages'] == null
+            ? null
+            : List.castFrom<dynamic, String>(json['languages']),
         lastAirDate = json['last_air_date'],
-        lastEpisodeToAir =
-            LastEpisodeToAir.fromJson(json['last_episode_to_air']),
+        lastEpisodeToAir = json['last_episode_to_air'] == null
+            ? null
+            : LastEpisodeToAir.fromJson(json['last_episode_to_air']),
         name = json['name'],
         nextEpisodeToAir = null,
-        networks = List.from(json['networks'])
-            .map((e) => Networks.fromJson(e))
-            .toList(),
+        networks = json['networks'] == null
+            ? null
+            : List.from(json['networks'])
+                .map((e) => Networks.fromJson(e))
+                .toList(),
         numberOfEpisodes = json['number_of_episodes'],
         numberOfSeasons = json['number_of_seasons'],
-        originCountry = List.castFrom<dynamic, String>(json['origin_country']),
+        originCountry = json['networks'] == null
+            ? null
+            : List.castFrom<dynamic, String>(json['origin_country']),
         originalLanguage = json['original_language'],
         originalName = json['original_name'],
         overview = json['overview'],
         popularity = json['popularity'],
         posterPath = json['poster_path'],
-        productionCompanies = List.from(json['production_companies'])
-            .map((e) => ProductionCompanies.fromJson(e))
-            .toList(),
-        productionCountries = List.from(json['production_countries'])
-            .map((e) => ProductionCountries.fromJson(e))
-            .toList(),
-        seasons =
-            List.from(json['seasons']).map((e) => Seasons.fromJson(e)).toList(),
-        spokenLanguages = List.from(json['spoken_languages'])
-            .map((e) => SpokenLanguages.fromJson(e))
-            .toList(),
+        productionCompanies = json['production_companies'] == null
+            ? null
+            : List.from(json['production_companies'])
+                .map((e) => ProductionCompanies.fromJson(e))
+                .toList(),
+        productionCountries = json['production_countries'] == null
+            ? null
+            : List.from(json['production_countries'])
+                .map((e) => ProductionCountries.fromJson(e))
+                .toList(),
+        seasons = json['seasons'] == null
+            ? null
+            : List.from(json['seasons'])
+                .map((e) => Seasons.fromJson(e))
+                .toList(),
+        spokenLanguages = json['spoken_languages'] == null
+            ? null
+            : List.from(json['spoken_languages'])
+                .map((e) => SpokenLanguages.fromJson(e))
+                .toList(),
         status = json['status'],
         tagline = json['tagline'],
         type = json['type'],
@@ -121,10 +165,10 @@ class CreatedBy {
     this.gender,
     this.profilePath,
   });
-  final int id;
+  final num id;
   final String creditId;
   final String name;
-  final int gender;
+  final num gender;
   final String profilePath;
 
   CreatedBy.fromJson(Map<String, dynamic> json)
@@ -133,6 +177,11 @@ class CreatedBy {
         name = json['name'],
         gender = json['gender'],
         profilePath = json['profile_path'];
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 class LastEpisodeToAir {
@@ -149,15 +198,15 @@ class LastEpisodeToAir {
     this.voteCount,
   });
   final String airDate;
-  final int episodeNumber;
-  final int id;
+  final num episodeNumber;
+  final num id;
   final String name;
   final String overview;
   final String productionCode;
-  final int seasonNumber;
+  final num seasonNumber;
   final String stillPath;
-  final double voteAverage;
-  final int voteCount;
+  final num voteAverage;
+  final num voteCount;
 
   LastEpisodeToAir.fromJson(Map<String, dynamic> json)
       : airDate = json['air_date'],
@@ -172,7 +221,7 @@ class LastEpisodeToAir {
         voteCount = json['vote_count'];
 }
 
-class Networks {
+class Networks extends Logo {
   Networks({
     this.name,
     this.id,
@@ -189,6 +238,11 @@ class Networks {
         id = json['id'],
         logoPath = json['logo_path'],
         originCountry = json['origin_country'];
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 class Seasons {
@@ -200,14 +254,16 @@ class Seasons {
     this.overview,
     this.posterPath,
     this.seasonNumber,
+    this.episodes,
   });
   final String airDate;
-  final int episodeCount;
-  final int id;
+  final num episodeCount;
+  final num id;
   final String name;
   final String overview;
   final String posterPath;
-  final int seasonNumber;
+  final num seasonNumber;
+  final List<Episode> episodes;
 
   Seasons.fromJson(Map<String, dynamic> json)
       : airDate = json['air_date'],
@@ -216,5 +272,48 @@ class Seasons {
         name = json['name'],
         overview = json['overview'],
         posterPath = json['poster_path'],
+        episodes = json['episodes'] == null
+            ? null
+            : List.from(json['episodes'])
+                .map((e) => Episode.fromJson(e))
+                .toList(),
         seasonNumber = json['season_number'];
+}
+
+class Episode {
+  String airDate;
+  int episodeNumber;
+  int id;
+  String name;
+  String overview;
+  String productionCode;
+  int seasonNumber;
+  String stillPath;
+  double voteAverage;
+  int voteCount;
+
+  Episode(
+      {this.airDate,
+      this.episodeNumber,
+      this.id,
+      this.name,
+      this.overview,
+      this.productionCode,
+      this.seasonNumber,
+      this.stillPath,
+      this.voteAverage,
+      this.voteCount});
+
+  Episode.fromJson(Map<String, dynamic> json) {
+    airDate = json['air_date'];
+    episodeNumber = json['episode_number'];
+    id = json['id'];
+    name = json['name'];
+    overview = json['overview'];
+    productionCode = json['production_code'];
+    seasonNumber = json['season_number'];
+    stillPath = json['still_path'];
+    voteAverage = json['vote_average'];
+    voteCount = json['vote_count'];
+  }
 }

@@ -6,8 +6,6 @@ import 'package:stacked/stacked.dart';
 class ItemGridViewModel extends FutureViewModel<BaseSearchResult> {
   final BaseSearchResult _param;
 
-  bool get isFavourite => data != null ? data.isFavourite : false;
-
   bool _highQualityImage = false;
   String baseImageUrl = URL_IMAGE_SMALL;
   bool over = false;
@@ -37,11 +35,11 @@ class ItemGridViewModel extends FutureViewModel<BaseSearchResult> {
   }
 
   Future<String> _checkImageCachedQuality() async {
-    if (await _checkImageCachedExist('$URL_IMAGE_BIG${_param.image}')) {
+    if (await _checkImageCachedExist('$URL_IMAGE_BIG${_param.posterImage}')) {
       _highQualityImage = true;
       return URL_IMAGE_BIG;
     } else if (await _checkImageCachedExist(
-        '$URL_IMAGE_MEDIUM${_param.image}')) {
+        '$URL_IMAGE_MEDIUM${_param.posterImage}')) {
       return URL_IMAGE_MEDIUM;
     }
     return URL_IMAGE_SMALL;

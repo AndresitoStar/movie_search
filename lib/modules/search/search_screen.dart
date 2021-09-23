@@ -7,7 +7,7 @@ import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:stacked/stacked.dart';
 
 class SearchScreen extends StatelessWidget {
-  static String routeName = "/search";
+  static const String routeName = "/search";
 
   @override
   Widget build(BuildContext context) {

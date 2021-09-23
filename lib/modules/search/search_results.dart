@@ -26,7 +26,7 @@ class SearchResults extends StatelessWidget {
                 color: Theme.of(context).accentColor,
                 child: ReactiveForm(
                   formGroup: model.form,
-                  child: ReactiveFormField<SearchCategory>(
+                  child: ReactiveFormField<SearchCategory, SearchCategory>(
                     formControl: model.categoryControl,
                     builder: (field) => Center(
                       child: SingleChildScrollView(
@@ -37,37 +37,27 @@ class SearchResults extends StatelessWidget {
                           children: SearchCategory.getAll()
                               .map(
                                 (e) => Container(
-                              padding:
-                              const EdgeInsets.symmetric(horizontal: 5),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(15),
-                                mouseCursor: SystemMouseCursors.click,
-                                onTap: () => field.control
-                                    .updateValue(e, emitEvent: true),
-                                child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 5),
-                                    decoration: BoxDecoration(
-                                      color: e == model.actualCategory
-                                          ? Colors.white54
-                                          : Colors.white12,
-                                      borderRadius:
-                                      BorderRadius.circular(15),
-                                    ),
-                                    child: Text(
-                                      e.label ?? e.value ?? '-',
-                                      style: TextStyle(
-                                        fontWeight: e == model.actualCategory
-                                            ? FontWeight.w700
-                                            : FontWeight.normal,
-                                        color: e == model.actualCategory
-                                            ? Colors.black87
-                                            : Colors.white,
-                                      ),
-                                    )),
-                              ),
-                            ),
-                          )
+                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(15),
+                                    mouseCursor: SystemMouseCursors.click,
+                                    onTap: () => field.control.updateValue(e, emitEvent: true),
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: e == model.actualCategory ? Colors.white54 : Colors.white12,
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
+                                        child: Text(
+                                          e.label ?? e.value ?? '-',
+                                          style: TextStyle(
+                                            fontWeight: e == model.actualCategory ? FontWeight.w700 : FontWeight.normal,
+                                            color: e == model.actualCategory ? Colors.black87 : Colors.white,
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                              )
                               .toList(),
                         ),
                       ),
@@ -85,43 +75,38 @@ class SearchResults extends StatelessWidget {
                           (model.searchResults.isEmpty &&
                               model.queryControl?.value != null &&
                               model.queryControl.value.isEmpty)
-                      ? SearchHistoryView(
-                          onTap: (value) => model.queryControl.value = value)
+                      ? SearchHistoryView(onTap: (value) => model.queryControl.value = value)
                       : model.searchResults.isEmpty
                           ? Center(child: Text('Sin resultados'))
                           : Scrollbar(
                               child: GridView.builder(
                                   itemCount: model.searchResults.length + 1,
-                                  gridDelegate:
-                                      SliverGridDelegateWithMaxCrossAxisExtent(
-                                          // crossAxisCount: getColumns(context),
-                                          maxCrossAxisExtent: 600,
-                                          mainAxisExtent: 200,
-                                          childAspectRatio: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              (MediaQuery.of(context).size.height / 4),
-                                          crossAxisSpacing: 10,
-                                          mainAxisSpacing: 10),
+                                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                                      // crossAxisCount: getColumns(context),
+                                      maxCrossAxisExtent: 600,
+                                      mainAxisExtent: 200,
+                                      childAspectRatio:
+                                          MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 4),
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10),
                                   padding: EdgeInsets.zero,
                                   physics: BouncingScrollPhysics(),
-                                  itemBuilder: (ctx, i) =>
-                                      i < model.searchResults.length
-                                          ? SearchResultListItem(
-                                              searchResult: model.searchResults[i],
-                                              searchCriteria: model.queryControl.value,
+                                  itemBuilder: (ctx, i) => i < model.searchResults.length
+                                      ? SearchResultListItem(
+                                          searchResult: model.searchResults[i],
+                                          searchCriteria: model.queryControl.value,
+                                        )
+                                      : model.hasMore
+                                          ? Builder(
+                                              builder: (context) {
+                                                model.fetchMore(context);
+                                                return SizedBox(
+                                                  height: 10,
+                                                  child: LinearProgressIndicator(),
+                                                );
+                                              },
                                             )
-                                          : model.hasMore
-                                              ? Builder(
-                                                  builder: (context) {
-                                                    model.fetchMore(context);
-                                                    return SizedBox(
-                                                      height: 10,
-                                                      child: LinearProgressIndicator(),
-                                                    );
-                                                  },
-                                                )
-                                              : Container()),
+                                          : Container()),
                             ),
             ),
           ],
