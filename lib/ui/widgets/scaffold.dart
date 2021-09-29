@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'lateral_bar.dart';
-
 class CustomScaffold extends StatelessWidget {
   final int bottomBarIndex;
   final Widget body;
@@ -17,22 +15,18 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Scaffold(
-          // bottomNavigationBar:
-          //     landscape ? null : MyBottomBar(index: bottomBarIndex),
-          body: landscape
-              ? Row(
-                  children: [
-                    Center(child: MyLateralBar(index: bottomBarIndex)),
-                    Expanded(child: body)
-                  ],
-                )
-              : body,
+    return Container(
+      child: Scaffold(
+        // bottomNavigationBar:
+        //     landscape ? null : MyBottomBar(index: bottomBarIndex),
+        body: Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 1080),
+            alignment: Alignment.center,
+            child: body,
+          ),
         ),
-      ],
+      ),
     );
   }
 }

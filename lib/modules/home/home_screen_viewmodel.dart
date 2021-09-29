@@ -21,6 +21,25 @@ class HomeScreenViewModel extends BaseViewModel {
 
   Map<String, List<BaseSearchResult>> _popularMap = {};
 
+  Map<String, List<BaseSearchResult>> get popularMapFull => {..._popularMap};
+
+  Map<TrendingContent, Map<GenreTableData, List<BaseSearchResult>>> _trendingMap = {};
+
+  Map<GenreTableData, List<BaseSearchResult>> get trendingMap =>
+      _trendingMap.containsKey(typeSelected) ? _trendingMap[typeSelected] : {};
+
+  Future<List<BaseSearchResult>> getTrendingListData(GenreTableData genre) async {
+    print(genre.name);
+    if (_trendingMap.containsKey(typeSelected) &&
+        _trendingMap[typeSelected].containsKey(genre) &&
+        _trendingMap[typeSelected][genre].isNotEmpty) {
+      return _trendingMap[typeSelected][genre];
+    }
+    final list = await TrendingService().getDiscover(typeSelected.type, genres: [int.tryParse(genre.id)]);
+    _trendingMap[typeSelected].update(genre, (value) => list.result);
+    return _trendingMap[typeSelected][genre];
+  }
+
   List<BaseSearchResult> get popularMap {
     final key = '${genreSelected?.type}${genreSelected?.id ?? ''}';
     return genreSelected != null && _popularMap.containsKey(key) ? _popularMap[key] : null;
@@ -63,16 +82,18 @@ class HomeScreenViewModel extends BaseViewModel {
     await Future.wait(TrendingContent.values.map(
       (t) async {
         if (!_popularMap.containsKey(t.type)) {
-          final response = await TrendingService().getDiscover(t.type);
+          final response = await TrendingService().getTrending(t.type);
           _popularMap.putIfAbsent(t.type, () => response.result);
         }
       },
     ).toList());
     // Fetching genres
     await Future.wait(TrendingContent.values.map((t) async {
-      var list = await _db.allGenres(t.type);
+      List<GenreTableData> list = await _db.allGenres(t.type);
       if (list.isEmpty) list = await _syncGenres(t.type);
-      _genresMap.putIfAbsent(t, () => [AllGenre(t.type), ...list]);
+      _genresMap.putIfAbsent(t, () => [/*AllGenre(t.type), */ ...list]);
+      _trendingMap.putIfAbsent(
+          t, () => Map.fromIterable(list.sublist(0, 5), key: (element) => element, value: (_) => []));
     }).toList());
     setBusy(false);
   }

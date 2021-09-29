@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/trending/trending_page.dart';
 import 'package:movie_search/routes.dart';
@@ -11,16 +11,23 @@ import 'package:stacked/stacked.dart';
 
 import 'trending_viewmodel.dart';
 
-class TrendingHorizontalList extends StatelessWidget {
+class TrendingHorizontalList extends StatefulWidget {
   final TrendingContent content;
-  final _defaultLength = Platform.isWindows ? 15 : 5;
+  final GenreTableData genre;
 
-  TrendingHorizontalList({Key key, this.content}) : super(key: key);
+  TrendingHorizontalList({Key key, this.content, this.genre}) : super(key: key);
+
+  @override
+  _TrendingHorizontalListState createState() => _TrendingHorizontalListState();
+}
+
+class _TrendingHorizontalListState extends State<TrendingHorizontalList> with AutomaticKeepAliveClientMixin {
+  final _defaultLength = Platform.isWindows || Platform.isLinux ? 15 : 5;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TrendingViewModel>.reactive(
-      viewModelBuilder: () => TrendingViewModel(this.content),
+      viewModelBuilder: () => TrendingViewModel.homeHorizontal(this.widget.content, widget.genre),
       onModelReady: (model) => model.synchronize(),
       builder: (context, model, child) => Container(
         child: Stack(
@@ -32,8 +39,10 @@ class TrendingHorizontalList extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(content.title,
-                          style: Theme.of(context).textTheme.headline5),
+                      child: Text(
+                        widget.genre != null ? widget.genre.name : widget.content.title,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
                     ),
                     IconButton(
                       icon: Icon(MyIcons.arrow_right),
@@ -55,15 +64,11 @@ class TrendingHorizontalList extends StatelessWidget {
                     if (model.items.length >= _defaultLength)
                       ...model.items
                           .sublist(0, _defaultLength)
-                          .map((e) => AspectRatio(
-                              aspectRatio: 9 / 16,
-                              child: ItemGridView(item: e, showData: false)))
+                          .map((e) => AspectRatio(aspectRatio: 9 / 16, child: ItemGridView(item: e, showData: false)))
                           .toList(),
                     if (model.items.length == 0)
                       ...[1, 1, 1, 1, 1]
-                          .map((e) => AspectRatio(
-                              aspectRatio: 9 / 16,
-                              child: GridItemPlaceholder()))
+                          .map((e) => AspectRatio(aspectRatio: 9 / 16, child: GridItemPlaceholder()))
                           .toList(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -88,6 +93,10 @@ class TrendingHorizontalList extends StatelessWidget {
     );
   }
 
-  _onPressed(BuildContext context, model) => Navigator.of(context)
-      .push(Routes.defaultRoute(null, TrendingPage(param: model)));
+  _onPressed(BuildContext context, model) =>
+      Navigator.of(context).push(Routes.defaultRoute(null, TrendingPage(param: model)));
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

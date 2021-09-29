@@ -72,10 +72,7 @@ class TrendingViewModel extends BaseViewModel {
   }
 
   List<int> get activeGenres => filterGenre != null
-      ? filterGenre.entries
-          .where((element) => element.value)
-          .map<int>((e) => int.parse(e.key))
-          .toList()
+      ? filterGenre.entries.where((element) => element.value).map<int>((e) => int.parse(e.key)).toList()
       : [];
 
   List<GenreTableData> _allGenres = [];
@@ -95,12 +92,17 @@ class TrendingViewModel extends BaseViewModel {
       : _trendingService = TrendingService(),
         filterGenre = {};
 
+  TrendingViewModel.homeHorizontal(this.content, GenreTableData genre)
+      : _db = null,
+        filterGenre = Map()..putIfAbsent(genre.id, () => true),
+        _trendingService = TrendingService();
+
   Future synchronize() async {
     setBusy(true);
     SearchResponse response = await _trendingService.getDiscover(
       content.type,
       genres: activeGenres,
-      year: year,
+      // year: year,
     );
     _total = response?.totalResult ?? -1;
     _items = response?.result ?? [];
@@ -119,7 +121,7 @@ class TrendingViewModel extends BaseViewModel {
       content.type,
       page: _actualPage,
       genres: activeGenres,
-      year: year,
+      // year: year,
     );
     _items.addAll(results.result);
     notifyListeners();

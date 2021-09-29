@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:bordered_text/bordered_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +19,14 @@ class ItemGridView extends StatelessWidget {
   final bool showData;
   final bool useBackdrop;
   final BaseSearchResult item;
+  final EdgeInsets margin;
 
   const ItemGridView({
     Key key,
     @required this.item,
     this.showData = true,
     this.useBackdrop = false,
+    this.margin = const EdgeInsets.all(10),
   }) : super(key: key);
 
   @override
@@ -37,7 +38,7 @@ class ItemGridView extends StatelessWidget {
       builder: (context, model, child) {
         if (!model.initialised) return GridItemPlaceholder();
         final child = Card(
-          margin: const EdgeInsets.all(10),
+          margin: margin,
           elevation: 5,
           clipBehavior: Clip.hardEdge,
           shape: RoundedRectangleBorder(
