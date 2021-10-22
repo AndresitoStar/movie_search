@@ -15,12 +15,13 @@ class TrendingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return ViewModelBuilder<TrendingViewModel>.reactive(
-        viewModelBuilder: () => TrendingViewModel.forPage(param.content, param.items, param.total, context.read()),
+        viewModelBuilder: () => TrendingViewModel.forPage(param.content, param.items, param.total, context.read(),
+            filterGenre: param.filterGenre),
         builder: (context, viewModel, child) => Scaffold(
               appBar: AppBar(
-                title: Text(viewModel.content.title),
+                title: Text(
+                    '${viewModel.content.title}${param.activeGenresNames.isNotEmpty ? ' de ' + param.activeGenresNames.first : ''}'),
                 primary: true,
                 titleSpacing: 0,
                 elevation: 0,
@@ -42,22 +43,22 @@ class TrendingPage extends StatelessWidget {
                   //       showFilters(context, param.content.type, viewModel),
                   // ),
                 ],
-                bottom: viewModel.activeGenres.length > 0
-                    ? PreferredSize(
-                        preferredSize: Size.fromHeight(kToolbarHeight),
-                        child: Container(
-                          height: kToolbarHeight,
-                          child: ListView.separated(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            physics: ClampingScrollPhysics(),
-                            separatorBuilder: (context, index) => Container(width: 10),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: viewModel.activeGenresNames.length,
-                            itemBuilder: (context, i) => Chip(label: Text(viewModel.activeGenresNames[i])),
-                          ),
-                        ),
-                      )
-                    : null,
+                // bottom: viewModel.activeGenres.length > 0
+                //     ? PreferredSize(
+                //         preferredSize: Size.fromHeight(kToolbarHeight),
+                //         child: Container(
+                //           height: kToolbarHeight,
+                //           child: ListView.separated(
+                //             padding: const EdgeInsets.symmetric(horizontal: 10),
+                //             physics: ClampingScrollPhysics(),
+                //             separatorBuilder: (context, index) => Container(width: 10),
+                //             scrollDirection: Axis.horizontal,
+                //             itemCount: viewModel.activeGenresNames.length,
+                //             itemBuilder: (context, i) => Chip(label: Text(viewModel.activeGenresNames[i])),
+                //           ),
+                //         ),
+                //       )
+                //     : null,
                 leading: IconButton(
                   icon: Icon(MyIcons.arrow_left),
                   onPressed: () => Navigator.of(context).pop(),
@@ -69,7 +70,11 @@ class TrendingPage extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       itemCount: viewModel.items.length + 2,
                       itemBuilder: (ctx, i) => i < viewModel.items.length
-                          ? ItemGridView(item: viewModel.items[i], showData: false)
+                          ? ItemGridView(
+                              item: viewModel.items[i],
+                              showData: false,
+                              heroTagPrefix: '',
+                            )
                           : viewModel.hasMore
                               ? Builder(
                                   builder: (context) {

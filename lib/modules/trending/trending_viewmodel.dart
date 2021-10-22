@@ -88,13 +88,13 @@ class TrendingViewModel extends BaseViewModel {
       : _db = null,
         _trendingService = TrendingService();
 
-  TrendingViewModel.forPage(this.content, this._items, this._total, this._db)
-      : _trendingService = TrendingService(),
-        filterGenre = {};
+  TrendingViewModel.forPage(this.content, this._items, this._total, this._db, {this.filterGenre = const {}})
+      : _trendingService = TrendingService();
 
   TrendingViewModel.homeHorizontal(this.content, GenreTableData genre)
       : _db = null,
-        filterGenre = Map()..putIfAbsent(genre.id, () => true),
+        filterGenre = {genre.id: true},
+        _allGenres = [genre],
         _trendingService = TrendingService();
 
   Future synchronize() async {

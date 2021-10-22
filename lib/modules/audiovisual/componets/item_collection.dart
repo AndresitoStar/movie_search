@@ -13,8 +13,7 @@ class ItemCollectionView extends StatelessWidget {
   final bool sliver;
   final Collection collection;
 
-  const ItemCollectionView({Key key, this.sliver, this.collection})
-      : super(key: key);
+  const ItemCollectionView({Key key, this.sliver, this.collection}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +25,14 @@ class ItemCollectionView extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color:
-                    Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.background.withOpacity(0.6),
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                    Theme.of(context).colorScheme.background.withOpacity(0.6),
                     BlendMode.luminosity,
                   ),
-                  image: NetworkImage(
-                      '$URL_IMAGE_MEDIUM${collection.backdropPath}'),
+                  image: NetworkImage('$URL_IMAGE_MEDIUM${collection.backdropPath}'),
                 ),
               ),
               child: ListTile(
@@ -63,7 +60,7 @@ class ItemCollectionView extends StatelessWidget {
                                     ItemCollectionScreen.route,
                                     arguments: model.collection,
                                   ),
-                          child: Text('Ver colleccion'),
+                          child: Text('Ver colección'),
                         ),
                         Spacer(),
                       ],
@@ -103,12 +100,10 @@ class ItemCollectionScreen extends StatelessWidget {
         itemBuilder: (ctx, i) => ItemGridView(
           item: BaseSearchResult.fromMovie(collection.parts[i]),
           showData: false,
+          heroTagPrefix: 'collection',
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: getColumns(context),
-            childAspectRatio: 5 / 9,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10),
+            crossAxisCount: getColumns(context), childAspectRatio: 5 / 9, crossAxisSpacing: 10, mainAxisSpacing: 10),
       ),
     );
   }

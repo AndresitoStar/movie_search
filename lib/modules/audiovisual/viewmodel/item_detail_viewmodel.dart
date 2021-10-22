@@ -71,7 +71,7 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
     final results = await Future.wait([
       _checkImageCachedQuality(),
       _cacheData(),
-      _fetchImages(),
+      // _fetchImages(),
     ]);
     baseImageUrl = results[0];
     setInitialised(true);
@@ -119,23 +119,6 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
       return file?.file?.exists() ?? false;
     } catch (e) {
       return false;
-    }
-  }
-
-  Future _fetchImages() async {
-    try {
-      final images = await _service.getImages(_param.type.type, _param.id);
-      if (images != null && images.isNotEmpty) {
-        _images.addAll(images);
-        // timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
-        //   if (!pauseTimer)
-        //     currentImage =
-        //         currentImage == images.length - 1 ? 0 : currentImage + 1;
-        //   notifyListeners();
-        // });
-      }
-    } catch (e) {
-      print(e);
     }
   }
 

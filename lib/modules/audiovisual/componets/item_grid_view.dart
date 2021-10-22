@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_grid_viewmodel.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
@@ -20,10 +21,12 @@ class ItemGridView extends StatelessWidget {
   final bool useBackdrop;
   final BaseSearchResult item;
   final EdgeInsets margin;
+  final String heroTagPrefix;
 
   const ItemGridView({
     Key key,
     @required this.item,
+    @required this.heroTagPrefix,
     this.showData = true,
     this.useBackdrop = false,
     this.margin = const EdgeInsets.all(10),
@@ -54,7 +57,7 @@ class ItemGridView extends StatelessWidget {
                   child: (useBackdrop && item.backDropImage != null) || item.posterImage != null
                       ? CachedNetworkImage(
                           imageUrl:
-                              '${model.baseImageUrl}${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
+                              '${useBackdrop ? URL_IMAGE_BIG : model.baseImageUrl}${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
                           placeholder: (_, __) =>
                               Container(color: Colors.transparent, child: Center(child: CircularProgressIndicator())),
                           errorWidget: (ctx, _, __) =>
@@ -128,7 +131,7 @@ class ItemGridView extends StatelessWidget {
               child: useBackdrop
                   ? child
                   : Hero(
-                      tag: '${model.data.id}',
+                      tag: '$heroTagPrefix${model.data.id}',
                       child: child,
                     ),
             ),
@@ -156,6 +159,10 @@ class ItemGridView extends StatelessWidget {
     );
   }
 
-  _onPressed(BuildContext context) =>
-      Navigator.of(context).push(Routes.defaultRoute(null, ItemDetailPage(item: this.item)));
+  _onPressed(BuildContext context) => Navigator.of(context).push(Routes.defaultRoute(
+      null,
+      ItemDetailPage(
+        item: this.item,
+        heroTagPrefix: heroTagPrefix,
+      )));
 }

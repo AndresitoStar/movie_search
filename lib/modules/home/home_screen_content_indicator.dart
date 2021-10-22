@@ -23,16 +23,23 @@ class HomeScreenContentIndicator extends ViewModelWidget<HomeScreenViewModel> {
           controller: tabController,
           isScrollable: true,
           labelPadding: EdgeInsets.symmetric(horizontal: 10.0),
-          labelStyle: theme.primaryTextTheme.headline5.copyWith(color: theme.colorScheme.background),
+          labelStyle: theme.primaryTextTheme.headline5.copyWith(color: theme.colorScheme.onPrimary),
           unselectedLabelStyle: theme.textTheme.headline5,
           indicatorWeight: 0.0,
           indicator: BoxDecoration(
             color: theme.colorScheme.primary,
           ),
           tabs: TrendingContent.values
-              .map((e) => Tab(
-                    text: e.title,
-                  ))
+              .map(
+                (e) => Tab(
+                  child: Text(
+                    e.title,
+                    style: theme.primaryTextTheme.headline5.copyWith(
+                      color: e == viewModel.typeSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onBackground,
+                    ),
+                  ),
+                ),
+              )
               .toList(),
         ),
       ),

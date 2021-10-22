@@ -22,7 +22,7 @@ class TrendingHorizontalList extends StatefulWidget {
 }
 
 class _TrendingHorizontalListState extends State<TrendingHorizontalList> with AutomaticKeepAliveClientMixin {
-  final _defaultLength = Platform.isWindows || Platform.isLinux ? 15 : 5;
+  final _defaultLength = Platform.isWindows || Platform.isLinux ? 15 : 10;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,16 @@ class _TrendingHorizontalListState extends State<TrendingHorizontalList> with Au
                     if (model.items.length >= _defaultLength)
                       ...model.items
                           .sublist(0, _defaultLength)
-                          .map((e) => AspectRatio(aspectRatio: 9 / 16, child: ItemGridView(item: e, showData: false)))
+                          .map(
+                            (e) => AspectRatio(
+                              aspectRatio: 9 / 16,
+                              child: ItemGridView(
+                                item: e,
+                                showData: false,
+                                heroTagPrefix: widget.genre != null ? widget.genre.id : widget.content.type,
+                              ),
+                            ),
+                          )
                           .toList(),
                     if (model.items.length == 0)
                       ...[1, 1, 1, 1, 1]
@@ -73,12 +82,8 @@ class _TrendingHorizontalListState extends State<TrendingHorizontalList> with Au
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
-                        child: FloatingActionButton(
-                          child: Icon(MyIcons.more),
-                          heroTag: 'more${model.content}',
-                          elevation: 0,
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: Theme.of(context).iconTheme.color,
+                        child: TextButton(
+                          child: Text('Ver Más'),
                           onPressed: () => _onPressed(context, model),
                         ),
                       ),

@@ -17,8 +17,9 @@ import 'item_recomendation_horizontal_list.dart';
 
 class ItemDetailPage extends StatelessWidget {
   final BaseSearchResult item;
+  final String heroTagPrefix;
 
-  const ItemDetailPage({Key key, @required this.item}) : super(key: key);
+  const ItemDetailPage({Key key, @required this.item, this.heroTagPrefix = ''}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,7 @@ class ItemDetailPage extends StatelessWidget {
                   )
                 : landscape
                     ? ItemDetailLandscape()
-                    : ItemDetailPortrait(),
+                    : ItemDetailPortrait(heroTagPrefix),
           ),
         ),
       ),
@@ -53,7 +54,8 @@ class ItemDetailPage extends StatelessWidget {
 }
 
 class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
-  const ItemDetailPortrait({Key key}) : super(key: key);
+  final String heroTagPrefix;
+  const ItemDetailPortrait(this.heroTagPrefix, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
@@ -61,7 +63,7 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
       controller: model.scrollController,
       cacheExtent: 1000,
       slivers: <Widget>[
-        ItemDetailSliverAppBar(ItemDetailAppbarContentExtended()),
+        ItemDetailSliverAppBar(ItemDetailAppbarContentExtended(heroTagPrefix)),
         if (model.initialised) ...[
           ItemDetailMainContent(),
           CreditHorizontalList(model.itemType.type, model.itemId),

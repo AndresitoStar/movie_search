@@ -10,16 +10,14 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
   final ERecommendationType recommendationType;
   final bool sliver;
 
-  const ItemDetailRecommendationHorizontalList(
-      this.type, this.typeId, this.recommendationType,
+  const ItemDetailRecommendationHorizontalList(this.type, this.typeId, this.recommendationType,
       {Key key, this.sliver = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ItemRecommendationViewModel>.reactive(
-      viewModelBuilder: () => ItemRecommendationViewModel(
-          this.type, this.typeId, this.recommendationType),
+      viewModelBuilder: () => ItemRecommendationViewModel(this.type, this.typeId, this.recommendationType),
       builder: (context, model, _) {
         final height = 300.0;
         final child = !model.initialised
@@ -38,14 +36,13 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                             title: Text(
                               recommendationType.name,
                               style: Theme.of(context).textTheme.headline5.copyWith(
-                                color: Theme.of(context).primaryColor,
-                              ),
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                             ),
                           ),
                           Container(
                             padding: const EdgeInsets.only(bottom: 20),
-                            constraints: BoxConstraints(
-                                minHeight: height, maxHeight: height + 50),
+                            constraints: BoxConstraints(minHeight: height, maxHeight: height + 50),
                             child: model.isBusy
                                 ? ListView.builder(
                                     physics: ClampingScrollPhysics(),
@@ -63,7 +60,10 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                                     scrollDirection: Axis.horizontal,
                                     itemCount: model.items.length,
                                     itemBuilder: (ctx, i) => AspectRatio(
-                                      child: ItemGridView(item: model.items[i]),
+                                      child: ItemGridView(
+                                        item: model.items[i],
+                                        heroTagPrefix: recommendationType.type,
+                                      ),
                                       aspectRatio: 8 / 15,
                                     ),
                                   ),

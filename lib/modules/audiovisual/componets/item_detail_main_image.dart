@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
-import 'package:movie_search/modules/dialog_image/download_image_button.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/circular_button.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
 import 'package:movie_search/ui/widgets/dialog_image.dart';
+import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:stacked/stacked.dart';
 
@@ -20,17 +20,15 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
   Widget build(BuildContext context, model) {
     final theme = Theme.of(context);
     return Container(
-      color: Theme
-          .of(context)
-          .scaffoldBackgroundColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Stack(
         fit: StackFit.expand,
         children: [
           model.withImageList
               ? ContentImageCarousel()
               : model.withImage
-              ? ContentImageWidget(model.posterImageUrl)
-              : Card(child: PlaceholderImage(height: 250)),
+                  ? ContentImageWidget(model.posterImageUrl)
+                  : Card(child: PlaceholderImage(height: 250)),
           if (!landscape)
             IgnorePointer(
               ignoring: true,
@@ -43,14 +41,10 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
                       Colors.transparent,
                       Colors.transparent,
                       Colors.transparent,
-                      Theme
-                          .of(context)
-                          .scaffoldBackgroundColor
+                      Theme.of(context).scaffoldBackgroundColor
                     ],
                   ),
-                  border: Border.all(color: Theme
-                      .of(context)
-                      .scaffoldBackgroundColor),
+                  border: Border.all(color: Theme.of(context).scaffoldBackgroundColor),
                 ),
               ),
             ),
@@ -104,7 +98,8 @@ class ContentImageWidget extends StatelessWidget {
   final BoxFit fit;
   final String baseUrl;
 
-  ContentImageWidget(this.imagePath, {
+  ContentImageWidget(
+    this.imagePath, {
     Key key,
     this.fit = BoxFit.fitWidth,
     this.baseUrl = URL_IMAGE_MEDIUM,
@@ -115,22 +110,15 @@ class ContentImageWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () => DialogImage.show(context: context, imageUrl: '$baseUrl$imagePath'),
       child: Container(
-        color: Theme
-            .of(context)
-            .scaffoldBackgroundColor,
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: CachedNetworkImage(
           imageUrl: '$baseUrl$imagePath',
-          placeholder: (_, __) =>
-              CachedNetworkImage(
-                // width: double.infinity,
-                fit: fit,
-                imageUrl: '$URL_IMAGE_SMALL$imagePath',
-              ),
-          errorWidget: (ctx, _, __) =>
-              PlaceholderImage(height: MediaQuery
-                  .of(ctx)
-                  .size
-                  .height * 0.6),
+          placeholder: (_, __) => CachedNetworkImage(
+            fit: fit,
+            imageUrl: '$URL_IMAGE_SMALL$imagePath',
+            placeholder: (context, _) => GridItemPlaceholder(),
+          ),
+          errorWidget: (ctx, _, __) => PlaceholderImage(height: MediaQuery.of(ctx).size.height * 0.6),
           fit: fit,
           // width: double.infinity,
         ),

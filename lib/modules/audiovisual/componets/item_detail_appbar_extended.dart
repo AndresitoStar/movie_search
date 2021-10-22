@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
+import 'package:movie_search/modules/audiovisual/componets/items_images_button.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/imdb_rating/components/imdb_rating.dart';
 import 'package:movie_search/modules/video/video_button.dart';
@@ -13,6 +14,10 @@ import 'package:stacked/stacked.dart';
 import 'item_detail_main_image.dart';
 
 class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewModel> {
+  final String heroTagPrefix;
+
+  ItemDetailAppbarContentExtended(this.heroTagPrefix);
+
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
     final theme = Theme.of(context);
@@ -54,7 +59,7 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
           bottom: 10,
           top: kToolbarHeight,
           child: Hero(
-            tag: '${model.itemId}',
+            tag: '$heroTagPrefix${model.itemId}',
             child: Material(
               color: Colors.transparent,
               child: AspectRatio(
@@ -133,7 +138,12 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
         Positioned(
           top: 10,
           right: 10,
-          child: ItemLikeButton(id: model.itemId, type: model.itemType),
+          child: Row(
+            children: [
+              ItemLikeButton(id: model.itemId, type: model.itemType),
+              if (model.dataReady) ItemImagesButtonView(param: model.data),
+            ],
+          ),
         )
       ],
     );

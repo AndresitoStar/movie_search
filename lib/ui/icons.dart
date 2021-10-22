@@ -37,6 +37,7 @@ class MyIcons {
   static const IconData drawerHamburger = FrinoIcons.f_menu;
   static const IconData maximize = Icons.crop_square;
   static const IconData minimize = Icons.minimize;
+  static const IconData gallery = FontAwesomeIcons.images;
 
   static IconData iconFromType(TMDB_API_TYPE type) {
     if (type == TMDB_API_TYPE.MOVIE) return movie;

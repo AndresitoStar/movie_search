@@ -37,6 +37,7 @@ class HomePopularWidget extends ViewModelWidget<HomeScreenViewModel> {
                                       item: e,
                                       showData: false,
                                       useBackdrop: true,
+                                      heroTagPrefix: 'popular',
                                     ),
                                   ),
                                 )

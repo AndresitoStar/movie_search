@@ -21,14 +21,10 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
   Widget build(BuildContext context, viewModel) {
     final item = viewModel.data;
     final children = <Widget>[
-      if (item.type == TMDB_API_TYPE.MOVIE)
-        ..._movieContentWidgets(context, item.movie),
-      if (item.type == TMDB_API_TYPE.TV_SHOW)
-        ..._tvShowsContentWidgets(context, item.tvShow),
+      if (item.type == TMDB_API_TYPE.MOVIE) ..._movieContentWidgets(context, item.movie),
+      if (item.type == TMDB_API_TYPE.TV_SHOW) ..._tvShowsContentWidgets(context, item.tvShow),
     ];
-    return isSliver
-        ? SliverList(delegate: SliverChildListDelegate(children))
-        : Column(children: children);
+    return isSliver ? SliverList(delegate: SliverChildListDelegate(children)) : Column(children: children);
   }
 
   List<Widget> _movieContentWidgets(BuildContext context, MovieApi movie) {
@@ -53,12 +49,13 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
         value1: movie.productionCountries?.join(', '),
         value2: movie.spokenLanguages?.join(', '),
       ),
-      ContentRow(
-        label1: 'Fecha de estreno',
-        label2: 'Duración',
-        value1: DateTime.tryParse(movie.releaseDate).format,
-        value2: movie.runtime != null ? '${movie.runtime} minutos' : null,
-      ),
+      if (movie.releaseDate?.isNotEmpty)
+        ContentRow(
+          label1: 'Fecha de estreno',
+          label2: 'Duración',
+          value1: DateTime.tryParse(movie.releaseDate).format,
+          value2: movie.runtime != null ? '${movie.runtime} minutos' : null,
+        ),
       ContentDivider(value: movie.productionCompanies?.join(', ')),
       ContentHorizontal(
         padding: 8,

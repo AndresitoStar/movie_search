@@ -6,9 +6,10 @@ import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
 
 class SearchResultItemImage extends StatelessWidget {
+  final String heroTag;
   final String imagePath;
 
-  const SearchResultItemImage(this.imagePath, {Key key}) : super(key: key);
+  const SearchResultItemImage(this.heroTag, this.imagePath, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,23 +17,26 @@ class SearchResultItemImage extends StatelessWidget {
       maxHeight: 120,
       child: imagePath == null
           ? PlaceholderImage()
-          : AspectRatio(
-              aspectRatio: 9 / 16,
-              child: FutureBuilder<String>(
-                  future: _checkImageCachedQuality(),
-                  initialData: URL_IMAGE_SMALL,
-                  builder: (context, snapshot) {
-                    return CachedNetworkImage(
-                      imageUrl: '${snapshot.data}$imagePath',
-                      placeholder: (_, __) => Container(
-                          color: Colors.transparent,
-                          child: Center(child: CircularProgressIndicator())),
-                      errorWidget: (ctx, _, __) => Container(
-                          color: Colors.transparent,
-                          child: Center(child: Icon(MyIcons.default_image))),
-                      fit: BoxFit.cover,
-                    );
-                  })),
+          : Hero(
+              tag: heroTag,
+              child: Material(
+                child: AspectRatio(
+                    aspectRatio: 9 / 16,
+                    child: FutureBuilder<String>(
+                        future: _checkImageCachedQuality(),
+                        initialData: URL_IMAGE_SMALL,
+                        builder: (context, snapshot) {
+                          return CachedNetworkImage(
+                            imageUrl: '${snapshot.data}$imagePath',
+                            placeholder: (_, __) =>
+                                Container(color: Colors.transparent, child: Center(child: CircularProgressIndicator())),
+                            errorWidget: (ctx, _, __) =>
+                                Container(color: Colors.transparent, child: Center(child: Icon(MyIcons.default_image))),
+                            fit: BoxFit.cover,
+                          );
+                        })),
+              ),
+            ),
     );
   }
 

@@ -28,7 +28,16 @@ class AudiovisualHorizontalList extends StatelessWidget {
                 if (snapshot.data.length >= _defaultLength)
                   ...snapshot.data
                       .sublist(0, _defaultLength)
-                      .map((e) => AspectRatio(aspectRatio: 9 / 16, child: ItemGridView(item: e, showData: false)))
+                      .map(
+                        (e) => AspectRatio(
+                          aspectRatio: 9 / 16,
+                          child: ItemGridView(
+                            item: e,
+                            showData: false,
+                            heroTagPrefix: tag,
+                          ),
+                        ),
+                      )
                       .toList(),
                 if (snapshot.data.length == 0)
                   ...List.generate(_defaultLength, (index) => null)

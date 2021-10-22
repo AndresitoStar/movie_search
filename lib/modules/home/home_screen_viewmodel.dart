@@ -72,8 +72,8 @@ class HomeScreenViewModel extends BaseViewModel {
       final response =
           await TrendingService().getDiscover(genre.type, genres: genre != null ? [int.tryParse(genre.id)] : null);
       _popularMap.putIfAbsent(key, () => response.result);
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future synchronize() async {

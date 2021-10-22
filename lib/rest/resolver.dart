@@ -1,6 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:movie_search/modules/audiovisual/model/image.dart';
 
+enum MediaImageType { POSTER, BACKDROP, PROFILES }
+
+extension MediaImageTypeExtension on MediaImageType {
+  String get title {
+    if (this == MediaImageType.POSTER) {
+      return 'Poster';
+    } else if (this == MediaImageType.BACKDROP) {
+      return 'Backdrop';
+    } else if (this == MediaImageType.PROFILES) {
+      return 'Profiles';
+    }
+    return this.toString();
+  }
+}
+
 abstract class BaseService {
   Dio clientTMDB;
   Dio clientOMDB;
@@ -64,6 +79,32 @@ abstract class BaseService {
             if (b != null) result.add(b);
           }
         }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return result;
+  }
+
+  Future<Map<MediaImageType, List<MediaImage>>> getImagesGroup(String type, int typeId) async {
+    Map<MediaImageType, List<MediaImage>> result = {};
+    try {
+      var response = await clientTMDB.get(
+        '$type/$typeId/images',
+        queryParameters: {
+          ...baseParams,
+          'include_image_language': 'en,null',
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final profiles = data['profiles'] as List ?? [];
+        final backdrops = data['backdrops'] as List ?? [];
+        final posters = data['posters'] as List ?? [];
+
+        result.putIfAbsent(MediaImageType.PROFILES, () => profiles.map((e) => MediaImage.fromJson(e)).toList());
+        result.putIfAbsent(MediaImageType.BACKDROP, () => backdrops.map((e) => MediaImage.fromJson(e)).toList());
+        result.putIfAbsent(MediaImageType.POSTER, () => posters.map((e) => MediaImage.fromJson(e)).toList());
       }
     } catch (e) {
       print(e);
