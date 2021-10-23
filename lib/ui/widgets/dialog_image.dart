@@ -5,32 +5,32 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/dialog_image/dialog_image_viewmodel.dart';
 import 'package:movie_search/modules/dialog_image/download_image_button.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:stacked/stacked.dart';
 
 import 'circular_button.dart';
 
-class DialogImage extends StatelessWidget {
+class DialogImage extends StatefulWidget {
   final String imageUrl;
   final List<String> images;
   final int currentImage;
+  final String baseUrl;
 
   const DialogImage({
     Key key,
     this.images,
     this.currentImage,
+    this.baseUrl,
     this.imageUrl,
   })  : assert(imageUrl != null || (images != null && currentImage != null)),
         super(key: key);
 
-  static Future show({
-    @required BuildContext context,
-    @required String imageUrl,
-  }) {
+  static Future show({@required BuildContext context, @required String imageUrl, String baseUrl = URL_IMAGE_MEDIUM}) {
     return showDialog(
       context: context,
-      builder: (context) => DialogImage(imageUrl: imageUrl),
+      builder: (context) => DialogImage(imageUrl: imageUrl, baseUrl: baseUrl),
     );
   }
 
@@ -41,9 +41,21 @@ class DialogImage extends StatelessWidget {
   }) {
     return showDialog(
       context: context,
-      builder: (context) =>
-          DialogImage(currentImage: currentImage, images: images),
+      builder: (context) => DialogImage(currentImage: currentImage, images: images),
     );
+  }
+
+  @override
+  _DialogImageState createState() => _DialogImageState();
+}
+
+class _DialogImageState extends State<DialogImage> {
+  String baseUrl;
+
+  @override
+  void initState() {
+    baseUrl = widget.baseUrl;
+    super.initState();
   }
 
   @override
@@ -55,8 +67,7 @@ class DialogImage extends StatelessWidget {
       insetPadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       content: ViewModelBuilder<DialogImageViewModel>.reactive(
-        viewModelBuilder: () =>
-            DialogImageViewModel(index: currentImage, length: images?.length),
+        viewModelBuilder: () => DialogImageViewModel(index: widget.currentImage, length: widget.images?.length),
         builder: (context, model, _) => Stack(
           fit: StackFit.expand,
           alignment: Alignment.center,
@@ -64,18 +75,18 @@ class DialogImage extends StatelessWidget {
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 6.0),
               child: Container(
-                  decoration: BoxDecoration(
-                color: Colors.transparent,
-              )),
+                decoration: BoxDecoration(color: Colors.transparent),
+                width: MediaQuery.of(context).size.width,
+              ),
             ),
-            if (imageUrl != null) _getImage(imageUrl),
-            if (images != null && currentImage != null)
+            if (widget.imageUrl != null) _getImage(widget.imageUrl),
+            if (widget.images != null && widget.currentImage != null)
               CarouselSlider(
                 carouselController: _carouselController,
-                items: images.map<Widget>((e) => _getImage(e)).toList(),
+                items: widget.images.map<Widget>((e) => _getImage(e)).toList(),
                 options: CarouselOptions(
                   viewportFraction: 0.95,
-                  initialPage: currentImage,
+                  initialPage: widget.currentImage,
                   enableInfiniteScroll: false,
                   disableCenter: true,
                   reverse: false,
@@ -85,7 +96,7 @@ class DialogImage extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                 ),
               ),
-            if (images != null && currentImage != null && model.canGoBack)
+            if (widget.images != null && widget.currentImage != null && model.canGoBack)
               Positioned(
                 // bottom: 50,
                 left: 0,
@@ -95,7 +106,7 @@ class DialogImage extends StatelessWidget {
                   onPressed: () => _carouselController.previousPage(),
                 ),
               ),
-            if (images != null && currentImage != null && model.canGoForward)
+            if (widget.images != null && widget.currentImage != null && model.canGoForward)
               Positioned(
                 // bottom: 50,
                 right: 5,
@@ -105,7 +116,7 @@ class DialogImage extends StatelessWidget {
                   onPressed: () => _carouselController.nextPage(),
                 ),
               ),
-            if (images != null && currentImage != null)
+            if (widget.images != null && widget.currentImage != null)
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -116,7 +127,7 @@ class DialogImage extends StatelessWidget {
                   color: Colors.black26,
                   child: AnimatedSmoothIndicator(
                     activeIndex: model.index,
-                    count: images.length,
+                    count: widget.images.length,
                     effect: ScrollingDotsEffect(
                       activeDotColor: Theme.of(context).accentColor,
                       dotColor: Colors.white30,
@@ -128,19 +139,33 @@ class DialogImage extends StatelessWidget {
               right: 50,
               top: 0,
               child: ImageDownloadButton(
-                imageUrl ?? images[currentImage],
+                widget.imageUrl ?? widget.images[widget.currentImage],
                 DateTime.now().toString(),
               ),
             ),
             Positioned(
-              right: 0,
+              right: 10,
               top: 0,
               child: MyCircularButton(
                 icon: Icon(MyIcons.clear),
                 color: Colors.red,
                 onPressed: () => Navigator.of(context).pop(),
               ),
-            )
+            ),
+            if (baseUrl != URL_IMAGE_BIG)
+              Positioned(
+                right: 72,
+                top: 0,
+                child: MyCircularButton(
+                  icon: Icon(MyIcons.quality, color: Theme.of(context).colorScheme.onPrimary),
+                  color: Theme.of(context).colorScheme.primaryVariant,
+                  onPressed: () {
+                    setState(() {
+                      baseUrl = URL_IMAGE_BIG;
+                    });
+                  },
+                ),
+              )
           ],
         ),
       ),
@@ -148,7 +173,7 @@ class DialogImage extends StatelessWidget {
   }
 
   _getImage(String image) => ExtendedImage.network(
-        image,
+        baseUrl + image,
         fit: BoxFit.contain,
         mode: ExtendedImageMode.gesture,
         initGestureConfigHandler: (state) => GestureConfig(

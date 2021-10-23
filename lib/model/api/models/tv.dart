@@ -83,9 +83,7 @@ class TvApi {
       : backdropPath = json['backdrop_path'],
         createdBy = json['created_by'] == null
             ? null
-            : List.from(json['created_by'])
-                .map((e) => CreatedBy.fromJson(e))
-                .toList(),
+            : List.from(json['created_by']).map((e) => CreatedBy.fromJson(e)).toList(),
         createdByPerson = json['created_by'] == null
             ? null
             : List.from(json['created_by']).map((e) {
@@ -94,37 +92,27 @@ class TvApi {
                   id: c.id,
                   name: c.name,
                   profilePath: c.profilePath,
+                  isFavourite: false,
                 );
               }).toList(),
-        episodeRunTime = json['episode_run_time'] == null
-            ? null
-            : List.castFrom<dynamic, num>(json['episode_run_time']),
+        episodeRunTime =
+            json['episode_run_time'] == null ? null : List.castFrom<dynamic, num>(json['episode_run_time']),
         firstAirDate = json['first_air_date'],
-        genres = json['genres'] == null
-            ? null
-            : List.from(json['genres']).map((e) => Genres.fromJson(e)).toList(),
+        genres = json['genres'] == null ? null : List.from(json['genres']).map((e) => Genres.fromJson(e)).toList(),
         homepage = json['homepage'],
         id = json['id'],
         inProduction = json['in_production'],
-        languages = json['languages'] == null
-            ? null
-            : List.castFrom<dynamic, String>(json['languages']),
+        languages = json['languages'] == null ? null : List.castFrom<dynamic, String>(json['languages']),
         lastAirDate = json['last_air_date'],
-        lastEpisodeToAir = json['last_episode_to_air'] == null
-            ? null
-            : LastEpisodeToAir.fromJson(json['last_episode_to_air']),
+        lastEpisodeToAir =
+            json['last_episode_to_air'] == null ? null : LastEpisodeToAir.fromJson(json['last_episode_to_air']),
         name = json['name'],
         nextEpisodeToAir = null,
-        networks = json['networks'] == null
-            ? null
-            : List.from(json['networks'])
-                .map((e) => Networks.fromJson(e))
-                .toList(),
+        networks =
+            json['networks'] == null ? null : List.from(json['networks']).map((e) => Networks.fromJson(e)).toList(),
         numberOfEpisodes = json['number_of_episodes'],
         numberOfSeasons = json['number_of_seasons'],
-        originCountry = json['networks'] == null
-            ? null
-            : List.castFrom<dynamic, String>(json['origin_country']),
+        originCountry = json['networks'] == null ? null : List.castFrom<dynamic, String>(json['origin_country']),
         originalLanguage = json['original_language'],
         originalName = json['original_name'],
         overview = json['overview'],
@@ -132,29 +120,57 @@ class TvApi {
         posterPath = json['poster_path'],
         productionCompanies = json['production_companies'] == null
             ? null
-            : List.from(json['production_companies'])
-                .map((e) => ProductionCompanies.fromJson(e))
-                .toList(),
+            : List.from(json['production_companies']).map((e) => ProductionCompanies.fromJson(e)).toList(),
         productionCountries = json['production_countries'] == null
             ? null
-            : List.from(json['production_countries'])
-                .map((e) => ProductionCountries.fromJson(e))
-                .toList(),
-        seasons = json['seasons'] == null
-            ? null
-            : List.from(json['seasons'])
-                .map((e) => Seasons.fromJson(e))
-                .toList(),
+            : List.from(json['production_countries']).map((e) => ProductionCountries.fromJson(e)).toList(),
+        seasons = json['seasons'] == null ? null : List.from(json['seasons']).map((e) => Seasons.fromJson(e)).toList(),
         spokenLanguages = json['spoken_languages'] == null
             ? null
-            : List.from(json['spoken_languages'])
-                .map((e) => SpokenLanguages.fromJson(e))
-                .toList(),
+            : List.from(json['spoken_languages']).map((e) => SpokenLanguages.fromJson(e)).toList(),
         status = json['status'],
         tagline = json['tagline'],
         type = json['type'],
         voteAverage = json['vote_average'],
         voteCount = json['vote_count'];
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['backdrop_path'] = backdropPath;
+    _data['created_by'] = createdBy == null ? null : createdBy.map((e) => e.toJson()).toList();
+    _data['episode_run_time'] = episodeRunTime;
+    _data['first_air_date'] = firstAirDate;
+    _data['genres'] = genres == null ? null : genres.map((e) => e.toJson()).toList();
+    _data['homepage'] = homepage;
+    _data['id'] = id;
+    _data['in_production'] = inProduction;
+    _data['languages'] = languages;
+    _data['last_air_date'] = lastAirDate;
+    _data['last_episode_to_air'] = lastEpisodeToAir.toJson();
+    _data['name'] = name;
+    _data['next_episode_to_air'] = nextEpisodeToAir;
+    _data['networks'] = networks == null ? null : networks.map((e) => e.toJson()).toList();
+    _data['number_of_episodes'] = numberOfEpisodes;
+    _data['number_of_seasons'] = numberOfSeasons;
+    _data['origin_country'] = originCountry;
+    _data['original_language'] = originalLanguage;
+    _data['original_name'] = originalName;
+    _data['overview'] = overview;
+    _data['popularity'] = popularity;
+    _data['poster_path'] = posterPath;
+    _data['production_companies'] =
+        productionCompanies == null ? null : productionCompanies.map((e) => e.toJson()).toList();
+    _data['production_countries'] =
+        productionCountries == null ? null : productionCountries.map((e) => e.toJson()).toList();
+    _data['seasons'] = seasons == null ? null : seasons.map((e) => e.toJson()).toList();
+    _data['spoken_languages'] = spokenLanguages == null ? null : spokenLanguages.map((e) => e.toJson()).toList();
+    _data['status'] = status;
+    _data['tagline'] = tagline;
+    _data['type'] = type;
+    _data['vote_average'] = voteAverage;
+    _data['vote_count'] = voteCount;
+    return _data;
+  }
 }
 
 class CreatedBy {
@@ -177,6 +193,16 @@ class CreatedBy {
         name = json['name'],
         gender = json['gender'],
         profilePath = json['profile_path'];
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['id'] = id;
+    _data['credit_id'] = creditId;
+    _data['name'] = name;
+    _data['gender'] = gender;
+    _data['profile_path'] = profilePath;
+    return _data;
+  }
 
   @override
   String toString() {
@@ -219,6 +245,21 @@ class LastEpisodeToAir {
         stillPath = json['still_path'],
         voteAverage = json['vote_average'],
         voteCount = json['vote_count'];
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['air_date'] = airDate;
+    _data['episode_number'] = episodeNumber;
+    _data['id'] = id;
+    _data['name'] = name;
+    _data['overview'] = overview;
+    _data['production_code'] = productionCode;
+    _data['season_number'] = seasonNumber;
+    _data['still_path'] = stillPath;
+    _data['vote_average'] = voteAverage;
+    _data['vote_count'] = voteCount;
+    return _data;
+  }
 }
 
 class Networks extends Logo {
@@ -238,6 +279,15 @@ class Networks extends Logo {
         id = json['id'],
         logoPath = json['logo_path'],
         originCountry = json['origin_country'];
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['name'] = name;
+    _data['id'] = id;
+    _data['logo_path'] = logoPath;
+    _data['origin_country'] = originCountry;
+    return _data;
+  }
 
   @override
   String toString() {
@@ -265,6 +315,18 @@ class Seasons {
   final num seasonNumber;
   final List<Episode> episodes;
 
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['air_date'] = airDate;
+    _data['episode_count'] = episodeCount;
+    _data['id'] = id;
+    _data['name'] = name;
+    _data['overview'] = overview;
+    _data['poster_path'] = posterPath;
+    _data['season_number'] = seasonNumber;
+    return _data;
+  }
+
   Seasons.fromJson(Map<String, dynamic> json)
       : airDate = json['air_date'],
         episodeCount = json['episode_count'],
@@ -272,11 +334,8 @@ class Seasons {
         name = json['name'],
         overview = json['overview'],
         posterPath = json['poster_path'],
-        episodes = json['episodes'] == null
-            ? null
-            : List.from(json['episodes'])
-                .map((e) => Episode.fromJson(e))
-                .toList(),
+        episodes =
+            json['episodes'] == null ? null : List.from(json['episodes']).map((e) => Episode.fromJson(e)).toList(),
         seasonNumber = json['season_number'];
 }
 

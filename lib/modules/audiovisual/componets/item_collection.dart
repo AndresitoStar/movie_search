@@ -38,9 +38,8 @@ class ItemCollectionView extends StatelessWidget {
               child: ListTile(
                 title: Text(
                   '${collection.name}',
-                  style: Theme.of(context).textTheme.headline5.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
+                  style:
+                      Theme.of(context).textTheme.headline5.copyWith(color: Theme.of(context).colorScheme.onBackground),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,10 +55,8 @@ class ItemCollectionView extends StatelessWidget {
                         ElevatedButton(
                           onPressed: model.isBusy
                               ? null
-                              : () => Navigator.of(context).pushNamed(
-                                    ItemCollectionScreen.route,
-                                    arguments: model.collection,
-                                  ),
+                              : () => Navigator.of(context)
+                                  .pushNamed(ItemCollectionScreen.route, arguments: model.collection),
                           child: Text('Ver colección'),
                         ),
                         Spacer(),

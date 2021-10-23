@@ -19,8 +19,7 @@ class PersonService extends BaseService {
     Map<String, String> params = {...baseParams, 'page': page.toString()};
 
     try {
-      var response =
-          await clientTMDB.get('person/popular', queryParameters: params);
+      var response = await clientTMDB.get('person/popular', queryParameters: params);
       if (response.statusCode == 200) {
         result = [];
         final body = response.data;
@@ -34,26 +33,31 @@ class PersonService extends BaseService {
     return PersonListResponse(result: result, totalResult: total);
   }
 
+  final Map<int, Person> _cacheById = {};
   Future<Person> getById(int id) async {
     try {
-      var response =
-          await clientTMDB.get('person/$id', queryParameters: baseParams);
+      if (_cacheById.containsKey(id)) return _cacheById[id];
+      var response = await clientTMDB.get('person/$id', queryParameters: baseParams);
       if (response.statusCode == 200) {
         final body = response.data;
         Person p = ResponseApiParser.personFromJsonApi(body);
+        _cacheById.putIfAbsent(id, () => p);
         return p;
       }
     } catch (e) {}
     return null;
   }
 
+  final Map<String, Credit> _cacheCredits = {};
   Future<Credit> getCredits(String type, int typeId) async {
     try {
-      var response = await clientTMDB.get('$type/$typeId/credits',
-          queryParameters: baseParams);
+      final id = '$typeId$type';
+      if (_cacheCredits.containsKey(id)) return _cacheCredits[id];
+      var response = await clientTMDB.get('$type/$typeId/credits', queryParameters: baseParams);
       if (response.statusCode == 200) {
         final body = response.data;
         Credit c = Credit.fromJson(body);
+        _cacheCredits.putIfAbsent(id, () => c);
         return c;
       }
     } catch (e) {}

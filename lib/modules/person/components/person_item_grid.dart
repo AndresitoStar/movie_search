@@ -1,9 +1,9 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/person/components/person_detail_screen.dart';
 import 'package:movie_search/modules/person/viewmodel/person_item_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
@@ -46,30 +46,12 @@ class PersonItemGridView extends StatelessWidget {
                             ClipRRect(
                               clipBehavior: Clip.hardEdge,
                               child: person.profilePath != null
-                                  ? CachedNetworkImage(
-                                      imageUrl:
-                                          '${model.baseImageUrl}${person.profilePath}',
-                                      placeholder: (_, __) => Container(
-                                          color: Colors.transparent,
-                                          child: Center(
-                                              child:
-                                                  CircularProgressIndicator())),
-                                      errorWidget: (ctx, _, __) => Container(
-                                          color: Colors.transparent,
-                                          child: Center(
-                                              child:
-                                                  Icon(MyIcons.default_image))),
-                                      fit: BoxFit.cover,
-                                    )
+                                  ? ContentImageWidget(person.profilePath, fit: BoxFit.cover, ignorePointer: true)
                                   : Container(
                                       child: LayoutBuilder(
-                                          builder: (context, constraint) =>
-                                              Icon(
-                                                  person.gender == 1
-                                                      ? MyIcons.castMale
-                                                      : MyIcons.castFemale,
-                                                  size: constraint
-                                                      .biggest.width)),
+                                          builder: (context, constraint) => Icon(
+                                              person.gender == 1 ? MyIcons.castMale : MyIcons.castFemale,
+                                              size: constraint.biggest.width)),
                                     ),
                             ),
                             Positioned(
@@ -78,38 +60,28 @@ class PersonItemGridView extends StatelessWidget {
                               right: 0,
                               child: ClipRect(
                                 child: BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                      sigmaX: 14.0, sigmaY: 14.0),
+                                  filter: ImageFilter.blur(sigmaX: 14.0, sigmaY: 14.0),
                                   child: Container(
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor
-                                        .withOpacity(0.7),
+                                    color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
                                     child: ListTile(
                                       title: Text(person.name ?? '' + '\n',
                                           textAlign: TextAlign.center,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 2,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2
-                                              .copyWith(
+                                          style: Theme.of(context).textTheme.subtitle2.copyWith(
                                                 fontSize: 18,
                                               )),
                                       subtitle: person?.character == null
                                           ? null
                                           : Text(
-                                              '${person?.character ?? ''}' ??
-                                                  '',
+                                              '${person?.character ?? ''}' ?? '',
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.center,
                                               maxLines: 1,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subtitle2
-                                                  .copyWith(
-                                                      fontSize: 13,
-                                                      fontStyle:
-                                                          FontStyle.italic),
+                                                  .copyWith(fontSize: 13, fontStyle: FontStyle.italic),
                                             ),
                                     ),
                                   ),
@@ -145,6 +117,6 @@ class PersonItemGridView extends StatelessWidget {
     );
   }
 
-  _onPressed(BuildContext context) => Navigator.of(context)
-      .push(Routes.defaultRoute(null, PersonDetailScreen(param: person)));
+  _onPressed(BuildContext context) =>
+      Navigator.of(context).push(Routes.defaultRoute(null, PersonDetailScreen(param: person)));
 }

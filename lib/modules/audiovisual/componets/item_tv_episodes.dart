@@ -1,22 +1,19 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_appbar.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_tv_season_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
-import 'package:movie_search/ui/widgets/default_image.dart';
-import 'package:movie_search/ui/widgets/dialog_image.dart';
 import 'package:stacked/stacked.dart';
 
 class EpisodesPage extends StatelessWidget {
   final Seasons season;
   final TvApi tvApi;
 
-  const EpisodesPage({Key key, @required this.season, @required this.tvApi})
-      : super(key: key);
+  const EpisodesPage({Key key, @required this.season, @required this.tvApi}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +25,7 @@ class EpisodesPage extends StatelessWidget {
         child: SafeArea(
           top: true,
           child: Scaffold(
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.startFloat,
+            floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
             floatingActionButton: landscape
                 ? FloatingActionButton.extended(
                     onPressed: () => Navigator.of(context).pop(),
@@ -61,36 +57,12 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
     return CustomScrollView(
       cacheExtent: 1000,
       slivers: <Widget>[
-        ItemDetailSliverAppBar(
-          GestureDetector(
-            onTap: () => DialogImage.show(
-              context: context,
-              imageUrl: '$URL_IMAGE_MEDIUM${season.posterPath}',
-            ),
-            child: Container(
-              height: MediaQuery.of(context).size.height / 1.778,
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: CachedNetworkImage(
-                imageUrl: '$URL_IMAGE_MEDIUM${season.posterPath}',
-                placeholder: (_, __) => CachedNetworkImage(
-                  // width: double.infinity,
-                  fit: BoxFit.fitWidth,
-                  imageUrl: '$URL_IMAGE_SMALL${season.posterPath}',
-                ),
-                errorWidget: (ctx, _, __) => PlaceholderImage(
-                    height: MediaQuery.of(ctx).size.height * 0.6),
-                fit: BoxFit.fitWidth,
-                width: double.infinity,
-              ),
-            ),
-          ),
-        ),
+        ItemDetailSliverAppBar(ContentImageWidget(season.posterPath, fit: BoxFit.fitWidth)),
         SliverList(
           delegate: SliverChildListDelegate(
             [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -123,53 +95,43 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
                                     Container(
                                       child: ListTile(
                                         subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
+                                          crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
                                             Text(
                                               'Capítulo: ${e.episodeNumber}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .subtitle1,
+                                              style: Theme.of(context).textTheme.subtitle1,
                                               textAlign: TextAlign.end,
                                             ),
                                             Text(
                                               e.name,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6,
+                                              style: Theme.of(context).textTheme.headline6,
                                               textAlign: TextAlign.end,
                                             ),
                                             Text(
                                               e.overview,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .caption,
+                                              style: Theme.of(context).textTheme.caption,
                                               textAlign: TextAlign.end,
                                             ),
                                             Divider(indent: 8, endIndent: 8),
                                             Text(
-                                              DateTime.tryParse(e.airDate)
-                                                  .format,
+                                              DateTime.tryParse(e.airDate).format,
                                               textAlign: TextAlign.end,
                                             ),
                                           ],
                                         ),
                                       ),
-                                      decoration: e.stillPath == null ? null : BoxDecoration(
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          colorFilter: ColorFilter.mode(
-                                            Theme.of(context)
-                                                .colorScheme
-                                                .background
-                                                .withOpacity(0.7),
-                                            BlendMode.luminosity,
-                                          ),
-                                          image: NetworkImage(
-                                              '$URL_IMAGE_MEDIUM${e.stillPath}'),
-                                        ),
-                                      ),
+                                      decoration: e.stillPath == null
+                                          ? null
+                                          : BoxDecoration(
+                                              image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                colorFilter: ColorFilter.mode(
+                                                  Theme.of(context).colorScheme.background.withOpacity(0.7),
+                                                  BlendMode.luminosity,
+                                                ),
+                                                image: NetworkImage('$URL_IMAGE_MEDIUM${e.stillPath}'),
+                                              ),
+                                            ),
                                     ),
                                   ],
                                 ),

@@ -36,8 +36,6 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
     setBusy(true);
     await safeExecute(() => Future.wait([
           // validate(),
-          syncCountries(),
-          syncLanguages(),
           syncGenres('movie'),
           syncGenres('tv'),
           // checkWasHereBefore(),
@@ -59,10 +57,8 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
     }
     AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
     String phoneModel = '${androidInfo.brand} ${androidInfo.model}';
-    await _splashService.updateMyDevice(androidInfo.androidId,
-        phoneModel: phoneModel);
-    final isEnabled =
-        await _splashService.checkIsDeviceEnable(androidInfo.androidId);
+    await _splashService.updateMyDevice(androidInfo.androidId, phoneModel: phoneModel);
+    final isEnabled = await _splashService.checkIsDeviceEnable(androidInfo.androidId);
     setInitialised(isEnabled);
     setBusy(false);
   }
@@ -71,38 +67,9 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
     setBusy(true);
     AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
     String phoneModel = '${androidInfo.brand} ${androidInfo.model}';
-    await _splashService.updateMyDevice(androidInfo.androidId,
-        email: email, phoneModel: phoneModel);
+    await _splashService.updateMyDevice(androidInfo.androidId, email: email, phoneModel: phoneModel);
     setBusy(false);
     form.reset();
-  }
-
-  Future syncCountries() async {
-    try {
-      final bool = await _db.existCountries();
-      if (bool) return;
-      var countries = await _splashService.getCountries();
-      final dbCountries = countries.entries
-          .map((entry) => CountryTableData(iso: entry.key, name: entry.value))
-          .toList();
-      await _db.insertCountries(dbCountries);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future syncLanguages() async {
-    try {
-      var bool = await _db.existLanguages();
-      if (bool) return;
-      var countries = await _splashService.getLanguages();
-      final dbLanguages = countries.entries
-          .map((entry) => LanguageTableData(iso: entry.key, name: entry.value))
-          .toList();
-      await _db.insertLanguages(dbLanguages);
-    } catch (e) {
-      print(e);
-    }
   }
 
   Future syncGenres(String type) async {
@@ -111,8 +78,7 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
       if (bool) return;
       var genres = await _splashService.getGenres(type);
       final dbGenres = genres.entries
-          .map((entry) => GenreTableData(
-              id: entry.key?.toString(), name: entry.value, type: type))
+          .map((entry) => GenreTableData(id: entry.key?.toString(), name: entry.value, type: type))
           .toList();
       await _db.insertGenres(dbGenres);
     } catch (e) {

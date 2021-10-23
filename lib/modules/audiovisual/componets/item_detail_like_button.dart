@@ -52,7 +52,7 @@ class ItemLikeButton extends StatelessWidget {
   }
 
   _onLikeButtonTap(BuildContext context, ItemLikeButtonViewModel model, bool isLiked) async {
-    await model.toggleFavourite(id);
+    await model.toggleFavourite(id, isLiked);
     if (context.scaffoldMessenger != null) {
       context.scaffoldMessenger.showSnackBar(SnackBar(
         duration: Duration(seconds: 1),

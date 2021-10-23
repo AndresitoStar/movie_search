@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/service/service.dart';
 import 'package:movie_search/modules/person/service/service.dart';
@@ -14,34 +16,31 @@ class ItemLikeButtonViewModel extends BaseViewModel {
       : _personService = PersonService.getInstance(),
         _audiovisualService = AudiovisualService.getInstance();
 
-  Stream<List<int>> get stream {
-    if (type == TMDB_API_TYPE.MOVIE || type == TMDB_API_TYPE.TV_SHOW)
-      return SharedPreferencesHelper.getInstance().streamForFavorite;
-    else if (type == TMDB_API_TYPE.PERSON)
-      return _db.watchFavouritesPersonId();
-    return null;
-  }
+  Stream<List<int>> get stream => _db.watchFavouritesId(type.type);
 
   initialize() {
-    if (type == TMDB_API_TYPE.MOVIE || type == TMDB_API_TYPE.TV_SHOW)
-      SharedPreferencesHelper.getInstance().streamForFavorite.listen((event) {
-        notifyListeners();
-      });
-    else if (type == TMDB_API_TYPE.PERSON)
-      _db.watchFavouritesPersonId().listen((event) {
-        notifyListeners();
-      });
+    // if (type == TMDB_API_TYPE.MOVIE || type == TMDB_API_TYPE.TV_SHOW)
+    //   SharedPreferencesHelper.getInstance().streamForFavorite.listen((event) {
+    //     notifyListeners();
+    //   });
+    // else if (type == TMDB_API_TYPE.PERSON)
+    //   _db.watchFavouritesPersonId().listen((event) {
+    //     notifyListeners();
+    //   });
+    _db.watchFavouritesId(type.type).listen((event) {
+      notifyListeners();
+    });
     setInitialised(true);
   }
 
-  Future toggleFavourite(int id) async {
+  Future toggleFavourite(int id, bool isLiked) async {
     setBusy(true);
     try {
-      if (type == TMDB_API_TYPE.MOVIE || type == TMDB_API_TYPE.TV_SHOW) {
-        await SharedPreferencesHelper.getInstance().toggleFavorite(id);
-      } else if (type == TMDB_API_TYPE.PERSON) {
-        if (await _db.getPersonById(id) == null) await _cacheData(id);
-        await _db.toggleFavouritePerson(id);
+      if (isLiked) {
+        await _db.removeFavourite(id);
+      } else {
+        final data = await _cacheData(id);
+        await _db.insertFavourite(id, type.type, jsonEncode(data));
       }
     } catch (e) {
       setError(e);
@@ -49,16 +48,11 @@ class ItemLikeButtonViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  _cacheData(int id) async {
-    if (type == TMDB_API_TYPE.MOVIE) {
-      final Movie av = await _audiovisualService.getById(id: id, type: type.type);
-      await _db.insertMovie(av);
-    } else if (type == TMDB_API_TYPE.TV_SHOW) {
-      final TvShow av = await _audiovisualService.getById(id: id, type: type.type);
-      await _db.insertTvShow(av);
+  Future<dynamic> _cacheData(int id) async {
+    if (type == TMDB_API_TYPE.MOVIE || type == TMDB_API_TYPE.TV_SHOW) {
+      return _audiovisualService.getById(id: id, type: type.type);
     } else if (type == TMDB_API_TYPE.PERSON) {
-      final Person person = await _personService.getById(id);
-      await _db.insertPerson(person);
+      return _personService.getById(id);
     }
   }
 }

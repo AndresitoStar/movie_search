@@ -1,11 +1,13 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:movie_search/modules/audiovisual/componets/items_images_button.dart';
+import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/person/components/person_detail_main_image.dart';
 import 'package:movie_search/modules/person/viewmodel/person_detail_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/circular_button.dart';
 import 'package:stacked/stacked.dart';
-
-import 'dart:math' as math;
 
 class PersonDetailSliverAppBar extends ViewModelWidget<PersonDetailViewModel> {
   @override
@@ -13,7 +15,7 @@ class PersonDetailSliverAppBar extends ViewModelWidget<PersonDetailViewModel> {
     final mq = MediaQuery.of(context);
     return SliverAppBar(
       pinned: true,
-      expandedHeight: mq.size.height * 2/3,
+      expandedHeight: mq.size.height * 2 / 3,
       elevation: 0,
       primary: true,
       automaticallyImplyLeading: false,
@@ -22,20 +24,12 @@ class PersonDetailSliverAppBar extends ViewModelWidget<PersonDetailViewModel> {
         icon: Icon(MyIcons.arrow_left),
         onPressed: () => Navigator.of(context).pop(),
       ),
-      actions: [
-        MyCircularButton(
-          icon: Icon(MyIcons.quality),
-          onPressed: () => model.toggleHighQualityImage(),
-        )
-      ],
+      actions: [ItemImagesButtonView(param: BaseSearchResult.fromPerson(model.param))],
       flexibleSpace: LayoutBuilder(
         builder: (context, c) {
-          final settings = context
-              .dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
+          final settings = context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
           final deltaExtent = settings.maxExtent - settings.minExtent;
-          final t = (1.0 -
-                  (settings.currentExtent - settings.minExtent) / deltaExtent)
-              .clamp(0.0, 1.0) as double;
+          final t = (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent).clamp(0.0, 1.0) as double;
           final fadeStart = math.max(0.0, 1.0 - kToolbarHeight / deltaExtent);
           const fadeEnd = 1.0;
           final opacity = 1.0 - Interval(fadeStart, fadeEnd).transform(t);

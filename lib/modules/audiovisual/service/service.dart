@@ -16,11 +16,15 @@ class AudiovisualService extends BaseService {
 
   AudiovisualService._() : super();
 
-  final Map<int, dynamic> _cache = {};
+  final Map<int, dynamic> _cacheById = {};
+  final Map<String, List<BaseSearchResult>> _cacheRecommendation = {};
+  final Map<int, Collection> _cacheCollection = {};
+  final Map<String, Seasons> _cacheSeason = {};
+  final Map<int, List<BaseSearchResult>> _cacheCredits = {};
 
   Future<dynamic> getById({@required String type, @required int id}) async {
-    if (_cache.containsKey(id)) {
-      return _cache[id];
+    if (_cacheById.containsKey(id)) {
+      return _cacheById[id];
     }
     var result;
     Map<String, String> params = {...baseParams, 'include_image_language': 'en,null'};
@@ -36,14 +40,18 @@ class AudiovisualService extends BaseService {
         result = TvApi.fromJson(data);
       }
     }
-    _cache.putIfAbsent(id, () => result);
+    _cacheById.putIfAbsent(id, () => result);
     return result;
   }
 
   Future<List<BaseSearchResult>> getRecommendations(
       String type, int typeId, ERecommendationType recommendationType) async {
     List<BaseSearchResult> result = [];
+    final id = '$typeId$type${recommendationType.type}';
     try {
+      if (_cacheRecommendation.containsKey(id)) {
+        return _cacheRecommendation[id];
+      }
       var response = await clientTMDB.get('$type/$typeId/${recommendationType.type}', queryParameters: baseParams);
       if (response.statusCode == 200) {
         final data = response.data;
@@ -57,24 +65,36 @@ class AudiovisualService extends BaseService {
       }
     } catch (e) {}
     if (result.isNotEmpty) result.sort((a, b) => a.year == null || b.year == null ? 1 : b.year.compareTo(a.year));
+    _cacheRecommendation.putIfAbsent(id, () => result);
     return result;
   }
 
   Future<Collection> getCollection(int id) async {
     try {
+      if (_cacheCollection.containsKey(id)) {
+        return _cacheCollection[id];
+      }
       var response = await clientTMDB.get('collection/$id', queryParameters: baseParams);
       if (response.statusCode == 200) {
-        return Collection.fromJson(response.data);
+        final result = Collection.fromJson(response.data);
+        _cacheCollection.putIfAbsent(id, () => result);
+        return result;
       }
     } catch (e) {}
     return null;
   }
 
   Future<Seasons> getSeason(int id, int seasonNumber) async {
+    final idCache = '$id$seasonNumber';
     try {
+      if (_cacheSeason.containsKey(idCache)) {
+        return _cacheSeason[idCache];
+      }
       var response = await clientTMDB.get('tv/$id/season/$seasonNumber', queryParameters: baseParams);
       if (response.statusCode == 200) {
-        return Seasons.fromJson(response.data);
+        final result = Seasons.fromJson(response.data);
+        _cacheSeason.putIfAbsent(idCache, () => result);
+        return result;
       }
     } catch (e) {
       print(e);
@@ -85,6 +105,9 @@ class AudiovisualService extends BaseService {
   Future<List<BaseSearchResult>> getPersonCombinedCredits(int id) async {
     List<BaseSearchResult> result = [];
     try {
+      if (_cacheCredits.containsKey(id)) {
+        return _cacheCredits[id];
+      }
       var response = await clientTMDB.get('person/$id/combined_credits', queryParameters: baseParams);
       if (response.statusCode == 200) {
         final json = response.data;
@@ -101,6 +124,7 @@ class AudiovisualService extends BaseService {
           });
         }
         result.sort((a, b) => a.year == null || b.year == null ? 1 : b.year.compareTo(a.year));
+        _cacheCredits.putIfAbsent(id, () => result);
       }
     } catch (e) {
       print(e);

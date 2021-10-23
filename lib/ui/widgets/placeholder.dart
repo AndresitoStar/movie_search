@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+class DefaultPlaceholder extends StatelessWidget {
+  const DefaultPlaceholder({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final color = Colors.grey;
+    final colorBaseValue = Theme.of(context).brightness == Brightness.dark ? 700 : 300;
+    final colorHighligthValue = Theme.of(context).brightness == Brightness.dark ? 600 : 100;
+    return Container(
+        child: Shimmer.fromColors(
+            baseColor: color[colorBaseValue],
+            highlightColor: color[colorHighligthValue],
+            child: Card(child: SizedBox.expand())));
+  }
+}
+
 class GridItemPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,10 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_grid_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
@@ -55,14 +55,10 @@ class ItemGridView extends StatelessWidget {
                 AspectRatio(
                   aspectRatio: 9 / 16,
                   child: (useBackdrop && item.backDropImage != null) || item.posterImage != null
-                      ? CachedNetworkImage(
-                          imageUrl:
-                              '${useBackdrop ? URL_IMAGE_BIG : model.baseImageUrl}${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
-                          placeholder: (_, __) =>
-                              Container(color: Colors.transparent, child: Center(child: CircularProgressIndicator())),
-                          errorWidget: (ctx, _, __) =>
-                              Container(color: Colors.transparent, child: Center(child: Icon(MyIcons.default_image))),
+                      ? ContentImageWidget(
+                          '${useBackdrop ? URL_IMAGE_BIG : model.baseImageUrl}${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
                           fit: BoxFit.cover,
+                          ignorePointer: true,
                         )
                       : PlaceholderImage(),
                 ),

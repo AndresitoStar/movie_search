@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
@@ -93,37 +94,75 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
   }
 }
 
-class ContentImageWidget extends StatelessWidget {
+class ContentImageWidget extends StatefulWidget {
   final String imagePath;
   final BoxFit fit;
   final String baseUrl;
+  final bool ignorePointer;
 
   ContentImageWidget(
     this.imagePath, {
     Key key,
     this.fit = BoxFit.fitWidth,
     this.baseUrl = URL_IMAGE_MEDIUM,
+    this.ignorePointer = false,
   }) : super(key: key);
 
   @override
+  _ContentImageWidgetState createState() => _ContentImageWidgetState();
+}
+
+class _ContentImageWidgetState extends State<ContentImageWidget> {
+  String baseUrl;
+
+  @override
+  void initState() {
+    baseUrl = widget.baseUrl;
+    _checkImageCachedQuality();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => DialogImage.show(context: context, imageUrl: '$baseUrl$imagePath'),
-      child: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: GestureDetector(
+        onTap: widget.ignorePointer
+            ? null
+            : () => DialogImage.show(context: context, imageUrl: widget.imagePath, baseUrl: widget.baseUrl)
+                .then((value) => _checkImageCachedQuality),
         child: CachedNetworkImage(
-          imageUrl: '$baseUrl$imagePath',
+          imageUrl: '$baseUrl${widget.imagePath}',
           placeholder: (_, __) => CachedNetworkImage(
-            fit: fit,
-            imageUrl: '$URL_IMAGE_SMALL$imagePath',
-            placeholder: (context, _) => GridItemPlaceholder(),
+            fit: widget.fit,
+            imageUrl: '$URL_IMAGE_SMALL${widget.imagePath}',
+            placeholder: (context, _) => DefaultPlaceholder(),
           ),
           errorWidget: (ctx, _, __) => PlaceholderImage(height: MediaQuery.of(ctx).size.height * 0.6),
-          fit: fit,
+          fit: widget.fit,
           // width: double.infinity,
         ),
       ),
     );
+  }
+
+  Future _checkImageCachedQuality() async {
+    String result;
+    if (await _checkImageCachedExist('$URL_IMAGE_BIG${widget.imagePath}')) {
+      result = URL_IMAGE_BIG;
+    } else {
+      result = URL_IMAGE_MEDIUM;
+    }
+    setState(() => baseUrl = result);
+  }
+
+  Future<bool> _checkImageCachedExist(String url) async {
+    try {
+      var file = await DefaultCacheManager().getFileFromCache(url);
+      return file?.file?.exists() ?? false;
+    } catch (e) {
+      return false;
+    }
   }
 }
 
