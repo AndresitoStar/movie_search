@@ -7,7 +7,6 @@ import 'package:movie_search/modules/audiovisual/componets/item_detail_like_butt
 import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_grid_viewmodel.dart';
-import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
@@ -56,9 +55,10 @@ class ItemGridView extends StatelessWidget {
                   aspectRatio: 9 / 16,
                   child: (useBackdrop && item.backDropImage != null) || item.posterImage != null
                       ? ContentImageWidget(
-                          '${useBackdrop ? URL_IMAGE_BIG : model.baseImageUrl}${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
+                          '${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
                           fit: BoxFit.cover,
                           ignorePointer: true,
+                          isBackdrop: useBackdrop && item.backDropImage != null,
                         )
                       : PlaceholderImage(),
                 ),

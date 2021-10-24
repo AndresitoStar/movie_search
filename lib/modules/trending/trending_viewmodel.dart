@@ -1,12 +1,38 @@
+import 'package:flutter/cupertino.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/trending/trending_service.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/ui/icons.dart';
 import 'package:stacked/stacked.dart';
 
 enum TrendingContent { MOVIE, TV }
 
-enum TrendingType { DAY, WEEK }
+enum TrendingType { TRENDING, POPULAR }
+
+extension ExtensionTitleTrending on TrendingType {
+  String get title {
+    switch (this) {
+      case TrendingType.TRENDING:
+        return 'Tendencia';
+      case TrendingType.POPULAR:
+        return 'Popular';
+      default:
+        return '';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case TrendingType.TRENDING:
+        return MyIcons.trending;
+      case TrendingType.POPULAR:
+        return MyIcons.popular;
+      default:
+        return null;
+    }
+  }
+}
 
 extension ExtensionTitle on TrendingContent {
   String get title {
@@ -18,6 +44,27 @@ extension ExtensionTitle on TrendingContent {
       default:
         return '';
     }
+  }
+
+  String get titleTrending {
+    switch (this) {
+      case TrendingContent.MOVIE:
+        return 'En Cines';
+      case TrendingContent.TV:
+        return 'En Televisión';
+      default:
+        return '';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case TrendingContent.MOVIE:
+        return MyIcons.movie;
+      case TrendingContent.TV:
+        return MyIcons.tv;
+    }
+    return null;
   }
 
   String get type {
@@ -36,6 +83,7 @@ extension ExtensionTitle on TrendingContent {
 
 class TrendingViewModel extends BaseViewModel {
   final TrendingContent content;
+  final TrendingType trendingType;
   final TrendingService _trendingService;
   final MyDatabase _db;
 
@@ -64,13 +112,6 @@ class TrendingViewModel extends BaseViewModel {
     synchronize();
   }
 
-  TrendingType trendingType = TrendingType.DAY;
-
-  updateTrendingType(TrendingType trendingType) {
-    this.trendingType = trendingType;
-    synchronize();
-  }
-
   List<int> get activeGenres => filterGenre != null
       ? filterGenre.entries.where((element) => element.value).map<int>((e) => int.parse(e.key)).toList()
       : [];
@@ -84,14 +125,15 @@ class TrendingViewModel extends BaseViewModel {
           .toList()
       : [];
 
-  TrendingViewModel(this.content)
+  TrendingViewModel(this.content, {this.trendingType = TrendingType.TRENDING})
       : _db = null,
         _trendingService = TrendingService();
 
-  TrendingViewModel.forPage(this.content, this._items, this._total, this._db, {this.filterGenre = const {}})
+  TrendingViewModel.forPage(this.content, this._items, this._total, this._db,
+      {this.filterGenre = const {}, this.trendingType = TrendingType.TRENDING})
       : _trendingService = TrendingService();
 
-  TrendingViewModel.homeHorizontal(this.content, GenreTableData genre)
+  TrendingViewModel.homeHorizontal(this.content, GenreTableData genre, {this.trendingType = TrendingType.TRENDING})
       : _db = null,
         filterGenre = {genre.id: true},
         _allGenres = [genre],
@@ -99,11 +141,9 @@ class TrendingViewModel extends BaseViewModel {
 
   Future synchronize() async {
     setBusy(true);
-    SearchResponse response = await _trendingService.getDiscover(
-      content.type,
-      genres: activeGenres,
-      // year: year,
-    );
+    SearchResponse response = trendingType == TrendingType.POPULAR
+        ? await _trendingService.getDiscover(content.type, genres: activeGenres)
+        : await _trendingService.getTrending(content.type);
     _total = response?.totalResult ?? -1;
     _items = response?.result ?? [];
     _actualPage = 1;
@@ -117,12 +157,9 @@ class TrendingViewModel extends BaseViewModel {
 
   Future _fetchMore() async {
     _actualPage++;
-    SearchResponse results = await _trendingService.getDiscover(
-      content.type,
-      page: _actualPage,
-      genres: activeGenres,
-      // year: year,
-    );
+    SearchResponse results = trendingType == TrendingType.POPULAR
+        ? await _trendingService.getDiscover(content.type, page: _actualPage, genres: activeGenres)
+        : await _trendingService.getTrending(content.type, page: _actualPage);
     _items.addAll(results.result);
     notifyListeners();
   }

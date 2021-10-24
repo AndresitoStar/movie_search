@@ -1,63 +1,93 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/home/home_popular.dart';
-import 'package:movie_search/modules/home/home_screen_content_indicator.dart';
 import 'package:movie_search/modules/home/home_search_bar.dart';
 import 'package:movie_search/modules/trending/trending_horizontal_list.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
-import 'package:provider/provider.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:stacked/stacked.dart';
-
-import 'home_screen_viewmodel.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = "/home";
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HomeScreenViewModel>.reactive(
-      viewModelBuilder: () => HomeScreenViewModel(context.read()),
-      onModelReady: (model) => model.synchronize(),
-      builder: (context, model, _) {
-        return CustomScaffold(
-          bottomBarIndex: 0,
-          body: DefaultTabController(
-            length: TrendingContent.values.length,
-            child: Column(
-              children: [
-                HomeSearchBar(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: HomeScreenContentIndicator(),
-                ),
-                ReactiveFormField(
-                  formControl: model.typeControl,
-                  builder: (field) => Expanded(
-                    child: ListView(
-                      children: [
-                        HomePopularWidget(),
-                        Divider(),
-                        if (model.genresMap != null &&
-                            model.genresMap[field.value] != null &&
-                            model.genresMap[field.value].isNotEmpty)
-                          ...model.genresMap[field.value].map(
-                            (e) => Container(
-                              key: UniqueKey(),
-                              height: 350,
-                              child: TrendingHorizontalList(content: model.typeSelected, genre: e),
+    final theme = Theme.of(context);
+    return CustomScaffold(
+      bottomBarIndex: 0,
+      body: Column(
+        children: [
+          AppBar(
+            leading: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Image.asset('assets/images/ic_launcher.png'),
+            ),
+            title: Text('Movie Search'),
+            titleSpacing: 0,
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 10),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    Card(
+                      elevation: 5,
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10),
+                          ListTile(
+                            title: Text(
+                              'Bienvenido(a)',
+                              style: theme.textTheme.headline5.copyWith(color: theme.colorScheme.primary),
+                            ),
+                            subtitle: Text(
+                              'Millones de películas, programas de televisión y personas por descubrir. Explora ahora.',
+                              style: theme.textTheme.subtitle1.copyWith(color: theme.hintColor),
                             ),
                           ),
-                      ],
+                          SizedBox(height: 10),
+                          HomeSearchBar(),
+                          SizedBox(height: 10),
+                        ],
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 20),
+                    Divider(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(height: 320, child: TrendingHorizontalList(content: TrendingContent.MOVIE)),
+                          Divider(height: 10),
+                          SizedBox(height: 320, child: TrendingHorizontalList(content: TrendingContent.TV)),
+                          Divider(),
+                          SizedBox(
+                            height: 320,
+                            child: TrendingHorizontalList(
+                              content: TrendingContent.MOVIE,
+                              trendingType: TrendingType.POPULAR,
+                            ),
+                          ),
+                          Divider(height: 10),
+                          SizedBox(
+                            height: 320,
+                            child: TrendingHorizontalList(
+                              content: TrendingContent.TV,
+                              trendingType: TrendingType.POPULAR,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

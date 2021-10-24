@@ -34,6 +34,7 @@ class ThemeViewModel extends BaseViewModel {
       ).toTheme.copyWith(
             inputDecorationTheme: baseTheme,
             elevatedButtonTheme: baseElevatedButtonThemeData,
+            cardTheme: cardTheme,
           );
 
   ThemeData get darkTheme => FlexColorScheme.dark(
@@ -45,17 +46,19 @@ class ThemeViewModel extends BaseViewModel {
       ).toTheme.copyWith(
             inputDecorationTheme: baseTheme,
             elevatedButtonTheme: baseElevatedButtonThemeData,
+            cardTheme: cardTheme,
           );
 
-  final OutlinedBorder _buttonsBorder = RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(15),
-  );
+  final OutlinedBorder _buttonsBorder = RoundedRectangleBorder(borderRadius: BorderRadius.circular(15));
 
-  ElevatedButtonThemeData get baseElevatedButtonThemeData =>
-      ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-        shape: _buttonsBorder,
-      ));
+  CardTheme get cardTheme => CardTheme(shape: _buttonsBorder);
+
+  ElevatedButtonThemeData get baseElevatedButtonThemeData => ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          shape: _buttonsBorder,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        ),
+      );
 
   InputDecorationTheme get baseTheme => InputDecorationTheme(
         isDense: false,

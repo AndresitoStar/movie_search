@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
+import 'package:movie_search/ui/icons.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,10 +45,12 @@ class ResponseApiParser {
   }
 }
 
-const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w342';
-// const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w92';
+// const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w342';
+const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w92';
+const String URL_IMAGE_SMALL_BACKDROP = 'https://image.tmdb.org/t/p/w780';
 const String URL_IMAGE_MEDIUM = 'https://image.tmdb.org/t/p/w342';
-const String URL_IMAGE_BIG = 'https://image.tmdb.org/t/p/w780';
+const String URL_IMAGE_MEDIUM_BACKDROP = 'https://image.tmdb.org/t/p/w1280';
+const String URL_IMAGE_BIG = 'https://image.tmdb.org/t/p/original';
 
 extension snackbar_extension on BuildContext {
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
@@ -88,6 +91,19 @@ extension tmdb_type on TMDB_API_TYPE {
         return 'Series';
       case TMDB_API_TYPE.PERSON:
         return 'Personas';
+      default:
+        return null;
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case TMDB_API_TYPE.MOVIE:
+        return MyIcons.movie;
+      case TMDB_API_TYPE.TV_SHOW:
+        return MyIcons.tv;
+      case TMDB_API_TYPE.PERSON:
+        return MyIcons.castMale;
       default:
         return null;
     }

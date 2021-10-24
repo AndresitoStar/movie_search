@@ -85,10 +85,11 @@ class TrendingService extends BaseService {
       if (year != null) 'year': year.toString(),
       'page': page.toString(),
     };
-    final key = '$type$page-${genres.first}';
+    String key = '$type$page';
     if (genres?.length == 1 && year == null) {
-      if (_cacheDiscover.containsKey(key)) return _cacheDiscover[key];
+      final key = '$type$page-${genres.first}';
     }
+    if (_cacheDiscover.containsKey(key)) return _cacheDiscover[key];
 
     try {
       var response = await clientTMDB.get('discover/$type', queryParameters: params);
@@ -108,9 +109,7 @@ class TrendingService extends BaseService {
       }
     }
     final r = SearchResponse(result: result, totalResult: total);
-    if (genres?.length == 1 && year == null) {
-      _cacheDiscover.putIfAbsent(key, () => r);
-    }
+    _cacheDiscover.putIfAbsent(key, () => r);
     return r;
   }
 }

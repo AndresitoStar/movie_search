@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'bottom_bar.dart';
+
 class CustomScaffold extends StatelessWidget {
   final int bottomBarIndex;
   final Widget body;
@@ -17,8 +19,7 @@ class CustomScaffold extends StatelessWidget {
     final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
     return Container(
       child: Scaffold(
-        // bottomNavigationBar:
-        //     landscape ? null : MyBottomBar(index: bottomBarIndex),
+        bottomNavigationBar: landscape ? null : MyBottomBar(index: bottomBarIndex),
         body: Center(
           child: Container(
             constraints: BoxConstraints(maxWidth: 1080),

@@ -37,9 +37,9 @@ class WindowsBar extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10, top: 15),
                   child: Text(
-                      'Buscador de Peliculas y Series',
-                      style: Theme.of(context).accentTextTheme.subtitle1,
-                    ),
+                    'Movie Search',
+                    style: Theme.of(context).accentTextTheme.subtitle1,
+                  ),
                 ),
               ),
             ),

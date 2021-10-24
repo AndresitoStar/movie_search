@@ -87,7 +87,7 @@ class App extends StatelessWidget {
           themeMode: EasyDynamicTheme.of(context).themeMode,
         ),
         builder: (context, model, child) => MaterialApp(
-          title: 'Buscador de Peliculas y Series',
+          title: 'Movie Search',
           debugShowCheckedModeBanner: false,
           theme: model.theme,
           darkTheme: model.darkTheme,

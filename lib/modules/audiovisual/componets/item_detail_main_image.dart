@@ -97,15 +97,15 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
 class ContentImageWidget extends StatefulWidget {
   final String imagePath;
   final BoxFit fit;
-  final String baseUrl;
   final bool ignorePointer;
+  final bool isBackdrop;
 
   ContentImageWidget(
     this.imagePath, {
     Key key,
     this.fit = BoxFit.fitWidth,
-    this.baseUrl = URL_IMAGE_MEDIUM,
     this.ignorePointer = false,
+    this.isBackdrop = false,
   }) : super(key: key);
 
   @override
@@ -117,8 +117,8 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
 
   @override
   void initState() {
-    baseUrl = widget.baseUrl;
-    _checkImageCachedQuality();
+    baseUrl = widget.isBackdrop ? URL_IMAGE_MEDIUM_BACKDROP : URL_IMAGE_MEDIUM;
+    // _checkImageCachedQuality();
     super.initState();
   }
 
@@ -129,13 +129,13 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
       child: GestureDetector(
         onTap: widget.ignorePointer
             ? null
-            : () => DialogImage.show(context: context, imageUrl: widget.imagePath, baseUrl: widget.baseUrl)
+            : () => DialogImage.show(context: context, imageUrl: widget.imagePath, baseUrl: baseUrl)
                 .then((value) => _checkImageCachedQuality),
         child: CachedNetworkImage(
           imageUrl: '$baseUrl${widget.imagePath}',
           placeholder: (_, __) => CachedNetworkImage(
             fit: widget.fit,
-            imageUrl: '$URL_IMAGE_SMALL${widget.imagePath}',
+            imageUrl: '${widget.isBackdrop ? URL_IMAGE_SMALL_BACKDROP : URL_IMAGE_SMALL}${widget.imagePath}',
             placeholder: (context, _) => DefaultPlaceholder(),
           ),
           errorWidget: (ctx, _, __) => PlaceholderImage(height: MediaQuery.of(ctx).size.height * 0.6),
@@ -151,9 +151,11 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
     if (await _checkImageCachedExist('$URL_IMAGE_BIG${widget.imagePath}')) {
       result = URL_IMAGE_BIG;
     } else {
-      result = URL_IMAGE_MEDIUM;
+      result = widget.isBackdrop ? URL_IMAGE_MEDIUM : URL_IMAGE_MEDIUM_BACKDROP;
     }
-    setState(() => baseUrl = result);
+    if (mounted) {
+      setState(() => baseUrl = result);
+    }
   }
 
   Future<bool> _checkImageCachedExist(String url) async {

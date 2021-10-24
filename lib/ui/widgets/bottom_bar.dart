@@ -15,16 +15,14 @@ class MyBottomBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: index,
       showSelectedLabels: false,
-      elevation: 0,
+      // elevation: 5,
       showUnselectedLabels: false,
       type: BottomNavigationBarType.fixed,
       iconSize: 30,
       onTap: (i) {
         switch (i) {
           case 0:
-            if (index != 0)
-              Navigator.of(context)
-                  .popUntil(ModalRoute.withName(HomeScreen.routeName));
+            if (index != 0) Navigator.of(context).popUntil(ModalRoute.withName(HomeScreen.routeName));
             break;
           case 1:
             if (index != 1) goToSearch(context);
@@ -38,26 +36,22 @@ class MyBottomBar extends StatelessWidget {
         }
       },
       items: [
+        BottomNavigationBarItem(icon: Icon(MyIcons.home), label: '', tooltip: 'Inicio'),
+        BottomNavigationBarItem(icon: Icon(MyIcons.search), label: '', tooltip: 'Buscar'),
         BottomNavigationBarItem(
-            icon: Icon(MyIcons.home), label: '', tooltip: 'Inicio'),
-        BottomNavigationBarItem(
-            icon: Icon(MyIcons.search), label: '', tooltip: 'Buscar'),
-        BottomNavigationBarItem(
-            icon: Icon(MyIcons.favourite_off),
-            label: '',
-            activeIcon: Icon(MyIcons.favourite_on),
-            tooltip: 'Favoritos'),
-        BottomNavigationBarItem(
-            icon: Icon(MyIcons.settings), label: '', tooltip: 'Ajustes'),
+            icon: Icon(MyIcons.favourite_off), label: '', activeIcon: Icon(MyIcons.favourite_on), tooltip: 'Favoritos'),
+        BottomNavigationBarItem(icon: Icon(MyIcons.settings), label: '', tooltip: 'Ajustes'),
       ],
     );
   }
 
   Future goToFavourites(BuildContext context) {
-    return Navigator.of(context).pushNamed(FavouriteScreen.routeName);
+    if (index == 0) return Navigator.of(context).pushNamed(FavouriteScreen.routeName);
+    return Navigator.of(context).pushReplacementNamed(FavouriteScreen.routeName);
   }
 
   Future goToSearch(BuildContext context) {
+    if (index == 0) return Navigator.of(context).pushNamed(SearchScreen.routeName);
     return Navigator.of(context).pushNamed(SearchScreen.routeName);
   }
 

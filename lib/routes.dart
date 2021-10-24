@@ -21,15 +21,15 @@ class Routes {
   static const Duration _transitionDuration = Duration(milliseconds: 400);
 
   static _getTransitions(String name, context, Animation<double> animation, Animation<double> secondary, Widget child) {
-    switch (name) {
-      case SearchScreen.routeName:
-        // case SettingsScreen.routeName:
-        return SlideTransition(
-          position: Tween(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0)).animate(animation),
-          child: child,
-        );
-        break;
-    }
+    // switch (name) {
+    //   case SearchScreen.routeName:
+    //     // case SettingsScreen.routeName:
+    //     return SlideTransition(
+    //       position: Tween(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0)).animate(animation),
+    //       child: child,
+    //     );
+    //     break;
+    // }
     return FadeTransition(opacity: animation, child: child);
   }
 

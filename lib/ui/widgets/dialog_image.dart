@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:moor/moor.dart';
 import 'package:movie_search/modules/dialog_image/dialog_image_viewmodel.dart';
 import 'package:movie_search/modules/dialog_image/download_image_button.dart';
 import 'package:movie_search/providers/util.dart';
@@ -55,7 +58,23 @@ class _DialogImageState extends State<DialogImage> {
   @override
   void initState() {
     baseUrl = widget.baseUrl;
+    _checkImageCachedExist();
     super.initState();
+  }
+
+  Future _checkImageCachedExist() async {
+    bool exist = false;
+    try {
+      var file = await DefaultCacheManager().getFileFromCache(URL_IMAGE_BIG + widget.imageUrl);
+      exist = await file?.file?.exists() ?? false;
+    } catch (e) {
+      print(e);
+    }
+    if (exist) {
+      setState(() {
+        baseUrl = URL_IMAGE_BIG;
+      });
+    }
   }
 
   @override
@@ -172,20 +191,32 @@ class _DialogImageState extends State<DialogImage> {
     );
   }
 
-  _getImage(String image) => ExtendedImage.network(
-        baseUrl + image,
-        fit: BoxFit.contain,
-        mode: ExtendedImageMode.gesture,
-        initGestureConfigHandler: (state) => GestureConfig(
-          minScale: 0.9,
-          animationMinScale: 0.7,
-          maxScale: 3.0,
-          animationMaxScale: 3.5,
-          speed: 1.0,
-          inertialSpeed: 100.0,
-          initialScale: 0.9,
-          inPageView: true,
-          initialAlignment: InitialAlignment.center,
-        ),
-      );
+  _cacheImage(String url) async {
+    try {
+      Uint8List bytes = (await NetworkAssetBundle(Uri.parse(url)).load(url)).buffer.asUint8List();
+      DefaultCacheManager().putFile(url, Uint8List.fromList(bytes), eTag: url);
+    } catch (e) {
+      print('>>>' + e);
+    }
+  }
+
+  _getImage(String image) {
+    _cacheImage(baseUrl + image);
+    return ExtendedImage.network(
+      baseUrl + image,
+      fit: BoxFit.contain,
+      mode: ExtendedImageMode.gesture,
+      initGestureConfigHandler: (state) => GestureConfig(
+        minScale: 0.9,
+        animationMinScale: 0.7,
+        maxScale: 3.0,
+        animationMaxScale: 3.5,
+        speed: 1.0,
+        inertialSpeed: 100.0,
+        initialScale: 0.9,
+        inPageView: true,
+        initialAlignment: InitialAlignment.center,
+      ),
+    );
+  }
 }

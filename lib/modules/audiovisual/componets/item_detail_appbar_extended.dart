@@ -33,7 +33,7 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
             child: ContentImageWidget(
               model.backDropImageUrl ?? model.posterImageUrl,
               fit: BoxFit.cover,
-              baseUrl: model.baseImageUrl,
+              isBackdrop: model.backDropImageUrl != null,
             ),
           ),
         ),
@@ -65,14 +65,11 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
               child: AspectRatio(
                 aspectRatio: 9 / 16,
                 child: Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: ContentImageWidget(
-                      model.posterImageUrl,
-                      fit: BoxFit.cover,
-                      baseUrl: model.baseImageUrl,
-                    ),
+                  clipBehavior: Clip.hardEdge,
+                  child: Card(
+                    clipBehavior: Clip.hardEdge,
+                    elevation: 0,
+                    child: ContentImageWidget(model.posterImageUrl, fit: BoxFit.cover),
                   ),
                 ),
               ),

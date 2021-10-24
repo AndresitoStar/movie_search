@@ -29,7 +29,7 @@ class SettingsScreen extends StatelessWidget {
                     titleSpacing: 0,
                     elevation: 0,
                   ),
-                Expanded(child: _getInfo(context, 'Buscador de Peliculas', '2.0.0')),
+                Expanded(child: _getInfo(context, 'Movie Search', '2.1.0')),
               ],
             ),
           ),

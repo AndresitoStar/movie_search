@@ -28,6 +28,8 @@ class MyIcons {
   static const IconData star = FrinoIcons.f_star_filled;
   static const IconData movie = FrinoIcons.f_movie_tape;
   static const IconData tv = FrinoIcons.f_tv;
+  static const IconData trending = FontAwesomeIcons.hotTub;
+  static const IconData popular = FrinoIcons.f_star_outline;
   static const IconData filter = FrinoIcons.f_filter;
   static const IconData calendar = FrinoIcons.f_calendar;
   static const IconData download = Icons.file_download;
