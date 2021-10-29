@@ -1,4 +1,4 @@
-import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/model/api/models/person.dart';
 import 'package:movie_search/modules/person/service/service.dart';
 import 'package:stacked/stacked.dart';
 

@@ -1,4 +1,4 @@
-import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/model/api/models/person.dart';
 
 import 'movie.dart';
 
@@ -88,12 +88,7 @@ class TvApi {
             ? null
             : List.from(json['created_by']).map((e) {
                 final c = CreatedBy.fromJson(e);
-                return Person(
-                  id: c.id,
-                  name: c.name,
-                  profilePath: c.profilePath,
-                  isFavourite: false,
-                );
+                return Person(id: c.id, name: c.name, profilePath: c.profilePath);
               }).toList(),
         episodeRunTime =
             json['episode_run_time'] == null ? null : List.castFrom<dynamic, num>(json['episode_run_time']),

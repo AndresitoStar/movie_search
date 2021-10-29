@@ -8,7 +8,6 @@ import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_v
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
-import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_appbar.dart';
@@ -25,7 +24,7 @@ class ItemDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
     return ViewModelBuilder<ItemDetailViewModel>.reactive(
-      viewModelBuilder: () => ItemDetailViewModel(item, context.read()),
+      viewModelBuilder: () => ItemDetailViewModel(item),
       builder: (context, model, _) => Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
@@ -66,18 +65,15 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
         ItemDetailSliverAppBar(ItemDetailAppbarContentExtended(heroTagPrefix)),
         if (model.initialised) ...[
           ItemDetailMainContent(),
-          CreditHorizontalList(model.itemType.type, model.itemId),
-          ItemDetailSecondaryContent(),
-          ItemDetailRecommendationHorizontalList(
-            model.itemType.type,
-            model.itemId,
-            ERecommendationType.Recommendation,
-          ),
-          // ItemDetailRecommendationHorizontalList(
-          //   model.itemType.type,
-          //   model.itemId,
-          //   ERecommendationType.Similar,
-          // ),
+          if (model.itemType != TMDB_API_TYPE.PERSON) ...[
+            CreditHorizontalList(model.itemType.type, model.itemId),
+            ItemDetailSecondaryContent(),
+            ItemDetailRecommendationHorizontalList(
+                model.itemType.type, model.itemId, ERecommendationType.Recommendation),
+          ] else ...[
+            ItemDetailSecondaryContent(),
+            ItemDetailRecommendationHorizontalList(model.itemType.type, model.itemId, ERecommendationType.Credit),
+          ],
         ] else
           SliverToBoxAdapter(child: SizedBox(child: LinearProgressIndicator())),
       ],
@@ -111,28 +107,26 @@ class ItemDetailLandscape extends ViewModelWidget<ItemDetailViewModel> {
             controller: model.scrollController,
             child: Column(
               children: [
-                if (model.initialised) ItemDetailMainContent(isSliver: false),
-                if (model.initialised)
-                  CreditHorizontalList(
-                    model.itemType.type,
-                    model.itemId,
-                    isSliver: false,
-                  ),
-                if (model.initialised) ItemDetailSecondaryContent(isSliver: false),
-                if (model.initialised)
-                  ItemDetailRecommendationHorizontalList(
-                    model.itemType.type,
-                    model.itemId,
-                    ERecommendationType.Recommendation,
-                    sliver: false,
-                  ),
-                if (model.initialised)
-                  ItemDetailRecommendationHorizontalList(
-                    model.itemType.type,
-                    model.itemId,
-                    ERecommendationType.Similar,
-                    sliver: false,
-                  ),
+                if (model.initialised) ...[
+                  ItemDetailMainContent(isSliver: false),
+                  if (model.itemType != TMDB_API_TYPE.PERSON)
+                    CreditHorizontalList(
+                      model.itemType.type,
+                      model.itemId,
+                      isSliver: false,
+                    ),
+                  ItemDetailSecondaryContent(isSliver: false),
+                  if (model.itemType != TMDB_API_TYPE.PERSON)
+                    ItemDetailRecommendationHorizontalList(
+                      model.itemType.type,
+                      model.itemId,
+                      ERecommendationType.Recommendation,
+                      sliver: false,
+                    ),
+                  if (model.itemType == TMDB_API_TYPE.PERSON)
+                    ItemDetailRecommendationHorizontalList(
+                        model.itemType.type, model.itemId, ERecommendationType.Credit),
+                ],
               ],
             ),
           ),

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_page.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
-import 'package:movie_search/modules/person/components/person_detail_screen.dart';
 import 'package:movie_search/modules/search/search_result_image.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
@@ -82,9 +81,7 @@ class SearchResultListItem extends StatelessWidget {
   }
 
   _onPressed(BuildContext context) {
-    final child = (searchResult.type == TMDB_API_TYPE.PERSON
-        ? PersonDetailScreen(param: searchResult.person)
-        : ItemDetailPage(item: this.searchResult));
+    final child = ItemDetailPage(item: this.searchResult);
     Navigator.of(context).push(Routes.defaultRoute(null, child));
   }
 }

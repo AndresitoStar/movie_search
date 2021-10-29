@@ -96,35 +96,46 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                   ),
                 ),
               ),
-              if (model.initialised) ...[
-                if (model.data.genres != null && model.data.genres.isNotEmpty)
+              if (model.initialised)
+                if (model.itemType == TMDB_API_TYPE.PERSON) ...[
+                  Text(
+                    '${model.data.person.birthday ?? ''} - ${model.data.person.deathday ?? 'actualidad'}',
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  Text(
+                    '${_age(model.data.person.birthday, model.data.person.deathday)} años',
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                ] else if (model.data.genres != null && model.data.genres.isNotEmpty)
                   Text(
                     "${model.year} - ${model.data.genres.join(' / ')}",
                     style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).hintColor),
                   ),
-              ],
-              Row(
-                children: [
-                  Icon(MyIcons.star, size: 18),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: model.initialised
-                        ? Text(
-                            '${model.data.voteAverage.toStringAsFixed(1)}',
-                            style: theme.textTheme.headline6,
-                          )
-                        : CircularProgressIndicator.adaptive(strokeWidth: 1),
-                  ),
-                  if (model.initialised)
-                    ImbdbRatingView(
-                      model.itemId,
-                      model.itemType.type,
-                      imdbId: model.data.movie?.imdbId,
-                      key: ValueKey(model.data.id),
-                    )
-                ],
-              ),
-              if (model.initialised) ...[
+              if (model.itemType != TMDB_API_TYPE.PERSON)
+                Row(
+                  children: [
+                    Icon(MyIcons.star, size: 18),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: model.initialised
+                          ? Text(
+                              '${model.data.voteAverage.toStringAsFixed(1)}',
+                              style: theme.textTheme.headline6,
+                            )
+                          : CircularProgressIndicator.adaptive(strokeWidth: 1),
+                    ),
+                    if (model.initialised)
+                      ImbdbRatingView(
+                        model.itemId,
+                        model.itemType.type,
+                        imdbId: model.data.movie?.imdbId,
+                        key: ValueKey(model.data.id),
+                      )
+                  ],
+                ),
+              if (model.initialised && model.itemType != TMDB_API_TYPE.PERSON) ...[
                 VideoButton(param: model.data),
               ],
               // ItemLikeButton(
@@ -144,5 +155,13 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
         )
       ],
     );
+  }
+
+  String _age(String birthday, String deathDay) {
+    DateTime birth = DateTime.parse(birthday);
+    DateTime death = deathDay != null ? DateTime.parse(deathDay) : DateTime.now();
+
+    final age = death.difference(birth).inDays / 365.25;
+    return age.floor().toStringAsFixed(0);
   }
 }

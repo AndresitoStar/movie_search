@@ -18,41 +18,6 @@ class GenreTable extends Table {
   TextColumn get type => text()();
 }
 
-@DataClassName("Person")
-class PersonTable extends Table {
-  IntColumn get id => integer()();
-
-  TextColumn get birthday => text().nullable()();
-
-  TextColumn get knownForDepartment => text().nullable()();
-
-  TextColumn get deathday => text().nullable()();
-
-  TextColumn get name => text().nullable()();
-
-  IntColumn get gender => integer().nullable()();
-
-  TextColumn get biography => text().nullable()();
-
-  RealColumn get popularity => real().nullable()();
-
-  TextColumn get placeOfBirth => text().nullable()();
-
-  TextColumn get profilePath => text().nullable()();
-
-  TextColumn get imdbId => text().nullable()();
-
-  TextColumn get character => text().nullable()();
-
-  DateTimeColumn get fecha_reg => dateTime().nullable()();
-
-  TextColumn get externalId => text().nullable()();
-
-  BoolColumn get isFavourite => boolean().clientDefault(() => false)();
-
-  Set<Column> get primaryKey => {id};
-}
-
 @DataClassName('Favourite')
 class FavouriteTable extends Table {
   IntColumn get id => integer()();
@@ -76,7 +41,6 @@ LazyDatabase _openConnection() {
 
 @UseMoor(tables: [
   GenreTable,
-  PersonTable,
   FavouriteTable,
 ])
 class MyDatabase extends _$MyDatabase {
@@ -100,21 +64,7 @@ class MyDatabase extends _$MyDatabase {
     );
   }
 
-  //region Person
-  Future<Person> getPersonById(int id) async {
-    return (select(personTable)..where((m) => m.id.equals(id))).getSingleOrNull();
-  }
-
-  Future insertPerson(Person data) {
-    return batch((b) {
-      b.insert(
-          personTable,
-          data.copyWith(
-            fecha_reg: DateTime.now(),
-          ),
-          mode: InsertMode.insertOrReplace);
-    });
-  }
+  //region Favourites
 
   Future insertFavourite(int id, String type, String jsonData) {
     return batch((b) {
@@ -122,32 +72,15 @@ class MyDatabase extends _$MyDatabase {
     });
   }
 
-  Stream<List<int>> watchFavouritesPersonId() {
-    final query = selectOnly(personTable)
-      ..addColumns([personTable.id])
-      ..where(personTable.isFavourite.equals(true));
-    return query.map((r) => r.read(personTable.id)).watch();
-  }
-
   Stream<List<int>> watchFavouritesId(String type) {
     final query = selectOnly(favouriteTable)..addColumns([favouriteTable.id]);
     return query.map((r) => r.read(favouriteTable.id)).watch();
-  }
-
-  Future toggleFavouritePerson(int id) async {
-    final data = await getPersonById(id);
-    return update(personTable).replace(data.copyWith(isFavourite: !data.isFavourite));
   }
 
   Future removeFavourite(int id) async {
     return delete(favouriteTable)
       ..where((tbl) => tbl.id.equals(id))
       ..go();
-  }
-
-  Stream<List<Person>> watchFavouritesPerson() {
-    final query = select(personTable)..where((m) => m.isFavourite);
-    return query.watch();
   }
 
   Stream<List<T>> watchFavourites<T>(String type, FromJsonFunction<T> fromJsonFunction) {

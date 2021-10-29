@@ -8,7 +8,6 @@ import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
-import 'package:movie_search/ui/widgets/circular_button.dart';
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_main_image.dart';
@@ -27,7 +26,7 @@ class ItemImagesButtonView extends StatelessWidget {
               padding: const EdgeInsets.all(12.0),
               child: CircularProgressIndicator(strokeWidth: 1),
             )
-          : MyCircularButton(
+          : IconButton(
               onPressed: model.images.isEmpty
                   ? null
                   : () => Navigator.push(

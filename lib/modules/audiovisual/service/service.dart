@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:movie_search/model/api/models/movie.dart';
+import 'package:movie_search/model/api/models/person.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
-import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
 
 class AudiovisualService extends BaseService {
@@ -33,7 +33,7 @@ class AudiovisualService extends BaseService {
     if (response.statusCode == 200) {
       final data = response.data;
       if (type == 'person') {
-        result = ResponseApiParser.personFromJsonApi(data);
+        result = Person.fromJson(data);
       } else if (type == 'movie') {
         result = MovieApi.fromJson(data);
       } else if (type == 'tv') {

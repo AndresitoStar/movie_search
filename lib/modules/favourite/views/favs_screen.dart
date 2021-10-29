@@ -1,12 +1,10 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/model/api/models/movie.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/favourite/viewmodel/favourite_viewmodel.dart';
-import 'package:movie_search/modules/person/components/person_item_grid.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:provider/provider.dart';
@@ -133,22 +131,7 @@ class FavouriteScreen extends StatelessWidget {
   }
 
   Widget _favouritePersonPage(BuildContext context, FavouritesViewModel viewModel) {
-    return StreamBuilder<List<Person>>(
-        stream: viewModel.streamPerson,
-        initialData: [],
-        builder: (context, snapshot) {
-          if (snapshot.data.length == 0) return _buildEmptyList('Personas');
-          return GridView.builder(
-            padding: const EdgeInsets.all(10.0),
-            itemCount: snapshot.data.length,
-            itemBuilder: (ctx, i) => PersonItemGridView(person: snapshot.data[i]),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: getColumns(context),
-                childAspectRatio: 5 / 9,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-          );
-        });
+    return Container();
   }
 
   Widget _buildEmptyList(String type) {

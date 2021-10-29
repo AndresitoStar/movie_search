@@ -6,12 +6,9 @@ import 'package:flutter/rendering.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
-import 'package:movie_search/modules/audiovisual/viewmodel/item_grid_viewmodel.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
-import 'package:movie_search/ui/widgets/placeholder.dart';
-import 'package:stacked/stacked.dart';
 
 import 'item_detail_page.dart';
 
@@ -34,11 +31,8 @@ class ItemGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ViewModelBuilder<ItemGridViewModel>.reactive(
-      viewModelBuilder: () => ItemGridViewModel(this.item),
-      disposeViewModel: true,
-      builder: (context, model, child) {
-        if (!model.initialised) return GridItemPlaceholder();
+    return Builder(
+      builder: (context) {
         final child = Card(
           margin: margin,
           elevation: 5,
@@ -120,17 +114,12 @@ class ItemGridView extends StatelessWidget {
         );
         return Stack(
           children: [
-            MouseRegion(
-              cursor: SystemMouseCursors.click,
-              onEnter: (event) => model.toggleOver(true),
-              onExit: (event) => model.toggleOver(false),
-              child: useBackdrop
-                  ? child
-                  : Hero(
-                      tag: '$heroTagPrefix${model.data.id}',
-                      child: child,
-                    ),
-            ),
+            useBackdrop
+                ? child
+                : Hero(
+                    tag: '$heroTagPrefix${item.id}',
+                    child: child,
+                  ),
             if (!useBackdrop)
               Positioned(
                 bottom: 50,

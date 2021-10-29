@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,34 +14,6 @@ class SearchResponse {
   final int totalPageResult;
 
   SearchResponse({this.totalResult, this.totalPageResult, this.result});
-}
-
-class PersonListResponse {
-  final List<Person> result;
-  final int totalResult;
-  final int totalPageResult;
-
-  PersonListResponse({this.result, this.totalResult, this.totalPageResult});
-}
-
-class ResponseApiParser {
-  static Person personFromJsonApi(Map<String, dynamic> json) {
-    return Person(
-      id: json['id'],
-      birthday: json['birthday'],
-      knownForDepartment: json['known_for_department'],
-      deathday: json['deathday'],
-      name: json['name'],
-      character: json['character'],
-      gender: json['gender'],
-      biography: json['biography'],
-      popularity: json['vote_average'],
-      placeOfBirth: json['place_of_birth'],
-      profilePath: json['profile_path'],
-      imdbId: json['imdb_id'],
-      isFavourite: false,
-    );
-  }
 }
 
 // const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w342';

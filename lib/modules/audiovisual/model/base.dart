@@ -1,5 +1,5 @@
-import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/model/api/models/movie.dart';
+import 'package:movie_search/model/api/models/person.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/providers/util.dart';
 
@@ -15,7 +15,6 @@ class BaseSearchResult {
   MovieApi movie;
   TvApi tvShow;
   Person person;
-
 
   String get status => type == TMDB_API_TYPE.MOVIE && movie != null
       ? _parseStatus(movie.status)
@@ -64,7 +63,7 @@ class BaseSearchResult {
 
   static BaseSearchResult fromJson(String mediaType, Map<String, dynamic> data) {
     if (mediaType == 'person') {
-      return BaseSearchResult.fromPerson(ResponseApiParser.personFromJsonApi(data));
+      return BaseSearchResult.fromPerson(Person.fromJson(data));
     } else if (mediaType == 'movie') {
       return BaseSearchResult.fromMovie(MovieApi.fromJson(data));
     } else if (mediaType == 'tv') {

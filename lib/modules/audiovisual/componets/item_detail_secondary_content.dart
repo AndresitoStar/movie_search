@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/model/api/models/movie.dart';
+import 'package:movie_search/model/api/models/person.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_collection.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_tv_season.dart';
@@ -23,6 +24,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
     final children = <Widget>[
       if (item.type == TMDB_API_TYPE.MOVIE) ..._movieContentWidgets(context, item.movie),
       if (item.type == TMDB_API_TYPE.TV_SHOW) ..._tvShowsContentWidgets(context, item.tvShow),
+      if (item.type == TMDB_API_TYPE.PERSON) ..._personContentWidgets(context, item.person),
     ];
     return isSliver ? SliverList(delegate: SliverChildListDelegate(children)) : Column(children: children);
   }
@@ -74,18 +76,6 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
 
   List<Widget> _tvShowsContentWidgets(BuildContext context, TvApi tvShow) {
     return [
-      // ContentDynamic(
-      //   labels: [
-      //     'Capitulos',
-      //     'Duración',
-      //   ],
-      //   values: [
-      //     '${tvShow.numberOfEpisodes ?? '-'}',
-      //     tvShow.episodeRunTime != null && tvShow.episodeRunTime.isNotEmpty
-      //         ? '${tvShow.episodeRunTime.first} minutos'
-      //         : null,
-      //   ],
-      // ),
       ContentRow(
         label1: 'Pais',
         label2: 'Idioma',
@@ -138,6 +128,17 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
         padding: 8,
         label: 'Cadenas Televisivas',
         subtitle: logoWidgets(context, tvShow.networks),
+      ),
+    ];
+  }
+
+  List<Widget> _personContentWidgets(BuildContext context, Person item) {
+    return [
+      ContentRow(
+        label1: 'Conocida por',
+        label2: 'Lugar de Nacimiento',
+        value1: item.knownForDepartment,
+        value2: item.placeOfBirth,
       ),
     ];
   }
