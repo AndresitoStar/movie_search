@@ -1,7 +1,4 @@
-import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/model/api/models/movie.dart';
-import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/favourite/viewmodel/favourite_viewmodel.dart';
@@ -19,129 +16,57 @@ class FavouriteScreen extends StatelessWidget {
 
     return ViewModelBuilder<FavouritesViewModel>.nonReactive(
       onModelReady: (model) => model.initialize(),
-      builder: (context, model, _) => DefaultTabController(
-        length: 3,
-        initialIndex: 0,
-        child: CustomScaffold(
-          bottomBarIndex: 2,
-          body: NestedScrollView(
-            headerSliverBuilder: (context, value) {
-              return [
-                SliverAppBar(
-                  floating: false,
-                  snap: false,
-                  pinned: true,
-                  // elevation: 0,
-                  primary: true,
-                  title: Text('Favoritos'),
-                  leading: IconButton(
-                    icon: Icon(MyIcons.arrow_left),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  titleSpacing: 0,
-                  toolbarHeight: landscape ? 0 : kToolbarHeight,
-                  bottom: TabBar(
-                    tabs: [
-                      Tab(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Peliculas"),
-                        ),
-                      ),
-                      Tab(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Series"),
-                        ),
-                      ),
-                      Tab(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Personas"),
-                        ),
-                      ),
-                    ],
-                    indicatorSize: TabBarIndicatorSize.label,
-                    // indicator: BoxDecoration(
-                    //   color: Theme.of(context).primaryColorLight,
-                    // ),
-                    // unselectedLabelColor: Theme.of(context).shadowColor,
-                    // labelColor: Theme.of(context).primaryColorLight,
-                    // labelStyle: Theme.of(context).textTheme.headline6,
-                    indicator: BubbleTabIndicator(
-                      indicatorHeight: 25.0,
-                      indicatorColor: Theme.of(context).primaryColorDark,
-                      tabBarIndicatorSize: TabBarIndicatorSize.label,
-                    ),
-                  ),
+      builder: (context, model, _) => CustomScaffold(
+        bottomBarIndex: 2,
+        body: NestedScrollView(
+          headerSliverBuilder: (context, value) {
+            return [
+              SliverAppBar(
+                floating: false,
+                snap: false,
+                pinned: true,
+                // elevation: 0,
+                primary: true,
+                title: Text('Favoritos'),
+                leading: IconButton(
+                  icon: Icon(MyIcons.arrow_left),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
-              ];
-            },
-            body: TabBarView(
-              children: [
-                _favouriteMoviePage(context, model),
-                _favouriteTvPage(context, model),
-                _favouritePersonPage(context, model),
-              ],
-            ),
-          ),
+                titleSpacing: 0,
+                toolbarHeight: landscape ? 0 : kToolbarHeight,
+              ),
+            ];
+          },
+          body: StreamBuilder<List<BaseSearchResult>>(
+              stream: model.stream,
+              initialData: [],
+              builder: (context, snapshot) {
+                if (snapshot.data.length == 0) return _buildEmptyList();
+                return GridView.builder(
+                  padding: const EdgeInsets.all(10.0),
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (ctx, i) => ItemGridView(item: snapshot.data[i], heroTagPrefix: ''),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: getColumns(context),
+                      childAspectRatio: 5 / 9,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10),
+                );
+              }),
         ),
       ),
       viewModelBuilder: () => FavouritesViewModel(context.read()),
     );
   }
 
-  Widget _favouriteMoviePage(BuildContext context, FavouritesViewModel viewModel) {
-    return StreamBuilder<List<MovieApi>>(
-        stream: viewModel.streamMovies,
-        initialData: [],
-        builder: (context, snapshot) {
-          if (snapshot.data.length == 0) return _buildEmptyList('Peliculas');
-          return GridView.builder(
-            padding: const EdgeInsets.all(10.0),
-            itemCount: snapshot.data.length,
-            itemBuilder: (ctx, i) =>
-                ItemGridView(item: BaseSearchResult.fromMovie(snapshot.data[i]), heroTagPrefix: ''),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: getColumns(context),
-                childAspectRatio: 5 / 9,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-          );
-        });
-  }
-
-  Widget _favouriteTvPage(BuildContext context, FavouritesViewModel viewModel) {
-    return StreamBuilder<List<TvApi>>(
-        stream: viewModel.streamTvShow,
-        initialData: [],
-        builder: (context, snapshot) {
-          if (snapshot.data.length == 0) return _buildEmptyList('Series');
-          return GridView.builder(
-            padding: const EdgeInsets.all(10.0),
-            itemCount: snapshot.data.length,
-            itemBuilder: (ctx, i) => ItemGridView(item: BaseSearchResult.fromTv(snapshot.data[i]), heroTagPrefix: ''),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: getColumns(context),
-                childAspectRatio: 5 / 9,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-          );
-        });
-  }
-
-  Widget _favouritePersonPage(BuildContext context, FavouritesViewModel viewModel) {
-    return Container();
-  }
-
-  Widget _buildEmptyList(String type) {
+  Widget _buildEmptyList() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(MyIcons.favourite_off, size: 64),
           SizedBox(height: 25.0),
-          Text('No tienes $type Favoritas todavía.'),
+          Text('No tienes Favoritas todavía.'),
         ],
       ),
     );

@@ -55,10 +55,10 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
   Future<BaseSearchResult> _getData() async {
     try {
       if (_param.type == TMDB_API_TYPE.MOVIE) {
-        final MovieApi movie = await _service.getById(id: _param.id, type: _param.type.type);
+        final Movie movie = await _service.getById(id: _param.id, type: _param.type.type);
         return BaseSearchResult.fromMovie(movie);
       } else if (_param.type == TMDB_API_TYPE.TV_SHOW) {
-        final TvApi tv = await _service.getById(id: _param.id, type: _param.type.type);
+        final TvShow tv = await _service.getById(id: _param.id, type: _param.type.type);
         return BaseSearchResult.fromTv(tv);
       } else {
         final Person person = await _service.getById(id: _param.id, type: _param.type.type);

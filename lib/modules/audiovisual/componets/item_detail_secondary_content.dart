@@ -29,7 +29,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
     return isSliver ? SliverList(delegate: SliverChildListDelegate(children)) : Column(children: children);
   }
 
-  List<Widget> _movieContentWidgets(BuildContext context, MovieApi movie) {
+  List<Widget> _movieContentWidgets(BuildContext context, Movie movie) {
     return [
       if (movie.homepage != null)
         ContentHorizontal(
@@ -74,7 +74,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
     ];
   }
 
-  List<Widget> _tvShowsContentWidgets(BuildContext context, TvApi tvShow) {
+  List<Widget> _tvShowsContentWidgets(BuildContext context, TvShow tvShow) {
     return [
       ContentRow(
         label1: 'Pais',

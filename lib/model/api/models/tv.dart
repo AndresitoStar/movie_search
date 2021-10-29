@@ -11,8 +11,8 @@ abstract class Logo {
   Logo({this.name, this.id, this.logoPath, this.originCountry});
 }
 
-class TvApi {
-  TvApi({
+class TvShow {
+  TvShow({
     this.backdropPath,
     this.createdBy,
     this.createdByPerson,
@@ -79,7 +79,7 @@ class TvApi {
   final num voteAverage;
   final num voteCount;
 
-  TvApi.fromJson(Map<String, dynamic> json)
+  TvShow.fromJson(Map<String, dynamic> json)
       : backdropPath = json['backdrop_path'],
         createdBy = json['created_by'] == null
             ? null

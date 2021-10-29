@@ -35,9 +35,9 @@ class AudiovisualService extends BaseService {
       if (type == 'person') {
         result = Person.fromJson(data);
       } else if (type == 'movie') {
-        result = MovieApi.fromJson(data);
+        result = Movie.fromJson(data);
       } else if (type == 'tv') {
-        result = TvApi.fromJson(data);
+        result = TvShow.fromJson(data);
       }
     }
     _cacheById.putIfAbsent(id, () => result);

@@ -76,7 +76,7 @@ class PersonHorizontalList extends StatelessWidget {
       itemBuilder: (ctx, i) => AspectRatio(
         child: ItemGridView(
           item: BaseSearchResult.fromPerson(items[i]),
-          heroTagPrefix: '',
+          heroTagPrefix: 'person',
           showData: false,
         ),
         aspectRatio: 8 / 16,

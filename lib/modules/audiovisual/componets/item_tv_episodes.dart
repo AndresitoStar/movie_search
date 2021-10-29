@@ -11,7 +11,7 @@ import 'package:stacked/stacked.dart';
 
 class EpisodesPage extends StatelessWidget {
   final Seasons season;
-  final TvApi tvApi;
+  final TvShow tvApi;
 
   const EpisodesPage({Key key, @required this.season, @required this.tvApi}) : super(key: key);
 

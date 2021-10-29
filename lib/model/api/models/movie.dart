@@ -1,7 +1,7 @@
 import 'package:movie_search/model/api/models/tv.dart';
 
-class MovieApi {
-  MovieApi({
+class Movie {
+  Movie({
     this.adult,
     this.backdropPath,
     this.collection,
@@ -87,7 +87,7 @@ class MovieApi {
     return _data;
   }
 
-  MovieApi.fromJson(Map<String, dynamic> json)
+  Movie.fromJson(Map<String, dynamic> json)
       : adult = json['adult'],
         backdropPath = json['backdrop_path'],
         collection = json['belongs_to_collection'] == null ? null : Collection.fromJson(json['belongs_to_collection']),
@@ -239,7 +239,7 @@ class Collection {
   String posterPath;
   String backdropPath;
   String overview;
-  List<MovieApi> parts;
+  List<Movie> parts;
 
   Collection({
     this.id,
@@ -266,6 +266,6 @@ class Collection {
     posterPath = json['poster_path'];
     backdropPath = json['backdrop_path'];
     overview = json['overview'];
-    parts = json['parts'] == null ? null : List.from(json['parts']).map((e) => MovieApi.fromJson(e)).toList();
+    parts = json['parts'] == null ? null : List.from(json['parts']).map((e) => Movie.fromJson(e)).toList();
   }
 }

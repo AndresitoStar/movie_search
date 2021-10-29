@@ -12,8 +12,8 @@ class BaseSearchResult {
   String backDropImage;
   num voteAverage;
   TMDB_API_TYPE type;
-  MovieApi movie;
-  TvApi tvShow;
+  Movie movie;
+  TvShow tvShow;
   Person person;
 
   String get status => type == TMDB_API_TYPE.MOVIE && movie != null
@@ -32,7 +32,7 @@ class BaseSearchResult {
 
   int get year => releaseDate != null ? DateTime.tryParse(releaseDate)?.year : null;
 
-  BaseSearchResult.fromMovie(MovieApi movie)
+  BaseSearchResult.fromMovie(Movie movie)
       : id = movie.id,
         title = movie.title,
         titleOriginal = movie.originalTitle,
@@ -43,7 +43,7 @@ class BaseSearchResult {
         movie = movie,
         type = TMDB_API_TYPE.MOVIE;
 
-  BaseSearchResult.fromTv(TvApi tv)
+  BaseSearchResult.fromTv(TvShow tv)
       : id = tv.id,
         title = tv.name,
         titleOriginal = tv.originalName,
@@ -65,9 +65,9 @@ class BaseSearchResult {
     if (mediaType == 'person') {
       return BaseSearchResult.fromPerson(Person.fromJson(data));
     } else if (mediaType == 'movie') {
-      return BaseSearchResult.fromMovie(MovieApi.fromJson(data));
+      return BaseSearchResult.fromMovie(Movie.fromJson(data));
     } else if (mediaType == 'tv') {
-      return BaseSearchResult.fromTv(TvApi.fromJson(data));
+      return BaseSearchResult.fromTv(TvShow.fromJson(data));
     }
     return null;
   }

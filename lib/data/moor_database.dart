@@ -88,6 +88,8 @@ class MyDatabase extends _$MyDatabase {
     return query.map((e) => fromJsonFunction(e.json)).watch();
   }
 
+  Stream<List<Favourite>> watchAllFavourites() => select(favouriteTable).watch();
+
   //endregion
 
   //region Genres
