@@ -12,7 +12,8 @@ import 'search_viewmodel.dart';
 class SearchBar extends StatelessWidget {
   onLoad(SearchViewModel model) {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      Future.delayed(Duration(milliseconds: 500), () => model.queryControl.focus());
+      Future.delayed(
+          Duration(milliseconds: 500), () => model.queryControl.focus());
     });
   }
 
@@ -30,14 +31,15 @@ class SearchBar extends StatelessWidget {
           clipBehavior: Clip.hardEdge,
           margin: const EdgeInsets.symmetric(horizontal: 10),
           elevation: 1,
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+          color: Theme.of(context).inputDecorationTheme.fillColor,
           child: ReactiveForm(
             formGroup: model.form,
             child: ReactiveTextField(
               formControl: model.queryControl,
               cursorColor: Theme.of(context).colorScheme.onBackground,
               autocorrect: false,
-              style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+              style:
+                  TextStyle(color: Theme.of(context).colorScheme.onBackground),
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
                 prefixIcon: Icon(MyIcons.search, size: 16),

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/splash/splash_viewmodel.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
+import 'package:movie_search/providers/util.dart';
 
 class SplashScreen extends StatelessWidget {
   static String route = "/splash";
@@ -15,10 +17,10 @@ class SplashScreen extends StatelessWidget {
         body: model.hasError
             ? _buildError(context, model)
             : model.isBusy
-                ? _buildBusyIndicator()
+                ? _buildBusyIndicator(context)
                 : Builder(builder: (context) {
                     _navigateHome(context);
-                    return _buildBusyIndicator();
+                    return _buildBusyIndicator(context);
                   }),
       ),
       viewModelBuilder: () => SplashViewModel(context.read()),
@@ -40,29 +42,48 @@ class SplashScreen extends StatelessWidget {
         ),
       );
 
-  _buildBusyIndicator() => Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/ic_launcher.png',
-              width: 200,
-            ),
-            SizedBox(height: 64),
-            SizedBox(
-              height: 60,
-              width: 60,
-              child: CircularProgressIndicator(strokeWidth: 1),
-            ),
-          ],
+  _buildBusyIndicator(BuildContext context) {
+    final strokeWidth = 10.0;
+    final imageSize = 200.0;
+
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: Image.asset(
+            'assets/images/ic_launcher.png',
+            width: imageSize,
+          ),
         ),
-      );
+        Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            height: imageSize + strokeWidth,
+            width: imageSize + strokeWidth,
+            child: CircularProgressIndicator(strokeWidth: strokeWidth),
+          ),
+        ),
+        Positioned(
+          bottom: 100,
+          left: 10,
+          right: 10,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Movie Search', style: context.theme.textTheme.headline5),
+              SizedBox(height: 10),
+              Text('by Andrés Forns', style: context.theme.textTheme.caption),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   _navigateHome(BuildContext context) {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      // Navigator.of(context).pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
     });
   }
 }

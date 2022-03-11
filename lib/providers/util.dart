@@ -13,7 +13,10 @@ class SearchResponse {
   final int totalResult;
   final int totalPageResult;
 
-  SearchResponse({required this.totalResult, required this.totalPageResult, required this.result});
+  SearchResponse(
+      {required this.totalResult,
+      required this.totalPageResult,
+      required this.result});
 }
 
 // const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w342';
@@ -22,6 +25,14 @@ const String URL_IMAGE_SMALL_BACKDROP = 'https://image.tmdb.org/t/p/w780';
 const String URL_IMAGE_MEDIUM = 'https://image.tmdb.org/t/p/w342';
 const String URL_IMAGE_MEDIUM_BACKDROP = 'https://image.tmdb.org/t/p/w1280';
 const String URL_IMAGE_BIG = 'https://image.tmdb.org/t/p/original';
+
+extension ThemeExtension on BuildContext {
+  ThemeData get theme => Theme.of(this);
+}
+
+extension MediaQueryExtension on BuildContext {
+  MediaQueryData get mq => MediaQuery.of(this);
+}
 
 extension snackbar_extension on BuildContext {
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
@@ -35,7 +46,8 @@ extension snackbar_extension on BuildContext {
 }
 
 extension DateFormatter on DateTime {
-  String get format => DateFormat('dd MMMM yyyy', Locale('es', 'ES').toString()).format(this);
+  String get format =>
+      DateFormat('dd MMMM yyyy', Locale('es', 'ES').toString()).format(this);
 }
 
 enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON }
@@ -105,7 +117,8 @@ class SharedPreferencesHelper {
   static SharedPreferencesHelper? _instance;
 
   static SharedPreferencesHelper getInstance() {
-    if (_instance == null || _instance!._streamForHighQuality.isClosed) _instance = SharedPreferencesHelper._();
+    if (_instance == null || _instance!._streamForHighQuality.isClosed)
+      _instance = SharedPreferencesHelper._();
     return _instance!;
   }
 
@@ -114,7 +127,8 @@ class SharedPreferencesHelper {
     isHighQuality().then((value) => _streamForHighQuality.add(value));
 
     _streamForSearchHistory = BehaviorSubject<List<String>>();
-    getSearchHistory().then((value) => _streamForSearchHistory.add(value.reversed.toList()));
+    getSearchHistory()
+        .then((value) => _streamForSearchHistory.add(value.reversed.toList()));
   }
 
   late StreamController<bool> _streamForHighQuality;
@@ -122,7 +136,8 @@ class SharedPreferencesHelper {
 
   Stream<bool> get streamForHighQuality => _streamForHighQuality.stream;
 
-  Stream<List<String>> get streamForSearchHistory => _streamForSearchHistory.stream;
+  Stream<List<String>> get streamForSearchHistory =>
+      _streamForSearchHistory.stream;
 
   Function(bool) get changeHighQuality => _streamForHighQuality.sink.add;
 
