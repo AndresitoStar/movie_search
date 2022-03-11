@@ -5,11 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/splash/splash_service.dart';
 import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/rest/safe_executor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:stacked/stacked.dart';
 
-class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
+class SplashViewModel extends FutureViewModel {
   final MyDatabase _db;
   final SplashService _splashService;
 
@@ -17,7 +16,7 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
 
   bool wasHereBefore = false;
 
-  String get email => this.form.controls['email'].value;
+  String? get email => (this.form.controls['email'] as FormControl<String>).value;
 
   SplashViewModel(this._db)
       : _splashService = SplashService.getInstance(),
@@ -34,12 +33,12 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
   @override
   Future futureToRun() async {
     setBusy(true);
-    await safeExecute(() => Future.wait([
-          // validate(),
-          syncGenres('movie'),
-          syncGenres('tv'),
-          // checkWasHereBefore(),
-        ])).then((value) => checkWasHereBefore());
+    await Future.wait([
+      // validate(),
+      syncGenres('movie'),
+      syncGenres('tv'),
+      // checkWasHereBefore(),
+    ]).then((value) => checkWasHereBefore());
   }
 
   Future checkWasHereBefore() async {
@@ -78,7 +77,7 @@ class SplashViewModel extends FutureViewModel with SafeAsyncExecutor {
       if (bool) return;
       var genres = await _splashService.getGenres(type);
       final dbGenres = genres.entries
-          .map((entry) => GenreTableData(id: entry.key?.toString(), name: entry.value, type: type))
+          .map((entry) => GenreTableData(id: entry.key.toString(), name: entry.value, type: type))
           .toList();
       await _db.insertGenres(dbGenres);
     } catch (e) {

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
 import 'package:path/path.dart' as p;
@@ -72,7 +71,7 @@ class MyDatabase extends _$MyDatabase {
     });
   }
 
-  Stream<List<int>> watchFavouritesId(String type) {
+  Stream<List<int?>> watchFavouritesId(String type) {
     final query = selectOnly(favouriteTable)..addColumns([favouriteTable.id]);
     return query.map((r) => r.read(favouriteTable.id)).watch();
   }

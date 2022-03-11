@@ -48,14 +48,14 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
 }
 
 class ContentImageWidget extends StatefulWidget {
-  final String imagePath;
+  final String? imagePath;
   final BoxFit fit;
   final bool ignorePointer;
   final bool isBackdrop;
 
   ContentImageWidget(
     this.imagePath, {
-    Key key,
+    Key? key,
     this.fit = BoxFit.fitWidth,
     this.ignorePointer = false,
     this.isBackdrop = false,
@@ -66,7 +66,7 @@ class ContentImageWidget extends StatefulWidget {
 }
 
 class _ContentImageWidgetState extends State<ContentImageWidget> {
-  String baseUrl;
+  late String baseUrl;
 
   @override
   void initState() {
@@ -77,12 +77,13 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.imagePath == null || widget.imagePath!.isEmpty) return PlaceholderImage();
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: GestureDetector(
         onTap: widget.ignorePointer
             ? null
-            : () => DialogImage.show(context: context, imageUrl: widget.imagePath, baseUrl: baseUrl)
+            : () => DialogImage.show(context: context, imageUrl: widget.imagePath!, baseUrl: baseUrl)
                 .then((value) => _checkImageCachedQuality),
         child: CachedNetworkImage(
           imageUrl: '$baseUrl${widget.imagePath}',
@@ -91,7 +92,7 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
             imageUrl: '${widget.isBackdrop ? URL_IMAGE_SMALL_BACKDROP : URL_IMAGE_SMALL}${widget.imagePath}',
             placeholder: (context, _) => DefaultPlaceholder(),
           ),
-          errorWidget: (ctx, _, __) => PlaceholderImage(height: MediaQuery.of(ctx).size.height * 0.6),
+          errorWidget: (ctx, _, __) => PlaceholderImage(/*height: MediaQuery.of(ctx).size.height * 0.6*/),
           fit: widget.fit,
           // width: double.infinity,
         ),
@@ -113,8 +114,8 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
 
   Future<bool> _checkImageCachedExist(String url) async {
     try {
-      var file = await DefaultCacheManager().getFileFromCache(url);
-      return file?.file?.exists() ?? false;
+      final FileInfo? fileInfo = await DefaultCacheManager().getFileFromCache(url);
+      return await fileInfo?.file.exists() ?? false;
     } catch (e) {
       return false;
     }

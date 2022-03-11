@@ -11,7 +11,8 @@ import 'item_detail_main_image.dart';
 
 class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
   final bool sliver;
-  const ItemDetailTvSeasonView(this.sliver, {Key key}) : super(key: key);
+
+  const ItemDetailTvSeasonView(this.sliver, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
@@ -27,20 +28,20 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
                 Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                 BlendMode.luminosity,
               ),
-              image: NetworkImage('$URL_IMAGE_MEDIUM${model.data.tvShow.backdropPath}'),
+              image: NetworkImage('$URL_IMAGE_MEDIUM${model.data!.tvShow!.backdropPath}'),
             ),
           ),
           child: ListTile(
             title: RichText(
               text: TextSpan(
                   text: 'Temporadas:',
-                  style: Theme.of(context).textTheme.headline6.copyWith(
+                  style: Theme.of(context).textTheme.headline6!.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
                       ),
                   children: [
                     TextSpan(
-                      text: ' ${model.data.tvShow.numberOfSeasons}',
-                      style: Theme.of(context).textTheme.headline4.copyWith(
+                      text: ' ${model.data!.tvShow!.numberOfSeasons}',
+                      style: Theme.of(context).textTheme.headline4!.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
                     )
@@ -50,8 +51,8 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _SeasonCard(
-                  season: model.data.tvShow.seasons.last,
-                  tvApi: model.data.tvShow,
+                  season: model.data!.tvShow!.seasons!.last,
+                  tvApi: model.data!.tvShow!,
                   isLast: true,
                 ),
                 Row(
@@ -62,11 +63,12 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
                           ? null
                           : () => Navigator.of(context).push(
                                 Routes.defaultRoute(
-                                    null,
-                                    _SeasonScreen(
-                                      seasons: model.data.tvShow.seasons,
-                                      tv: model.data.tvShow,
-                                    )),
+                                  null,
+                                  _SeasonScreen(
+                                    seasons: model.data!.tvShow!.seasons!,
+                                    tv: model.data!.tvShow!,
+                                  ),
+                                ),
                               ),
                       child: Text('Ver todas...'),
                     ),
@@ -87,7 +89,8 @@ class _SeasonCard extends StatelessWidget {
   final Seasons season;
   final TvShow tvApi;
   final bool isLast;
-  const _SeasonCard({Key key, this.season, this.isLast = false, this.tvApi}) : super(key: key);
+
+  const _SeasonCard({Key? key, required this.season, this.isLast = false, required this.tvApi}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +139,7 @@ class _SeasonCard extends StatelessWidget {
                         children: [
                           SizedBox(height: 10),
                           Text(
-                            season.name,
+                            season.name ?? '',
                             style: Theme.of(context).textTheme.headline6,
                           ),
                           SizedBox(height: 8),
@@ -146,7 +149,7 @@ class _SeasonCard extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            season.overview,
+                            season.overview ?? '',
                             maxLines: 3,
                             textAlign: TextAlign.end,
                             overflow: TextOverflow.ellipsis,
@@ -167,7 +170,7 @@ class _SeasonCard extends StatelessWidget {
 }
 
 class _SeasonScreen extends StatelessWidget {
-  const _SeasonScreen({Key key, this.seasons, this.tv}) : super(key: key);
+  const _SeasonScreen({Key? key, required this.seasons, required this.tv}) : super(key: key);
   final List<Seasons> seasons;
   final TvShow tv;
 
@@ -175,7 +178,7 @@ class _SeasonScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(tv.name),
+        title: Text(tv.name ?? ''),
         titleSpacing: 0,
         leading: IconButton(
           icon: Icon(MyIcons.arrow_left),

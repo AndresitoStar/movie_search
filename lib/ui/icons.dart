@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frino_icons/frino_icons.dart';
-import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/ui/frino_icons.dart';
 
 class MyIcons {
   static const IconData home = FrinoIcons.f_home_simple;
@@ -41,10 +40,7 @@ class MyIcons {
   static const IconData minimize = Icons.minimize;
   static const IconData gallery = FontAwesomeIcons.images;
 
-  static IconData iconFromType(TMDB_API_TYPE type) {
-    if (type == TMDB_API_TYPE.MOVIE) return movie;
-    if (type == TMDB_API_TYPE.TV_SHOW) return tv;
-    if (type == TMDB_API_TYPE.PERSON) return castMale;
-    return null;
-  }
+  static const IconData facebook = FontAwesomeIcons.facebookSquare;
+  static const IconData instagram = FontAwesomeIcons.instagram;
+  static const IconData twitter = FrinoIcons.f_twitter_official;
 }

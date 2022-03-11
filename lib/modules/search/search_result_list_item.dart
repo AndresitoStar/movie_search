@@ -2,71 +2,86 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_page.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
-import 'package:movie_search/modules/search/search_result_image.dart';
+import 'package:movie_search/modules/search/search_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
+import 'package:provider/provider.dart';
 
 class SearchResultListItem extends StatelessWidget {
   final BaseSearchResult searchResult;
-  final String searchCriteria;
+  final String? searchCriteria;
 
-  SearchResultListItem({Key key, @required this.searchResult, this.searchCriteria}) : super(key: key);
+  SearchResultListItem({Key? key, required this.searchResult, this.searchCriteria}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final SearchViewModel? searchViewModel = context.read();
     return GestureDetector(
       onTap: () {
-        if (searchCriteria != null) SharedPreferencesHelper.getInstance().updateSearchHistory(searchCriteria);
+        if (searchCriteria != null) SharedPreferencesHelper.getInstance().updateSearchHistory(searchCriteria!);
+        if (searchViewModel != null) searchViewModel.queryControl.unfocus();
         _onPressed(context);
       },
       child: Card(
         elevation: 5,
         clipBehavior: Clip.hardEdge,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
         margin: const EdgeInsets.all(10),
         child: Stack(
           fit: StackFit.expand,
           children: [
-            if (searchResult.backDropImage != null) ...[
-              Container(
-                child: Image.network(
-                  '$URL_IMAGE_MEDIUM${searchResult.backDropImage}',
-                  fit: BoxFit.fitWidth,
+            if (searchResult.backDropImage != null || searchResult.posterImage != null) ...[
+              ...[
+                ContentImageWidget(
+                  searchResult.backDropImage ?? searchResult.posterImage,
+                  ignorePointer: true,
+                  isBackdrop: true,
                 ),
-              ),
+              ],
             ],
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (searchResult.backDropImage == null)
-                  SearchResultItemImage(searchResult.id.toString(), searchResult.posterImage),
-                Container(height: 120),
+                // AspectRatio(
+                //   aspectRatio: 9 / 16,
+                //   child: Card(
+                //     margin: const EdgeInsets.fromLTRB(3, 3, 0, 3),
+                //     child: Card(
+                //       clipBehavior: Clip.hardEdge,
+                //       child: ContentImageWidget(
+                //         searchResult.posterImage,
+                //         ignorePointer: true,
+                //         fit: BoxFit.cover,
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        color: Theme.of(context).cardColor,
-                        padding: const EdgeInsets.all(5),
-                        child: Text(searchResult.type.nameSingular),
-                      ),
+                      Spacer(),
                       Container(
                         color: Theme.of(context).cardColor.withOpacity(0.7),
                         child: ListTile(
-                          title: Text(searchResult.title,
-                              textAlign: TextAlign.end,
-                              style: Theme.of(context).textTheme.headline6.copyWith(
-                                    color: Theme.of(context).accentColor,
-                                  )),
-                          subtitle: searchResult.titleOriginal != null
-                              ? Text(searchResult.titleOriginal,
-                                  textAlign: TextAlign.end, style: Theme.of(context).textTheme.subtitle1)
-                              : null,
+                          title: Text(
+                            searchResult.title ?? '-',
+                            textAlign: TextAlign.end,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              if (searchResult.titleOriginal != null &&
+                                  searchResult.titleOriginal != searchResult.title)
+                                Text(searchResult.titleOriginal!,
+                                    textAlign: TextAlign.end, style: Theme.of(context).textTheme.subtitle1),
+                              Text(searchResult.type.nameSingular)
+                            ],
+                          ),
                         ),
                       ),
                     ],

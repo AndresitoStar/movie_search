@@ -7,16 +7,11 @@ import 'package:stacked/stacked.dart';
 
 class ItemLikeButton extends StatelessWidget {
   final double iconSize;
-  final int id;
+  final num id;
   final TMDB_API_TYPE type;
   final bool showDisabled;
 
-  ItemLikeButton({
-    this.iconSize = 32,
-    this.showDisabled = true,
-    @required this.id,
-    @required this.type,
-  });
+  ItemLikeButton({this.iconSize = 32, this.showDisabled = true, required this.id, required this.type});
 
   @override
   Widget build(BuildContext context) {
@@ -31,20 +26,20 @@ class ItemLikeButton extends StatelessWidget {
             )
           : model.hasError
               ? Icon(Icons.broken_image)
-              : StreamBuilder<List<int>>(
+              : StreamBuilder<List<num?>>(
                   stream: model.stream,
                   initialData: [],
                   builder: (context, snapshot) {
-                    if (!snapshot.data.contains(id) && !this.showDisabled) {
+                    if (!snapshot.data!.contains(id) && !this.showDisabled) {
                       return Container();
                     }
                     return IconButton(
-                      icon: Icon(snapshot.data.contains(id) ? MyIcons.favourite_on : MyIcons.favourite_off),
+                      icon: Icon(snapshot.data!.contains(id) ? MyIcons.favourite_on : MyIcons.favourite_off),
                       iconSize: this.iconSize,
                       padding: EdgeInsets.zero,
-                      color: snapshot.data.contains(id) ? Colors.red : Theme.of(context).colorScheme.onBackground,
+                      color: snapshot.data!.contains(id) ? Colors.red : Theme.of(context).colorScheme.onBackground,
                       onPressed: () {
-                        return _onLikeButtonTap(context, model, snapshot.data.contains(id));
+                        return _onLikeButtonTap(context, model, snapshot.data!.contains(id));
                       },
                     );
                   }),
@@ -53,11 +48,10 @@ class ItemLikeButton extends StatelessWidget {
 
   _onLikeButtonTap(BuildContext context, ItemLikeButtonViewModel model, bool isLiked) async {
     await model.toggleFavourite(id, isLiked);
-    if (context.scaffoldMessenger != null) {
-      context.scaffoldMessenger.showSnackBar(SnackBar(
-        duration: Duration(seconds: 1),
-        content: Text(isLiked ? 'Eliminado de Mis Favoritos' : 'Agregado a Mis Favoritos'),
-      ));
-    }
+    context.scaffoldMessenger.hideCurrentSnackBar();
+    context.scaffoldMessenger.showSnackBar(SnackBar(
+      duration: Duration(seconds: 1),
+      content: Text(isLiked ? 'Eliminado de Mis Favoritos' : 'Agregado a Mis Favoritos'),
+    ));
   }
 }

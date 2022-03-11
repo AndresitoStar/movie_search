@@ -18,43 +18,40 @@ class ItemDetailPage extends StatelessWidget {
   final BaseSearchResult item;
   final String heroTagPrefix;
 
-  const ItemDetailPage({Key key, @required this.item, this.heroTagPrefix = ''}) : super(key: key);
+  const ItemDetailPage({Key? key, required this.item, this.heroTagPrefix = ''}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
     return ViewModelBuilder<ItemDetailViewModel>.reactive(
       viewModelBuilder: () => ItemDetailViewModel(item),
-      builder: (context, model, _) => Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: SafeArea(
-          top: true,
-          child: Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-            floatingActionButton: landscape
-                ? FloatingActionButton.extended(
-                    onPressed: () => Navigator.of(context).pop(),
-                    label: Text('ATRAS'),
-                    icon: Icon(MyIcons.arrow_left),
-                  )
-                : null,
-            body: model.hasError
-                ? Center(
-                    child: Text('${model.modelError?.toString()}'),
-                  )
-                : landscape
-                    ? ItemDetailLandscape()
-                    : ItemDetailPortrait(heroTagPrefix),
+      builder: (context, model, _) {
+        return Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: SafeArea(
+            top: true,
+            child: Scaffold(
+              floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+              floatingActionButton: landscape
+                  ? FloatingActionButton.extended(
+                      onPressed: () => Navigator.of(context).pop(),
+                      label: Text('ATRAS'),
+                      icon: Icon(MyIcons.arrow_left),
+                    )
+                  : null,
+              body: landscape ? ItemDetailLandscape() : ItemDetailPortrait(heroTagPrefix),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
 class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
   final String heroTagPrefix;
-  const ItemDetailPortrait(this.heroTagPrefix, {Key key}) : super(key: key);
+
+  const ItemDetailPortrait(this.heroTagPrefix, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
@@ -63,13 +60,18 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
       cacheExtent: 1000,
       slivers: <Widget>[
         ItemDetailSliverAppBar(ItemDetailAppbarContentExtended(heroTagPrefix)),
-        if (model.initialised) ...[
+        if (model.hasError)
+          SliverToBoxAdapter(child: ElevatedButton(onPressed: model.initialise, child: Text('Recargar')))
+        else if (model.initialised) ...[
           ItemDetailMainContent(),
           if (model.itemType != TMDB_API_TYPE.PERSON) ...[
             CreditHorizontalList(model.itemType.type, model.itemId),
             ItemDetailSecondaryContent(),
             ItemDetailRecommendationHorizontalList(
-                model.itemType.type, model.itemId, ERecommendationType.Recommendation),
+              model.itemType.type,
+              model.itemId,
+              ERecommendationType.Recommendation,
+            ),
           ] else ...[
             ItemDetailSecondaryContent(),
             ItemDetailRecommendationHorizontalList(model.itemType.type, model.itemId, ERecommendationType.Credit),
@@ -82,7 +84,7 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
 }
 
 class ItemDetailLandscape extends ViewModelWidget<ItemDetailViewModel> {
-  const ItemDetailLandscape({Key key}) : super(key: key);
+  const ItemDetailLandscape({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {

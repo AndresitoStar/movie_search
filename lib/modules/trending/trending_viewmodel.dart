@@ -28,8 +28,6 @@ extension ExtensionTitleTrending on TrendingType {
         return MyIcons.trending;
       case TrendingType.POPULAR:
         return MyIcons.popular;
-      default:
-        return null;
     }
   }
 }
@@ -64,7 +62,6 @@ extension ExtensionTitle on TrendingContent {
       case TrendingContent.TV:
         return MyIcons.tv;
     }
-    return null;
   }
 
   String get type {
@@ -73,10 +70,6 @@ extension ExtensionTitle on TrendingContent {
         return 'movie';
       case TrendingContent.TV:
         return 'tv';
-      // case TMDB_API_TYPE.PERSON:
-      //   return 'person';
-      default:
-        return null;
     }
   }
 }
@@ -85,7 +78,7 @@ class TrendingViewModel extends BaseViewModel {
   final TrendingContent content;
   final TrendingType trendingType;
   final TrendingService _trendingService;
-  final MyDatabase _db;
+  final MyDatabase? _db;
 
   List<BaseSearchResult> _items = [];
 
@@ -103,17 +96,17 @@ class TrendingViewModel extends BaseViewModel {
 
   final Debounce _debounce = Debounce(milliseconds: 100);
 
-  Map<String, bool> filterGenre;
+  Map<String, bool>? filterGenre;
 
-  int year;
+  int? year;
 
-  updateYear(int year) {
+  updateYear(int? year) {
     this.year = year;
     synchronize();
   }
 
   List<int> get activeGenres => filterGenre != null
-      ? filterGenre.entries.where((element) => element.value).map<int>((e) => int.parse(e.key)).toList()
+      ? filterGenre!.entries.where((element) => element.value).map<int>((e) => int.parse(e.key)).toList()
       : [];
 
   List<GenreTableData> _allGenres = [];
@@ -144,10 +137,10 @@ class TrendingViewModel extends BaseViewModel {
     SearchResponse response = trendingType == TrendingType.POPULAR
         ? await _trendingService.getDiscover(content.type, genres: activeGenres)
         : await _trendingService.getTrending(content.type);
-    _total = response?.totalResult ?? -1;
-    _items = response?.result ?? [];
+    _total = response.totalResult;
+    _items = response.result;
     _actualPage = 1;
-    if (_db != null) _allGenres = await _db.allGenres(content.type);
+    if (_db != null) _allGenres = await _db!.allGenres(content.type);
     setBusy(false);
   }
 

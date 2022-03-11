@@ -12,7 +12,7 @@ class ItemSeasonViewModel extends FutureViewModel {
   @override
   Future futureToRun() async {
     setBusy(true);
-    season = await _service.getSeason(tvApi.id, season.seasonNumber);
+    season = await _service.getSeason(tvApi.id, season.seasonNumber ?? 1);
     notifyListeners();
     setInitialised(true);
     setBusy(false);

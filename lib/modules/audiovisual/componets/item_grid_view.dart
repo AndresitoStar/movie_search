@@ -1,13 +1,12 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
+import 'package:movie_search/modules/search/search_result_list_item.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
-import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
 
 import 'item_detail_page.dart';
@@ -20,9 +19,9 @@ class ItemGridView extends StatelessWidget {
   final String heroTagPrefix;
 
   const ItemGridView({
-    Key key,
-    @required this.item,
-    @required this.heroTagPrefix,
+    Key? key,
+    required this.item,
+    required this.heroTagPrefix,
     this.showData = true,
     this.useBackdrop = false,
     this.margin = const EdgeInsets.all(10),
@@ -30,6 +29,7 @@ class ItemGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (useBackdrop) return SearchResultListItem(searchResult: item);
     final theme = Theme.of(context);
     return Builder(
       builder: (context) {
@@ -77,7 +77,7 @@ class ItemGridView extends StatelessWidget {
                     right: 0,
                     child: Container(
                       padding: const EdgeInsets.all(8),
-                      child: Icon(MyIcons.iconFromType(item.type)),
+                      child: Icon(item.type.icon),
                       decoration: BoxDecoration(
                         color: theme.scaffoldBackgroundColor.withOpacity(0.8),
                         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10)),
@@ -101,8 +101,17 @@ class ItemGridView extends StatelessWidget {
                             textAlign: useBackdrop ? TextAlign.start : TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
-                            style: theme.textTheme.headline6.copyWith(fontSize: 16),
+                            style: theme.textTheme.headline6!.copyWith(fontSize: 16),
                           ),
+                          subtitle: item.subtitle == null
+                              ? null
+                              : Text(
+                                  item.subtitle!,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: theme.textTheme.caption,
+                                ),
                         ),
                       ),
                     ),
@@ -144,10 +153,13 @@ class ItemGridView extends StatelessWidget {
     );
   }
 
-  _onPressed(BuildContext context) => Navigator.of(context).push(Routes.defaultRoute(
-      null,
-      ItemDetailPage(
-        item: this.item,
-        heroTagPrefix: heroTagPrefix,
-      )));
+  _onPressed(BuildContext context) {
+    print('$heroTagPrefix${item.id}');
+    return Navigator.of(context).push(Routes.defaultRoute(
+        null,
+        ItemDetailPage(
+          item: this.item,
+          heroTagPrefix: heroTagPrefix,
+        )));
+  }
 }

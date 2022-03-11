@@ -11,43 +11,39 @@ class GenreTableData extends DataClass implements Insertable<GenreTableData> {
   final String id;
   final String name;
   final String type;
-  GenreTableData({@required this.id, @required this.name, @required this.type});
+  GenreTableData({required this.id, required this.name, required this.type});
   factory GenreTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+      {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    final stringType = db.typeSystem.forDartType<String>();
     return GenreTableData(
-      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      type: stringType.mapFromDatabaseResponse(data['${effectivePrefix}type']),
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
+      type: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}type'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String>(id);
-    }
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    if (!nullToAbsent || type != null) {
-      map['type'] = Variable<String>(type);
-    }
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['type'] = Variable<String>(type);
     return map;
   }
 
   GenreTableCompanion toCompanion(bool nullToAbsent) {
     return GenreTableCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      id: Value(id),
+      name: Value(name),
+      type: Value(type),
     );
   }
 
   factory GenreTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return GenreTableData(
       id: serializer.fromJson<String>(json['id']),
@@ -56,7 +52,7 @@ class GenreTableData extends DataClass implements Insertable<GenreTableData> {
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
@@ -65,7 +61,7 @@ class GenreTableData extends DataClass implements Insertable<GenreTableData> {
     };
   }
 
-  GenreTableData copyWith({String id, String name, String type}) =>
+  GenreTableData copyWith({String? id, String? name, String? type}) =>
       GenreTableData(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -82,10 +78,9 @@ class GenreTableData extends DataClass implements Insertable<GenreTableData> {
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(name.hashCode, type.hashCode)));
+  int get hashCode => Object.hash(id, name, type);
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       (other is GenreTableData &&
           other.id == this.id &&
@@ -103,16 +98,16 @@ class GenreTableCompanion extends UpdateCompanion<GenreTableData> {
     this.type = const Value.absent(),
   });
   GenreTableCompanion.insert({
-    @required String id,
-    @required String name,
-    @required String type,
+    required String id,
+    required String name,
+    required String type,
   })  : id = Value(id),
         name = Value(name),
         type = Value(type);
   static Insertable<GenreTableData> custom({
-    Expression<String> id,
-    Expression<String> name,
-    Expression<String> type,
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? type,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -122,7 +117,7 @@ class GenreTableCompanion extends UpdateCompanion<GenreTableData> {
   }
 
   GenreTableCompanion copyWith(
-      {Value<String> id, Value<String> name, Value<String> type}) {
+      {Value<String>? id, Value<String>? name, Value<String>? type}) {
     return GenreTableCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -158,72 +153,50 @@ class GenreTableCompanion extends UpdateCompanion<GenreTableData> {
 
 class $GenreTableTable extends GenreTable
     with TableInfo<$GenreTableTable, GenreTableData> {
-  final GeneratedDatabase _db;
-  final String _alias;
-  $GenreTableTable(this._db, [this._alias]);
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $GenreTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedTextColumn _id;
   @override
-  GeneratedTextColumn get id => _id ??= _constructId();
-  GeneratedTextColumn _constructId() {
-    return GeneratedTextColumn(
-      'id',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _nameMeta = const VerificationMeta('name');
-  GeneratedTextColumn _name;
   @override
-  GeneratedTextColumn get name => _name ??= _constructName();
-  GeneratedTextColumn _constructName() {
-    return GeneratedTextColumn(
-      'name',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _typeMeta = const VerificationMeta('type');
-  GeneratedTextColumn _type;
   @override
-  GeneratedTextColumn get type => _type ??= _constructType();
-  GeneratedTextColumn _constructType() {
-    return GeneratedTextColumn(
-      'type',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> type = GeneratedColumn<String?>(
+      'type', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, name, type];
   @override
-  $GenreTableTable get asDslTable => this;
+  String get aliasedName => _alias ?? 'genre_table';
   @override
-  String get $tableName => _alias ?? 'genre_table';
-  @override
-  final String actualTableName = 'genre_table';
+  String get actualTableName => 'genre_table';
   @override
   VerificationContext validateIntegrity(Insertable<GenreTableData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name'], _nameMeta));
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('type')) {
       context.handle(
-          _typeMeta, type.isAcceptableOrUnknown(data['type'], _typeMeta));
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
     } else if (isInserting) {
       context.missing(_typeMeta);
     }
@@ -233,14 +206,14 @@ class $GenreTableTable extends GenreTable
   @override
   Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
-  GenreTableData map(Map<String, dynamic> data, {String tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return GenreTableData.fromData(data, _db, prefix: effectivePrefix);
+  GenreTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return GenreTableData.fromData(data, attachedDatabase,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $GenreTableTable createAlias(String alias) {
-    return $GenreTableTable(_db, alias);
+    return $GenreTableTable(attachedDatabase, alias);
   }
 }
 
@@ -248,43 +221,38 @@ class Favourite extends DataClass implements Insertable<Favourite> {
   final int id;
   final String type;
   final String json;
-  Favourite({@required this.id, @required this.type, @required this.json});
+  Favourite({required this.id, required this.type, required this.json});
   factory Favourite.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+      {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    final intType = db.typeSystem.forDartType<int>();
-    final stringType = db.typeSystem.forDartType<String>();
     return Favourite(
-      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      type: stringType.mapFromDatabaseResponse(data['${effectivePrefix}type']),
-      json: stringType.mapFromDatabaseResponse(data['${effectivePrefix}json']),
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      type: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}type'])!,
+      json: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}json'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<int>(id);
-    }
-    if (!nullToAbsent || type != null) {
-      map['type'] = Variable<String>(type);
-    }
-    if (!nullToAbsent || json != null) {
-      map['json'] = Variable<String>(json);
-    }
+    map['id'] = Variable<int>(id);
+    map['type'] = Variable<String>(type);
+    map['json'] = Variable<String>(json);
     return map;
   }
 
   FavouriteTableCompanion toCompanion(bool nullToAbsent) {
     return FavouriteTableCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
-      json: json == null && nullToAbsent ? const Value.absent() : Value(json),
+      id: Value(id),
+      type: Value(type),
+      json: Value(json),
     );
   }
 
   factory Favourite.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return Favourite(
       id: serializer.fromJson<int>(json['id']),
@@ -293,7 +261,7 @@ class Favourite extends DataClass implements Insertable<Favourite> {
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
@@ -302,7 +270,7 @@ class Favourite extends DataClass implements Insertable<Favourite> {
     };
   }
 
-  Favourite copyWith({int id, String type, String json}) => Favourite(
+  Favourite copyWith({int? id, String? type, String? json}) => Favourite(
         id: id ?? this.id,
         type: type ?? this.type,
         json: json ?? this.json,
@@ -318,10 +286,9 @@ class Favourite extends DataClass implements Insertable<Favourite> {
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(type.hashCode, json.hashCode)));
+  int get hashCode => Object.hash(id, type, json);
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Favourite &&
           other.id == this.id &&
@@ -339,16 +306,16 @@ class FavouriteTableCompanion extends UpdateCompanion<Favourite> {
     this.json = const Value.absent(),
   });
   FavouriteTableCompanion.insert({
-    @required int id,
-    @required String type,
-    @required String json,
+    required int id,
+    required String type,
+    required String json,
   })  : id = Value(id),
         type = Value(type),
         json = Value(json);
   static Insertable<Favourite> custom({
-    Expression<int> id,
-    Expression<String> type,
-    Expression<String> json,
+    Expression<int>? id,
+    Expression<String>? type,
+    Expression<String>? json,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -358,7 +325,7 @@ class FavouriteTableCompanion extends UpdateCompanion<Favourite> {
   }
 
   FavouriteTableCompanion copyWith(
-      {Value<int> id, Value<String> type, Value<String> json}) {
+      {Value<int>? id, Value<String>? type, Value<String>? json}) {
     return FavouriteTableCompanion(
       id: id ?? this.id,
       type: type ?? this.type,
@@ -394,72 +361,50 @@ class FavouriteTableCompanion extends UpdateCompanion<Favourite> {
 
 class $FavouriteTableTable extends FavouriteTable
     with TableInfo<$FavouriteTableTable, Favourite> {
-  final GeneratedDatabase _db;
-  final String _alias;
-  $FavouriteTableTable(this._db, [this._alias]);
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FavouriteTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedIntColumn _id;
   @override
-  GeneratedIntColumn get id => _id ??= _constructId();
-  GeneratedIntColumn _constructId() {
-    return GeneratedIntColumn(
-      'id',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _typeMeta = const VerificationMeta('type');
-  GeneratedTextColumn _type;
   @override
-  GeneratedTextColumn get type => _type ??= _constructType();
-  GeneratedTextColumn _constructType() {
-    return GeneratedTextColumn(
-      'type',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> type = GeneratedColumn<String?>(
+      'type', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _jsonMeta = const VerificationMeta('json');
-  GeneratedTextColumn _json;
   @override
-  GeneratedTextColumn get json => _json ??= _constructJson();
-  GeneratedTextColumn _constructJson() {
-    return GeneratedTextColumn(
-      'json',
-      $tableName,
-      false,
-    );
-  }
-
+  late final GeneratedColumn<String?> json = GeneratedColumn<String?>(
+      'json', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, type, json];
   @override
-  $FavouriteTableTable get asDslTable => this;
+  String get aliasedName => _alias ?? 'favourite_table';
   @override
-  String get $tableName => _alias ?? 'favourite_table';
-  @override
-  final String actualTableName = 'favourite_table';
+  String get actualTableName => 'favourite_table';
   @override
   VerificationContext validateIntegrity(Insertable<Favourite> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
     }
     if (data.containsKey('type')) {
       context.handle(
-          _typeMeta, type.isAcceptableOrUnknown(data['type'], _typeMeta));
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
     } else if (isInserting) {
       context.missing(_typeMeta);
     }
     if (data.containsKey('json')) {
       context.handle(
-          _jsonMeta, json.isAcceptableOrUnknown(data['json'], _jsonMeta));
+          _jsonMeta, json.isAcceptableOrUnknown(data['json']!, _jsonMeta));
     } else if (isInserting) {
       context.missing(_jsonMeta);
     }
@@ -469,24 +414,21 @@ class $FavouriteTableTable extends FavouriteTable
   @override
   Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
-  Favourite map(Map<String, dynamic> data, {String tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return Favourite.fromData(data, _db, prefix: effectivePrefix);
+  Favourite map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return Favourite.fromData(data, attachedDatabase,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $FavouriteTableTable createAlias(String alias) {
-    return $FavouriteTableTable(_db, alias);
+    return $FavouriteTableTable(attachedDatabase, alias);
   }
 }
 
 abstract class _$MyDatabase extends GeneratedDatabase {
   _$MyDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
-  $GenreTableTable _genreTable;
-  $GenreTableTable get genreTable => _genreTable ??= $GenreTableTable(this);
-  $FavouriteTableTable _favouriteTable;
-  $FavouriteTableTable get favouriteTable =>
-      _favouriteTable ??= $FavouriteTableTable(this);
+  late final $GenreTableTable genreTable = $GenreTableTable(this);
+  late final $FavouriteTableTable favouriteTable = $FavouriteTableTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override

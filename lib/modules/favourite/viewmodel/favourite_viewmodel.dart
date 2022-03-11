@@ -13,7 +13,7 @@ class FavouritesViewModel extends BaseViewModel {
 
   FavouritesViewModel(this._db);
 
-  Stream<List<BaseSearchResult>> get stream => _db.watchAllFavourites().map((event) => event.map((e) {
+  Stream<List<BaseSearchResult?>> get stream => _db.watchAllFavourites().map((event) => event.map((e) {
         Map<String, dynamic> json = jsonDecode(e.json);
         if (e.type == TMDB_API_TYPE.PERSON.type) {
           return BaseSearchResult.fromPerson(Person.fromJson(json));

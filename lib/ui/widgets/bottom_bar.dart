@@ -8,7 +8,7 @@ import 'package:movie_search/ui/screens/settings.dart';
 class MyBottomBar extends StatelessWidget {
   final int index;
 
-  const MyBottomBar({Key key, this.index}) : super(key: key);
+  const MyBottomBar({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

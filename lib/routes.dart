@@ -20,7 +20,7 @@ final Map<String, Widget> routes = {
 class Routes {
   static const Duration _transitionDuration = Duration(milliseconds: 400);
 
-  static _getTransitions(String name, context, Animation<double> animation, Animation<double> secondary, Widget child) {
+  static _getTransitions(context, Animation<double> animation, Animation<double> secondary, Widget child) {
     // switch (name) {
     //   case SearchScreen.routeName:
     //     // case SettingsScreen.routeName:
@@ -33,7 +33,7 @@ class Routes {
     return FadeTransition(opacity: animation, child: child);
   }
 
-  static Route<dynamic> defaultRoute(RouteSettings settings, Widget child) {
+  static Route<dynamic> defaultRoute(RouteSettings? settings, Widget child) {
     return PageRouteBuilder(
       transitionDuration: _transitionDuration,
       pageBuilder: (_, __, ___) => SafeArea(
@@ -51,7 +51,7 @@ class Routes {
       return PageRouteBuilder(
         transitionDuration: _transitionDuration,
         transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            _getTransitions(settings.name, context, animation, secondaryAnimation, child),
+            _getTransitions(context, animation, secondaryAnimation, child),
         pageBuilder: (_, __, ___) => Builder(
             builder: (context) => Container(constraints: BoxConstraints(maxWidth: 720), child: _routes[settings.name])),
         settings: settings,

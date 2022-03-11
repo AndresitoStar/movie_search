@@ -19,17 +19,17 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
 
   final ScrollController scrollController;
 
-  String get posterImageUrl => _param.posterImage;
+  String? get posterImageUrl => _param.posterImage;
 
-  bool get withImage => posterImageUrl != null && posterImageUrl.isNotEmpty;
+  bool get withImage => posterImageUrl != null && posterImageUrl!.isNotEmpty;
 
-  String get title => _param.title;
+  String? get title => _param.title;
 
-  int get year => _param.year;
+  num? get year => _param.year;
 
-  String get backDropImageUrl => _param.backDropImage;
+  String? get backDropImageUrl => _param.backDropImage;
 
-  int get itemId => _param.id;
+  num get itemId => _param.id;
 
   TMDB_API_TYPE get itemType => _param.type;
 
@@ -41,15 +41,10 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
 
   @override
   Future<BaseSearchResult> futureToRun() async {
-    try {
-      final result = await _getData();
-      clearErrors();
-      setInitialised(true);
-      return result;
-    } catch (e) {
-      setError(e);
-      return null;
-    }
+    final result = await _getData();
+    clearErrors();
+    setInitialised(true);
+    return result;
   }
 
   Future<BaseSearchResult> _getData() async {

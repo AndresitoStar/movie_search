@@ -24,6 +24,13 @@ class SearchScreen extends StatelessWidget {
               titleSpacing: 0,
               title: Text('Búsqueda'),
               primary: true,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.filter_alt),
+                  color: Theme.of(context).iconTheme.color,
+                  onPressed: () => model.toggleFilter(),
+                )
+              ],
             ),
             SearchBar(),
             SizedBox(height: 10),

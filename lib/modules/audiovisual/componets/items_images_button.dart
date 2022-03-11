@@ -15,7 +15,7 @@ import 'item_detail_main_image.dart';
 class ItemImagesButtonView extends StatelessWidget {
   final BaseSearchResult param;
 
-  const ItemImagesButtonView({Key key, this.param}) : super(key: key);
+  const ItemImagesButtonView({Key? key, required this.param}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +40,13 @@ class ItemImagesPage extends StatelessWidget {
   final BaseSearchResult param;
   final Map<MediaImageType, List<MediaImage>> imagesMap;
 
-  const ItemImagesPage({Key key, this.param, this.imagesMap}) : super(key: key);
+  const ItemImagesPage({Key? key, required this.param, required this.imagesMap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(param.title),
+        title: Text(param.title ?? ''),
         primary: true,
         titleSpacing: 0,
         elevation: 0,
@@ -58,19 +58,19 @@ class ItemImagesPage extends StatelessWidget {
             child: Column(
               children: [
                 for (MediaImageType type in MediaImageType.values)
-                  if (imagesMap[type].length > 0)
+                  if (imagesMap.containsKey(type) && imagesMap[type]!.length > 0)
                     ExpansionTile(
-                      title: Text('${type.title} (${imagesMap[type].length})'),
+                      title: Text('${type.title} (${imagesMap[type]!.length})'),
                       children: [
                         GridView.builder(
                           shrinkWrap: true,
                           physics: ClampingScrollPhysics(),
                           padding: const EdgeInsets.all(10.0),
-                          itemCount: imagesMap[type].length,
-                          itemBuilder: (ctx, i) => ContentImageWidget(imagesMap[type][i].filePath, fit: BoxFit.cover),
+                          itemCount: imagesMap[type]!.length,
+                          itemBuilder: (ctx, i) => ContentImageWidget(imagesMap[type]![i].filePath, fit: BoxFit.cover),
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: getColumns(context),
-                            childAspectRatio: imagesMap[type].map((e) => e.aspectRatio).reduce(max),
+                            childAspectRatio: imagesMap[type]!.map((e) => e.aspectRatio!).reduce(max),
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
                           ),

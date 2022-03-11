@@ -11,7 +11,7 @@ import 'search_viewmodel.dart';
 
 class SearchBar extends StatelessWidget {
   onLoad(SearchViewModel model) {
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       Future.delayed(Duration(milliseconds: 500), () => model.queryControl.focus());
     });
   }
@@ -23,6 +23,7 @@ class SearchBar extends StatelessWidget {
     return ViewModelBuilder<SearchViewModel>.nonReactive(
       viewModelBuilder: () => context.read(),
       onModelReady: (model) => this.onLoad(model),
+      fireOnModelReadyOnce: true,
       builder: (context, model, child) => Hero(
         tag: 'searchBar',
         child: Card(
@@ -47,12 +48,9 @@ class SearchBar extends StatelessWidget {
                     IconButton(
                       icon: Icon(MyIcons.clear),
                       color: Theme.of(context).iconTheme.color,
-                      onPressed: () => model.queryControl.reset(value: ''),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.filter_alt),
-                      color: Theme.of(context).iconTheme.color,
-                      onPressed: () => model.toggleFilter(),
+                      onPressed: () => model.queryControl
+                        ..reset(value: '')
+                        ..focus(),
                     ),
                   ],
                 ),

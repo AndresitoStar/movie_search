@@ -9,8 +9,8 @@ import 'package:movie_search/ui/widgets/placeholder.dart';
 class AudiovisualHorizontalList extends StatelessWidget {
   final String tag;
   final Future<List<BaseSearchResult>> fetchFunction;
-  final VoidCallback viewMoreFunction;
-  AudiovisualHorizontalList(this.fetchFunction, {Key key, this.viewMoreFunction, @required this.tag}) : super(key: key);
+  final VoidCallback? viewMoreFunction;
+  AudiovisualHorizontalList(this.fetchFunction, {Key? key, this.viewMoreFunction, required this.tag}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class AudiovisualHorizontalList extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (snapshot.data.length >= _defaultLength)
-                  ...snapshot.data
+                if (snapshot.data != null && snapshot.data!.length >= _defaultLength)
+                  ...snapshot.data!
                       .sublist(0, _defaultLength)
                       .map(
                         (e) => AspectRatio(
@@ -39,7 +39,7 @@ class AudiovisualHorizontalList extends StatelessWidget {
                         ),
                       )
                       .toList(),
-                if (snapshot.data.length == 0)
+                if (snapshot.data != null && snapshot.data!.length == 0)
                   ...List.generate(_defaultLength, (index) => null)
                       .map((e) => AspectRatio(aspectRatio: 9 / 16, child: GridItemPlaceholder()))
                       .toList(),

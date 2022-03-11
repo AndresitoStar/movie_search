@@ -6,12 +6,12 @@ import 'package:stacked/stacked.dart';
 
 class ItemDetailRecommendationHorizontalList extends StatelessWidget {
   final String type;
-  final int typeId;
+  final num typeId;
   final ERecommendationType recommendationType;
   final bool sliver;
 
   const ItemDetailRecommendationHorizontalList(this.type, this.typeId, this.recommendationType,
-      {Key key, this.sliver = true})
+      {Key? key, this.sliver = true})
       : super(key: key);
 
   @override
@@ -35,7 +35,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                           ListTile(
                             title: Text(
                               recommendationType.name,
-                              style: Theme.of(context).textTheme.headline5.copyWith(
+                              style: Theme.of(context).textTheme.headline5!.copyWith(
                                     color: Theme.of(context).primaryColor,
                                   ),
                             ),
@@ -62,7 +62,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                                     itemBuilder: (ctx, i) => AspectRatio(
                                       child: ItemGridView(
                                         item: model.items[i],
-                                        heroTagPrefix: recommendationType.type,
+                                        heroTagPrefix: '$i-${recommendationType.type}-',
                                       ),
                                       aspectRatio: 8 / 15,
                                     ),

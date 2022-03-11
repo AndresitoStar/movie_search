@@ -15,7 +15,8 @@ class TrendingHorizontalList extends StatefulWidget {
   final TrendingType trendingType;
   final GenreTableData genre;
 
-  TrendingHorizontalList({Key key, this.content, this.genre, this.trendingType = TrendingType.TRENDING})
+  TrendingHorizontalList(
+      {Key? key, required this.content, required this.genre, this.trendingType = TrendingType.TRENDING})
       : super(key: key);
 
   @override

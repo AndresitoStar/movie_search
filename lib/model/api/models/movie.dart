@@ -8,7 +8,7 @@ class Movie {
     this.budget,
     this.genres,
     this.homepage,
-    this.id,
+    required this.id,
     this.imdbId,
     this.originalLanguage,
     this.originalTitle,
@@ -29,39 +29,39 @@ class Movie {
     this.voteCount,
   });
 
-  final bool adult;
-  final String backdropPath;
-  final Collection collection;
-  final num budget;
-  final List<Genres> genres;
-  final String homepage;
+  final bool? adult;
+  final String? backdropPath;
+  final Collection? collection;
+  final num? budget;
+  final List<Genres>? genres;
+  final String? homepage;
   final num id;
-  final String imdbId;
-  final String originalLanguage;
-  final String originalTitle;
-  final String overview;
-  final num popularity;
-  final String posterPath;
-  final List<ProductionCompanies> productionCompanies;
-  final List<ProductionCountries> productionCountries;
-  final String releaseDate;
-  final num revenue;
-  final num runtime;
-  final List<SpokenLanguages> spokenLanguages;
-  final String status;
-  final String tagline;
-  final String title;
-  final bool video;
-  final num voteAverage;
-  final num voteCount;
+  final String? imdbId;
+  final String? originalLanguage;
+  final String? originalTitle;
+  final String? overview;
+  final num? popularity;
+  final String? posterPath;
+  final List<ProductionCompanies>? productionCompanies;
+  final List<ProductionCountries>? productionCountries;
+  final String? releaseDate;
+  final num? revenue;
+  final num? runtime;
+  final List<SpokenLanguages>? spokenLanguages;
+  final String? status;
+  final String? tagline;
+  final String? title;
+  final bool? video;
+  final num? voteAverage;
+  final num? voteCount;
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['adult'] = adult;
     _data['backdrop_path'] = backdropPath;
-    _data['belongs_to_collection'] = collection != null ? collection.toJson() : null;
+    _data['belongs_to_collection'] = collection != null ? collection!.toJson() : null;
     _data['budget'] = budget;
-    _data['genres'] = genres == null ? null : genres.map((e) => e.toJson()).toList();
+    _data['genres'] = genres == null ? null : genres!.map((e) => e.toJson()).toList();
     _data['homepage'] = homepage;
     _data['id'] = id;
     _data['imdb_id'] = imdbId;
@@ -71,13 +71,13 @@ class Movie {
     _data['popularity'] = popularity;
     _data['poster_path'] = posterPath;
     _data['production_companies'] =
-        productionCompanies == null ? null : productionCompanies.map((e) => e.toJson()).toList();
+        productionCompanies == null ? null : productionCompanies!.map((e) => e.toJson()).toList();
     _data['production_countries'] =
-        productionCountries == null ? null : productionCountries.map((e) => e.toJson()).toList();
+        productionCountries == null ? null : productionCountries!.map((e) => e.toJson()).toList();
     _data['release_date'] = releaseDate;
     _data['revenue'] = revenue;
     _data['runtime'] = runtime;
-    _data['spoken_languages'] = spokenLanguages == null ? null : spokenLanguages.map((e) => e.toJson()).toList();
+    _data['spoken_languages'] = spokenLanguages == null ? null : spokenLanguages!.map((e) => e.toJson()).toList();
     _data['status'] = status;
     _data['tagline'] = tagline;
     _data['title'] = title;
@@ -123,8 +123,8 @@ class Movie {
 
 class Genres {
   Genres({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 
   final num id;
@@ -148,43 +148,13 @@ class Genres {
 }
 
 class ProductionCompanies extends Logo {
-  ProductionCompanies({
-    this.id,
-    this.logoPath,
-    this.name,
-    this.originCountry,
-  });
-
-  final num id;
-  final String logoPath;
-  final String name;
-  final String originCountry;
-
-  ProductionCompanies.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        logoPath = json['logo_path'],
-        name = json['name'],
-        originCountry = json['origin_country'];
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['logo_path'] = logoPath;
-    _data['name'] = name;
-    _data['origin_country'] = originCountry;
-    return _data;
-  }
-
-  @override
-  String toString() {
-    return name;
-  }
+  ProductionCompanies.fromJson(Map<String, dynamic> json) : super(json);
 }
 
 class ProductionCountries {
   ProductionCountries({
-    this.iso_3166_1,
-    this.name,
+    required this.iso_3166_1,
+    required this.name,
   });
 
   final String iso_3166_1;
@@ -209,8 +179,8 @@ class ProductionCountries {
 
 class SpokenLanguages {
   SpokenLanguages({
-    this.iso_639_1,
-    this.name,
+    required this.iso_639_1,
+    required this.name,
   });
 
   final String iso_639_1;
@@ -235,14 +205,14 @@ class SpokenLanguages {
 
 class Collection {
   int id;
-  String name;
-  String posterPath;
-  String backdropPath;
-  String overview;
-  List<Movie> parts;
+  String? name;
+  String? posterPath;
+  String? backdropPath;
+  String? overview;
+  List<Movie>? parts;
 
   Collection({
-    this.id,
+    required this.id,
     this.name,
     this.posterPath,
     this.backdropPath,
@@ -260,12 +230,11 @@ class Collection {
     return _data;
   }
 
-  Collection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    posterPath = json['poster_path'];
-    backdropPath = json['backdrop_path'];
-    overview = json['overview'];
-    parts = json['parts'] == null ? null : List.from(json['parts']).map((e) => Movie.fromJson(e)).toList();
-  }
+  Collection.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        name = json['name'],
+        posterPath = json['poster_path'],
+        backdropPath = json['backdrop_path'],
+        overview = json['overview'],
+        parts = json['parts'] == null ? null : List.from(json['parts']).map((e) => Movie.fromJson(e)).toList();
 }

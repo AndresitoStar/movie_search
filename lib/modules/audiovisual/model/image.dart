@@ -1,18 +1,19 @@
 class MediaImage {
-  double aspectRatio;
-  String filePath;
-  int height;
-  double voteAverage;
-  int voteCount;
-  int width;
+  double? aspectRatio;
+  String? filePath;
+  int? height;
+  double? voteAverage;
+  int? voteCount;
+  int? width;
 
-  MediaImage(
-      {this.aspectRatio,
-      this.filePath,
-      this.height,
-      this.voteAverage,
-      this.voteCount,
-      this.width});
+  MediaImage({
+    this.aspectRatio,
+    this.filePath,
+    this.height,
+    this.voteAverage,
+    this.voteCount,
+    this.width,
+  });
 
   MediaImage.fromJson(Map<String, dynamic> json) {
     aspectRatio = json['aspect_ratio'];
@@ -22,5 +23,4 @@ class MediaImage {
     voteCount = json['vote_count'];
     width = json['width'];
   }
-
 }

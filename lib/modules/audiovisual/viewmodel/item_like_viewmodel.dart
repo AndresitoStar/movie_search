@@ -12,7 +12,7 @@ class ItemLikeButtonViewModel extends BaseViewModel {
 
   ItemLikeButtonViewModel(this._db, this.type) : _audiovisualService = AudiovisualService.getInstance();
 
-  Stream<List<int>> get stream => _db.watchFavouritesId(type.type);
+  Stream<List<num?>> get stream => _db.watchFavouritesId(type.type);
 
   initialize() {
     _db.watchFavouritesId(type.type).listen((event) {
@@ -21,14 +21,14 @@ class ItemLikeButtonViewModel extends BaseViewModel {
     setInitialised(true);
   }
 
-  Future toggleFavourite(int id, bool isLiked) async {
+  Future toggleFavourite(num id, bool isLiked) async {
     setBusy(true);
     try {
       if (isLiked) {
-        await _db.removeFavourite(id);
+        await _db.removeFavourite(id.toInt());
       } else {
         final data = await _cacheData(id);
-        await _db.insertFavourite(id, type.type, jsonEncode(data));
+        await _db.insertFavourite(id.toInt(), type.type, jsonEncode(data));
       }
     } catch (e) {
       setError(e);
@@ -36,5 +36,5 @@ class ItemLikeButtonViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  Future<dynamic> _cacheData(int id) async => _audiovisualService.getById(id: id, type: type.type);
+  Future<dynamic> _cacheData(num id) async => _audiovisualService.getById(id: id, type: type.type);
 }

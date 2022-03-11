@@ -46,7 +46,7 @@ class SettingsScreen extends StatelessWidget {
       children: [
         Image.asset('assets/images/ic_launcher.png', width: 150, height: 150),
         SizedBox(height: 30),
-        Text(appName, style: theme.textTheme.headline4.copyWith(color: theme.accentColor)),
+        Text(appName, style: theme.textTheme.headline4!.copyWith(color: theme.colorScheme.secondary)),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -62,25 +62,12 @@ class SettingsScreen extends StatelessWidget {
           ],
         ),
         SizedBox(height: 30),
-        Text('Desarrollador', style: theme.textTheme.subtitle2.copyWith(color: theme.hintColor)),
+        Text('Desarrollador', style: theme.textTheme.subtitle2!.copyWith(color: theme.hintColor)),
         Text('Ing. Andrés Forns Jusino', style: theme.textTheme.headline6),
         SizedBox(height: 30),
-        Text('Version', style: theme.textTheme.subtitle2.copyWith(color: theme.hintColor)),
+        Text('Version', style: theme.textTheme.subtitle2!.copyWith(color: theme.hintColor)),
         Text(version, style: theme.textTheme.headline6),
       ],
-    );
-  }
-
-  _showImageQualityDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Calidad de Imagenes',
-          textAlign: TextAlign.center,
-        ),
-        content: Row(),
-      ),
     );
   }
 }

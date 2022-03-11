@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/home/home_search_bar.dart';
-import 'package:movie_search/modules/trending/trending_horizontal_list.dart';
+import 'package:movie_search/modules/trending/trending_card.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 
@@ -39,11 +39,11 @@ class HomeScreen extends StatelessWidget {
                           ListTile(
                             title: Text(
                               'Bienvenido(a)',
-                              style: theme.textTheme.headline5.copyWith(color: theme.colorScheme.primary),
+                              style: theme.textTheme.headline5!.copyWith(color: theme.colorScheme.primary),
                             ),
                             subtitle: Text(
                               'Millones de películas, programas de televisión y personas por descubrir. Explora ahora.',
-                              style: theme.textTheme.subtitle1.copyWith(color: theme.hintColor),
+                              style: theme.textTheme.subtitle1!.copyWith(color: theme.hintColor),
                             ),
                           ),
                           SizedBox(height: 10),
@@ -59,25 +59,13 @@ class HomeScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          SizedBox(height: 320, child: TrendingHorizontalList(content: TrendingContent.MOVIE)),
+                          TrendingCard(content: TrendingContent.MOVIE),
                           Divider(height: 10),
-                          SizedBox(height: 320, child: TrendingHorizontalList(content: TrendingContent.TV)),
+                          TrendingCard(content: TrendingContent.TV),
                           Divider(),
-                          SizedBox(
-                            height: 320,
-                            child: TrendingHorizontalList(
-                              content: TrendingContent.MOVIE,
-                              trendingType: TrendingType.POPULAR,
-                            ),
-                          ),
+                          TrendingCard(content: TrendingContent.MOVIE, trendingType: TrendingType.POPULAR),
                           Divider(height: 10),
-                          SizedBox(
-                            height: 320,
-                            child: TrendingHorizontalList(
-                              content: TrendingContent.TV,
-                              trendingType: TrendingType.POPULAR,
-                            ),
-                          ),
+                          TrendingCard(content: TrendingContent.TV, trendingType: TrendingType.POPULAR),
                         ],
                       ),
                     )

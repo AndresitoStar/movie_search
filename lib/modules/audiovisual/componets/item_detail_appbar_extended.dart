@@ -6,6 +6,7 @@ import 'package:movie_search/modules/audiovisual/componets/item_detail_like_butt
 import 'package:movie_search/modules/audiovisual/componets/items_images_button.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/imdb_rating/components/imdb_rating.dart';
+import 'package:movie_search/modules/person/components/social_view.dart';
 import 'package:movie_search/modules/video/video_button.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
@@ -91,27 +92,27 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                 strokeColor: theme.colorScheme.primary,
                 child: Text(
                   '${model.title}',
-                  style: theme.textTheme.headline5.copyWith(
+                  style: theme.textTheme.headline5!.copyWith(
                     color: theme.colorScheme.onBackground,
                   ),
                 ),
               ),
               if (model.initialised)
-                if (model.itemType == TMDB_API_TYPE.PERSON) ...[
+                if (model.itemType == TMDB_API_TYPE.PERSON && model.data?.person?.birthday != null) ...[
                   Text(
-                    '${model.data.person.birthday ?? ''} - ${model.data.person.deathday ?? 'actualidad'}',
+                    '${model.data!.person!.birthday ?? ''} - ${model.data!.person!.deathday ?? 'actualidad'}',
                     textAlign: TextAlign.start,
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                   Text(
-                    '${_age(model.data.person.birthday, model.data.person.deathday)} años',
+                    '${_age(model.data!.person!.birthday!, model.data!.person!.deathday)} años',
                     textAlign: TextAlign.start,
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
-                ] else if (model.data.genres != null && model.data.genres.isNotEmpty)
+                ] else if (model.data!.genres != null && model.data!.genres!.isNotEmpty)
                   Text(
-                    "${model.year} - ${model.data.genres.join(' / ')}",
-                    style: Theme.of(context).textTheme.subtitle1.copyWith(color: Theme.of(context).hintColor),
+                    "${model.year ?? '?'} - ${model.data!.genres!.join(' / ')}",
+                    style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).hintColor),
                   ),
               if (model.itemType != TMDB_API_TYPE.PERSON)
                 Row(
@@ -121,7 +122,7 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                       padding: const EdgeInsets.all(8.0),
                       child: model.initialised
                           ? Text(
-                              '${model.data.voteAverage.toStringAsFixed(1)}',
+                              '${model.data!.voteAverage!.toStringAsFixed(1)}',
                               style: theme.textTheme.headline6,
                             )
                           : CircularProgressIndicator.adaptive(strokeWidth: 1),
@@ -130,14 +131,12 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                       ImbdbRatingView(
                         model.itemId,
                         model.itemType.type,
-                        imdbId: model.data.movie?.imdbId,
-                        key: ValueKey(model.data.id),
+                        imdbId: model.data?.movie?.imdbId,
+                        key: ValueKey(model.data!.id),
                       )
                   ],
                 ),
-              if (model.initialised && model.itemType != TMDB_API_TYPE.PERSON) ...[
-                VideoButton(param: model.data),
-              ],
+              SocialView(model.itemType.type, model.itemId),
               // ItemLikeButton(
               //     id: model.itemId, type: model.data.type, iconSize: 42),
             ],
@@ -149,7 +148,8 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
           child: Row(
             children: [
               ItemLikeButton(id: model.itemId, type: model.itemType),
-              if (model.dataReady) ItemImagesButtonView(param: model.data),
+              if (model.dataReady) ItemImagesButtonView(param: model.data!),
+              if (model.itemType != TMDB_API_TYPE.PERSON && model.dataReady) VideoButton(param: model.data!),
             ],
           ),
         )
@@ -157,7 +157,7 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
     );
   }
 
-  String _age(String birthday, String deathDay) {
+  String _age(String birthday, String? deathDay) {
     DateTime birth = DateTime.parse(birthday);
     DateTime death = deathDay != null ? DateTime.parse(deathDay) : DateTime.now();
 

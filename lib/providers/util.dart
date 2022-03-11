@@ -13,7 +13,7 @@ class SearchResponse {
   final int totalResult;
   final int totalPageResult;
 
-  SearchResponse({this.totalResult, this.totalPageResult, this.result});
+  SearchResponse({required this.totalResult, required this.totalPageResult, required this.result});
 }
 
 // const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w342';
@@ -49,8 +49,6 @@ extension tmdb_type on TMDB_API_TYPE {
         return 'tv';
       case TMDB_API_TYPE.PERSON:
         return 'person';
-      default:
-        return null;
     }
   }
 
@@ -62,8 +60,6 @@ extension tmdb_type on TMDB_API_TYPE {
         return 'Series';
       case TMDB_API_TYPE.PERSON:
         return 'Personas';
-      default:
-        return null;
     }
   }
 
@@ -75,8 +71,6 @@ extension tmdb_type on TMDB_API_TYPE {
         return MyIcons.tv;
       case TMDB_API_TYPE.PERSON:
         return MyIcons.castMale;
-      default:
-        return null;
     }
   }
 
@@ -88,33 +82,31 @@ extension tmdb_type on TMDB_API_TYPE {
         return 'Serie';
       case TMDB_API_TYPE.PERSON:
         return 'Persona';
-      default:
-        return null;
     }
   }
 }
 
 class Debounce {
   final int milliseconds;
-  VoidCallback action;
-  Timer _timer;
+  VoidCallback? action;
+  Timer? _timer;
 
-  Debounce({this.milliseconds});
+  Debounce({required this.milliseconds});
 
   run(VoidCallback action) {
     if (_timer != null) {
-      _timer.cancel();
+      _timer!.cancel();
     }
     _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 }
 
 class SharedPreferencesHelper {
-  static SharedPreferencesHelper _instance;
+  static SharedPreferencesHelper? _instance;
 
   static SharedPreferencesHelper getInstance() {
-    if (_instance == null || _instance._streamForHighQuality.isClosed) _instance = SharedPreferencesHelper._();
-    return _instance;
+    if (_instance == null || _instance!._streamForHighQuality.isClosed) _instance = SharedPreferencesHelper._();
+    return _instance!;
   }
 
   SharedPreferencesHelper._() {
@@ -123,20 +115,14 @@ class SharedPreferencesHelper {
 
     _streamForSearchHistory = BehaviorSubject<List<String>>();
     getSearchHistory().then((value) => _streamForSearchHistory.add(value.reversed.toList()));
-
-    _streamForFavorite = BehaviorSubject<List<int>>();
-    getFavouriteList().then((value) => _streamForFavorite.add(value));
   }
 
-  StreamController<bool> _streamForHighQuality;
-  StreamController<List<String>> _streamForSearchHistory;
-  StreamController<List<int>> _streamForFavorite;
+  late StreamController<bool> _streamForHighQuality;
+  late StreamController<List<String>> _streamForSearchHistory;
 
   Stream<bool> get streamForHighQuality => _streamForHighQuality.stream;
 
   Stream<List<String>> get streamForSearchHistory => _streamForSearchHistory.stream;
-
-  Stream<List<int>> get streamForFavorite => _streamForFavorite.stream;
 
   Function(bool) get changeHighQuality => _streamForHighQuality.sink.add;
 
@@ -148,21 +134,9 @@ class SharedPreferencesHelper {
     });
   }
 
-  toggleFavorite(int id) {
-    getFavouriteList().then((list) {
-      if (list.contains(id))
-        list.remove(id);
-      else
-        list.add(id);
-      _streamForFavorite.sink.add(list);
-      setFavouriteList(list);
-    });
-  }
-
   dispose() {
-    _streamForHighQuality?.close();
-    _streamForSearchHistory?.close();
-    _streamForFavorite?.close();
+    _streamForHighQuality.close();
+    _streamForSearchHistory.close();
   }
 
   static Future _setBoolean(String key, bool value) async {
@@ -183,30 +157,28 @@ class SharedPreferencesHelper {
   static Future<bool> _getBoolean(String key) async {
     WidgetsFlutterBinding.ensureInitialized();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool result;
+    bool result = false;
     try {
-      result = prefs.getBool(key);
+      result = prefs.getBool(key) ?? false;
     } catch (e) {}
-    return result ?? false;
+    return result;
   }
 
-  static Future<String> _getString(String key) async {
+  static Future<String?> _getString(String key) async {
     WidgetsFlutterBinding.ensureInitialized();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    try {
-      return prefs.getString(key);
-    } catch (e) {}
-    return null;
+    return prefs.getString(key);
   }
 
-  static Future<List<T>> _getList<T extends Object>(String key) async {
+  static Future<List<String>> _getList(String key) async {
     WidgetsFlutterBinding.ensureInitialized();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List result;
+    List<String> result = [];
     try {
-      result = prefs.getStringList(key).toSet().toList();
+      final r = prefs.getStringList(key);
+      if (r != null) result.addAll(r.toSet());
     } catch (e) {}
-    return result ?? [];
+    return result;
   }
 
   static Future<bool> wasHereBefore() async {
@@ -226,35 +198,18 @@ class SharedPreferencesHelper {
   }
 
   static Future<List<String>> getSearchHistory() async {
-    return _getList<String>('SEARCH_HISTORY');
+    return _getList('SEARCH_HISTORY');
   }
 
   static void setSearchHistory(List<String> value) async {
     _setList('SEARCH_HISTORY', value);
   }
 
-  static Future<List<int>> getFavouriteList() async {
-    final list = await _getList<String>('FAVORITE');
-    return list.map((e) => int.tryParse(e)).toList();
-  }
-
-  static void setFavouriteList(List<int> value) async {
-    _setList('FAVORITE', value);
-  }
-
-  static Future<String> getFlexSchemaColor() async {
+  static Future<String?> getFlexSchemaColor() async {
     return _getString('SCHEME_COLOR');
   }
 
   static void setFlexSchemaColor(String value) async {
     _setString('SCHEME_COLOR', value);
-  }
-
-  static Future<String> getBrightness() async {
-    return _getString('Brightness');
-  }
-
-  static void setBrightness(String value) async {
-    _setString('Brightness', value);
   }
 }

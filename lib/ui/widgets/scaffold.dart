@@ -8,9 +8,9 @@ class CustomScaffold extends StatelessWidget {
   // final AppBar appBar;
 
   const CustomScaffold({
-    Key key,
-    @required this.bottomBarIndex,
-    @required this.body,
+    Key? key,
+    required this.bottomBarIndex,
+    required this.body,
     // this.appBar,
   }) : super(key: key);
 

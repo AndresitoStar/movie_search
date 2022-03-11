@@ -5,7 +5,7 @@ import 'package:stacked/stacked.dart';
 class CastListViewModel extends FutureViewModel {
   final PersonService _service;
   final String type;
-  final int typeId;
+  final num typeId;
 
   List<Person> _items = [];
 
@@ -17,7 +17,7 @@ class CastListViewModel extends FutureViewModel {
   Future futureToRun() async {
     setBusy(true);
     final credit = await _service.getCredits(type, typeId);
-    _items = credit.cast;
+    _items = credit.cast!;
     setInitialised(true);
     setBusy(false);
   }

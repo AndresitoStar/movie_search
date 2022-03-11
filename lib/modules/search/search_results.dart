@@ -23,7 +23,7 @@ class SearchResults extends StatelessWidget {
                 height: model.showFilter ? kToolbarHeight - 10 : 0,
                 duration: Duration(milliseconds: 400),
                 curve: Curves.fastOutSlowIn,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 child: ReactiveForm(
                   formGroup: model.form,
                   child: ReactiveFormField<SearchCategory, SearchCategory>(
@@ -71,42 +71,43 @@ class SearchResults extends StatelessWidget {
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
-                  : model.searchResults == null ||
-                          (model.searchResults.isEmpty &&
-                              model.queryControl?.value != null &&
-                              model.queryControl.value.isEmpty)
+                  : model.searchResults.isEmpty && model.queryControl.value != null && model.queryControl.isNullOrEmpty
                       ? SearchHistoryView(onTap: (value) => model.queryControl.value = value)
                       : model.searchResults.isEmpty
                           ? Center(child: Text('Sin resultados'))
-                          : Scrollbar(
-                              child: GridView.builder(
-                                  itemCount: model.searchResults.length + 1,
-                                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                                      // crossAxisCount: getColumns(context),
-                                      maxCrossAxisExtent: 600,
-                                      mainAxisExtent: 200,
-                                      childAspectRatio:
-                                          MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 4),
-                                      crossAxisSpacing: 10,
-                                      mainAxisSpacing: 10),
-                                  padding: EdgeInsets.zero,
-                                  physics: BouncingScrollPhysics(),
-                                  itemBuilder: (ctx, i) => i < model.searchResults.length
-                                      ? SearchResultListItem(
-                                          searchResult: model.searchResults[i],
-                                          searchCriteria: model.queryControl.value,
-                                        )
-                                      : model.hasMore
-                                          ? Builder(
-                                              builder: (context) {
-                                                model.fetchMore(context);
-                                                return SizedBox(
-                                                  height: 10,
-                                                  child: LinearProgressIndicator(),
-                                                );
-                                              },
-                                            )
-                                          : Container()),
+                          : GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onPanDown: (_) => FocusScope.of(context).requestFocus(FocusNode()),
+                              child: Scrollbar(
+                                child: GridView.builder(
+                                    itemCount: model.searchResults.length + 1,
+                                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                                        // crossAxisCount: getColumns(context),
+                                        maxCrossAxisExtent: 600,
+                                        mainAxisExtent: 150,
+                                        childAspectRatio: MediaQuery.of(context).size.width /
+                                            (MediaQuery.of(context).size.height / 4),
+                                        crossAxisSpacing: 10,
+                                        mainAxisSpacing: 10),
+                                    padding: EdgeInsets.zero,
+                                    physics: BouncingScrollPhysics(),
+                                    itemBuilder: (ctx, i) => i < model.searchResults.length
+                                        ? SearchResultListItem(
+                                            searchResult: model.searchResults[i],
+                                            searchCriteria: model.queryControl.value,
+                                          )
+                                        : model.hasMore
+                                            ? Builder(
+                                                builder: (context) {
+                                                  model.fetchMore(context);
+                                                  return SizedBox(
+                                                    height: 10,
+                                                    child: LinearProgressIndicator(),
+                                                  );
+                                                },
+                                              )
+                                            : Container()),
+                              ),
                             ),
             ),
           ],

@@ -1,8 +1,8 @@
 import 'package:movie_search/model/api/models/person.dart';
 
 class Credit {
-  int id;
-  List<Person> cast;
+  int? id;
+  List<Person>? cast;
 
   Credit({this.id, this.cast});
 
@@ -11,7 +11,7 @@ class Credit {
     if (json['cast'] != null) {
       cast = <Person>[];
       json['cast'].forEach((v) {
-        cast.add(Person.fromJson(v));
+        cast!.add(Person.fromJson(v));
       });
     }
   }

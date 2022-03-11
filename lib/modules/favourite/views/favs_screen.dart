@@ -37,15 +37,15 @@ class FavouriteScreen extends StatelessWidget {
               ),
             ];
           },
-          body: StreamBuilder<List<BaseSearchResult>>(
+          body: StreamBuilder<List<BaseSearchResult?>>(
               stream: model.stream,
               initialData: [],
               builder: (context, snapshot) {
-                if (snapshot.data.length == 0) return _buildEmptyList();
+                if (snapshot.data != null && snapshot.data!.length == 0) return _buildEmptyList();
                 return GridView.builder(
                   padding: const EdgeInsets.all(10.0),
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (ctx, i) => ItemGridView(item: snapshot.data[i], heroTagPrefix: ''),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (ctx, i) => ItemGridView(item: snapshot.data![i]!, heroTagPrefix: ''),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: getColumns(context),
                       childAspectRatio: 5 / 9,

@@ -15,7 +15,7 @@ class ThemeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  ThemeViewModel(this._flexColor, {this.themeMode});
+  ThemeViewModel(this._flexColor, {required this.themeMode});
 
   bool get isDark => themeMode == ThemeMode.dark;
 

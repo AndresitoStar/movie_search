@@ -4,7 +4,7 @@ import 'package:movie_search/rest/resolver.dart';
 import 'package:stacked/stacked.dart';
 
 class ItemImagesViewModel extends FutureViewModel {
-  final int id;
+  final num id;
   final String type;
 
   ItemImagesViewModel(this.id, this.type);

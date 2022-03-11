@@ -7,13 +7,14 @@ import 'package:movie_search/modules/audiovisual/componets/item_detail_main_imag
 import 'package:movie_search/modules/audiovisual/viewmodel/item_tv_season_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
+import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
 
 class EpisodesPage extends StatelessWidget {
   final Seasons season;
   final TvShow tvApi;
 
-  const EpisodesPage({Key key, @required this.season, @required this.tvApi}) : super(key: key);
+  const EpisodesPage({Key? key, required this.season, required this.tvApi}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class EpisodesPage extends StatelessWidget {
                     child: Text('${model.modelError?.toString()}'),
                   )
                 :  */
-                landscape ? Container() : _Portrait(season),
+                landscape ? Container() : _Portrait(season, tvApi),
           ),
         ),
       ),
@@ -49,11 +50,13 @@ class EpisodesPage extends StatelessWidget {
 
 class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
   final Seasons season;
+  final TvShow tvShow;
 
-  _Portrait(this.season);
+  _Portrait(this.season, this.tvShow);
 
   @override
   Widget build(BuildContext context, ItemSeasonViewModel model) {
+    final theme = Theme.of(context).textTheme;
     return CustomScrollView(
       cacheExtent: 1000,
       slivers: <Widget>[
@@ -68,19 +71,30 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
                   children: [
                     SizedBox(height: 10),
                     Text(
-                      season.name,
+                      tvShow.name ?? '',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline4,
+                      style: theme.headline4,
                     ),
-                    SizedBox(height: 20),
                     Text(
-                      season.overview,
+                      season.name ?? '',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: theme.headline5,
                     ),
+                    if (season.overview != null && season.overview!.isNotEmpty) ...[
+                      SizedBox(height: 20),
+                      Text(
+                        season.overview ?? '',
+                        textAlign: TextAlign.center,
+                        style: theme.bodyText1,
+                      ),
+                    ],
                     SizedBox(height: 20),
-                    if (!model.isBusy && model.season?.episodes != null)
-                      ...model.season.episodes
+                    if (model.isBusy)
+                      ...[1, 1, 1, 1, 1]
+                          .map((e) => AspectRatio(aspectRatio: 16 / 9, child: GridItemPlaceholder()))
+                          .toList()
+                    else if (model.season.episodes != null)
+                      ...model.season.episodes!
                           .map((e) => Card(
                                 margin: const EdgeInsets.only(
                                   bottom: 20,
@@ -99,24 +113,25 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
                                           children: [
                                             Text(
                                               'Capítulo: ${e.episodeNumber}',
-                                              style: Theme.of(context).textTheme.subtitle1,
+                                              style: theme.subtitle1,
                                               textAlign: TextAlign.end,
                                             ),
                                             Text(
-                                              e.name,
-                                              style: Theme.of(context).textTheme.headline6,
+                                              e.name ?? '',
+                                              style: theme.headline6,
                                               textAlign: TextAlign.end,
                                             ),
                                             Text(
-                                              e.overview,
-                                              style: Theme.of(context).textTheme.caption,
+                                              e.overview ?? '',
+                                              style: theme.caption,
                                               textAlign: TextAlign.end,
                                             ),
                                             Divider(indent: 8, endIndent: 8),
-                                            Text(
-                                              DateTime.tryParse(e.airDate).format,
-                                              textAlign: TextAlign.end,
-                                            ),
+                                            if (e.airDate != null && e.airDate!.isNotEmpty)
+                                              Text(
+                                                DateTime.tryParse(e.airDate!)?.format ?? '',
+                                                textAlign: TextAlign.end,
+                                              ),
                                           ],
                                         ),
                                       ),

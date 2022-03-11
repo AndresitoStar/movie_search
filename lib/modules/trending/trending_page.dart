@@ -11,7 +11,7 @@ import 'package:stacked/stacked.dart';
 class TrendingPage extends StatelessWidget {
   final TrendingViewModel param;
 
-  const TrendingPage({Key key, @required this.param}) : super(key: key);
+  const TrendingPage({Key? key, required this.param}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +137,7 @@ class TrendingPage extends StatelessWidget {
       },
     );
     if (dateTime != null && dateTime is DateTime)
-      viewModel.updateYear(dateTime?.year);
+      viewModel.updateYear(dateTime.year);
     else if (dateTime is bool) viewModel.updateYear(null);
   }
 
@@ -147,7 +147,7 @@ class TrendingPage extends StatelessWidget {
       // backgroundColor: Theme.of(context).primaryColor,
       isDismissible: false,
       builder: (BuildContext context) => ViewModelBuilder<TrendingFilterViewModel>.reactive(
-        viewModelBuilder: () => new TrendingFilterViewModel(context.read(), type, viewModel.filterGenre),
+        viewModelBuilder: () => new TrendingFilterViewModel(context.read(), type, viewModel.filterGenre!),
         createNewModelOnInsert: true,
         builder: (context, model, _) => model.isBusy
             ? Center(child: CircularProgressIndicator())
@@ -193,7 +193,7 @@ class TrendingPage extends StatelessWidget {
                               (e) => ElevatedButton(
                                 onPressed: () => model.toggle(e.id),
                                 style: ElevatedButton.styleFrom(
-                                  primary: model.filterGenre[e.id]
+                                  primary: model.filterGenre[e.id]!
                                       ? Theme.of(context).primaryColorDark
                                       : Theme.of(context).colorScheme.background,
                                   elevation: 5,
@@ -201,7 +201,7 @@ class TrendingPage extends StatelessWidget {
                                 child: Text(
                                   e.name,
                                   style: TextStyle(
-                                      color: model.filterGenre[e.id]
+                                      color: model.filterGenre[e.id]!
                                           ? Theme.of(context).colorScheme.onPrimary
                                           : Theme.of(context).colorScheme.onBackground),
                                 ),
