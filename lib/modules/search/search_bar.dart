@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:provider/provider.dart';
@@ -12,8 +10,7 @@ import 'search_viewmodel.dart';
 class SearchBar extends StatelessWidget {
   onLoad(SearchViewModel model) {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      Future.delayed(
-          Duration(milliseconds: 500), () => model.queryControl.focus());
+      Future.delayed(Duration(milliseconds: 500), () => model.queryControl.focus());
     });
   }
 
@@ -38,8 +35,7 @@ class SearchBar extends StatelessWidget {
               formControl: model.queryControl,
               cursorColor: Theme.of(context).colorScheme.onBackground,
               autocorrect: false,
-              style:
-                  TextStyle(color: Theme.of(context).colorScheme.onBackground),
+              style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
                 prefixIcon: Icon(MyIcons.search, size: 16),

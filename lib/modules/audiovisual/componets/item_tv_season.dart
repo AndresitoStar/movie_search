@@ -22,21 +22,31 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
-                BlendMode.luminosity,
-              ),
-              image: NetworkImage('$URL_IMAGE_MEDIUM${model.data!.tvShow!.backdropPath}'),
-            ),
+            image: model.data!.tvShow!.backdropPath == null
+                ? null
+                : DecorationImage(
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.6),
+                      BlendMode.luminosity,
+                    ),
+                    image: NetworkImage(
+                      '$URL_IMAGE_MEDIUM${model.data!.tvShow!.backdropPath}',
+                    ),
+                  ),
           ),
           child: ListTile(
             title: RichText(
               text: TextSpan(
                   text: 'Temporadas:',
                   style: Theme.of(context).textTheme.headline6!.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onPrimary
+                            .withOpacity(0.8),
                       ),
                   children: [
                     TextSpan(
@@ -90,7 +100,12 @@ class _SeasonCard extends StatelessWidget {
   final TvShow tvApi;
   final bool isLast;
 
-  const _SeasonCard({Key? key, required this.season, this.isLast = false, required this.tvApi}) : super(key: key);
+  const _SeasonCard(
+      {Key? key,
+      required this.season,
+      this.isLast = false,
+      required this.tvApi})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +185,8 @@ class _SeasonCard extends StatelessWidget {
 }
 
 class _SeasonScreen extends StatelessWidget {
-  const _SeasonScreen({Key? key, required this.seasons, required this.tv}) : super(key: key);
+  const _SeasonScreen({Key? key, required this.seasons, required this.tv})
+      : super(key: key);
   final List<Seasons> seasons;
   final TvShow tv;
 

@@ -1,11 +1,11 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_appbar.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_tv_episode_detail.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_tv_season_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
@@ -95,7 +95,7 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
                           .toList()
                     else if (model.season.episodes != null)
                       ...model.season.episodes!
-                          .map((e) => Card(
+                          .map((episode) => Card(
                                 margin: const EdgeInsets.only(
                                   bottom: 20,
                                   left: 10,
@@ -108,34 +108,45 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
                                   children: [
                                     Container(
                                       child: ListTile(
+                                        onTap: () => Navigator.of(context).push(
+                                          Routes.defaultRoute(
+                                            null,
+                                            ItemEpisodeDetailPage(
+                                              episode: episode,
+                                              season: season,
+                                              tvShow: tvShow,
+                                              heroTagPrefix: '${tvShow.id}-${season.id}-${episode.id}',
+                                            ),
+                                          ),
+                                        ),
                                         subtitle: Column(
                                           crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                              'Capítulo: ${e.episodeNumber}',
+                                              'Capítulo: ${episode.episodeNumber}',
                                               style: theme.subtitle1,
                                               textAlign: TextAlign.end,
                                             ),
                                             Text(
-                                              e.name ?? '',
+                                              episode.name ?? '',
                                               style: theme.headline6,
                                               textAlign: TextAlign.end,
                                             ),
                                             Text(
-                                              e.overview ?? '',
+                                              episode.overview ?? '',
                                               style: theme.caption,
                                               textAlign: TextAlign.end,
                                             ),
                                             Divider(indent: 8, endIndent: 8),
-                                            if (e.airDate != null && e.airDate!.isNotEmpty)
+                                            if (episode.airDate != null && episode.airDate!.isNotEmpty)
                                               Text(
-                                                DateTime.tryParse(e.airDate!)?.format ?? '',
+                                                DateTime.tryParse(episode.airDate!)?.format ?? '',
                                                 textAlign: TextAlign.end,
                                               ),
                                           ],
                                         ),
                                       ),
-                                      decoration: e.stillPath == null
+                                      decoration: episode.stillPath == null
                                           ? null
                                           : BoxDecoration(
                                               image: DecorationImage(
@@ -144,7 +155,7 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
                                                   Theme.of(context).colorScheme.background.withOpacity(0.7),
                                                   BlendMode.luminosity,
                                                 ),
-                                                image: NetworkImage('$URL_IMAGE_MEDIUM${e.stillPath}'),
+                                                image: NetworkImage('$URL_IMAGE_MEDIUM${episode.stillPath}'),
                                               ),
                                             ),
                                     ),

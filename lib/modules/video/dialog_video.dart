@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:movie_search/model/api/models/video.dart';
 import 'package:movie_search/ui/icons.dart';

@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_page.dart';
@@ -79,7 +76,7 @@ class SearchResultListItem extends StatelessWidget {
                                   searchResult.titleOriginal != searchResult.title)
                                 Text(searchResult.titleOriginal!,
                                     textAlign: TextAlign.end, style: Theme.of(context).textTheme.subtitle1),
-                              Text(searchResult.type.nameSingular)
+                              if (searchResult.type != TMDB_API_TYPE.PERSON) Text(searchResult.type.nameSingular)
                             ],
                           ),
                         ),

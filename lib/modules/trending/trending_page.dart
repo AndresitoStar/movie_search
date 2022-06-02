@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
@@ -59,10 +58,7 @@ class TrendingPage extends StatelessWidget {
                 //         ),
                 //       )
                 //     : null,
-                leading: IconButton(
-                  icon: Icon(MyIcons.arrow_left),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
+                leading: IconButton(icon: Icon(MyIcons.arrow_left), onPressed: () => Navigator.of(context).pop()),
               ),
               body: viewModel.isBusy
                   ? Center(child: CircularProgressIndicator())

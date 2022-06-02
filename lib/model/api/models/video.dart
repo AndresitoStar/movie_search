@@ -11,6 +11,8 @@ class Video {
 
   Video({this.id, this.iso6391, this.iso31661, this.key, this.name, this.site, this.size, this.type});
 
+  String get youtubeThumbnail => 'https://img.youtube.com/vi/${this.key}/0.jpg';
+
   Video.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     iso6391 = json['iso_639_1'];

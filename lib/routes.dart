@@ -4,6 +4,7 @@ import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
 import 'package:movie_search/modules/splash/splash_screen.dart';
+import 'package:movie_search/modules/video/video_screen.dart';
 import 'package:movie_search/ui/screens/onboard.dart';
 import 'package:movie_search/ui/screens/settings.dart';
 
@@ -15,6 +16,7 @@ final Map<String, Widget> routes = {
   SettingsScreen.routeName: SettingsScreen(),
   OnboardScreen.routeName: OnboardScreen(),
   ItemCollectionScreen.route: ItemCollectionScreen(),
+  VideoScreen.route: VideoScreen(),
 };
 
 class Routes {

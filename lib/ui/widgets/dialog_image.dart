@@ -178,7 +178,7 @@ class _DialogImageState extends State<DialogImage> {
                 top: 0,
                 child: MyCircularButton(
                   icon: Icon(MyIcons.quality, color: Theme.of(context).colorScheme.onPrimary),
-                  color: Theme.of(context).colorScheme.primaryVariant,
+                  color: Theme.of(context).colorScheme.primary,
                   onPressed: () {
                     setState(() {
                       baseUrl = URL_IMAGE_BIG;

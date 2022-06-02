@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_list_page.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
+import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
 
@@ -21,10 +23,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
       builder: (context, model, _) {
         final height = 300.0;
         final child = !model.initialised
-            ? Container(
-                height: 10,
-                child: LinearProgressIndicator(),
-              )
+            ? Container(height: 10, child: LinearProgressIndicator())
             : model.isBusy
                 ? LinearProgressIndicator()
                 : model.items.length > 0
@@ -35,9 +34,23 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                           ListTile(
                             title: Text(
                               recommendationType.name,
-                              style: Theme.of(context).textTheme.headline5!.copyWith(
-                                    color: Theme.of(context).primaryColor,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5!
+                                  .copyWith(color: Theme.of(context).primaryColor),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.grid_view_rounded),
+                              onPressed: () => Navigator.of(context).push(
+                                Routes.defaultRoute(
+                                  null,
+                                  ItemListPage(
+                                    items: model.items,
+                                    title: recommendationType.name,
+                                    heroTagPrefix: recommendationType.type,
                                   ),
+                                ),
+                              ),
                             ),
                           ),
                           Container(

@@ -72,9 +72,9 @@ class TrendingService extends BaseService {
       'page': page.toString(),
     };
     String key = '$type$page';
-    if (genres?.length == 1) {
-      final key = '$type$page-${genres!.first}';
-    }
+    // if (genres?.length == 1) {
+    //   final key = '$type$page-${genres!.first}';
+    // }
     if (_cacheDiscover.containsKey(key)) return _cacheDiscover[key]!;
 
     try {
@@ -85,7 +85,7 @@ class TrendingService extends BaseService {
         total = body['total_results'];
         for (var data in body['results']) {
           BaseSearchResult b = BaseSearchResult.fromJson(type, data);
-          if (b != null) result.add(b);
+          result.add(b);
         }
       }
     } catch (e) {

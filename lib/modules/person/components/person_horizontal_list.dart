@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/model/api/models/person.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_list_page.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/person/viewmodel/cast_list_viewmodel.dart';
+import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
 
@@ -29,9 +31,20 @@ class CreditHorizontalList extends StatelessWidget {
                       ListTile(
                         title: Text(
                           'Reparto',
-                          style: Theme.of(context).textTheme.headline5!.copyWith(
-                                color: Theme.of(context).primaryColor,
+                          style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).primaryColor),
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.grid_view_rounded),
+                          onPressed: () => Navigator.of(context).push(
+                            Routes.defaultRoute(
+                              null,
+                              ItemListPage(
+                                items: model.items.map((e) => BaseSearchResult.fromPerson(e)).toList(),
+                                title: 'Reparto',
+                                heroTagPrefix: 'person-$typeId',
                               ),
+                            ),
+                          ),
                         ),
                       ),
                       Container(
@@ -77,7 +90,7 @@ class PersonHorizontalList extends StatelessWidget {
       itemBuilder: (ctx, i) => AspectRatio(
         child: ItemGridView(
           item: BaseSearchResult.fromPerson(items[i]),
-          heroTagPrefix: 'person-$tag-',
+          heroTagPrefix: '$i-person-$tag-',
           showData: false,
         ),
         aspectRatio: 8 / 16,

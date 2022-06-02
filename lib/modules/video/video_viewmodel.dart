@@ -13,7 +13,7 @@ class VideoViewModel extends FutureViewModel {
 
   bool get hasVideos => _videos.isNotEmpty;
 
-  VideoViewModel(this.type, this.id) : this._service = VideoService();
+  VideoViewModel(this.type, this.id) : this._service = VideoService.getInstance();
 
   @override
   Future futureToRun() async {

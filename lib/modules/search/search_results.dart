@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:movie_search/modules/search/search_category.dart';
 import 'package:movie_search/modules/search/search_history.dart';
 import 'package:movie_search/modules/search/search_viewmodel.dart';

@@ -72,6 +72,7 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
               model.itemId,
               ERecommendationType.Recommendation,
             ),
+            SliverToBoxAdapter(child: SizedBox(height: 20)),
           ] else ...[
             ItemDetailSecondaryContent(),
             ItemDetailRecommendationHorizontalList(model.itemType.type, model.itemId, ERecommendationType.Credit),

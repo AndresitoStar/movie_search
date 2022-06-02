@@ -11,9 +11,7 @@ class ItemCollectionView extends StatelessWidget {
   final bool sliver;
   final Collection collection;
 
-  const ItemCollectionView(
-      {Key? key, required this.sliver, required this.collection})
-      : super(key: key);
+  const ItemCollectionView({Key? key, required this.sliver, required this.collection}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +23,25 @@ class ItemCollectionView extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color:
-                    Theme.of(context).colorScheme.background.withOpacity(0.6),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.background.withOpacity(0.6),
-                    BlendMode.luminosity,
-                  ),
-                  image: NetworkImage(
-                      '$URL_IMAGE_MEDIUM${collection.backdropPath}'),
-                ),
+                color: Theme.of(context).colorScheme.background.withOpacity(0.6),
+                image: collection.backdropPath == null
+                    ? null
+                    : DecorationImage(
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.background.withOpacity(0.6),
+                          BlendMode.luminosity,
+                        ),
+                        image: NetworkImage('$URL_IMAGE_MEDIUM${collection.backdropPath}'),
+                      ),
               ),
               child: ListTile(
                 title: Text(
                   '${collection.name}',
-                  style: Theme.of(context).textTheme.headline5!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5!
+                      .copyWith(color: Theme.of(context).colorScheme.onBackground),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,9 +56,8 @@ class ItemCollectionView extends StatelessWidget {
                         ElevatedButton(
                           onPressed: model.isBusy
                               ? null
-                              : () => Navigator.of(context).pushNamed(
-                                  ItemCollectionScreen.route,
-                                  arguments: model.collection),
+                              : () => Navigator.of(context)
+                                  .pushNamed(ItemCollectionScreen.route, arguments: model.collection),
                           child: Text('Ver colección'),
                         ),
                         Spacer(),
@@ -83,8 +82,7 @@ class ItemCollectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Collection collection =
-        ModalRoute.of(context)!.settings.arguments as Collection;
+    final Collection collection = ModalRoute.of(context)!.settings.arguments as Collection;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -103,10 +101,7 @@ class ItemCollectionScreen extends StatelessWidget {
           heroTagPrefix: 'collection',
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: getColumns(context),
-            childAspectRatio: 5 / 9,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10),
+            crossAxisCount: getColumns(context), childAspectRatio: 5 / 9, crossAxisSpacing: 10, mainAxisSpacing: 10),
       ),
     );
   }

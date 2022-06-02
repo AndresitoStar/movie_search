@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/splash/splash_viewmodel.dart';
-import 'package:path/path.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
-import 'package:movie_search/providers/util.dart';
 
 class SplashScreen extends StatelessWidget {
   static String route = "/splash";
@@ -34,10 +33,8 @@ class SplashScreen extends StatelessWidget {
           children: [
             Icon(Icons.network_locked, size: 160),
             SizedBox(height: 20),
-            Text(
-                'Parece que ocurrio un error, verifica que tengas conexión a Internet.',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline6),
+            Text('Parece que ocurrio un error, verifica que tengas conexión a Internet.',
+                textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6),
           ],
         ),
       );
@@ -82,8 +79,7 @@ class SplashScreen extends StatelessWidget {
 
   _navigateHome(BuildContext context) {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
     });
   }
 }

@@ -4,24 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/trending/trending_page.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
-import 'package:movie_search/ui/widgets/default_image.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
 
 import 'trending_viewmodel.dart';
-import 'package:movie_search/providers/util.dart';
 
 class TrendingCard extends StatelessWidget {
   final TrendingContent content;
   final TrendingType trendingType;
   final GenreTableData? genre;
 
-  TrendingCard(
-      {Key? key,
-      required this.content,
-      this.genre,
-      this.trendingType = TrendingType.TRENDING})
+  TrendingCard({Key? key, required this.content, this.genre, this.trendingType = TrendingType.TRENDING})
       : super(key: key);
 
   final _defaultLength = Platform.isWindows || Platform.isLinux ? 15 : 3;
@@ -36,20 +31,14 @@ class TrendingCard extends StatelessWidget {
       builder: (context, model, child) {
         final doIt = model.items.length > _defaultLength;
         return Container(
-          margin:
-              const EdgeInsets.symmetric(horizontal: 0).copyWith(bottom: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 0).copyWith(bottom: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               for (var i = 0; i < _defaultLength; ++i)
                 AnimatedCrossFade(
-                  firstChild: Container(
-                      key: UniqueKey(),
-                      height: 150,
-                      child: GridItemPlaceholder()),
-                  crossFadeState: doIt
-                      ? CrossFadeState.showSecond
-                      : CrossFadeState.showFirst,
+                  firstChild: Container(key: UniqueKey(), height: 150, child: GridItemPlaceholder()),
+                  crossFadeState: doIt ? CrossFadeState.showSecond : CrossFadeState.showFirst,
                   duration: Duration(milliseconds: 400),
                   secondChild: Container(
                     key: UniqueKey(),
@@ -58,9 +47,7 @@ class TrendingCard extends StatelessWidget {
                         ? ItemGridView(
                             item: model.items[i],
                             showData: false,
-                            heroTagPrefix: genre != null
-                                ? genre!.id
-                                : '${content.type}${trendingType.index}',
+                            heroTagPrefix: genre != null ? genre!.id : '${content.type}${trendingType.index}',
                             useBackdrop: true,
                           )
                         : null,
@@ -81,6 +68,6 @@ class TrendingCard extends StatelessWidget {
     );
   }
 
-  _onPressed(BuildContext context, model) => Navigator.of(context)
-      .push(Routes.defaultRoute(null, TrendingPage(param: model)));
+  _onPressed(BuildContext context, model) =>
+      Navigator.of(context).push(Routes.defaultRoute(null, TrendingPage(param: model)));
 }

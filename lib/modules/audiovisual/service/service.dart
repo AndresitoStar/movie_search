@@ -19,6 +19,7 @@ class AudiovisualService extends BaseService {
   final Map<String, List<BaseSearchResult>> _cacheRecommendation = {};
   final Map<String, Collection> _cacheCollection = {};
   final Map<String, Seasons> _cacheSeason = {};
+  final Map<String, Episode> _cacheEpisode = {};
   final Map<String, List<BaseSearchResult>> _cacheCredits = {};
 
   Future<dynamic> getById({required String type, required num id}) async => sendGET(
@@ -62,6 +63,13 @@ class AudiovisualService extends BaseService {
         (data) => Seasons.fromJson(data),
         cacheMap: _cacheSeason,
         idCache: '$id$seasonNumber',
+      );
+
+  Future<Episode> getEpisode(num tvShowId, num seasonNumber, num episodeNumber) async => sendGET<Episode>(
+        'tv/$tvShowId/season/$seasonNumber/episode/$episodeNumber',
+        (data) => Episode.fromJson(data),
+        cacheMap: _cacheEpisode,
+        idCache: '$tvShowId-$seasonNumber-$episodeNumber',
       );
 
   Future<List<BaseSearchResult>> getPersonCombinedCredits(num id) async =>

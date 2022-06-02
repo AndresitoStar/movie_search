@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,10 +12,7 @@ class SearchResponse {
   final int totalResult;
   final int totalPageResult;
 
-  SearchResponse(
-      {required this.totalResult,
-      required this.totalPageResult,
-      required this.result});
+  SearchResponse({required this.totalResult, required this.totalPageResult, required this.result});
 }
 
 // const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w342';
@@ -46,8 +42,7 @@ extension snackbar_extension on BuildContext {
 }
 
 extension DateFormatter on DateTime {
-  String get format =>
-      DateFormat('dd MMMM yyyy', Locale('es', 'ES').toString()).format(this);
+  String get format => DateFormat('dd MMMM yyyy', Locale('es', 'ES').toString()).format(this);
 }
 
 enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON }
@@ -117,8 +112,7 @@ class SharedPreferencesHelper {
   static SharedPreferencesHelper? _instance;
 
   static SharedPreferencesHelper getInstance() {
-    if (_instance == null || _instance!._streamForHighQuality.isClosed)
-      _instance = SharedPreferencesHelper._();
+    if (_instance == null || _instance!._streamForHighQuality.isClosed) _instance = SharedPreferencesHelper._();
     return _instance!;
   }
 
@@ -127,8 +121,7 @@ class SharedPreferencesHelper {
     isHighQuality().then((value) => _streamForHighQuality.add(value));
 
     _streamForSearchHistory = BehaviorSubject<List<String>>();
-    getSearchHistory()
-        .then((value) => _streamForSearchHistory.add(value.reversed.toList()));
+    getSearchHistory().then((value) => _streamForSearchHistory.add(value.reversed.toList()));
   }
 
   late StreamController<bool> _streamForHighQuality;
@@ -136,8 +129,7 @@ class SharedPreferencesHelper {
 
   Stream<bool> get streamForHighQuality => _streamForHighQuality.stream;
 
-  Stream<List<String>> get streamForSearchHistory =>
-      _streamForSearchHistory.stream;
+  Stream<List<String>> get streamForSearchHistory => _streamForSearchHistory.stream;
 
   Function(bool) get changeHighQuality => _streamForHighQuality.sink.add;
 
@@ -226,5 +218,34 @@ class SharedPreferencesHelper {
 
   static void setFlexSchemaColor(String value) async {
     _setString('SCHEME_COLOR', value);
+  }
+}
+
+extension DurationExtension on Duration {
+  String formatDuration() {
+    var seconds = this.inSeconds;
+    final days = seconds ~/ Duration.secondsPerDay;
+    seconds -= days * Duration.secondsPerDay;
+    final hours = seconds ~/ Duration.secondsPerHour;
+    seconds -= hours * Duration.secondsPerHour;
+    final minutes = seconds ~/ Duration.secondsPerMinute;
+    seconds -= minutes * Duration.secondsPerMinute;
+
+    final List<String> tokens = [];
+    if (days != 0) {
+      // tokens.add('${days}d');
+      return days == 1 ? '$days dia' : '$days dias'; // TODO add to localizations
+    }
+    if (tokens.isNotEmpty || hours != 0) {
+      // tokens.add('${hours}h');
+      return hours == 1 ? '$hours hora' : '$hours horas'; // TODO add to localizations
+    }
+    if (tokens.isNotEmpty || minutes != 0) {
+      // tokens.add('${minutes}m');
+      return minutes == 1 ? '$minutes minuto' : '$minutes minutos'; // TODO add to localizations
+    }
+    // tokens.add('${seconds}s');
+    return seconds == 1 ? '$seconds segundo' : '$seconds segundos';
+    // return tokens.join(':');
   }
 }

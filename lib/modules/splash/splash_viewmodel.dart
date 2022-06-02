@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/splash/splash_service.dart';
@@ -56,8 +56,8 @@ class SplashViewModel extends FutureViewModel {
     }
     AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
     String phoneModel = '${androidInfo.brand} ${androidInfo.model}';
-    await _splashService.updateMyDevice(androidInfo.androidId, phoneModel: phoneModel);
-    final isEnabled = await _splashService.checkIsDeviceEnable(androidInfo.androidId);
+    await _splashService.updateMyDevice(androidInfo.androidId!, phoneModel: phoneModel);
+    final isEnabled = await _splashService.checkIsDeviceEnable(androidInfo.androidId!);
     setInitialised(isEnabled);
     setBusy(false);
   }
@@ -66,7 +66,7 @@ class SplashViewModel extends FutureViewModel {
     setBusy(true);
     AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
     String phoneModel = '${androidInfo.brand} ${androidInfo.model}';
-    await _splashService.updateMyDevice(androidInfo.androidId, email: email, phoneModel: phoneModel);
+    await _splashService.updateMyDevice(androidInfo.androidId!, email: email, phoneModel: phoneModel);
     setBusy(false);
     form.reset();
   }
