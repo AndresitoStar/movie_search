@@ -30,6 +30,12 @@ class SettingsScreen extends StatelessWidget {
                     elevation: 0,
                   ),
                 Expanded(child: _getInfo(context, 'Buscador de Peliculas', '2.0.0')),
+                  titleSpacing: 0,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                ),
+                Expanded(
+                    child: _getInfo(context, 'Buscador de Peliculas by AndresitoStar', '2.0.1')),
               ],
             ),
           ),
