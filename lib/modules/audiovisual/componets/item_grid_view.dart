@@ -1,17 +1,13 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
-import 'package:movie_search/modules/audiovisual/viewmodel/item_grid_viewmodel.dart';
+import 'package:movie_search/modules/search/search_result_list_item.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
-import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
-import 'package:movie_search/ui/widgets/placeholder.dart';
-import 'package:stacked/stacked.dart';
 
 import 'item_detail_page.dart';
 
@@ -20,10 +16,12 @@ class ItemGridView extends StatelessWidget {
   final bool useBackdrop;
   final BaseSearchResult item;
   final EdgeInsets margin;
+  final String heroTagPrefix;
 
   const ItemGridView({
-    Key key,
-    @required this.item,
+    Key? key,
+    required this.item,
+    required this.heroTagPrefix,
     this.showData = true,
     this.useBackdrop = false,
     this.margin = const EdgeInsets.all(10),
@@ -31,12 +29,10 @@ class ItemGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (useBackdrop) return SearchResultListItem(searchResult: item);
     final theme = Theme.of(context);
-    return ViewModelBuilder<ItemGridViewModel>.reactive(
-      viewModelBuilder: () => ItemGridViewModel(this.item),
-      disposeViewModel: true,
-      builder: (context, model, child) {
-        if (!model.initialised) return GridItemPlaceholder();
+    return Builder(
+      builder: (context) {
         final child = Card(
           margin: margin,
           elevation: 5,
@@ -52,14 +48,11 @@ class ItemGridView extends StatelessWidget {
                 AspectRatio(
                   aspectRatio: 9 / 16,
                   child: (useBackdrop && item.backDropImage != null) || item.posterImage != null
-                      ? CachedNetworkImage(
-                          imageUrl:
-                              '${model.baseImageUrl}${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
-                          placeholder: (_, __) =>
-                              Container(color: Colors.transparent, child: Center(child: CircularProgressIndicator())),
-                          errorWidget: (ctx, _, __) =>
-                              Container(color: Colors.transparent, child: Center(child: Icon(MyIcons.default_image))),
+                      ? ContentImageWidget(
+                          '${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
                           fit: BoxFit.cover,
+                          ignorePointer: true,
+                          isBackdrop: useBackdrop && item.backDropImage != null,
                         )
                       : PlaceholderImage(),
                 ),
@@ -84,7 +77,7 @@ class ItemGridView extends StatelessWidget {
                     right: 0,
                     child: Container(
                       padding: const EdgeInsets.all(8),
-                      child: Icon(MyIcons.iconFromType(item.type)),
+                      child: Icon(item.type.icon),
                       decoration: BoxDecoration(
                         color: theme.scaffoldBackgroundColor.withOpacity(0.8),
                         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10)),
@@ -108,8 +101,17 @@ class ItemGridView extends StatelessWidget {
                             textAlign: useBackdrop ? TextAlign.start : TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
-                            style: theme.textTheme.headline6.copyWith(fontSize: 16),
+                            style: theme.textTheme.headline6!.copyWith(fontSize: 16),
                           ),
+                          subtitle: item.subtitle == null
+                              ? null
+                              : Text(
+                                  item.subtitle!,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: theme.textTheme.caption,
+                                ),
                         ),
                       ),
                     ),
@@ -121,17 +123,12 @@ class ItemGridView extends StatelessWidget {
         );
         return Stack(
           children: [
-            MouseRegion(
-              cursor: SystemMouseCursors.click,
-              onEnter: (event) => model.toggleOver(true),
-              onExit: (event) => model.toggleOver(false),
-              child: useBackdrop
-                  ? child
-                  : Hero(
-                      tag: '${model.data.id}',
-                      child: child,
-                    ),
-            ),
+            useBackdrop
+                ? child
+                : Hero(
+                    tag: '$heroTagPrefix${item.id}',
+                    child: child,
+                  ),
             if (!useBackdrop)
               Positioned(
                 bottom: 50,
@@ -156,6 +153,13 @@ class ItemGridView extends StatelessWidget {
     );
   }
 
-  _onPressed(BuildContext context) =>
-      Navigator.of(context).push(Routes.defaultRoute(null, ItemDetailPage(item: this.item)));
+  _onPressed(BuildContext context) {
+    print('$heroTagPrefix${item.id}');
+    return Navigator.of(context).push(Routes.defaultRoute(
+        null,
+        ItemDetailPage(
+          item: this.item,
+          heroTagPrefix: heroTagPrefix,
+        )));
+  }
 }

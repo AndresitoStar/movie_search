@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/model/api/models/movie.dart';
+import 'package:movie_search/model/api/models/person.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_collection.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_tv_season.dart';
+import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
 import 'package:movie_search/providers/util.dart';
@@ -19,28 +21,25 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
 
   @override
   Widget build(BuildContext context, viewModel) {
-    final item = viewModel.data;
+    final BaseSearchResult item = viewModel.data!;
     final children = <Widget>[
-      if (item.type == TMDB_API_TYPE.MOVIE)
-        ..._movieContentWidgets(context, item.movie),
-      if (item.type == TMDB_API_TYPE.TV_SHOW)
-        ..._tvShowsContentWidgets(context, item.tvShow),
+      if (item.type == TMDB_API_TYPE.MOVIE) ..._movieContentWidgets(context, item.movie!),
+      if (item.type == TMDB_API_TYPE.TV_SHOW) ..._tvShowsContentWidgets(context, item.tvShow!),
+      if (item.type == TMDB_API_TYPE.PERSON) ..._personContentWidgets(context, item.person!),
     ];
-    return isSliver
-        ? SliverList(delegate: SliverChildListDelegate(children))
-        : Column(children: children);
+    return isSliver ? SliverList(delegate: SliverChildListDelegate(children)) : Column(children: children);
   }
 
-  List<Widget> _movieContentWidgets(BuildContext context, MovieApi movie) {
+  List<Widget> _movieContentWidgets(BuildContext context, Movie movie) {
     return [
       if (movie.homepage != null)
         ContentHorizontal(
           padding: 8,
           label: 'Sitio Oficial',
           subtitle: GestureDetector(
-            onTap: () => launch(movie.homepage),
+            onTap: () => launch(movie.homepage!),
             child: Text(
-              movie.homepage,
+              movie.homepage!,
               style: TextStyle(
                 decoration: TextDecoration.underline,
               ),
@@ -53,12 +52,13 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
         value1: movie.productionCountries?.join(', '),
         value2: movie.spokenLanguages?.join(', '),
       ),
-      ContentRow(
-        label1: 'Fecha de estreno',
-        label2: 'Duración',
-        value1: DateTime.tryParse(movie.releaseDate).format,
-        value2: movie.runtime != null ? '${movie.runtime} minutos' : null,
-      ),
+      if (movie.releaseDate?.isNotEmpty ?? false)
+        ContentRow(
+          label1: 'Fecha de estreno',
+          label2: 'Duración',
+          value1: DateTime.tryParse(movie.releaseDate!)?.format,
+          value2: movie.runtime != null ? '${movie.runtime} minutos' : null,
+        ),
       ContentDivider(value: movie.productionCompanies?.join(', ')),
       ContentHorizontal(
         padding: 8,
@@ -68,27 +68,15 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
       if (movie.collection != null) ...[
         Divider(indent: 8, endIndent: 8),
         ItemCollectionView(
-          collection: movie.collection,
+          collection: movie.collection!,
           sliver: false,
         ),
       ]
     ];
   }
 
-  List<Widget> _tvShowsContentWidgets(BuildContext context, TvApi tvShow) {
+  List<Widget> _tvShowsContentWidgets(BuildContext context, TvShow tvShow) {
     return [
-      // ContentDynamic(
-      //   labels: [
-      //     'Capitulos',
-      //     'Duración',
-      //   ],
-      //   values: [
-      //     '${tvShow.numberOfEpisodes ?? '-'}',
-      //     tvShow.episodeRunTime != null && tvShow.episodeRunTime.isNotEmpty
-      //         ? '${tvShow.episodeRunTime.first} minutos'
-      //         : null,
-      //   ],
-      // ),
       ContentRow(
         label1: 'Pais',
         label2: 'Idioma',
@@ -98,49 +86,63 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
       ContentRow(
         label1: 'Fecha de estreno',
         label2: 'Ultima emisión',
-        value1: DateTime.tryParse(tvShow.firstAirDate).format,
-        value2: DateTime.tryParse(tvShow.lastAirDate).format,
+        value1: tvShow.firstAirDate == null ? null : DateTime.tryParse(tvShow.firstAirDate!)?.format,
+        value2: tvShow.lastAirDate == null ? null : DateTime.tryParse(tvShow.lastAirDate!)?.format,
       ),
-      if (tvShow.seasons.length > 0) ItemDetailTvSeasonView(false),
-      if (tvShow.createdByPerson != null && tvShow.createdByPerson.isNotEmpty)
+      if (tvShow.seasons != null && tvShow.seasons!.length > 0) ItemDetailTvSeasonView(false),
+      if (tvShow.createdByPerson != null && tvShow.createdByPerson!.isNotEmpty)
         ListTile(
           title: Text(
             'Creadores',
-            style: Theme.of(context).textTheme.headline5.copyWith(
+            style: Theme.of(context).textTheme.headline5!.copyWith(
                   color: Theme.of(context).primaryColor,
                 ),
           ),
           subtitle: Container(
             height: 330,
             child: PersonHorizontalList(
-              items: tvShow.createdByPerson,
+              items: tvShow.createdByPerson!,
+              tag: '${tvShow.id}',
             ),
           ),
         ),
-      if (tvShow.homepage != null && tvShow.homepage.isNotEmpty)
+      if (tvShow.homepage != null && tvShow.homepage!.isNotEmpty)
         ContentHorizontal(
           padding: 8,
           label: 'Sitio Oficial',
           subtitle: GestureDetector(
-            onTap: () => launch(tvShow.homepage),
+            onTap: () => launch(tvShow.homepage!),
             child: Text(
-              tvShow.homepage,
+              tvShow.homepage!,
               style: TextStyle(
                 decoration: TextDecoration.underline,
               ),
             ),
           ),
         ),
-      ContentHorizontal(
-        padding: 8,
-        label: 'Productora',
-        // content: tvShow.productionCompanies.join(', '),
-        subtitle: logoWidgets(context, tvShow.productionCompanies),
-      ),
-      ContentHorizontal(
-        padding: 8,
-        label: 'Cadenas Televisivas',
-        subtitle: logoWidgets(context, tvShow.networks),
+      if (tvShow.productionCompanies != null)
+        ContentHorizontal(
+          padding: 8,
+          label: 'Productora',
+          // content: tvShow.productionCompanies.join(', '),
+          subtitle: logoWidgets(context, tvShow.productionCompanies!),
+        ),
+      if (tvShow.networks != null)
+        ContentHorizontal(
+          padding: 8,
+          label: 'Cadenas Televisivas',
+          subtitle: logoWidgets(context, tvShow.networks!),
+        ),
+    ];
+  }
+
+  List<Widget> _personContentWidgets(BuildContext context, Person item) {
+    return [
+      ContentRow(
+        label1: 'Conocida por',
+        label2: 'Lugar de Nacimiento',
+        value1: item.knownForDepartment,
+        value2: item.placeOfBirth,
       ),
     ];
   }
@@ -163,7 +165,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
                         ),
                       )
                     : Text(
-                        e.name,
+                        e.name!,
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
               )

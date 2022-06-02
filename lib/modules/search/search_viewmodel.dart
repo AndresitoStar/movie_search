@@ -9,12 +9,14 @@ import 'package:stacked/stacked.dart';
 
 class SearchViewModel extends BaseViewModel {
   final SearchService _service;
-  FormGroup form;
+  final FormGroup form = fb.group({
+    FORM_QUERY: FormControl<String>(value: ''),
+    FORM_CATEGORY: FormControl<SearchCategory>(value: SearchCategory.all()),
+  });
 
-  List<BaseSearchResult> _searchResults;
+  final List<BaseSearchResult> _searchResults = [];
 
-  List<BaseSearchResult> get searchResults =>
-      _searchResults != null ? [..._searchResults] : null;
+  List<BaseSearchResult> get searchResults => [..._searchResults];
 
   int _total = -1;
   int _page = 1;
@@ -27,12 +29,13 @@ class SearchViewModel extends BaseViewModel {
   static const String FORM_QUERY = 'formQuery';
   static const String FORM_CATEGORY = 'formCategory';
 
-  FormControl<String> get queryControl => this.form.controls[FORM_QUERY];
+  FormControl<String> get queryControl => this.form.controls[FORM_QUERY] as FormControl<String>;
 
-  FormControl<SearchCategory> get categoryControl =>
-      this.form.controls[FORM_CATEGORY];
+  FormControl<SearchCategory> get categoryControl => this.form.controls[FORM_CATEGORY] as FormControl<SearchCategory>;
 
-  SearchCategory get actualCategory => categoryControl.value;
+  SearchCategory? get actualCategory => categoryControl.value;
+
+  String get _query => queryControl.value ?? '';
 
   bool showFilter = false;
 
@@ -42,13 +45,9 @@ class SearchViewModel extends BaseViewModel {
   }
 
   SearchViewModel(this._service) {
-    this.form = fb.group({
-      FORM_QUERY: FormControl<String>(value: ''),
-      FORM_CATEGORY: FormControl<SearchCategory>(value: SearchCategory.all()),
-    });
     final onData = (event) {
-      _debounce.run(() {
-        search();
+      _debounce.run(() async {
+        await search();
       });
     };
     queryControl.valueChanges.listen(onData);
@@ -59,15 +58,12 @@ class SearchViewModel extends BaseViewModel {
     setBusy(true);
     try {
       _page = 1;
+      _searchResults.clear();
       if (queryControl.isNullOrEmpty) {
         _total = -1;
-        _searchResults = [];
       } else {
-        final response = await _service.search(queryControl.value,
-            page: _page, type: actualCategory.value);
-        if (response != null) {
-          _searchResults = response.result;
-        }
+        final response = await _service.search(_query, page: _page, type: actualCategory?.value);
+        _searchResults.addAll(response.result);
         _total = response.totalResult;
         _totalPage = response.totalPageResult;
       }
@@ -81,12 +77,9 @@ class SearchViewModel extends BaseViewModel {
 
   fetchMore(BuildContext context) async {
     _page++;
-    var result = await _service.search(queryControl.value,
-        page: _page, type: actualCategory.value);
-    if (result != null) {
-      _searchResults.addAll(result.result);
-      _totalPage = result.totalPageResult;
-    }
+    var result = await _service.search(_query, page: _page, type: actualCategory?.value);
+    _searchResults.addAll(result.result);
+    _totalPage = result.totalPageResult;
     notifyListeners();
   }
 }

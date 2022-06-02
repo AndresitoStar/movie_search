@@ -3,7 +3,7 @@ import 'package:movie_search/modules/splash/splash_service.dart';
 import 'package:stacked/stacked.dart';
 
 class TrendingFilterViewModel extends FutureViewModel {
-  Map<String, bool> _filterGenre;
+  Map<String, bool> _filterGenre = {};
 
   Map<String, bool> get filterGenre => {..._filterGenre};
 
@@ -16,11 +16,10 @@ class TrendingFilterViewModel extends FutureViewModel {
 
   final String type;
 
-  TrendingFilterViewModel(this._db, this.type, this._filterGenre)
-      : _splashService = SplashService.getInstance();
+  TrendingFilterViewModel(this._db, this.type, this._filterGenre) : _splashService = SplashService.getInstance();
 
   toggle(String genre) {
-    final newValue = !filterGenre[genre];
+    final newValue = !filterGenre[genre]!;
     _filterGenre.update(genre, (v) => newValue);
     notifyListeners();
   }
@@ -36,8 +35,7 @@ class TrendingFilterViewModel extends FutureViewModel {
       if (bool) return [];
       var genres = await _splashService.getGenres(type);
       final dbGenres = genres.entries
-          .map((entry) => GenreTableData(
-              id: entry.key?.toString(), name: entry.value, type: type))
+          .map((entry) => GenreTableData(id: entry.key.toString(), name: entry.value, type: type))
           .toList();
       await _db.insertGenres(dbGenres);
       return dbGenres;
@@ -54,9 +52,7 @@ class TrendingFilterViewModel extends FutureViewModel {
     if (_genres.isEmpty) {
       _genres = await syncGenres(type);
     }
-    if (_filterGenre == null || _filterGenre.isEmpty)
-      _filterGenre =
-          Map.fromIterable(_genres, key: (v) => '${v.id}', value: (v) => false);
+    if (_filterGenre.isEmpty) _filterGenre = Map.fromIterable(_genres, key: (v) => '${v.id}', value: (v) => false);
     setBusy(false);
   }
 }

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/modules/person/components/person_item_grid.dart';
+import 'package:movie_search/model/api/models/person.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_list_page.dart';
+import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/person/viewmodel/cast_list_viewmodel.dart';
+import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
 
 class CreditHorizontalList extends StatelessWidget {
   final String type;
-  final int typeId;
+  final num typeId;
   final bool isSliver;
 
-  const CreditHorizontalList(this.type, this.typeId,
-      {Key key, this.isSliver = true})
-      : super(key: key);
+  const CreditHorizontalList(this.type, this.typeId, {Key? key, this.isSliver = true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +31,24 @@ class CreditHorizontalList extends StatelessWidget {
                       ListTile(
                         title: Text(
                           'Reparto',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                                color: Theme.of(context).primaryColor,
+                          style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).primaryColor),
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.grid_view_rounded),
+                          onPressed: () => Navigator.of(context).push(
+                            Routes.defaultRoute(
+                              null,
+                              ItemListPage(
+                                items: model.items.map((e) => BaseSearchResult.fromPerson(e)).toList(),
+                                title: 'Reparto',
+                                heroTagPrefix: 'person-$typeId',
                               ),
+                            ),
+                          ),
                         ),
                       ),
                       Container(
-                        constraints: BoxConstraints(
-                            minHeight: height, maxHeight: height + 50),
+                        constraints: BoxConstraints(minHeight: height, maxHeight: height + 50),
                         child: model.isBusy
                             ? ListView.builder(
                                 physics: ClampingScrollPhysics(),
@@ -49,9 +60,7 @@ class CreditHorizontalList extends StatelessWidget {
                                   aspectRatio: 8 / 16,
                                 ),
                               )
-                            : PersonHorizontalList(
-                                items: model.items,
-                              ),
+                            : PersonHorizontalList(items: model.items, tag: '$typeId'),
                       ),
                     ],
                   );
@@ -66,12 +75,10 @@ class CreditHorizontalList extends StatelessWidget {
 }
 
 class PersonHorizontalList extends StatelessWidget {
-  const PersonHorizontalList({
-    Key key,
-    @required this.items,
-  }) : super(key: key);
+  const PersonHorizontalList({Key? key, required this.items, required this.tag}) : super(key: key);
 
   final List<Person> items;
+  final String tag;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +88,11 @@ class PersonHorizontalList extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemCount: items.length,
       itemBuilder: (ctx, i) => AspectRatio(
-        child: PersonItemGridView(person: items[i]),
+        child: ItemGridView(
+          item: BaseSearchResult.fromPerson(items[i]),
+          heroTagPrefix: '$i-person-$tag-',
+          showData: false,
+        ),
         aspectRatio: 8 / 16,
       ),
     );

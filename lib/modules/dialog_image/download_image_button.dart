@@ -15,8 +15,7 @@ class ImageDownloadButton extends StatelessWidget {
   final String imgUrl;
   final String imageName;
 
-  const ImageDownloadButton(this.imgUrl, this.imageName, {Key key})
-      : super(key: key);
+  const ImageDownloadButton(this.imgUrl, this.imageName, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +24,7 @@ class ImageDownloadButton extends StatelessWidget {
           ? model.isBusy
               ? CircularProgressIndicator(strokeWidth: 1)
               : model.hasError
-                  ? MyCircularButton(
-                      icon: Icon(MyIcons.error, color: Colors.red))
+                  ? MyCircularButton(icon: Icon(MyIcons.error, color: Colors.red))
                   : MyCircularButton(
                       icon: Icon(MyIcons.download),
                       onPressed: () => _downloadImage(context, model),
@@ -36,8 +34,7 @@ class ImageDownloadButton extends StatelessWidget {
     );
   }
 
-  Future _downloadImage(
-      BuildContext context, ImageDownloadViewModel model) async {
+  Future _downloadImage(BuildContext context, ImageDownloadViewModel model) async {
     try {
       model.setBusy(true);
       final response = await get(Uri.parse(imgUrl));

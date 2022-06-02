@@ -52,5 +52,5 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            Nueva version: Buscador de Peliculas y Series, by Ing. Andrés Forns Jusino
+            Nueva version: Movie Search, by Ing. Andrés Forns Jusino
             ${{ steps.v8a.outputs.link }}

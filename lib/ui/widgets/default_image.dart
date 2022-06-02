@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class PlaceholderImage extends StatelessWidget {
-  final double height;
+  final double? height;
 
   const PlaceholderImage({
-    Key key,
+    Key? key,
     this.height,
   }) : super(key: key);
 

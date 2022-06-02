@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class MyCircularButton extends StatelessWidget {
   final Widget icon;
-  final VoidCallback onPressed;
-  final Color color;
+  final VoidCallback? onPressed;
+  final Color? color;
 
   const MyCircularButton({
-    Key key,
-    @required this.icon,
+    Key? key,
+    required this.icon,
     this.onPressed,
     this.color,
   }) : super(key: key);
@@ -18,8 +18,7 @@ class MyCircularButton extends StatelessWidget {
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color:
-            color ?? Theme.of(context).colorScheme.background.withOpacity(0.5),
+        color: color ?? Theme.of(context).colorScheme.background.withOpacity(0.5),
       ),
       child: IconButton(
         icon: icon,

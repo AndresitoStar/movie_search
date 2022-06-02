@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "media-catalog-5af13",
+  "private_key_id": "bf4ec2cb4a3b93f6139c35991ad5330ea4bd1a72",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCZL9Jl8PX3Rzll\nmDlK31FtrqSDcs01K+Q3na3TTIGbnqhm0tDrCHVrPbiwUe5jfvvp/RRcy3YJVSfc\nJ8eqhqUuiTyqOEtdR0Et95inH7ixsVA9Sus4BTqpSCgyakn9nZAR7mkYnqXqxDRD\nGhwCRMcrRmpN3dBPetbG93PZN2N/bncQpRqjSFMbl/g6Vv/6E5a6eCjW7OINF0AB\ne0isew3QBtRxf0GsfA2otaFl2nc+MGmbF3KUa46kpQuPIew8Fx+Ufa22UtOfXM8H\ntddvqjo+FYtqpgsg/DeEHLCbwktGODG4QQHYYJi2SpxWUPoQ9ezyWk7gh8ZIkdah\nrdySVl89AgMBAAECggEABG0tFXyFwwA4IJ8qMqdq1TJJdzHrS5jJ1rCT/AnXKe3G\n/HeliVEcgX2OV2v6qT3bXirNupO3hLQE+5fbrWoIHmThT6LiTJ75O3CO5O9l+R6A\nTNEcJGmERS18Wd6X5j/2EIqU110IOtUyFGlN+2PM5It7mWXqNc29JJE0dAeldKJr\nU/+Db/WWx2K8DYEH6u21g8i6H4jIjHc89XDuU7odS8Q9ktTKxD9nBvDE83aSWGJR\n9ygTYoM/nynouejEzRu7GiKf+kbDWJx6HBssERGyJNK/ELx7uOalGussf3wGZzAm\nbdlVULJSQ4XywINQeQm6U0/BLiAm7EbDs6xjBRjYaQKBgQDLVrD4wg+rdKc9b1Rr\nWq85qobMVW2hNvXJ4n4Xr7NnzGPkBMPQGb737nZOAkF4eLU6Na10TUwusaW6tEu5\nlZRIK1+b4R4+Qypnt1SNPpAgt/xeHQuMl4cnissjBnnLT//MLa2yNCC/7rsJ1Vxd\ntzRTp759f1JnNoSAP6W6C2dX2QKBgQDA3BMY/snoti4k6Xtxg8ObR87EdXqCvNAg\nSlRhh6/R1EAb+i8crIBrN583x9ToESBuXC6tQiL5BTV4jh8zgw4vZej2PD+vgD8l\n+e1ZKhIhBhimu3c3rwWauqhzxp8QpRIF5ofvBD5dezA7axS34UhKtjxyzXpOsH5I\n1uJb+z3oBQKBgQDKfdpe32Kba9/f3i5DeltlIdx7P9ec5A6ArXzEOcR/aZtQRy54\n3iq+3EoUBUsNnadcAHhriU6EcYSJGWMPvVWdSRQ9N0HW3ywrfPZGcjc1XgOD9Yi6\nyWtehWklyB0hytkBi7ud6ytx91trv33sFbWWWUXp1BFLl4776GYxj4mqgQKBgC4d\nsbddXXx266vJ5Mms/z4HOqsBiGzwpzfBblHv9xvOjBHkjhVmLkL1Bu54qzFevwmE\no2iskt5G35VXLqDLqr2subr/hx75JKB5FccnZzRcV9KuqwA2qrln/tXIXcrGHfwp\nNsHxmtQRm+PpZAfgJ8AtuWCeP6vHSjsynuftuMzdAoGBAIqwHypa0DTyZMQpBGcM\nKAH4vLS9VqlWumlMLILtuKdB5ohPyDK/PJOEz8ijGxeua6JmOcd9zXYjDehZOi16\nHDloQCiQOyAHJ3tMEOQpdVzR1bwpICgko5sdWGCm92wq5YCFPiDdNFeyg4kowYFo\ndnZ1A5U4qdZSNfwgu8z/xhO4\n-----END PRIVATE KEY-----\n",
+  "client_email": "movie-search-file-upload-servi@media-catalog-5af13.iam.gserviceaccount.com",
+  "client_id": "102038306384391343498",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/movie-search-file-upload-servi%40media-catalog-5af13.iam.gserviceaccount.com"
+}
