@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
+import 'package:movie_search/modules/themes/theme_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/screens/settings.dart';
+import 'package:stacked/stacked.dart';
+import 'package:provider/provider.dart';
 
 class MyLateralBar extends StatelessWidget {
   final int index;
@@ -14,49 +17,120 @@ class MyLateralBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      width: 32,
-      child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width,
-            minHeight: MediaQuery.of(context).size.height,
-          ),
-          child: IntrinsicHeight(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: 20),
-                IconButton(
-                  icon: Icon(MyIcons.home),
-                  tooltip: 'Inicio',
-                  color: index == 0 ? theme.accentColor : Colors.white,
-                  onPressed: () => _onTap(context, 0),
+    return ViewModelBuilder<ThemeViewModel>.reactive(
+      viewModelBuilder: () => context.read(),
+      disposeViewModel: false,
+      builder: (context, model, _) => AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        width: model.drawerOpened ? 160 : 50,
+        color: theme.primaryColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 25),
+            Expanded(
+              flex: 1,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  icon: Icon(MyIcons.drawerHamburger),
+                  onPressed: () => model.toggleOpenDrawer(),
                 ),
-                IconButton(
-                  icon: Icon(MyIcons.search),
-                  tooltip: 'Buscar',
-                  color: index == 1 ? theme.accentColor : Colors.white,
-                  onPressed: () => _onTap(context, 1),
-                ),
-                IconButton(
-                  icon: Icon(MyIcons.favourite_off),
-                  onPressed: () => _onTap(context, 2),
-                  color: index == 2 ? theme.accentColor : Colors.white,
-                  tooltip: 'Favoritos',
-                ),
-                IconButton(
-                  icon: Icon(MyIcons.settings),
-                  tooltip: 'Ajustes',
-                  color: index == 3 ? theme.accentColor : Colors.white,
-                  onPressed: () => _onTap(context, 3),
-                ),
-                SizedBox(height: 20),
-              ],
+              ),
             ),
-          ),
+            Expanded(
+              flex: 6,
+              child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: MediaQuery.of(context).size.width,
+                    minHeight: MediaQuery.of(context).size.height,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          color: index == 0
+                              ? Theme.of(context).primaryColorDark
+                              :  Colors.transparent,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(MyIcons.home),
+                                tooltip: 'Inicio',
+                                color: Theme.of(context).primaryColorLight,
+                                onPressed: () => _onTap(context, 0),
+                              ),
+                              if (model.drawerOpened) SizedBox(width: 5),
+                              if (model.drawerOpened) drawerText(context, 'Inicio', 0)
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          color: index == 1
+                              ? Theme.of(context).primaryColorDark
+                              : Colors.transparent,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(MyIcons.search),
+                                tooltip: 'Buscar',
+                                color: Theme.of(context).primaryColorLight,
+                                onPressed: () => _onTap(context, 1),
+                              ),
+                              if (model.drawerOpened) SizedBox(width: 5),
+                              if (model.drawerOpened) drawerText(context, 'Buscar', 1)
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          color: index == 2
+                              ? Theme.of(context).primaryColorDark
+                              :  Colors.transparent,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(MyIcons.favourite_off),
+                                onPressed: () => _onTap(context, 2),
+                                color: Theme.of(context).primaryColorLight,
+                                tooltip: 'Favoritos',
+                              ),
+                              if (model.drawerOpened) SizedBox(width: 5),
+                              if (model.drawerOpened)
+                                drawerText(context, 'Favoritos', 2)
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          color: index == 3
+                              ? Theme.of(context).primaryColorDark
+                              :  Colors.transparent,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(MyIcons.settings),
+                                tooltip: 'Ajustes',
+                                color: Theme.of(context).primaryColorLight,
+                                onPressed: () => _onTap(context, 3),
+                              ),
+                              if (model.drawerOpened) SizedBox(width: 5),
+                              if (model.drawerOpened) drawerText(context, 'Ajustes', 3)
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -92,4 +166,18 @@ class MyLateralBar extends StatelessWidget {
   Future goToSettings(BuildContext context) {
     return Navigator.of(context).pushNamed(SettingsScreen.routeName);
   }
+
+  Widget drawerText(BuildContext context, String text, int index) =>
+      AnimatedOpacity(
+        duration: Duration(seconds: 1),
+        opacity: 1,
+        child: InkWell(
+          onTap: () => _onTap(context, index),
+          child: Text(
+            text.toUpperCase(),
+            style: Theme.of(context).textTheme.headline6.copyWith(
+                color: Theme.of(context).primaryColorLight),
+          ),
+        ),
+      );
 }

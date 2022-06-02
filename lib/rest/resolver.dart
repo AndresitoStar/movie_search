@@ -55,8 +55,9 @@ abstract class BaseService {
       if (response.statusCode == 200) {
         final data = response.data;
         final profiles = data['profiles'] as List ?? [];
+        final backdrops = data['backdrops'] as List ?? [];
         final posters = data['posters'] as List ?? [];
-        final list = [...profiles, ...posters];
+        final list = [...profiles, ...posters, ...backdrops];
         if (list != null) {
           for (var i = 0; i < list.length; i++) {
             MediaImage b = MediaImage.fromJson(list[i]);

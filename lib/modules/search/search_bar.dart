@@ -19,110 +19,64 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
+
     return ViewModelBuilder<SearchViewModel>.nonReactive(
       viewModelBuilder: () => context.read(),
       onModelReady: (model) => this.onLoad(model),
-      builder: (context, model, child) => Card(
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        clipBehavior: Clip.hardEdge,
-        elevation: 0,
-        color: Theme.of(context).cardColor.withOpacity(0.28),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: ReactiveForm(
+      builder: (context, model, child) => AppBar(
+        leading: IconButton(
+          icon: Icon(MyIcons.arrow_left),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        automaticallyImplyLeading: false,
+        toolbarHeight: kToolbarHeight + 10,
+        titleSpacing: 0,
+        primary: true,
+        title: ReactiveForm(
           formGroup: model.form,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () => null,
-                    icon: Icon(MyIcons.search),
-                    iconSize: 20,
-                  ),
-                  Expanded(
-                    child: ReactiveTextField(
-                      formControl: model.queryControl,
-                      cursorColor: Colors.white,
-                      decoration: InputDecoration(
-                        hintText: 'Buscar...',
-                        hintStyle: TextStyle(fontSize: 20),
-                        suffixIcon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(MyIcons.clear),
-                              onPressed: () =>
-                                  model.queryControl.reset(value: ''),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.filter_alt),
-                              color: Theme.of(context).iconTheme.color,
-                              onPressed: () => model.toggleFilter(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+          child: Container(
+            clipBehavior: Clip.hardEdge,
+            margin: const EdgeInsets.only(right: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+            ),
+            child: ReactiveTextField(
+              formControl: model.queryControl,
+              cursorColor: Theme.of(context).colorScheme.onBackground,
+              autocorrect: false,
+              style: TextStyle(
+                fontSize: 20,
+                color: Theme.of(context).colorScheme.onBackground,
               ),
-              AnimatedContainer(
-                height: model.showFilter ? kToolbarHeight - 10 : 0,
-                duration: Duration(milliseconds: 400),
-                curve: Curves.fastOutSlowIn,
-                child: ReactiveForm(
-                  formGroup: model.form,
-                  child: ReactiveFormField<SearchCategory>(
-                    formControl: model.categoryControl,
-                    builder: (field) => Center(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: SearchCategory.getAll()
-                              .map(
-                                (e) => Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(15),
-                                    mouseCursor: SystemMouseCursors.click,
-                                    onTap: () => field.control
-                                        .updateValue(e, emitEvent: true),
-                                    child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 5),
-                                        decoration: BoxDecoration(
-                                          color: e == model.actualCategory
-                                              ? Theme.of(context).accentColor
-                                              : Colors.white24,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        child: Text(
-                                          e.label ?? e.value ?? '-',
-                                          style: TextStyle(
-                                            fontWeight: e == model.actualCategory
-                                              ? FontWeight.w700
-                                              : FontWeight.normal,
-                                            color: e == model.actualCategory
-                                              ? Colors.black87
-                                              : Colors.white,
-                                          ),
-                                        )),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ),
+              decoration: InputDecoration(
+                prefix: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    MyIcons.search,
+                    size: 20,
                   ),
                 ),
+                hintText: 'Buscar...',
+                hintStyle: TextStyle(fontSize: 20),
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(MyIcons.clear),
+                      color: Theme.of(context).iconTheme.color,
+                      onPressed: () => model.queryControl.reset(value: ''),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.filter_alt),
+                      color: Theme.of(context).iconTheme.color,
+                      onPressed: () => model.toggleFilter(),
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
         ),
       ),

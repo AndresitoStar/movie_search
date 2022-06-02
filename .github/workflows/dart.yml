@@ -16,7 +16,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
-          flutter-version: "2.0.1"
+          flutter-version: "2.2.3"
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build apk --release --split-per-abi
@@ -54,5 +54,3 @@ jobs:
           message: |
             Nueva version: Buscador de Peliculas y Series, by Ing. Andrés Forns Jusino
             ${{ steps.v8a.outputs.link }}
-            ${{ steps.v7a.outputs.link }}
-            ${{ steps.x86.outputs.link }}

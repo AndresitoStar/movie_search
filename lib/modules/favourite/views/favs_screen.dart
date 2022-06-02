@@ -12,8 +12,11 @@ import 'package:stacked/stacked.dart';
 
 class FavouriteScreen extends StatelessWidget {
   static String routeName = "/favourite";
+
   @override
   Widget build(BuildContext context) {
+    final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
+
     return ViewModelBuilder<FavouritesViewModel>.nonReactive(
       onModelReady: (model) => model.initialize(),
       builder: (context, model, _) => DefaultTabController(
@@ -28,14 +31,15 @@ class FavouriteScreen extends StatelessWidget {
                   floating: false,
                   snap: false,
                   pinned: true,
-                  elevation: 3,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  // elevation: 0,
+                  primary: true,
                   title: Text('Favoritos'),
                   leading: IconButton(
                     icon: Icon(MyIcons.arrow_left),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   titleSpacing: 0,
+                  toolbarHeight: landscape ? 0 : kToolbarHeight,
                   bottom: TabBar(
                     tabs: [
                       Tab(
@@ -57,15 +61,18 @@ class FavouriteScreen extends StatelessWidget {
                         ),
                       ),
                     ],
-                    // indicatorSize: TabBarIndicatorSize.label,
-                    unselectedLabelColor: Colors.white70,
-                    labelColor: Theme.of(context).accentColor,
-                    labelStyle: Theme.of(context).textTheme.headline6,
-                    // indicator: BubbleTabIndicator(
-                    //   indicatorHeight: 25.0,
-                    //   indicatorColor: Theme.of(context).accentColor,
-                    //   tabBarIndicatorSize: TabBarIndicatorSize.label,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    // indicator: BoxDecoration(
+                    //   color: Theme.of(context).primaryColorLight,
                     // ),
+                    // unselectedLabelColor: Theme.of(context).shadowColor,
+                    // labelColor: Theme.of(context).primaryColorLight,
+                    // labelStyle: Theme.of(context).textTheme.headline6,
+                    indicator: BubbleTabIndicator(
+                      indicatorHeight: 25.0,
+                      indicatorColor: Theme.of(context).primaryColorDark,
+                      tabBarIndicatorSize: TabBarIndicatorSize.label,
+                    ),
                   ),
                 ),
               ];
@@ -86,43 +93,45 @@ class FavouriteScreen extends StatelessWidget {
 
   Widget _favouriteMoviePage(
       BuildContext context, FavouritesViewModel viewModel) {
-    return StreamBuilder<List<Movie>>(
-        stream: viewModel.streamMovies,
-        initialData: [],
-        builder: (context, snapshot) {
-          if (snapshot.data.length == 0) return _buildEmptyList('Peliculas');
-          return GridView.builder(
-            padding: const EdgeInsets.all(10.0),
-            itemCount: snapshot.data.length,
-            itemBuilder: (ctx, i) => ItemGridView(
-                item: BaseSearchResult.fromMovie(snapshot.data[i])),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: getColumns(context),
-                childAspectRatio: 5 / 9,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-          );
-        });
+    return Container();
+    // return StreamBuilder<List<Movie>>(
+    //     stream: viewModel.streamMovies,
+    //     initialData: [],
+    //     builder: (context, snapshot) {
+    //       if (snapshot.data.length == 0) return _buildEmptyList('Peliculas');
+    //       return GridView.builder(
+    //         padding: const EdgeInsets.all(10.0),
+    //         itemCount: snapshot.data.length,
+    //         itemBuilder: (ctx, i) => ItemGridView(
+    //             item: BaseSearchResult.fromMovie(snapshot.data[i])),
+    //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    //             crossAxisCount: getColumns(context),
+    //             childAspectRatio: 5 / 9,
+    //             crossAxisSpacing: 10,
+    //             mainAxisSpacing: 10),
+    //       );
+    //     });
   }
 
   Widget _favouriteTvPage(BuildContext context, FavouritesViewModel viewModel) {
-    return StreamBuilder<List<TvShow>>(
-        stream: viewModel.streamTvShow,
-        initialData: [],
-        builder: (context, snapshot) {
-          if (snapshot.data.length == 0) return _buildEmptyList('Series');
-          return GridView.builder(
-            padding: const EdgeInsets.all(10.0),
-            itemCount: snapshot.data.length,
-            itemBuilder: (ctx, i) =>
-                ItemGridView(item: BaseSearchResult.fromTv(snapshot.data[i])),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: getColumns(context),
-                childAspectRatio: 5 / 9,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-          );
-        });
+    return Container();
+    // return StreamBuilder<List<TvShow>>(
+    //     stream: viewModel.streamTvShow,
+    //     initialData: [],
+    //     builder: (context, snapshot) {
+    //       if (snapshot.data.length == 0) return _buildEmptyList('Series');
+    //       return GridView.builder(
+    //         padding: const EdgeInsets.all(10.0),
+    //         itemCount: snapshot.data.length,
+    //         itemBuilder: (ctx, i) =>
+    //             ItemGridView(item: BaseSearchResult.fromTv(snapshot.data[i])),
+    //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    //             crossAxisCount: getColumns(context),
+    //             childAspectRatio: 5 / 9,
+    //             crossAxisSpacing: 10,
+    //             mainAxisSpacing: 10),
+    //       );
+    //     });
   }
 
   Widget _favouritePersonPage(

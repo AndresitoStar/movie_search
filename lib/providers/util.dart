@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/model/serie.dart';
@@ -113,11 +114,7 @@ class ResponseApiParser {
 
   static TvShow tvFromJsonApi(Map<String, dynamic> json) {
     try {
-      String createdBy,
-          genres,
-          productionCompanies,
-          productionCountries,
-          spokenLanguages;
+      String createdBy, genres, productionCompanies, productionCountries, spokenLanguages;
       int episodesRuntime;
       if (json['created_by'] != null) {
         final list = <String>[];
@@ -156,9 +153,7 @@ class ResponseApiParser {
       }
       if (json['episode_run_time'] != null) {
         final list = json['episode_run_time'] as List<dynamic>;
-        if (list.isNotEmpty)
-          episodesRuntime =
-              list?.reduce((value, element) => min<num>(value, element));
+        if (list.isNotEmpty) episodesRuntime = list?.reduce((value, element) => min<num>(value, element));
       }
       return TvShow(
         createdBy: createdBy,
@@ -190,7 +185,8 @@ class ResponseApiParser {
   }
 }
 
-const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w92';
+const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w342';
+// const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w92';
 const String URL_IMAGE_MEDIUM = 'https://image.tmdb.org/t/p/w342';
 const String URL_IMAGE_BIG = 'https://image.tmdb.org/t/p/w780';
 
@@ -203,6 +199,10 @@ extension snackbar_extension on BuildContext {
           content: Text(message),
         ),
       );
+}
+
+extension DateFormatter on DateTime {
+  String get format => DateFormat('dd MMMM yyyy', Locale('es', 'ES').toString()).format(this);
 }
 
 enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON }
@@ -267,40 +267,56 @@ class SharedPreferencesHelper {
   static SharedPreferencesHelper _instance;
 
   static SharedPreferencesHelper getInstance() {
-    if (_instance == null || _instance._streamForRecent.isClosed)
-      _instance = SharedPreferencesHelper._();
+    if (_instance == null || _instance._streamForHighQuality.isClosed) _instance = SharedPreferencesHelper._();
     return _instance;
   }
 
   SharedPreferencesHelper._() {
-    _streamForRecent = BehaviorSubject<bool>();
-    isActiveRecent().then((value) => _streamForRecent.add(value));
+    _streamForHighQuality = BehaviorSubject<bool>();
+    isHighQuality().then((value) => _streamForHighQuality.add(value));
 
     _streamForSearchHistory = BehaviorSubject<List<String>>();
-    getSearchHistory().then((value) => _streamForSearchHistory.add(value));
+    getSearchHistory().then((value) => _streamForSearchHistory.add(value.reversed.toList()));
+
+    _streamForFavorite = BehaviorSubject<List<int>>();
+    getFavouriteList().then((value) => _streamForFavorite.add(value));
   }
 
-  StreamController<bool> _streamForRecent;
+  StreamController<bool> _streamForHighQuality;
   StreamController<List<String>> _streamForSearchHistory;
+  StreamController<List<int>> _streamForFavorite;
 
-  Stream<bool> get streamForRecent => _streamForRecent.stream;
+  Stream<bool> get streamForHighQuality => _streamForHighQuality.stream;
 
-  Stream<List<String>> get streamForSearchHistory =>
-      _streamForSearchHistory.stream;
+  Stream<List<String>> get streamForSearchHistory => _streamForSearchHistory.stream;
 
-  Function(bool) get changeActiveRecent => _streamForRecent.sink.add;
+  Stream<List<int>> get streamForFavorite => _streamForFavorite.stream;
+
+  Function(bool) get changeHighQuality => _streamForHighQuality.sink.add;
 
   updateSearchHistory(String query) {
     getSearchHistory().then((value) {
       value.add(query);
-      _streamForSearchHistory.sink.add(value);
+      _streamForSearchHistory.sink.add(value.reversed.toList());
       setSearchHistory(value);
     });
   }
 
+  toggleFavorite(int id) {
+    getFavouriteList().then((list) {
+      if (list.contains(id))
+        list.remove(id);
+      else
+        list.add(id);
+      _streamForFavorite.sink.add(list);
+      setFavouriteList(list);
+    });
+  }
+
   dispose() {
-    _streamForRecent?.close();
+    _streamForHighQuality?.close();
     _streamForSearchHistory?.close();
+    _streamForFavorite?.close();
   }
 
   static Future _setBoolean(String key, bool value) async {
@@ -308,9 +324,14 @@ class SharedPreferencesHelper {
     return await prefs.setBool(key, value);
   }
 
+  static Future _setString(String key, String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.setString(key, value);
+  }
+
   static Future _setList(String key, List value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return await prefs.setStringList(key, value.toList());
+    return await prefs.setStringList(key, value.map((e) => '$e').toList());
   }
 
   static Future<bool> _getBoolean(String key) async {
@@ -321,6 +342,15 @@ class SharedPreferencesHelper {
       result = prefs.getBool(key);
     } catch (e) {}
     return result ?? false;
+  }
+
+  static Future<String> _getString(String key) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      return prefs.getString(key);
+    } catch (e) {}
+    return null;
   }
 
   static Future<List<T>> _getList<T extends Object>(String key) async {
@@ -341,12 +371,12 @@ class SharedPreferencesHelper {
     return _setBoolean('WAS_HERE_BEFORE', true);
   }
 
-  static Future<bool> isActiveRecent() async {
-    return _getBoolean('ACTIVE_RECENT');
+  static Future<bool> isHighQuality() async {
+    return _getBoolean('IMAGE_QUALITY');
   }
 
-  static void setActiveRecent(bool value) async {
-    _setBoolean('ACTIVE_RECENT', value);
+  static void setHighQuality(bool value) async {
+    _setBoolean('IMAGE_QUALITY', value);
   }
 
   static Future<List<String>> getSearchHistory() async {
@@ -355,5 +385,30 @@ class SharedPreferencesHelper {
 
   static void setSearchHistory(List<String> value) async {
     _setList('SEARCH_HISTORY', value);
+  }
+
+  static Future<List<int>> getFavouriteList() async {
+    final list = await _getList<String>('FAVORITE');
+    return list.map((e) => int.tryParse(e)).toList();
+  }
+
+  static void setFavouriteList(List<int> value) async {
+    _setList('FAVORITE', value);
+  }
+
+  static Future<String> getFlexSchemaColor() async {
+    return _getString('SCHEME_COLOR');
+  }
+
+  static void setFlexSchemaColor(String value) async {
+    _setString('SCHEME_COLOR', value);
+  }
+
+  static Future<String> getBrightness() async {
+    return _getString('Brightness');
+  }
+
+  static void setBrightness(String value) async {
+    _setString('Brightness', value);
   }
 }

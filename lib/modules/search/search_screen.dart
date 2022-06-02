@@ -7,7 +7,7 @@ import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:stacked/stacked.dart';
 
 class SearchScreen extends StatelessWidget {
-  static String routeName = "/search";
+  static const String routeName = "/search";
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +15,11 @@ class SearchScreen extends StatelessWidget {
       viewModelBuilder: () => SearchViewModel(SearchService()),
       builder: (context, model, child) => CustomScaffold(
         bottomBarIndex: 1,
-        body: Container(
-          padding: MediaQuery.of(context)
-              .padding
-              .copyWith(left: 0, right: 0, bottom: 0),
-          child: Column(
-            children: [
-              SearchBar(),
-              Expanded(child: SearchResults()),
-            ],
-          ),
+        body: Column(
+          children: [
+            SearchBar(),
+            Expanded(child: SearchResults()),
+          ],
         ),
       ),
     );

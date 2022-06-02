@@ -8,12 +8,13 @@ class MyIcons {
   static const IconData settings = FrinoIcons.f_settings;
   static const IconData categories = FrinoIcons.f_dashboard;
 
-  static const IconData arrow_left = FrinoIcons.f_arrow_left;
-  static const IconData arrow_right = FrinoIcons.f_arrow_right;
+  static const IconData arrow_left = Icons.arrow_back_ios_new_rounded;
+  static const IconData arrow_right = Icons.arrow_forward_ios_rounded;
   static const IconData check = FrinoIcons.f_check;
   static const IconData clean = FrinoIcons.f_no_access;
   static const IconData favourite_on = Icons.favorite_rounded;
-  static const IconData favourite_off = FrinoIcons.f_heart;
+  static const IconData favourite_off = Icons.favorite_border_rounded;
+  static const IconData favourite_home_bar = FrinoIcons.f_heart;
   static const IconData clear = Icons.clear;
   static const IconData search = FrinoIcons.f_search_2;
   static const IconData more = FrinoIcons.f_more_horizontal;
@@ -33,6 +34,9 @@ class MyIcons {
   static const IconData error = Icons.warning;
   static const IconData video = Icons.ondemand_video_rounded;
   static const IconData youtube = FontAwesomeIcons.youtube;
+  static const IconData drawerHamburger = FrinoIcons.f_menu;
+  static const IconData maximize = Icons.crop_square;
+  static const IconData minimize = Icons.minimize;
 
   static IconData iconFromType(TMDB_API_TYPE type) {
     if (type == TMDB_API_TYPE.MOVIE) return movie;

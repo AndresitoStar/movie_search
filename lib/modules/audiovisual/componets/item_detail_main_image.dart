@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/dialog_image/download_image_button.dart';
@@ -19,67 +20,50 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
   Widget build(BuildContext context, model) {
     final theme = Theme.of(context);
     return Container(
-      color: Theme.of(context).primaryColor,
-      child: GestureDetector(
-        onTap: model.withImageList || model.withImage
-            ? () {
-                model.togglePauseTimer();
-                DialogImage.showCarousel(
-                  context: context,
-                  currentImage: model.currentImage,
-                  images: model.images
-                      .map((e) => '${model.baseImageUrl}$e')
-                      .toList(),
-                ).then((value) => model.togglePauseTimer());
-              }
-            : null,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            model.withImageList
-                ? ContentImageWidget(model.images[model.currentImage])
-                : model.withImage
-                    ? ContentImageWidget(model.image)
-                    : Card(
-                        child: PlaceholderImage(height: 250),
-                      ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: landscape ? Alignment.centerLeft : Alignment.topCenter,
-                  end: landscape
-                      ? Alignment.centerRight
-                      : Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.transparent,
-                    Colors.transparent,
-                    Theme.of(context).scaffoldBackgroundColor
-                  ],
+      color: Theme
+          .of(context)
+          .scaffoldBackgroundColor,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          model.withImageList
+              ? ContentImageCarousel()
+              : model.withImage
+              ? ContentImageWidget(model.posterImageUrl)
+              : Card(child: PlaceholderImage(height: 250)),
+          if (!landscape)
+            IgnorePointer(
+              ignoring: true,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: landscape ? Alignment.centerLeft : Alignment.topCenter,
+                    end: landscape ? Alignment.centerRight : Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.transparent,
+                      Colors.transparent,
+                      Theme
+                          .of(context)
+                          .scaffoldBackgroundColor
+                    ],
+                  ),
+                  border: Border.all(color: Theme
+                      .of(context)
+                      .scaffoldBackgroundColor),
                 ),
-                border: Border.all(
-                    color: Theme.of(context).scaffoldBackgroundColor),
               ),
             ),
-            Positioned(
-              right: 55,
-              top: 5,
-              child: ImageDownloadButton(
-                model.baseImageUrl + model.images[model.currentImage],
-                DateTime.now().toString(),
-              ),
-            ),
+          if (!model.isHighQualityImage)
             Positioned(
               top: 5,
               right: 5,
               child: MyCircularButton(
                 icon: Icon(MyIcons.quality),
-                color: Colors.black54,
-                onPressed: model.isHighQualityImage
-                    ? null
-                    : () => model.toggleHighQualityImage(),
+                onPressed: model.isHighQualityImage ? null : () => model.toggleHighQualityImage(),
               ),
             ),
+          if (model.withImageList)
             Positioned(
               bottom: 0,
               left: 0,
@@ -109,33 +93,68 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
                 ),
               ),
             )
-          ],
+        ],
+      ),
+    );
+  }
+}
+
+class ContentImageWidget extends StatelessWidget {
+  final String imagePath;
+  final BoxFit fit;
+  final String baseUrl;
+
+  ContentImageWidget(this.imagePath, {
+    Key key,
+    this.fit = BoxFit.fitWidth,
+    this.baseUrl = URL_IMAGE_MEDIUM,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => DialogImage.show(context: context, imageUrl: '$baseUrl$imagePath'),
+      child: Container(
+        color: Theme
+            .of(context)
+            .scaffoldBackgroundColor,
+        child: CachedNetworkImage(
+          imageUrl: '$baseUrl$imagePath',
+          placeholder: (_, __) =>
+              CachedNetworkImage(
+                // width: double.infinity,
+                fit: fit,
+                imageUrl: '$URL_IMAGE_SMALL$imagePath',
+              ),
+          errorWidget: (ctx, _, __) =>
+              PlaceholderImage(height: MediaQuery
+                  .of(ctx)
+                  .size
+                  .height * 0.6),
+          fit: fit,
+          // width: double.infinity,
         ),
       ),
     );
   }
 }
 
-class ContentImageWidget extends ViewModelWidget<ItemDetailViewModel> {
-  final String imagePath;
-
-  ContentImageWidget(this.imagePath, {Key key}) : super(key: key);
-
+class ContentImageCarousel extends ViewModelWidget<ItemDetailViewModel> {
   @override
-  Widget build(BuildContext context, model) {
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: CachedNetworkImage(
-        imageUrl: '${model.baseImageUrl}$imagePath',
-        placeholder: (_, __) => CachedNetworkImage(
-          // width: double.infinity,
-          fit: BoxFit.fitWidth,
-          imageUrl: '$URL_IMAGE_SMALL$imagePath',
-        ),
-        errorWidget: (ctx, _, __) =>
-            PlaceholderImage(height: MediaQuery.of(ctx).size.height * 0.6),
-        fit: BoxFit.fitWidth,
-        // width: double.infinity,
+  Widget build(BuildContext context, ItemDetailViewModel model) {
+    return CarouselSlider(
+      items: model.images.map((i) => ContentImageWidget(i)).toList(),
+      options: CarouselOptions(
+        viewportFraction: 1,
+        initialPage: 0,
+        // height: MediaQuery.of(context).size.height * 2 / 3,
+        enableInfiniteScroll: false,
+        disableCenter: true,
+        reverse: false,
+        autoPlay: false,
+        onPageChanged: (index, reason) => model.changeCurrentImage(index),
+        enlargeCenterPage: false,
+        scrollDirection: Axis.horizontal,
       ),
     );
   }

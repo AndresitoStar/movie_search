@@ -27,10 +27,7 @@ class ItemLikeButton extends StatelessWidget {
       builder: (context, model, child) => !model.initialised || model.isBusy
           ? Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                  height: iconSize,
-                  width: iconSize,
-                  child: CircularProgressIndicator(strokeWidth: 1)),
+              child: SizedBox(height: iconSize, width: iconSize, child: CircularProgressIndicator(strokeWidth: 1)),
             )
           : model.hasError
               ? Icon(Icons.broken_image)
@@ -42,31 +39,24 @@ class ItemLikeButton extends StatelessWidget {
                       return Container();
                     }
                     return IconButton(
-                      icon: Icon(snapshot.data.contains(id)
-                          ? MyIcons.favourite_on
-                          : MyIcons.favourite_off),
+                      icon: Icon(snapshot.data.contains(id) ? MyIcons.favourite_on : MyIcons.favourite_off),
                       iconSize: this.iconSize,
                       padding: EdgeInsets.zero,
-                      color:
-                          snapshot.data.contains(id) ? Colors.red : Colors.grey,
+                      color: snapshot.data.contains(id) ? Colors.red : Theme.of(context).colorScheme.onBackground,
                       onPressed: () {
-                        return _onLikeButtonTap(
-                            context, model, snapshot.data.contains(id));
+                        return _onLikeButtonTap(context, model, snapshot.data.contains(id));
                       },
                     );
                   }),
     );
   }
 
-  _onLikeButtonTap(
-      BuildContext context, ItemLikeButtonViewModel model, bool isLiked) async {
+  _onLikeButtonTap(BuildContext context, ItemLikeButtonViewModel model, bool isLiked) async {
     await model.toggleFavourite(id);
     if (context.scaffoldMessenger != null) {
       context.scaffoldMessenger.showSnackBar(SnackBar(
         duration: Duration(seconds: 1),
-        content: Text(isLiked
-            ? 'Eliminado de Mis Favoritos'
-            : 'Agregado a Mis Favoritos'),
+        content: Text(isLiked ? 'Eliminado de Mis Favoritos' : 'Agregado a Mis Favoritos'),
       ));
     }
   }

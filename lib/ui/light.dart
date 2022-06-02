@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
 class LightTheme {
-  static ThemeData theme = ThemeData(
-    fontFamily: 'Dosis',
-    primarySwatch: MaterialColor(4294888011, {
-      50: Color(0xfffff8e6),
-      100: Color(0xfffff0cc),
-      200: Color(0xfffee19a),
-      300: Color(0xfffed267),
-      400: Color(0xfffec334),
-      500: Color(0xfffeb401),
-      600: Color(0xffcb9001),
-      700: Color(0xff986c01),
-      800: Color(0xff654801),
-      900: Color(0xff332400)
-    }),
+  static ThemeData theme = ThemeData.light().copyWith(
+    // fontFamily: 'Dosis',
+    // primarySwatch: MaterialColor(4294888011, {
+    //   50: Color(0xfffff8e6),
+    //   100: Color(0xfffff0cc),
+    //   200: Color(0xfffee19a),
+    //   300: Color(0xfffed267),
+    //   400: Color(0xfffec334),
+    //   500: Color(0xfffeb401),
+    //   600: Color(0xffcb9001),
+    //   700: Color(0xff986c01),
+    //   800: Color(0xff654801),
+    //   900: Color(0xff332400)
+    // }),
     brightness: Brightness.light,
     primaryColor: Color(0xfffeca4b),
     primaryColorBrightness: Brightness.light,

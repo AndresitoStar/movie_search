@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
 import 'package:stacked/stacked.dart';
@@ -8,28 +9,33 @@ class HomeScreenContentIndicator extends ViewModelWidget<HomeScreenViewModel> {
   @override
   Widget build(BuildContext context, HomeScreenViewModel viewModel) {
     final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: TrendingContent.values
-          .map((e) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: ElevatedButton(
-                  child: Text(e.title,
-                      style: theme.textTheme.headline6.copyWith(
-                          color: viewModel.typeSelected == e
-                              ? Colors.white
-                              : Colors.black26)),
-                  onPressed: () => viewModel.selectType(e),
-                  style: ButtonStyle(
-                    elevation: MaterialStateProperty.all<double>(5),
-                    backgroundColor: viewModel.typeSelected == e
-                        ? MaterialStateProperty.all<Color>(theme.cardColor.withOpacity(0.5))
-                        : MaterialStateProperty.all<Color>(
-                            theme.cardColor.withOpacity(0.5)),
-                  ),
-                ),
-              ))
-          .toList(),
+    final tabController = DefaultTabController.of(context);
+    tabController.addListener(() {
+      final selected = TrendingContent.values
+          .firstWhere((element) => element.type == TrendingContent.values[tabController.index].type);
+      viewModel.selectType(selected);
+    });
+    return Container(
+      height: theme.textTheme.headline5.fontSize + 20 + 10,
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Center(
+        child: TabBar(
+          controller: tabController,
+          isScrollable: true,
+          labelPadding: EdgeInsets.symmetric(horizontal: 10.0),
+          labelStyle: theme.primaryTextTheme.headline5.copyWith(color: theme.colorScheme.background),
+          unselectedLabelStyle: theme.textTheme.headline5,
+          indicatorWeight: 0.0,
+          indicator: BoxDecoration(
+            color: theme.colorScheme.primary,
+          ),
+          tabs: TrendingContent.values
+              .map((e) => Tab(
+                    text: e.title,
+                  ))
+              .toList(),
+        ),
+      ),
     );
   }
 }

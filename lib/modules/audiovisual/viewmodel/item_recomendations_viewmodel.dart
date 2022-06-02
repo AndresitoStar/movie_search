@@ -11,6 +11,8 @@ extension recommendation_type on ERecommendationType {
         return 'recommendations';
       case ERecommendationType.Similar:
         return 'similar';
+      case ERecommendationType.Credit:
+        return 'combined_credits';
       default:
         return null;
     }
@@ -47,8 +49,7 @@ class ItemRecommendationViewModel extends FutureViewModel {
   Future futureToRun() async {
     setBusy(true);
     if (recommendationType == ERecommendationType.Credit)
-      _items.addAll(
-          await _service.getPersonCombinedCredits(typeId));
+      _items.addAll(await _service.getPersonCombinedCredits(typeId));
     _items.addAll(
         await _service.getRecommendations(type, typeId, recommendationType));
     setInitialised(true);

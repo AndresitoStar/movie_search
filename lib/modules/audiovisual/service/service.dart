@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:movie_search/model/api/models/movie.dart';
+import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
@@ -26,9 +28,9 @@ class AudiovisualService extends BaseService {
       if (type == 'person') {
         return ResponseApiParser.personFromJsonApi(data);
       } else if (type == 'movie') {
-        return ResponseApiParser.movieFromJsonApi(data);
+        return MovieApi.fromJson(data);
       } else if (type == 'tv') {
-        return ResponseApiParser.tvFromJsonApi(data);
+        return TvApi.fromJson(data);
       }
     }
     return null;
@@ -56,6 +58,30 @@ class AudiovisualService extends BaseService {
       result.sort((a, b) =>
           a.year == null || b.year == null ? 1 : b.year.compareTo(a.year));
     return result;
+  }
+
+  Future<Collection> getCollection(int id) async {
+    try {
+      var response =
+          await clientTMDB.get('collection/$id', queryParameters: baseParams);
+      if (response.statusCode == 200) {
+        return Collection.fromJson(response.data);
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  Future<Seasons> getSeason(int id, int seasonNumber) async {
+    try {
+      var response = await clientTMDB.get('tv/$id/season/$seasonNumber',
+          queryParameters: baseParams);
+      if (response.statusCode == 200) {
+        return Seasons.fromJson(response.data);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 
   Future<List<BaseSearchResult>> getPersonCombinedCredits(int id) async {

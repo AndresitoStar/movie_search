@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/model/api/models/movie.dart';
+import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/model/image.dart';
 import 'package:movie_search/modules/audiovisual/service/service.dart';
@@ -24,26 +26,43 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
 
   List<MediaImage> _images = [];
 
-  List<String> get images =>
-      [image, ..._images.map((e) => e.filePath).toSet().toList()];
+  List<String> get images => [posterImageUrl, ..._images.map((e) => e.filePath).toSet().toList()];
 
   bool get isHighQualityImage => _highQualityImage;
 
-  bool get withImage => _param.image != null;
+  bool get withImage => _param.posterImage != null;
 
   bool get withImageList => _images.isNotEmpty;
 
-  String get image => _param.image;
+  String get posterImageUrl => _param.posterImage;
+
+  String get title => _param.title;
+
+  int get year => _param.year;
+
+  String get backDropImageUrl => _param.backDropImage;
+
+  int get itemId => _param.id;
+
+  TMDB_API_TYPE get itemType => _param.type;
 
   int currentImage = 0;
 
-  Timer timer;
   bool pauseTimer = false;
+
+  togglePauseTimer() {
+    pauseTimer = !pauseTimer;
+    notifyListeners();
+  }
+
+  changeCurrentImage(int current) {
+    this.currentImage = current;
+    notifyListeners();
+  }
 
   @override
   void dispose() {
     scrollController.dispose();
-    timer?.cancel();
     super.dispose();
   }
 
@@ -59,30 +78,25 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
     return results[1] ?? _param;
   }
 
-  togglePauseTimer() {
-    pauseTimer = !pauseTimer;
-    notifyListeners();
-  }
-
   Future<BaseSearchResult> _cacheData() async {
     try {
       if (_param.type == TMDB_API_TYPE.MOVIE) {
-        final _dbMovie = await _db.getMovieById(_param.id);
-        if (_dbMovie != null) {
-          return BaseSearchResult.fromMovie(_dbMovie);
-        }
-        final Movie movie =
-            await _service.getById(id: _param.id, type: _param.type.type);
-        _db.insertMovie(movie);
+        // final _dbMovie = await _db.getMovieById(_param.id);
+        // if (_dbMovie != null) {
+        //   return BaseSearchResult.fromMovie(_dbMovie);
+        // }
+        // final Movie movie =
+        //     await _service.getById(id: _param.id, type: _param.type.type);
+        final MovieApi movie = await _service.getById(id: _param.id, type: _param.type.type);
+        // _db.insertMovie(movie);
         return BaseSearchResult.fromMovie(movie);
       } else if (_param.type == TMDB_API_TYPE.TV_SHOW) {
-        final _dbTv = await _db.getTvShowById(_param.id);
-        if (_dbTv != null) {
-          return BaseSearchResult.fromTv(_dbTv);
-        }
-        final TvShow tv =
-            await _service.getById(id: _param.id, type: _param.type.type);
-        _db.insertTvShow(tv);
+        // final _dbTv = await _db.getTvShowById(_param.id);
+        // if (_dbTv != null) {
+        //   return BaseSearchResult.fromTv(_dbTv);
+        // }
+        final TvApi tv = await _service.getById(id: _param.id, type: _param.type.type);
+        // _db.insertTvShow(tv);
         return BaseSearchResult.fromTv(tv);
       }
     } catch (err) {
@@ -92,7 +106,7 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
   }
 
   Future<String> _checkImageCachedQuality() async {
-    if (await _checkImageCachedExist('$URL_IMAGE_BIG${_param.image}')) {
+    if (await _checkImageCachedExist('$URL_IMAGE_BIG${_param.posterImage}')) {
       _highQualityImage = true;
       return URL_IMAGE_BIG;
     }
@@ -113,12 +127,12 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
       final images = await _service.getImages(_param.type.type, _param.id);
       if (images != null && images.isNotEmpty) {
         _images.addAll(images);
-        timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
-          if (!pauseTimer)
-            currentImage =
-                currentImage == images.length - 1 ? 0 : currentImage + 1;
-          notifyListeners();
-        });
+        // timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
+        //   if (!pauseTimer)
+        //     currentImage =
+        //         currentImage == images.length - 1 ? 0 : currentImage + 1;
+        //   notifyListeners();
+        // });
       }
     } catch (e) {
       print(e);
