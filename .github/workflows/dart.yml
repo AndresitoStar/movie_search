@@ -20,6 +20,7 @@ jobs:
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build apk --release --split-per-abi
+      - run: flutter build windows
   # uploading:
   #   name: Uploading to Google Drive
   #   runs-on: ubuntu-latest
