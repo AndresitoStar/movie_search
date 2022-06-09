@@ -1,8 +1,6 @@
 on:
-  push:
-    #    branches: [ master]
-    tags:
-      - "*"
+  workflow_dispatch:
+  
 name: Build Release
 jobs:
   build-apk:
@@ -20,6 +18,7 @@ jobs:
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build apk --release --split-per-abi
+      - run: flutter build windows
   # uploading:
   #   name: Uploading to Google Drive
   #   runs-on: ubuntu-latest
@@ -52,5 +51,5 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            Nueva version: Buscador de Peliculas y Series, by Ing. Andrés Forns Jusino
+            Nueva version: Movie Search, by Ing. Andrés Forns Jusino
             ${{ steps.v8a.outputs.link }}

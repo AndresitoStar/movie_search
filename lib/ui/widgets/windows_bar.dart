@@ -6,7 +6,7 @@ class WindowsBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final windowsBarColor = Theme.of(context).primaryColor;
     final primaryColor = Theme.of(context).primaryColorLight;
-    final primaryColor45 = Theme.of(context).accentTextTheme.subtitle1.color;
+    final primaryColor45 = Theme.of(context).primaryTextTheme.subtitle1?.color;
     final buttonColors = WindowButtonColors(
       iconNormal: primaryColor45,
       mouseOver: primaryColor,
@@ -37,9 +37,9 @@ class WindowsBar extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10, top: 15),
                   child: Text(
-                      'Buscador de Peliculas y Series',
-                      style: Theme.of(context).accentTextTheme.subtitle1,
-                    ),
+                    'Movie Search',
+                    style: Theme.of(context).primaryTextTheme.subtitle1,
+                  ),
                 ),
               ),
             ),

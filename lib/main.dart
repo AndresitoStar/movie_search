@@ -60,17 +60,11 @@ _configureSqliteOnLinux() {
   // open.overrideFor(OperatingSystem.linux, _openOnLinux);
 }
 
-DynamicLibrary _openOnLinux() {
-  final scriptDir = File(Platform.script.toFilePath()).parent;
-  final libraryNextToScript = File('${scriptDir.path}/libsqlite3.so');
-  return DynamicLibrary.open(libraryNextToScript.path);
-}
-
 class App extends StatelessWidget {
   final navigatorKey = GlobalKey<NavigatorState>();
   final FlexScheme color;
 
-  App({Key key, @required this.color}) : super(key: key);
+  App({Key? key, required this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,10 +78,10 @@ class App extends StatelessWidget {
       child: ViewModelBuilder<ThemeViewModel>.reactive(
         viewModelBuilder: () => ThemeViewModel(
           color,
-          themeMode: EasyDynamicTheme.of(context).themeMode,
+          themeMode: EasyDynamicTheme.of(context).themeMode ?? ThemeMode.light,
         ),
         builder: (context, model, child) => MaterialApp(
-          title: 'Buscador de Peliculas y Series',
+          title: 'Movie Search',
           debugShowCheckedModeBanner: false,
           theme: model.theme,
           darkTheme: model.darkTheme,

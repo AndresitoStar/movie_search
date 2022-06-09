@@ -13,8 +13,6 @@ extension recommendation_type on ERecommendationType {
         return 'similar';
       case ERecommendationType.Credit:
         return 'combined_credits';
-      default:
-        return null;
     }
   }
 
@@ -26,8 +24,6 @@ extension recommendation_type on ERecommendationType {
         return 'Similares';
       case ERecommendationType.Credit:
         return 'Participaciones';
-      default:
-        return null;
     }
   }
 }
@@ -35,7 +31,7 @@ extension recommendation_type on ERecommendationType {
 class ItemRecommendationViewModel extends FutureViewModel {
   final AudiovisualService _service;
   final String type;
-  final int typeId;
+  final num typeId;
   final ERecommendationType recommendationType;
 
   List<BaseSearchResult> _items = [];
@@ -48,11 +44,15 @@ class ItemRecommendationViewModel extends FutureViewModel {
   @override
   Future futureToRun() async {
     setBusy(true);
-    if (recommendationType == ERecommendationType.Credit)
-      _items.addAll(await _service.getPersonCombinedCredits(typeId));
-    _items.addAll(
-        await _service.getRecommendations(type, typeId, recommendationType));
-    setInitialised(true);
-    setBusy(false);
+    try {
+      if (recommendationType == ERecommendationType.Credit)
+        _items.addAll(await _service.getPersonCombinedCredits(typeId));
+      else
+        _items.addAll(await _service.getRecommendations(type, typeId, recommendationType));
+      setInitialised(true);
+      setBusy(false);
+    } catch (e) {
+      setError(e);
+    }
   }
 }

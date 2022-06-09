@@ -1,10 +1,10 @@
-import 'package:movie_search/modules/audiovisual/model/serie.dart';
+import 'package:movie_search/model/api/models/video.dart';
 import 'package:movie_search/modules/video/service.dart';
 import 'package:stacked/stacked.dart';
 
 class VideoViewModel extends FutureViewModel {
   final String type;
-  final int id;
+  final num id;
 
   final VideoService _service;
   final List<Video> _videos = [];
@@ -13,7 +13,7 @@ class VideoViewModel extends FutureViewModel {
 
   bool get hasVideos => _videos.isNotEmpty;
 
-  VideoViewModel(this.type, this.id) : this._service = VideoService();
+  VideoViewModel(this.type, this.id) : this._service = VideoService.getInstance();
 
   @override
   Future futureToRun() async {

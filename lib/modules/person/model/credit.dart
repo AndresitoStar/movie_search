@@ -1,9 +1,8 @@
-import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/model/api/models/person.dart';
 
 class Credit {
-  int id;
-  List<Person> cast;
+  int? id;
+  List<Person>? cast;
 
   Credit({this.id, this.cast});
 
@@ -12,9 +11,8 @@ class Credit {
     if (json['cast'] != null) {
       cast = <Person>[];
       json['cast'].forEach((v) {
-        cast.add(ResponseApiParser.personFromJsonApi(v));
+        cast!.add(Person.fromJson(v));
       });
     }
   }
-
 }

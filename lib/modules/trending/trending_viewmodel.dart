@@ -1,12 +1,36 @@
+import 'package:flutter/cupertino.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/trending/trending_service.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/ui/icons.dart';
 import 'package:stacked/stacked.dart';
 
-enum TrendingContent { MOVIE, TV }
+enum TrendingContent { MOVIE, TV, PERSON }
 
-enum TrendingType { DAY, WEEK }
+enum TrendingType { TRENDING, POPULAR }
+
+extension ExtensionTitleTrending on TrendingType {
+  String get title {
+    switch (this) {
+      case TrendingType.TRENDING:
+        return 'Tendencia';
+      case TrendingType.POPULAR:
+        return 'Popular';
+      default:
+        return '';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case TrendingType.TRENDING:
+        return MyIcons.trending;
+      case TrendingType.POPULAR:
+        return MyIcons.popular;
+    }
+  }
+}
 
 extension ExtensionTitle on TrendingContent {
   String get title {
@@ -15,8 +39,32 @@ extension ExtensionTitle on TrendingContent {
         return 'Películas';
       case TrendingContent.TV:
         return 'Series';
+      case TrendingContent.PERSON:
+        return 'Personas';
       default:
         return '';
+    }
+  }
+
+  String get titleTrending {
+    switch (this) {
+      case TrendingContent.MOVIE:
+        return 'En Cines';
+      case TrendingContent.TV:
+        return 'En Televisión';
+      default:
+        return '';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case TrendingContent.MOVIE:
+        return MyIcons.movie;
+      case TrendingContent.TV:
+        return MyIcons.tv;
+      case TrendingContent.PERSON:
+        return MyIcons.people;
     }
   }
 
@@ -26,18 +74,17 @@ extension ExtensionTitle on TrendingContent {
         return 'movie';
       case TrendingContent.TV:
         return 'tv';
-      // case TMDB_API_TYPE.PERSON:
-      //   return 'person';
-      default:
-        return null;
+      case TrendingContent.PERSON:
+        return 'person';
     }
   }
 }
 
 class TrendingViewModel extends BaseViewModel {
   final TrendingContent content;
+  final TrendingType trendingType;
   final TrendingService _trendingService;
-  final MyDatabase _db;
+  final MyDatabase? _db;
 
   List<BaseSearchResult> _items = [];
 
@@ -55,24 +102,20 @@ class TrendingViewModel extends BaseViewModel {
 
   final Debounce _debounce = Debounce(milliseconds: 100);
 
-  Map<String, bool> filterGenre;
+  Map<String, bool>? filterGenre;
 
-  int year;
+  int? year;
 
-  updateYear(int year) {
+  updateYear(int? year) {
     this.year = year;
     synchronize();
   }
 
-  TrendingType trendingType = TrendingType.DAY;
-
-  updateTrendingType(TrendingType trendingType) {
-    this.trendingType = trendingType;
-    synchronize();
-  }
-
   List<int> get activeGenres => filterGenre != null
-      ? filterGenre.entries.where((element) => element.value).map<int>((e) => int.parse(e.key)).toList()
+      ? filterGenre!.entries
+          .where((element) => element.value)
+          .map<int>((e) => int.parse(e.key))
+          .toList()
       : [];
 
   List<GenreTableData> _allGenres = [];
@@ -84,30 +127,30 @@ class TrendingViewModel extends BaseViewModel {
           .toList()
       : [];
 
-  TrendingViewModel(this.content)
+  TrendingViewModel(this.content, {this.trendingType = TrendingType.TRENDING})
       : _db = null,
         _trendingService = TrendingService();
 
-  TrendingViewModel.forPage(this.content, this._items, this._total, this._db)
-      : _trendingService = TrendingService(),
-        filterGenre = {};
+  TrendingViewModel.forPage(this.content, this._items, this._total, this._db,
+      {this.filterGenre = const {}, this.trendingType = TrendingType.TRENDING})
+      : _trendingService = TrendingService();
 
-  TrendingViewModel.homeHorizontal(this.content, GenreTableData genre)
+  TrendingViewModel.homeHorizontal(this.content, GenreTableData genre,
+      {this.trendingType = TrendingType.TRENDING})
       : _db = null,
-        filterGenre = Map()..putIfAbsent(genre.id, () => true),
+        filterGenre = {genre.id: true},
+        _allGenres = [genre],
         _trendingService = TrendingService();
 
   Future synchronize() async {
     setBusy(true);
-    SearchResponse response = await _trendingService.getDiscover(
-      content.type,
-      genres: activeGenres,
-      // year: year,
-    );
-    _total = response?.totalResult ?? -1;
-    _items = response?.result ?? [];
+    SearchResponse response = trendingType == TrendingType.POPULAR
+        ? await _trendingService.getPopular(content.type)
+        : await _trendingService.getTrending(content.type);
+    _total = response.totalResult;
+    _items = response.result;
     _actualPage = 1;
-    if (_db != null) _allGenres = await _db.allGenres(content.type);
+    if (_db != null) _allGenres = await _db!.allGenres(content.type);
     setBusy(false);
   }
 
@@ -117,12 +160,10 @@ class TrendingViewModel extends BaseViewModel {
 
   Future _fetchMore() async {
     _actualPage++;
-    SearchResponse results = await _trendingService.getDiscover(
-      content.type,
-      page: _actualPage,
-      genres: activeGenres,
-      // year: year,
-    );
+    SearchResponse results = trendingType == TrendingType.POPULAR
+        ? await _trendingService.getDiscover(content.type,
+            page: _actualPage, genres: activeGenres)
+        : await _trendingService.getTrending(content.type, page: _actualPage);
     _items.addAll(results.result);
     notifyListeners();
   }

@@ -1,63 +1,119 @@
-import 'package:flutter/cupertino.dart';
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/home/home_popular.dart';
-import 'package:movie_search/modules/home/home_screen_content_indicator.dart';
+import 'package:movie_search/modules/home/custom_segmented_view_pages.dart';
 import 'package:movie_search/modules/home/home_search_bar.dart';
-import 'package:movie_search/modules/trending/trending_horizontal_list.dart';
+import 'package:movie_search/modules/trending/trending_card.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
-import 'package:provider/provider.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:stacked/stacked.dart';
-
-import 'home_screen_viewmodel.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = "/home";
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HomeScreenViewModel>.reactive(
-      viewModelBuilder: () => HomeScreenViewModel(context.read()),
-      onModelReady: (model) => model.synchronize(),
-      builder: (context, model, _) {
-        return CustomScaffold(
-          bottomBarIndex: 0,
-          body: DefaultTabController(
-            length: TrendingContent.values.length,
-            child: Column(
-              children: [
-                HomeSearchBar(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: HomeScreenContentIndicator(),
-                ),
-                ReactiveFormField(
-                  formControl: model.typeControl,
-                  builder: (field) => Expanded(
-                    child: ListView(
-                      children: [
-                        HomePopularWidget(),
-                        Divider(),
-                        if (model.genresMap != null &&
-                            model.genresMap[field.value] != null &&
-                            model.genresMap[field.value].isNotEmpty)
-                          ...model.genresMap[field.value].map(
-                            (e) => Container(
-                              key: UniqueKey(),
-                              height: 350,
-                              child: TrendingHorizontalList(content: model.typeSelected, genre: e),
-                            ),
-                          ),
-                      ],
+    final theme = Theme.of(context);
+    final movieTrending = TrendingCard(
+      content: TrendingContent.MOVIE,
+      key: UniqueKey(),
+    );
+    final moviePopular = TrendingCard(
+      content: TrendingContent.MOVIE,
+      trendingType: TrendingType.POPULAR,
+      key: UniqueKey(),
+    );
+    final tvTrending = TrendingCard(
+      content: TrendingContent.TV,
+      key: UniqueKey(),
+    );
+    final tvPopular = TrendingCard(
+      content: TrendingContent.TV,
+      trendingType: TrendingType.POPULAR,
+      key: UniqueKey(),
+    );
+    final personTrending = TrendingCard(
+      content: TrendingContent.PERSON,
+      key: UniqueKey(),
+    );
+    final personPopular = TrendingCard(
+      content: TrendingContent.PERSON,
+      trendingType: TrendingType.POPULAR,
+      key: UniqueKey(),
+    );
+
+    return CustomScaffold(
+      bottomBarIndex: 0,
+      body: Column(
+        children: [
+          AppBar(
+            leading: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Image.asset('assets/images/ic_launcher.png'),
+            ),
+            actions: [EasyDynamicThemeBtn()],
+            title: Text('Movie Search'),
+            titleSpacing: 0,
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 10),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Text(
+                        'Bienvenido(a)',
+                        style: theme.textTheme.headline5!
+                            .copyWith(color: theme.colorScheme.primary),
+                      ),
+                      subtitle: Text(
+                        'Millones de películas, programas de televisión y personas por descubrir. Explora ahora.',
+                        style: theme.textTheme.subtitle1!
+                            .copyWith(color: theme.hintColor),
+                      ),
                     ),
-                  ),
+                    Divider(),
+                    HomeSearchBar(),
+                    Divider(),
+                    ListTile(
+                      title: Text(
+                        'Peliculas',
+                        style: theme.textTheme.headlineMedium!
+                            .copyWith(color: theme.colorScheme.primary),
+                      ),
+                    ),
+                    CustomSegmentedPageView(
+                      pages: [movieTrending, moviePopular],
+                      tabs: ['Tendencia', 'Popular'],
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Series y Televisión',
+                        style: theme.textTheme.headlineMedium!
+                            .copyWith(color: theme.colorScheme.primary),
+                      ),
+                    ),
+                    CustomSegmentedPageView(
+                      pages: [tvTrending, tvPopular],
+                      tabs: ['Tendencia', 'Popular'],
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Personas',
+                        style: theme.textTheme.headlineMedium!
+                            .copyWith(color: theme.colorScheme.primary),
+                      ),
+                    ),
+                    CustomSegmentedPageView(
+                      pages: [personTrending, personPopular],
+                      tabs: ['Tendencia', 'Popular'],
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

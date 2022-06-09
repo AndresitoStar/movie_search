@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.15)
-project(movie_search LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.14)
+project(movie_search_v2 LANGUAGES CXX)
 
-set(BINARY_NAME "movie_search")
+set(BINARY_NAME "movie_search_v2")
 
 cmake_policy(SET CMP0063 NEW)
 

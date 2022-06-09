@@ -33,11 +33,12 @@ class OnboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _getPage(
-      {BuildContext context,
-      String assetImage,
-      String text,
-      bool last = false}) {
+  Widget _getPage({
+    required BuildContext context,
+    required String assetImage,
+    required String text,
+    bool last = false,
+  }) {
     return Container(
       color: Color(0xff141414),
       child: Stack(
@@ -55,10 +56,7 @@ class OnboardScreen extends StatelessWidget {
             child: Text(
               text,
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .headline4
-                  .copyWith(color: Colors.white70),
+              style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white70),
             ),
           ),
           if (last)
@@ -68,7 +66,7 @@ class OnboardScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () => navigateToHome(context),
                 child: Text('Comenzar'),
-                style: ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
+                style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.secondary),
               ),
             ),
         ],
@@ -78,7 +76,6 @@ class OnboardScreen extends StatelessWidget {
 
   void navigateToHome(BuildContext context) {
     SharedPreferencesHelper.setFirstTime();
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(SplashScreen.route, (route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil(SplashScreen.route, (route) => false);
   }
 }

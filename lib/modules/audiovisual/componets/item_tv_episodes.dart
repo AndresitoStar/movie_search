@@ -1,22 +1,20 @@
-import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_appbar.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_tv_episode_detail.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_tv_season_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
-import 'package:movie_search/ui/widgets/default_image.dart';
-import 'package:movie_search/ui/widgets/dialog_image.dart';
+import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
 
 class EpisodesPage extends StatelessWidget {
   final Seasons season;
-  final TvApi tvApi;
+  final TvShow tvApi;
 
-  const EpisodesPage({Key key, @required this.season, @required this.tvApi})
-      : super(key: key);
+  const EpisodesPage({Key? key, required this.season, required this.tvApi}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +26,7 @@ class EpisodesPage extends StatelessWidget {
         child: SafeArea(
           top: true,
           child: Scaffold(
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.startFloat,
+            floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
             floatingActionButton: landscape
                 ? FloatingActionButton.extended(
                     onPressed: () => Navigator.of(context).pop(),
@@ -43,7 +40,7 @@ class EpisodesPage extends StatelessWidget {
                     child: Text('${model.modelError?.toString()}'),
                   )
                 :  */
-                landscape ? Container() : _Portrait(season),
+                landscape ? Container() : _Portrait(season, tvApi),
           ),
         ),
       ),
@@ -53,63 +50,52 @@ class EpisodesPage extends StatelessWidget {
 
 class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
   final Seasons season;
+  final TvShow tvShow;
 
-  _Portrait(this.season);
+  _Portrait(this.season, this.tvShow);
 
   @override
   Widget build(BuildContext context, ItemSeasonViewModel model) {
+    final theme = Theme.of(context).textTheme;
     return CustomScrollView(
       cacheExtent: 1000,
       slivers: <Widget>[
-        ItemDetailSliverAppBar(
-          GestureDetector(
-            onTap: () => DialogImage.show(
-              context: context,
-              imageUrl: '$URL_IMAGE_MEDIUM${season.posterPath}',
-            ),
-            child: Container(
-              height: MediaQuery.of(context).size.height / 1.778,
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: CachedNetworkImage(
-                imageUrl: '$URL_IMAGE_MEDIUM${season.posterPath}',
-                placeholder: (_, __) => CachedNetworkImage(
-                  // width: double.infinity,
-                  fit: BoxFit.fitWidth,
-                  imageUrl: '$URL_IMAGE_SMALL${season.posterPath}',
-                ),
-                errorWidget: (ctx, _, __) => PlaceholderImage(
-                    height: MediaQuery.of(ctx).size.height * 0.6),
-                fit: BoxFit.fitWidth,
-                width: double.infinity,
-              ),
-            ),
-          ),
-        ),
+        ItemDetailSliverAppBar(ContentImageWidget(season.posterPath, fit: BoxFit.fitWidth)),
         SliverList(
           delegate: SliverChildListDelegate(
             [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SizedBox(height: 10),
                     Text(
-                      season.name,
+                      tvShow.name ?? '',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline4,
+                      style: theme.headline4,
                     ),
-                    SizedBox(height: 20),
                     Text(
-                      season.overview,
+                      season.name ?? '',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: theme.headline5,
                     ),
+                    if (season.overview != null && season.overview!.isNotEmpty) ...[
+                      SizedBox(height: 20),
+                      Text(
+                        season.overview ?? '',
+                        textAlign: TextAlign.center,
+                        style: theme.bodyText1,
+                      ),
+                    ],
                     SizedBox(height: 20),
-                    if (!model.isBusy && model.season?.episodes != null)
-                      ...model.season.episodes
-                          .map((e) => Card(
+                    if (model.isBusy)
+                      ...[1, 1, 1, 1, 1]
+                          .map((e) => AspectRatio(aspectRatio: 16 / 9, child: GridItemPlaceholder()))
+                          .toList()
+                    else if (model.season.episodes != null)
+                      ...model.season.episodes!
+                          .map((episode) => Card(
                                 margin: const EdgeInsets.only(
                                   bottom: 20,
                                   left: 10,
@@ -122,54 +108,56 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
                                   children: [
                                     Container(
                                       child: ListTile(
+                                        onTap: () => Navigator.of(context).push(
+                                          Routes.defaultRoute(
+                                            null,
+                                            ItemEpisodeDetailPage(
+                                              episode: episode,
+                                              season: season,
+                                              tvShow: tvShow,
+                                              heroTagPrefix: '${tvShow.id}-${season.id}-${episode.id}',
+                                            ),
+                                          ),
+                                        ),
                                         subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
+                                          crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                              'Capítulo: ${e.episodeNumber}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .subtitle1,
+                                              'Capítulo: ${episode.episodeNumber}',
+                                              style: theme.subtitle1,
                                               textAlign: TextAlign.end,
                                             ),
                                             Text(
-                                              e.name,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6,
+                                              episode.name ?? '',
+                                              style: theme.headline6,
                                               textAlign: TextAlign.end,
                                             ),
                                             Text(
-                                              e.overview,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .caption,
+                                              episode.overview ?? '',
+                                              style: theme.caption,
                                               textAlign: TextAlign.end,
                                             ),
                                             Divider(indent: 8, endIndent: 8),
-                                            Text(
-                                              DateTime.tryParse(e.airDate)
-                                                  .format,
-                                              textAlign: TextAlign.end,
-                                            ),
+                                            if (episode.airDate != null && episode.airDate!.isNotEmpty)
+                                              Text(
+                                                DateTime.tryParse(episode.airDate!)?.format ?? '',
+                                                textAlign: TextAlign.end,
+                                              ),
                                           ],
                                         ),
                                       ),
-                                      decoration: e.stillPath == null ? null : BoxDecoration(
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          colorFilter: ColorFilter.mode(
-                                            Theme.of(context)
-                                                .colorScheme
-                                                .background
-                                                .withOpacity(0.7),
-                                            BlendMode.luminosity,
-                                          ),
-                                          image: NetworkImage(
-                                              '$URL_IMAGE_MEDIUM${e.stillPath}'),
-                                        ),
-                                      ),
+                                      decoration: episode.stillPath == null
+                                          ? null
+                                          : BoxDecoration(
+                                              image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                colorFilter: ColorFilter.mode(
+                                                  Theme.of(context).colorScheme.background.withOpacity(0.7),
+                                                  BlendMode.luminosity,
+                                                ),
+                                                image: NetworkImage('$URL_IMAGE_MEDIUM${episode.stillPath}'),
+                                              ),
+                                            ),
                                     ),
                                   ],
                                 ),

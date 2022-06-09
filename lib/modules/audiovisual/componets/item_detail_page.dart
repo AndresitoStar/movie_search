@@ -8,7 +8,6 @@ import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_v
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
-import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_appbar.dart';
@@ -17,43 +16,42 @@ import 'item_recomendation_horizontal_list.dart';
 
 class ItemDetailPage extends StatelessWidget {
   final BaseSearchResult item;
+  final String heroTagPrefix;
 
-  const ItemDetailPage({Key key, @required this.item}) : super(key: key);
+  const ItemDetailPage({Key? key, required this.item, this.heroTagPrefix = ''}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
     return ViewModelBuilder<ItemDetailViewModel>.reactive(
-      viewModelBuilder: () => ItemDetailViewModel(item, context.read()),
-      builder: (context, model, _) => Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: SafeArea(
-          top: true,
-          child: Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-            floatingActionButton: landscape
-                ? FloatingActionButton.extended(
-                    onPressed: () => Navigator.of(context).pop(),
-                    label: Text('ATRAS'),
-                    icon: Icon(MyIcons.arrow_left),
-                  )
-                : null,
-            body: model.hasError
-                ? Center(
-                    child: Text('${model.modelError?.toString()}'),
-                  )
-                : landscape
-                    ? ItemDetailLandscape()
-                    : ItemDetailPortrait(),
+      viewModelBuilder: () => ItemDetailViewModel(item),
+      builder: (context, model, _) {
+        return Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: SafeArea(
+            top: true,
+            child: Scaffold(
+              floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+              floatingActionButton: landscape
+                  ? FloatingActionButton.extended(
+                      onPressed: () => Navigator.of(context).pop(),
+                      label: Text('ATRAS'),
+                      icon: Icon(MyIcons.arrow_left),
+                    )
+                  : null,
+              body: landscape ? ItemDetailLandscape() : ItemDetailPortrait(heroTagPrefix),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
 class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
-  const ItemDetailPortrait({Key key}) : super(key: key);
+  final String heroTagPrefix;
+
+  const ItemDetailPortrait(this.heroTagPrefix, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
@@ -61,21 +59,24 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
       controller: model.scrollController,
       cacheExtent: 1000,
       slivers: <Widget>[
-        ItemDetailSliverAppBar(ItemDetailAppbarContentExtended()),
-        if (model.initialised) ...[
+        ItemDetailSliverAppBar(ItemDetailAppbarContentExtended(heroTagPrefix)),
+        if (model.hasError)
+          SliverToBoxAdapter(child: ElevatedButton(onPressed: model.initialise, child: Text('Recargar')))
+        else if (model.initialised) ...[
           ItemDetailMainContent(),
-          CreditHorizontalList(model.itemType.type, model.itemId),
-          ItemDetailSecondaryContent(),
-          ItemDetailRecommendationHorizontalList(
-            model.itemType.type,
-            model.itemId,
-            ERecommendationType.Recommendation,
-          ),
-          // ItemDetailRecommendationHorizontalList(
-          //   model.itemType.type,
-          //   model.itemId,
-          //   ERecommendationType.Similar,
-          // ),
+          if (model.itemType != TMDB_API_TYPE.PERSON) ...[
+            CreditHorizontalList(model.itemType.type, model.itemId),
+            ItemDetailSecondaryContent(),
+            ItemDetailRecommendationHorizontalList(
+              model.itemType.type,
+              model.itemId,
+              ERecommendationType.Recommendation,
+            ),
+            SliverToBoxAdapter(child: SizedBox(height: 20)),
+          ] else ...[
+            ItemDetailSecondaryContent(),
+            ItemDetailRecommendationHorizontalList(model.itemType.type, model.itemId, ERecommendationType.Credit),
+          ],
         ] else
           SliverToBoxAdapter(child: SizedBox(child: LinearProgressIndicator())),
       ],
@@ -84,7 +85,7 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
 }
 
 class ItemDetailLandscape extends ViewModelWidget<ItemDetailViewModel> {
-  const ItemDetailLandscape({Key key}) : super(key: key);
+  const ItemDetailLandscape({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
@@ -109,28 +110,26 @@ class ItemDetailLandscape extends ViewModelWidget<ItemDetailViewModel> {
             controller: model.scrollController,
             child: Column(
               children: [
-                if (model.initialised) ItemDetailMainContent(isSliver: false),
-                if (model.initialised)
-                  CreditHorizontalList(
-                    model.itemType.type,
-                    model.itemId,
-                    isSliver: false,
-                  ),
-                if (model.initialised) ItemDetailSecondaryContent(isSliver: false),
-                if (model.initialised)
-                  ItemDetailRecommendationHorizontalList(
-                    model.itemType.type,
-                    model.itemId,
-                    ERecommendationType.Recommendation,
-                    sliver: false,
-                  ),
-                if (model.initialised)
-                  ItemDetailRecommendationHorizontalList(
-                    model.itemType.type,
-                    model.itemId,
-                    ERecommendationType.Similar,
-                    sliver: false,
-                  ),
+                if (model.initialised) ...[
+                  ItemDetailMainContent(isSliver: false),
+                  if (model.itemType != TMDB_API_TYPE.PERSON)
+                    CreditHorizontalList(
+                      model.itemType.type,
+                      model.itemId,
+                      isSliver: false,
+                    ),
+                  ItemDetailSecondaryContent(isSliver: false),
+                  if (model.itemType != TMDB_API_TYPE.PERSON)
+                    ItemDetailRecommendationHorizontalList(
+                      model.itemType.type,
+                      model.itemId,
+                      ERecommendationType.Recommendation,
+                      sliver: false,
+                    ),
+                  if (model.itemType == TMDB_API_TYPE.PERSON)
+                    ItemDetailRecommendationHorizontalList(
+                        model.itemType.type, model.itemId, ERecommendationType.Credit),
+                ],
               ],
             ),
           ),

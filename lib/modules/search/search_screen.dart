@@ -3,6 +3,7 @@ import 'package:movie_search/modules/search/search_bar.dart';
 import 'package:movie_search/modules/search/search_results.dart';
 import 'package:movie_search/modules/search/search_service.dart';
 import 'package:movie_search/modules/search/search_viewmodel.dart';
+import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:stacked/stacked.dart';
 
@@ -17,7 +18,22 @@ class SearchScreen extends StatelessWidget {
         bottomBarIndex: 1,
         body: Column(
           children: [
+            AppBar(
+              leading: IconButton(icon: Icon(MyIcons.arrow_left), onPressed: () => Navigator.of(context).pop()),
+              automaticallyImplyLeading: false,
+              titleSpacing: 0,
+              title: Text('Búsqueda'),
+              primary: true,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.filter_alt),
+                  color: Theme.of(context).iconTheme.color,
+                  onPressed: () => model.toggleFilter(),
+                )
+              ],
+            ),
             SearchBar(),
+            SizedBox(height: 10),
             Expanded(child: SearchResults()),
           ],
         ),
