@@ -1,8 +1,6 @@
 on:
-  push:
-    #    branches: [ master]
-    tags:
-      - "*"
+  workflow_dispatch:
+  
 name: Build Release
 jobs:
   build-apk:
