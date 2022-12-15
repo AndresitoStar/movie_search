@@ -46,9 +46,13 @@ class ItemCollectionView extends StatelessWidget {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 5),
                     Text(
                       '${model.collection.overview}',
-                      style: Theme.of(context).primaryTextTheme.caption,
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .subtitle1!
+                          .copyWith(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8)),
                     ),
                     SizedBox(height: 5),
                     Row(

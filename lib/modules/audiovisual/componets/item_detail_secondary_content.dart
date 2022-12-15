@@ -8,9 +8,11 @@ import 'package:movie_search/modules/audiovisual/componets/item_tv_season.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
+import 'package:movie_search/modules/themes/theme_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'item_detail_ui_util.dart';
 
@@ -32,12 +34,12 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
 
   List<Widget> _movieContentWidgets(BuildContext context, Movie movie) {
     return [
-      if (movie.homepage != null)
+      if (movie.homepage != null && movie.homepage!.isNotEmpty)
         ContentHorizontal(
           padding: 8,
           label: 'Sitio Oficial',
           subtitle: GestureDetector(
-            onTap: () => launch(movie.homepage!),
+            onTap: () => launchUrl(Uri.parse(movie.homepage!)),
             child: Text(
               movie.homepage!,
               style: TextStyle(
@@ -63,7 +65,9 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
       ContentHorizontal(
         padding: 8,
         label: 'Productora',
-        content: movie.productionCompanies?.join(', '),
+        // content: movie.productionCompanies?.join(', '),
+        subtitle: logoWidgets(context, movie.productionCompanies!),
+        forceLight: ThemeViewModel.of(context).isDark,
       ),
       if (movie.collection != null) ...[
         Divider(indent: 8, endIndent: 8),
@@ -111,7 +115,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
           padding: 8,
           label: 'Sitio Oficial',
           subtitle: GestureDetector(
-            onTap: () => launch(tvShow.homepage!),
+            onTap: () => launchUrlString(tvShow.homepage!),
             child: Text(
               tvShow.homepage!,
               style: TextStyle(
@@ -124,6 +128,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
         ContentHorizontal(
           padding: 8,
           label: 'Productora',
+          forceLight: ThemeViewModel.of(context).isDark,
           // content: tvShow.productionCompanies.join(', '),
           subtitle: logoWidgets(context, tvShow.productionCompanies!),
         ),
@@ -131,6 +136,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
         ContentHorizontal(
           padding: 8,
           label: 'Cadenas Televisivas',
+          forceLight: ThemeViewModel.of(context).isDark,
           subtitle: logoWidgets(context, tvShow.networks!),
         ),
     ];

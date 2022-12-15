@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
 import 'package:movie_search/modules/trending/viewmodel/trending_filter_viewmodel.dart';
@@ -24,66 +25,31 @@ class TrendingPage extends StatelessWidget {
                 primary: true,
                 titleSpacing: 0,
                 elevation: 0,
-                actions: [
-                  // if (viewModel.content == TrendingContent.MOVIE)
-                  //   IconButton(
-                  //     icon: Icon(
-                  //       MyIcons.calendar,
-                  //     ),
-                  //     onPressed: () => showYearFilter(context, viewModel),
-                  //   ),
-                  // IconButton(
-                  //   icon: Icon(
-                  //     viewModel.activeGenres.length > 0
-                  //         ? Icons.filter_list_alt
-                  //         : MyIcons.filter,
-                  //   ),
-                  //   onPressed: () =>
-                  //       showFilters(context, param.content.type, viewModel),
-                  // ),
-                ],
-                // bottom: viewModel.activeGenres.length > 0
-                //     ? PreferredSize(
-                //         preferredSize: Size.fromHeight(kToolbarHeight),
-                //         child: Container(
-                //           height: kToolbarHeight,
-                //           child: ListView.separated(
-                //             padding: const EdgeInsets.symmetric(horizontal: 10),
-                //             physics: ClampingScrollPhysics(),
-                //             separatorBuilder: (context, index) => Container(width: 10),
-                //             scrollDirection: Axis.horizontal,
-                //             itemCount: viewModel.activeGenresNames.length,
-                //             itemBuilder: (context, i) => Chip(label: Text(viewModel.activeGenresNames[i])),
-                //           ),
-                //         ),
-                //       )
-                //     : null,
                 leading: IconButton(icon: Icon(MyIcons.arrow_left), onPressed: () => Navigator.of(context).pop()),
               ),
               body: viewModel.isBusy
                   ? Center(child: CircularProgressIndicator())
-                  : GridView.builder(
+                  : MasonryGridView.count(
                       padding: const EdgeInsets.all(10.0),
                       itemCount: viewModel.items.length + 2,
-                      itemBuilder: (ctx, i) => i < viewModel.items.length
-                          ? ItemGridView(
-                              item: viewModel.items[i],
-                              showData: false,
-                              heroTagPrefix: '',
-                            )
-                          : viewModel.hasMore
-                              ? Builder(
-                                  builder: (context) {
-                                    if (i == viewModel.items.length) viewModel.fetchMore();
-                                    return GridItemPlaceholder();
-                                  },
-                                )
-                              : Container(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: getColumns(context),
-                          childAspectRatio: 5 / 9,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10),
+                      crossAxisCount: getColumns(context),
+                      itemBuilder: (ctx, i) => AspectRatio(
+                        aspectRatio: 0.667,
+                        child: i < viewModel.items.length
+                            ? ItemGridView(
+                                item: viewModel.items[i],
+                                showData: false,
+                                heroTagPrefix: '',
+                              )
+                            : viewModel.hasMore
+                                ? Builder(
+                                    builder: (context) {
+                                      if (i == viewModel.items.length) viewModel.fetchMore();
+                                      return GridItemPlaceholder();
+                                    },
+                                  )
+                                : Container(),
+                      ),
                     ),
             ));
   }
@@ -189,7 +155,7 @@ class TrendingPage extends StatelessWidget {
                               (e) => ElevatedButton(
                                 onPressed: () => model.toggle(e.id),
                                 style: ElevatedButton.styleFrom(
-                                  primary: model.filterGenre[e.id]!
+                                  backgroundColor: model.filterGenre[e.id]!
                                       ? Theme.of(context).primaryColorDark
                                       : Theme.of(context).colorScheme.background,
                                   elevation: 5,

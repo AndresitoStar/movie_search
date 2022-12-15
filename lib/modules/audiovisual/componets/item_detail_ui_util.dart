@@ -98,8 +98,12 @@ class ContentHorizontal extends StatelessWidget {
   final String? content;
   final double padding;
   final Widget? subtitle;
+  final TextStyle? contentStyle;
+  final bool forceLight;
 
-  const ContentHorizontal({Key? key, this.label, this.content, this.padding = 0, this.subtitle}) : super(key: key);
+  const ContentHorizontal(
+      {Key? key, this.label, this.content, this.padding = 0, this.subtitle, this.contentStyle, this.forceLight = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -108,19 +112,22 @@ class ContentHorizontal extends StatelessWidget {
       visible: subtitle != null || (content != null && content!.isNotEmpty && content != 'N/A'),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: padding),
+        color: forceLight ? Colors.white70 : Theme.of(context).backgroundColor,
         child: ListTile(
           title: label != null
               ? Text(
                   label!,
                   style: Theme.of(context).textTheme.caption!.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: primaryColor,
+                        color: forceLight ? Theme.of(context).primaryTextTheme.subtitle2!.color : primaryColor,
                       ),
                 )
               : null,
           subtitle: subtitle ??
-              Text(content != null && content!.isNotEmpty ? content! : '',
-                  style: Theme.of(context).textTheme.subtitle1),
+              Text(
+                content != null && content!.isNotEmpty ? content! : '',
+                style: contentStyle ?? Theme.of(context).textTheme.subtitle1,
+              ),
         ),
       ),
     );

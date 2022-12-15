@@ -74,8 +74,12 @@ class SearchResultListItem extends StatelessWidget {
                             children: [
                               if (searchResult.titleOriginal != null &&
                                   searchResult.titleOriginal != searchResult.title)
-                                Text(searchResult.titleOriginal!,
-                                    textAlign: TextAlign.end, style: Theme.of(context).textTheme.subtitle1),
+                                Text(
+                                  searchResult.titleOriginal!,
+                                  textAlign: TextAlign.end,
+                                  style: Theme.of(context).textTheme.subtitle1,
+                                  maxLines: 1,
+                                ),
                               if (searchResult.type != TMDB_API_TYPE.PERSON) Text(searchResult.type.nameSingular)
                             ],
                           ),

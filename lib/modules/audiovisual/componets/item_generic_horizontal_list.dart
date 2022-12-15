@@ -30,7 +30,7 @@ class AudiovisualHorizontalList extends StatelessWidget {
                       .sublist(0, _defaultLength)
                       .map(
                         (e) => AspectRatio(
-                          aspectRatio: 9 / 16,
+                          aspectRatio: 0.667,
                           child: ItemGridView(
                             item: e,
                             showData: false,

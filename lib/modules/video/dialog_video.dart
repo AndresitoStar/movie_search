@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/model/api/models/video.dart';
 import 'package:movie_search/ui/icons.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class DialogVideo extends StatelessWidget {
   final List<Video> videos;
@@ -54,9 +54,11 @@ class DialogVideo extends StatelessWidget {
                     child: Card(
                       color: Colors.black26,
                       elevation: 0,
-                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 5),
                       child: ListTile(
-                        leading: Icon(v.isYoutube ? MyIcons.youtube : MyIcons.video),
+                        leading:
+                            Icon(v.isYoutube ? MyIcons.youtube : MyIcons.video),
                         title: Text(
                           v.name ?? '',
                           maxLines: 2,
@@ -74,7 +76,9 @@ class DialogVideo extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.red)),
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text('Cerrar'))
               ],
@@ -86,8 +90,8 @@ class DialogVideo extends StatelessWidget {
   Future<void> _launchYoutubeVideo(Video v) async {
     final url = 'https://www.youtube.com/watch?v=${v.key}';
 
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
     } else {
       throw 'Could not launch $url';
     }

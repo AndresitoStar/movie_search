@@ -118,12 +118,12 @@ class TvShow {
         lastAirDate = json['last_air_date'],
         lastEpisodeToAir = json['last_episode_to_air'] == null ? null : Episode.fromJson(json['last_episode_to_air']),
         name = json['name'],
-        nextEpisodeToAir = null,
+        nextEpisodeToAir = json['next_episode_to_air'] == null ? null : Episode.fromJson(json['next_episode_to_air']),
         networks =
             json['networks'] == null ? null : List.from(json['networks']).map((e) => Networks.fromJson(e)).toList(),
         numberOfEpisodes = json['number_of_episodes'],
         numberOfSeasons = json['number_of_seasons'],
-        originCountry = json['networks'] == null ? null : List.castFrom<dynamic, String>(json['origin_country']),
+        originCountry = json['origin_country'] == null ? null : List.castFrom<dynamic, String>(json['origin_country']),
         originalLanguage = json['original_language'],
         originalName = json['original_name'],
         overview = json['overview'],
@@ -144,6 +144,44 @@ class TvShow {
         type = json['type'],
         voteAverage = json['vote_average'],
         voteCount = json['vote_count'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'backdrop_path': this.backdropPath,
+      'created_by': this.createdByPerson == null ? null : createdByPerson!.map((e) => e.toJson()).toList(),
+      'episode_run_time': this.episodeRunTime == null ? null : episodeRunTime!.map((e) => e).toList(),
+      'first_air_date': this.firstAirDate,
+      'genres': this.genres == null ? null : genres!.map((e) => e.toJson()).toList(),
+      'homepage': this.homepage,
+      'id': this.id,
+      'in_production': this.inProduction,
+      'languages': this.languages == null ? null : languages!.map((e) => e).toList(),
+      'last_air_date': this.lastAirDate,
+      'last_episode_to_air': this.lastEpisodeToAir?.toJson(),
+      'name': this.name,
+      'next_episode_to_air': this.nextEpisodeToAir?.toJson(),
+      'networks': this.networks == null ? null : networks!.map((e) => e.toJson()).toList(),
+      'number_of_episodes': this.numberOfEpisodes,
+      'number_of_seasons': this.numberOfSeasons,
+      'origin_country': this.originCountry == null ? null : originCountry!.map((e) => e).toList(),
+      'original_language': this.originalLanguage,
+      'original_name': this.originalName,
+      'overview': this.overview,
+      'popularity': this.popularity,
+      'poster_path': this.posterPath,
+      'production_companies':
+          this.productionCompanies == null ? null : productionCompanies!.map((e) => e.toJson()).toList(),
+      'production_countries':
+          this.productionCountries == null ? null : productionCountries!.map((e) => e.toJson()).toList(),
+      'seasons': this.seasons == null ? null : seasons!.map((e) => e.toJson()).toList(),
+      'spoken_languages': this.spokenLanguages == null ? null : spokenLanguages!.map((e) => e.toJson()).toList(),
+      'status': this.status,
+      'tagline': this.tagline,
+      'type': this.type,
+      'vote_average': this.voteAverage,
+      'vote_count': this.voteCount,
+    };
+  }
 }
 
 class CreatedBy {
@@ -270,5 +308,52 @@ class Episode {
       voteAverage: map['vote_average'] as num?,
       voteCount: map['vote_count'] as int?,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': this.id,
+      'airDate': this.airDate,
+      'episodeNumber': this.episodeNumber,
+      'name': this.name,
+      'overview': this.overview,
+      'productionCode': this.productionCode,
+      'seasonNumber': this.seasonNumber,
+      'stillPath': this.stillPath,
+      'voteAverage': this.voteAverage,
+      'voteCount': this.voteCount,
+    };
+  }
+}
+
+class WatchProvider {
+  int providerId;
+  String? providerName;
+  String? logoPath;
+  int? displayPriority;
+
+  WatchProvider({
+    required this.providerId,
+    this.providerName,
+    this.logoPath,
+    this.displayPriority,
+  });
+
+  factory WatchProvider.fromJson(Map<String, dynamic> map) {
+    return WatchProvider(
+      providerName: map['provider_name'] as String?,
+      providerId: map['provider_id'] as int,
+      displayPriority: map['display_priority'] as int,
+      logoPath: map['logo_path'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'provider_id': this.providerId,
+      'provider_name': this.providerName,
+      'logo_path': this.logoPath,
+      'display_priority': this.displayPriority,
+    };
   }
 }

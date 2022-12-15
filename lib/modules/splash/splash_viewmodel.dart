@@ -33,12 +33,9 @@ class SplashViewModel extends FutureViewModel {
   @override
   Future futureToRun() async {
     setBusy(true);
-    await Future.wait([
-      // validate(),
-      syncGenres('movie'),
-      syncGenres('tv'),
-      // checkWasHereBefore(),
-    ]).then((value) => checkWasHereBefore());
+    await syncGenres('movie');
+    await syncGenres('tv');
+    checkWasHereBefore();
   }
 
   Future checkWasHereBefore() async {

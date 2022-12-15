@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/modules/discover/discover_screen.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
@@ -28,16 +29,20 @@ class MyBottomBar extends StatelessWidget {
             if (index != 1) goToSearch(context);
             break;
           case 2:
-            if (index != 2) goToFavourites(context);
+            if (index != 2) goToDiscover(context);
             break;
           case 3:
-            if (index != 3) goToSettings(context);
+            if (index != 3) goToFavourites(context);
+            break;
+          case 4:
+            if (index != 4) goToSettings(context);
             break;
         }
       },
       items: [
         BottomNavigationBarItem(icon: Icon(MyIcons.home), label: '', tooltip: 'Inicio'),
         BottomNavigationBarItem(icon: Icon(MyIcons.search), label: '', tooltip: 'Buscar'),
+        BottomNavigationBarItem(icon: Icon(MyIcons.discover), label: '', tooltip: 'Explorar'),
         BottomNavigationBarItem(
             icon: Icon(MyIcons.favourite_off), label: '', activeIcon: Icon(MyIcons.favourite_on), tooltip: 'Favoritos'),
         BottomNavigationBarItem(icon: Icon(MyIcons.settings), label: '', tooltip: 'Ajustes'),
@@ -52,10 +57,16 @@ class MyBottomBar extends StatelessWidget {
 
   Future goToSearch(BuildContext context) {
     if (index == 0) return Navigator.of(context).pushNamed(SearchScreen.routeName);
-    return Navigator.of(context).pushNamed(SearchScreen.routeName);
+    return Navigator.of(context).pushReplacementNamed(SearchScreen.routeName);
   }
 
   Future goToSettings(BuildContext context) {
-    return Navigator.of(context).pushNamed(SettingsScreen.routeName);
+    if (index == 0) return Navigator.of(context).pushNamed(SettingsScreen.routeName);
+    return Navigator.of(context).pushReplacementNamed(SettingsScreen.routeName);
+  }
+
+  Future goToDiscover(BuildContext context) {
+    if (index == 0) return Navigator.of(context).pushNamed(DiscoverScreen.routeName);
+    return Navigator.of(context).pushReplacementNamed(DiscoverScreen.routeName);
   }
 }

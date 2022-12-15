@@ -64,7 +64,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                                     itemCount: 3,
                                     itemBuilder: (ctx, i) => AspectRatio(
                                       child: GridItemPlaceholder(),
-                                      aspectRatio: 8 / 16,
+                                      aspectRatio: 0.667,
                                     ),
                                   )
                                 : ListView.builder(
@@ -77,7 +77,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                                         item: model.items[i],
                                         heroTagPrefix: '$i-${recommendationType.type}-',
                                       ),
-                                      aspectRatio: 8 / 15,
+                                      aspectRatio: 0.667,
                                     ),
                                   ),
                           ),

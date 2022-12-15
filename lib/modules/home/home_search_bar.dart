@@ -9,7 +9,7 @@ class HomeSearchBar extends StatelessWidget {
       tag: 'searchBar',
       child: Card(
         clipBehavior: Clip.hardEdge,
-        elevation: 1,
+        elevation: 0,
         color: Theme.of(context).inputDecorationTheme.fillColor,
         margin: const EdgeInsets.symmetric(horizontal: 10),
         child: TextField(
@@ -26,6 +26,5 @@ class HomeSearchBar extends StatelessWidget {
     );
   }
 
-  _onPressed(BuildContext context) =>
-      Navigator.of(context).pushNamed(SearchScreen.routeName);
+  _onPressed(BuildContext context) => Navigator.of(context).pushNamed(SearchScreen.routeName);
 }

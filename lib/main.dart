@@ -1,7 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
@@ -26,18 +25,8 @@ void main() async {
     _configureSqliteOnLinux();
   }
   final color = await _resolveColorSchema();
-  SharedPreferencesHelper.wasHereBefore().then((value) => runApp(EasyDynamicThemeWidget(child: App(color: color))));
-
-  if (Platform.isWindows || Platform.isLinux) {
-    doWhenWindowReady(() {
-      final initialSize = Size(400, 710);
-      appWindow.minSize = initialSize;
-      appWindow.size = initialSize;
-      appWindow.alignment = Alignment.center;
-      appWindow.show();
-      // appWindow.maximize();
-    });
-  }
+  SharedPreferencesHelper.wasHereBefore().then(
+      (value) => runApp(EasyDynamicThemeWidget(child: App(color: color))));
 }
 
 Future<FlexScheme> _resolveColorSchema() async {
@@ -86,7 +75,8 @@ class App extends StatelessWidget {
           theme: model.theme,
           darkTheme: model.darkTheme,
           themeMode: EasyDynamicTheme.of(context).themeMode,
-          onGenerateRoute: (settings) => Routes.generateRoute(context, settings),
+          onGenerateRoute: (settings) =>
+              Routes.generateRoute(context, settings),
           initialRoute: SplashScreen.route,
         ),
       ),

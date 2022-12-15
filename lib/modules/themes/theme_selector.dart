@@ -1,14 +1,38 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/themes/theme_viewmodel.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:provider/provider.dart';
 
 class ThemeSelectorDialog extends StatelessWidget {
   static Future show(BuildContext context) {
     return showModalBottomSheet(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.5),
-      builder: (context) => ThemeSelectorDialog(),
+      backgroundColor: Colors.transparent,
+      builder: (context) => GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: Container(
+          color: Color.fromRGBO(0, 0, 0, 0.001),
+          child: GestureDetector(
+            onTap: () {},
+            child: DraggableScrollableSheet(
+              initialChildSize: 0.4,
+              minChildSize: 0.2,
+              maxChildSize: 0.75,
+              builder: (_, controller) => Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(25.0),
+                    topRight: const Radius.circular(25.0),
+                  ),
+                ),
+                child: ThemeSelectorDialog(),
+              ),
+            ),
+          ),
+        ),
+      ),
       isScrollControlled: true,
     );
   }
@@ -17,10 +41,10 @@ class ThemeSelectorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeViewModel viewModel = Provider.of(context);
     bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: ListTile(
-        title: Text.rich(
+    return ListView(
+      padding: EdgeInsets.only(top: 20),
+      children: [
+        Text.rich(
           TextSpan(
             text: 'Seleccione el color principal\n'.toUpperCase(),
             children: [
@@ -41,12 +65,14 @@ class ThemeSelectorDialog extends StatelessWidget {
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline6,
         ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 20),
+        SizedBox(height: 20),
+        SingleChildScrollView(
+          padding: EdgeInsets.only(bottom: context.mq.size.height * 0.07, left: 10, right: 10),
           child: Wrap(
-            spacing: 14,
-            runSpacing: 16,
-            alignment: WrapAlignment.center,
+            spacing: 10,
+            runSpacing: 14,
+            alignment: WrapAlignment.start,
+            runAlignment: WrapAlignment.start,
             children: FlexScheme.values
                 .map((e) => FlexColor.schemes.containsKey(e)
                     ? InkWell(
@@ -54,18 +80,11 @@ class ThemeSelectorDialog extends StatelessWidget {
                           viewModel.setColor(e);
                           Navigator.of(context).pop();
                         },
-                        child: Chip(
-                          elevation: 2,
-                          avatar: e == viewModel.flexColor
-                              ? Icon(
-                                  Icons.check_circle_rounded,
-                                  color: Theme.of(context).colorScheme.onPrimary,
-                                )
+                        child: CircleAvatar(
+                          radius: 32,
+                          child: e == viewModel.flexColor
+                              ? Icon(Icons.check, color: Theme.of(context).colorScheme.onPrimary)
                               : null,
-                          label: Text(
-                            FlexColor.schemes[e]!.name,
-                            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                          ),
                           backgroundColor:
                               isDarkModeOn ? FlexColor.schemes[e]!.dark.primary : FlexColor.schemes[e]!.light.primary,
                         ),
@@ -74,7 +93,7 @@ class ThemeSelectorDialog extends StatelessWidget {
                 .toList(),
           ),
         ),
-      ),
+      ],
     );
   }
 }

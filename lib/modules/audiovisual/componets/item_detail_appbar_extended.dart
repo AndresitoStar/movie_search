@@ -58,22 +58,12 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
         Positioned(
           left: 10,
           bottom: 10,
-          top: kToolbarHeight,
+          right: mq.size.width * 10 / 16,
           child: Hero(
             tag: '$heroTagPrefix${model.itemId}',
-            child: Material(
-              color: Colors.transparent,
-              child: AspectRatio(
-                aspectRatio: 9 / 16,
-                child: Card(
-                  clipBehavior: Clip.hardEdge,
-                  child: Card(
-                    clipBehavior: Clip.hardEdge,
-                    elevation: 0,
-                    child: ContentImageWidget(model.posterImageUrl, fit: BoxFit.cover),
-                  ),
-                ),
-              ),
+            child: Card(
+              clipBehavior: Clip.hardEdge,
+              child: ContentImageWidget(model.posterImageUrl, fit: BoxFit.cover),
             ),
           ),
         ),
@@ -110,13 +100,44 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                 ] else if (model.data!.genres != null && model.data!.genres!.isNotEmpty)
-                  Text(
-                    "${model.year ?? '?'} - ${model.data!.genres!.join(' / ')}",
-                    style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).hintColor),
+                  // Text(
+                  //   "${model.year ?? '?'} - ${model.data!.genres!.join(' / ')}",
+                  //   style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).hintColor),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Wrap(
+                      children: model.data!.genres!
+                          .map(
+                            (e) => Container(
+                              child: Text(e),
+                              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.transparent,
+                                border: Border.all(color: context.theme.textTheme.subtitle1!.color!),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      runSpacing: 5,
+                      spacing: 6,
+                    ),
                   ),
               if (model.itemType != TMDB_API_TYPE.PERSON)
                 Row(
                   children: [
+                    if (model.year != null)
+                      Chip(
+                        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                        elevation: 5,
+                        label: Text(
+                          '${model.year}',
+                          style: TextStyle(color: context.theme.colorScheme.onPrimary, fontWeight: FontWeight.bold),
+                        ),
+                        backgroundColor: context.theme.colorScheme.secondary,
+                      ),
+                    SizedBox(width: 10),
                     Icon(MyIcons.star, size: 18),
                     Padding(
                       padding: const EdgeInsets.all(8.0),

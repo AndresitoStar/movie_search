@@ -33,8 +33,10 @@ class SplashScreen extends StatelessWidget {
           children: [
             Icon(Icons.network_locked, size: 160),
             SizedBox(height: 20),
-            Text('Parece que ocurrio un error, verifica que tengas conexión a Internet.',
-                textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6),
+            Text(
+                'Parece que ocurrio un error, verifica que tengas conexión a Internet.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline6),
           ],
         ),
       );
@@ -52,14 +54,14 @@ class SplashScreen extends StatelessWidget {
             width: imageSize,
           ),
         ),
-        Align(
-          alignment: Alignment.center,
-          child: SizedBox(
-            height: imageSize + strokeWidth,
-            width: imageSize + strokeWidth,
-            child: CircularProgressIndicator(strokeWidth: strokeWidth),
-          ),
-        ),
+        // Align(
+        //   alignment: Alignment.center,
+        //   child: SizedBox(
+        //     height: imageSize + strokeWidth,
+        //     width: imageSize + strokeWidth,
+        //     child: CircularProgressIndicator(strokeWidth: strokeWidth),
+        //   ),
+        // ),
         Positioned(
           bottom: 100,
           left: 10,
@@ -78,8 +80,9 @@ class SplashScreen extends StatelessWidget {
   }
 
   _navigateHome(BuildContext context) {
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      Navigator.of(context).pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
     });
   }
 }

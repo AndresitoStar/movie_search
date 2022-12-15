@@ -112,10 +112,7 @@ class TrendingViewModel extends BaseViewModel {
   }
 
   List<int> get activeGenres => filterGenre != null
-      ? filterGenre!.entries
-          .where((element) => element.value)
-          .map<int>((e) => int.parse(e.key))
-          .toList()
+      ? filterGenre!.entries.where((element) => element.value).map<int>((e) => int.parse(e.key)).toList()
       : [];
 
   List<GenreTableData> _allGenres = [];
@@ -135,8 +132,7 @@ class TrendingViewModel extends BaseViewModel {
       {this.filterGenre = const {}, this.trendingType = TrendingType.TRENDING})
       : _trendingService = TrendingService();
 
-  TrendingViewModel.homeHorizontal(this.content, GenreTableData genre,
-      {this.trendingType = TrendingType.TRENDING})
+  TrendingViewModel.homeHorizontal(this.content, GenreTableData genre, {this.trendingType = TrendingType.TRENDING})
       : _db = null,
         filterGenre = {genre.id: true},
         _allGenres = [genre],
@@ -161,8 +157,7 @@ class TrendingViewModel extends BaseViewModel {
   Future _fetchMore() async {
     _actualPage++;
     SearchResponse results = trendingType == TrendingType.POPULAR
-        ? await _trendingService.getDiscover(content.type,
-            page: _actualPage, genres: activeGenres)
+        ? await _trendingService.getDiscover(content.type, page: _actualPage)
         : await _trendingService.getTrending(content.type, page: _actualPage);
     _items.addAll(results.result);
     notifyListeners();

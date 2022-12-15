@@ -17,7 +17,7 @@ class FavouriteScreen extends StatelessWidget {
     return ViewModelBuilder<FavouritesViewModel>.nonReactive(
       onModelReady: (model) => model.initialize(),
       builder: (context, model, _) => CustomScaffold(
-        bottomBarIndex: 2,
+        bottomBarIndex: 3,
         body: NestedScrollView(
           headerSliverBuilder: (context, value) {
             return [

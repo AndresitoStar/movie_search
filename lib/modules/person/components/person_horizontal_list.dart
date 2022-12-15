@@ -92,8 +92,9 @@ class PersonHorizontalList extends StatelessWidget {
           item: BaseSearchResult.fromPerson(items[i]),
           heroTagPrefix: '$i-person-$tag-',
           showData: false,
+          showTitles: true,
         ),
-        aspectRatio: 8 / 16,
+        aspectRatio: 0.669,
       ),
     );
   }

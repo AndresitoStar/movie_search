@@ -39,6 +39,7 @@ class MyIcons {
   static const IconData maximize = Icons.crop_square;
   static const IconData minimize = Icons.minimize;
   static const IconData gallery = FontAwesomeIcons.images;
+  static const IconData discover = FontAwesomeIcons.solidPaperPlane;
 
   static const IconData facebook = FontAwesomeIcons.facebookSquare;
   static const IconData instagram = FontAwesomeIcons.instagram;

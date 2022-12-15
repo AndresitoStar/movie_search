@@ -1,4 +1,4 @@
-# movie_search
+# movie_search_v2
 
 A new Flutter project.
 

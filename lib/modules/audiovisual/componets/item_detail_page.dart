@@ -98,7 +98,7 @@ class ItemDetailLandscape extends ViewModelWidget<ItemDetailViewModel> {
           child: Container(
             alignment: Alignment.center,
             child: AspectRatio(
-              aspectRatio: 9 / 16,
+              aspectRatio: 0.667,
               child: DetailMainImage(landscape: true),
             ),
           ),

@@ -13,6 +13,7 @@ import 'item_detail_page.dart';
 
 class ItemGridView extends StatelessWidget {
   final bool showData;
+  final bool showTitles;
   final bool useBackdrop;
   final BaseSearchResult item;
   final EdgeInsets margin;
@@ -23,6 +24,7 @@ class ItemGridView extends StatelessWidget {
     required this.item,
     required this.heroTagPrefix,
     this.showData = true,
+    this.showTitles = false,
     this.useBackdrop = false,
     this.margin = const EdgeInsets.all(10),
   }) : super(key: key);
@@ -46,7 +48,7 @@ class ItemGridView extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 AspectRatio(
-                  aspectRatio: 9 / 16,
+                  aspectRatio: item.type == TMDB_API_TYPE.PERSON ? 0.669 : 0.667,
                   child: (useBackdrop && item.backDropImage != null) || item.posterImage != null
                       ? ContentImageWidget(
                           '${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
@@ -84,39 +86,40 @@ class ItemGridView extends StatelessWidget {
                       ),
                     ),
                   ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: ClipRect(
-                    child: BackdropFilter(
-                      filter: useBackdrop
-                          ? ImageFilter.blur(sigmaX: 7, sigmaY: 7)
-                          : ImageFilter.blur(sigmaX: 14.0, sigmaY: 14.0),
-                      child: Container(
-                        color: theme.scaffoldBackgroundColor.withOpacity(useBackdrop ? 0.5 : 0.7),
-                        child: ListTile(
-                          title: Text(
-                            item.title ?? '' + '\n',
-                            textAlign: useBackdrop ? TextAlign.start : TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: theme.textTheme.headline6!.copyWith(fontSize: 16),
+                if (this.showTitles)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: useBackdrop
+                            ? ImageFilter.blur(sigmaX: 7, sigmaY: 7)
+                            : ImageFilter.blur(sigmaX: 14.0, sigmaY: 14.0),
+                        child: Container(
+                          color: theme.scaffoldBackgroundColor.withOpacity(useBackdrop ? 0.5 : 0.7),
+                          child: ListTile(
+                            title: Text(
+                              item.title ?? '' + '\n',
+                              textAlign: useBackdrop ? TextAlign.start : TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: theme.textTheme.headline6!.copyWith(fontSize: 16),
+                            ),
+                            subtitle: item.subtitle == null
+                                ? null
+                                : Text(
+                                    item.subtitle!,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: theme.textTheme.caption,
+                                  ),
                           ),
-                          subtitle: item.subtitle == null
-                              ? null
-                              : Text(
-                                  item.subtitle!,
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: theme.textTheme.caption,
-                                ),
                         ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
           ),

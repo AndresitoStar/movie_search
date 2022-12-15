@@ -1,10 +1,10 @@
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/home/custom_segmented_view_pages.dart';
 import 'package:movie_search/modules/home/home_search_bar.dart';
 import 'package:movie_search/modules/trending/trending_card.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
+import 'package:movie_search/ui/widgets/theme_switcher.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = "/home";
@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Image.asset('assets/images/ic_launcher.png'),
             ),
-            actions: [EasyDynamicThemeBtn()],
+            actions: [MyThemeBtn()],
             title: Text('Movie Search'),
             titleSpacing: 0,
           ),
@@ -62,13 +62,11 @@ class HomeScreen extends StatelessWidget {
                     ListTile(
                       title: Text(
                         'Bienvenido(a)',
-                        style: theme.textTheme.headline5!
-                            .copyWith(color: theme.colorScheme.primary),
+                        style: theme.textTheme.headline5!.copyWith(color: theme.colorScheme.primary),
                       ),
                       subtitle: Text(
                         'Millones de películas, programas de televisión y personas por descubrir. Explora ahora.',
-                        style: theme.textTheme.subtitle1!
-                            .copyWith(color: theme.hintColor),
+                        style: theme.textTheme.subtitle1!.copyWith(color: theme.hintColor),
                       ),
                     ),
                     Divider(),
@@ -77,8 +75,7 @@ class HomeScreen extends StatelessWidget {
                     ListTile(
                       title: Text(
                         'Peliculas',
-                        style: theme.textTheme.headlineMedium!
-                            .copyWith(color: theme.colorScheme.primary),
+                        style: theme.textTheme.headlineMedium!.copyWith(color: theme.colorScheme.primary),
                       ),
                     ),
                     CustomSegmentedPageView(
@@ -88,8 +85,7 @@ class HomeScreen extends StatelessWidget {
                     ListTile(
                       title: Text(
                         'Series y Televisión',
-                        style: theme.textTheme.headlineMedium!
-                            .copyWith(color: theme.colorScheme.primary),
+                        style: theme.textTheme.headlineMedium!.copyWith(color: theme.colorScheme.primary),
                       ),
                     ),
                     CustomSegmentedPageView(
@@ -99,8 +95,7 @@ class HomeScreen extends StatelessWidget {
                     ListTile(
                       title: Text(
                         'Personas',
-                        style: theme.textTheme.headlineMedium!
-                            .copyWith(color: theme.colorScheme.primary),
+                        style: theme.textTheme.headlineMedium!.copyWith(color: theme.colorScheme.primary),
                       ),
                     ),
                     CustomSegmentedPageView(

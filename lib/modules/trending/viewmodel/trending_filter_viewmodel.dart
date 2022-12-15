@@ -52,7 +52,8 @@ class TrendingFilterViewModel extends FutureViewModel {
     if (_genres.isEmpty) {
       _genres = await syncGenres(type);
     }
-    if (_filterGenre.isEmpty) _filterGenre = Map.fromIterable(_genres, key: (v) => '${v.id}', value: (v) => false);
+    if (_filterGenre.isEmpty)
+      _filterGenre = Map.fromIterable(_genres, key: (v) => '${v.providerId}', value: (v) => false);
     setBusy(false);
   }
 }

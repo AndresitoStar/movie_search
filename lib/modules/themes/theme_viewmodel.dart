@@ -1,9 +1,12 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class ThemeViewModel extends BaseViewModel {
+  static ThemeViewModel of(BuildContext context) => Provider.of<ThemeViewModel>(context, listen: false);
+
   FlexScheme _flexColor;
   final ThemeMode themeMode;
   bool drawerOpened = false;
@@ -32,7 +35,7 @@ class ThemeViewModel extends BaseViewModel {
         appBarElevation: 0,
         appBarStyle: FlexAppBarStyle.background,
       ).toTheme.copyWith(
-            inputDecorationTheme: baseTheme,
+            inputDecorationTheme: baseTheme.copyWith(fillColor: Colors.black12),
             elevatedButtonTheme: baseElevatedButtonThemeData,
             cardTheme: cardTheme,
           );
@@ -44,7 +47,7 @@ class ThemeViewModel extends BaseViewModel {
         appBarElevation: 0,
         appBarStyle: FlexAppBarStyle.background,
       ).toTheme.copyWith(
-            inputDecorationTheme: baseTheme,
+            inputDecorationTheme: baseTheme.copyWith(fillColor: Colors.white12),
             elevatedButtonTheme: baseElevatedButtonThemeData,
             cardTheme: cardTheme,
           );
@@ -63,8 +66,8 @@ class ThemeViewModel extends BaseViewModel {
   InputDecorationTheme get baseTheme => InputDecorationTheme(
         isDense: false,
         isCollapsed: false,
-        filled: true,
-        fillColor: Colors.white12,
+        filled: false,
+        // fillColor: Colors.white12,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 10.0,
           vertical: 8.0,

@@ -93,7 +93,7 @@ class MyDatabase extends _$MyDatabase {
 
   //region Genres
   Future insertGenres(List<GenreTableData> genres) async {
-    await delete(genreTable).go();
+    // await delete(genreTable).go();
     return batch((b) => b.insertAll(genreTable, genres, mode: InsertMode.insertOrReplace));
   }
 
@@ -106,8 +106,12 @@ class MyDatabase extends _$MyDatabase {
     return (result ?? 0) > 0;
   }
 
-  Future<List<GenreTableData>> allGenres(String type) {
-    final query = select(genreTable)..where((m) => m.type.equals(type));
+  Future<List<GenreTableData>> allGenres(String? type) {
+    if (type != null) {
+      final query = select(genreTable)..where((m) => m.type.equals(type));
+      return query.get();
+    }
+    final query = select(genreTable);
     return query.get();
   }
 //endregion

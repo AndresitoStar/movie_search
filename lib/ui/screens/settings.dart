@@ -12,7 +12,7 @@ class SettingsScreen extends StatelessWidget {
     final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
 
     return CustomScaffold(
-      bottomBarIndex: 3,
+      bottomBarIndex: 4,
       body: Column(
         children: [
           Expanded(
@@ -46,7 +46,7 @@ class SettingsScreen extends StatelessWidget {
       children: [
         Image.asset('assets/images/ic_launcher.png', width: 150, height: 150),
         SizedBox(height: 30),
-        Text(appName, style: theme.textTheme.headline4!.copyWith(color: theme.colorScheme.secondary)),
+        Text(appName, style: theme.textTheme.headline4!.copyWith(color: theme.colorScheme.primary)),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

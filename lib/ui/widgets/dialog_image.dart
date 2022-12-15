@@ -5,7 +5,6 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:moor/moor.dart';
 import 'package:movie_search/modules/dialog_image/dialog_image_viewmodel.dart';
 import 'package:movie_search/modules/dialog_image/download_image_button.dart';
 import 'package:movie_search/providers/util.dart';
@@ -30,7 +29,10 @@ class DialogImage extends StatefulWidget {
   })  : assert(imageUrl != null || (images != null && currentImage != null)),
         super(key: key);
 
-  static Future show({required BuildContext context, required String imageUrl, String baseUrl = URL_IMAGE_MEDIUM}) {
+  static Future show(
+      {required BuildContext context,
+      required String imageUrl,
+      String baseUrl = URL_IMAGE_MEDIUM}) {
     return showDialog(
       context: context,
       builder: (context) => DialogImage(imageUrl: imageUrl, baseUrl: baseUrl),
@@ -44,7 +46,8 @@ class DialogImage extends StatefulWidget {
   }) {
     return showDialog(
       context: context,
-      builder: (context) => DialogImage(currentImage: currentImage, images: images),
+      builder: (context) =>
+          DialogImage(currentImage: currentImage, images: images),
     );
   }
 
@@ -65,7 +68,8 @@ class _DialogImageState extends State<DialogImage> {
   Future _checkImageCachedExist() async {
     bool exist = false;
     try {
-      var file = await DefaultCacheManager().getFileFromCache(URL_IMAGE_BIG + widget.imageUrl!);
+      var file = await DefaultCacheManager()
+          .getFileFromCache(URL_IMAGE_BIG + widget.imageUrl!);
       exist = await file?.file.exists() ?? false;
     } catch (e) {
       print(e);
@@ -86,8 +90,9 @@ class _DialogImageState extends State<DialogImage> {
       insetPadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       content: ViewModelBuilder<DialogImageViewModel>.reactive(
-        viewModelBuilder: () =>
-            DialogImageViewModel(index: widget.currentImage ?? 0, length: widget.images?.length ?? 1),
+        viewModelBuilder: () => DialogImageViewModel(
+            index: widget.currentImage ?? 0,
+            length: widget.images?.length ?? 1),
         builder: (context, model, _) => Stack(
           fit: StackFit.expand,
           alignment: Alignment.center,
@@ -116,23 +121,29 @@ class _DialogImageState extends State<DialogImage> {
                   scrollDirection: Axis.horizontal,
                 ),
               ),
-            if (widget.images != null && widget.currentImage != null && model.canGoBack)
+            if (widget.images != null &&
+                widget.currentImage != null &&
+                model.canGoBack)
               Positioned(
                 // bottom: 50,
                 left: 0,
                 child: MyCircularButton(
                   icon: Icon(MyIcons.arrow_left),
-                  color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+                  color:
+                      Theme.of(context).colorScheme.secondary.withOpacity(0.5),
                   onPressed: () => _carouselController.previousPage(),
                 ),
               ),
-            if (widget.images != null && widget.currentImage != null && model.canGoForward)
+            if (widget.images != null &&
+                widget.currentImage != null &&
+                model.canGoForward)
               Positioned(
                 // bottom: 50,
                 right: 5,
                 child: MyCircularButton(
                   icon: Icon(MyIcons.arrow_right),
-                  color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+                  color:
+                      Theme.of(context).colorScheme.secondary.withOpacity(0.5),
                   onPressed: () => _carouselController.nextPage(),
                 ),
               ),
@@ -177,7 +188,8 @@ class _DialogImageState extends State<DialogImage> {
                 right: 72,
                 top: 0,
                 child: MyCircularButton(
-                  icon: Icon(MyIcons.quality, color: Theme.of(context).colorScheme.onPrimary),
+                  icon: Icon(MyIcons.quality,
+                      color: Theme.of(context).colorScheme.onPrimary),
                   color: Theme.of(context).colorScheme.primary,
                   onPressed: () {
                     setState(() {
@@ -194,7 +206,9 @@ class _DialogImageState extends State<DialogImage> {
 
   _cacheImage(String url) async {
     try {
-      Uint8List bytes = (await NetworkAssetBundle(Uri.parse(url)).load(url)).buffer.asUint8List();
+      Uint8List bytes = (await NetworkAssetBundle(Uri.parse(url)).load(url))
+          .buffer
+          .asUint8List();
       DefaultCacheManager().putFile(url, Uint8List.fromList(bytes), eTag: url);
     } catch (e) {
       print('>>> $e');
