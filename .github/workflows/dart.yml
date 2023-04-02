@@ -14,42 +14,42 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
-          flutter-version: "2.10.0"
+          flutter-version: "3.3.9"
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build apk --release --split-per-abi
-      - run: flutter build windows
+      # - run: flutter build windows
   # uploading:
   #   name: Uploading to Google Drive
   #   runs-on: ubuntu-latest
   #   needs: [build-apk]
-  #   steps:
-      - name: Upload to Google Drive
-        uses: Jodebu/upload-to-drive@master
-        id: v8a
-        with:
-          target: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-          credentials: ${{ secrets.DRIVE_CREDENTIALS }}
-          folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
-      - name: Upload to Google Drive
-        uses: Jodebu/upload-to-drive@master
-        id: v7a
-        with:
-          target: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-          credentials: ${{ secrets.DRIVE_CREDENTIALS }}
-          folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
-      - name: Upload to Google Drive
-        uses: Jodebu/upload-to-drive@master
-        id: x86
-        with:
-          target: build/app/outputs/flutter-apk/app-x86_64-release.apk
-          credentials: ${{ secrets.DRIVE_CREDENTIALS }}
-          folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
-      - name: Send Telegram Notification
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            Nueva version: Movie Search, by Ing. Andrés Forns Jusino
-            ${{ steps.v8a.outputs.link }}
+  # #   steps:
+  #     - name: Upload to Google Drive
+  #       uses: Jodebu/upload-to-drive@master
+  #       id: v8a
+  #       with:
+  #         target: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+  #         credentials: ${{ secrets.DRIVE_CREDENTIALS }}
+  #         folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
+  #     - name: Upload to Google Drive
+  #       uses: Jodebu/upload-to-drive@master
+  #       id: v7a
+  #       with:
+  #         target: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+  #         credentials: ${{ secrets.DRIVE_CREDENTIALS }}
+  #         folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
+  #     - name: Upload to Google Drive
+  #       uses: Jodebu/upload-to-drive@master
+  #       id: x86
+  #       with:
+  #         target: build/app/outputs/flutter-apk/app-x86_64-release.apk
+  #         credentials: ${{ secrets.DRIVE_CREDENTIALS }}
+  #         folder: 1vNQ5N8Uacc76lUNEDNYQwI_4s-aLkJ4d
+  #     - name: Send Telegram Notification
+  #       uses: appleboy/telegram-action@master
+  #       with:
+  #         to: ${{ secrets.TELEGRAM_TO }}
+  #         token: ${{ secrets.TELEGRAM_TOKEN }}
+  #         message: |
+  #           Nueva version: Movie Search, by Ing. Andrés Forns Jusino
+  #           ${{ steps.v8a.outputs.link }}
