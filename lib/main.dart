@@ -25,8 +25,7 @@ void main() async {
     _configureSqliteOnLinux();
   }
   final color = await _resolveColorSchema();
-  SharedPreferencesHelper.wasHereBefore().then(
-      (value) => runApp(EasyDynamicThemeWidget(child: App(color: color))));
+  SharedPreferencesHelper.wasHereBefore().then((value) => runApp(EasyDynamicThemeWidget(child: App(color: color))));
 }
 
 Future<FlexScheme> _resolveColorSchema() async {
@@ -75,8 +74,7 @@ class App extends StatelessWidget {
           theme: model.theme,
           darkTheme: model.darkTheme,
           themeMode: EasyDynamicTheme.of(context).themeMode,
-          onGenerateRoute: (settings) =>
-              Routes.generateRoute(context, settings),
+          onGenerateRoute: (settings) => Routes.generateRoute(context, settings),
           initialRoute: SplashScreen.route,
         ),
       ),

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/splash/splash_service.dart';
@@ -44,29 +43,6 @@ class SplashViewModel extends FutureViewModel {
     setBusy(false);
   }
 
-  Future validate() async {
-    setBusy(true);
-    if (kIsWeb || Platform.isWindows) {
-      setInitialised(true);
-      setBusy(false);
-      return;
-    }
-    AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
-    String phoneModel = '${androidInfo.brand} ${androidInfo.model}';
-    await _splashService.updateMyDevice(androidInfo.androidId!, phoneModel: phoneModel);
-    final isEnabled = await _splashService.checkIsDeviceEnable(androidInfo.androidId!);
-    setInitialised(isEnabled);
-    setBusy(false);
-  }
-
-  Future sendData() async {
-    setBusy(true);
-    AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
-    String phoneModel = '${androidInfo.brand} ${androidInfo.model}';
-    await _splashService.updateMyDevice(androidInfo.androidId!, email: email, phoneModel: phoneModel);
-    setBusy(false);
-    form.reset();
-  }
 
   Future syncGenres(String type) async {
     try {

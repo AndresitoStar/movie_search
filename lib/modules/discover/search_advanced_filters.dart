@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -41,7 +43,11 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
         onExpansionChanged: (v) => model.toggleFilterExpansion(),
         topBorderOn: true,
         childrenBody: Container(
-          height: MediaQuery.of(context).size.height - kToolbarHeight - kBottomNavigationBarHeight - 50,
+          height: MediaQuery.of(context).size.height -
+              kToolbarHeight -
+              kBottomNavigationBarHeight -
+              50 -
+              (Platform.isIOS ? 60 : 0),
           child: Card(
             clipBehavior: Clip.hardEdge,
             margin: const EdgeInsets.symmetric(horizontal: 10),

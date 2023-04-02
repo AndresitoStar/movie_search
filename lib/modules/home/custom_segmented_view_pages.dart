@@ -19,7 +19,7 @@ class CustomSegmentedPageView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.only(top: 10),
             child: CupertinoSegmentedControl<int>(
               children: Map<int, Widget>.fromIterable(
                 tabs,
