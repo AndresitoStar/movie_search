@@ -21,6 +21,12 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('keys/key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -52,9 +58,9 @@ android {
 
     signingConfigs {
         release {
-            keyAlias System.getenv("KEY_ALIAS")
+            keyAlias "movie_search"
             keyPassword System.getenv("KEY_PASSWORD")
-            storeFile System.getenv("STORE_FILE")
+            storeFile file("key.jks")
             storePassword System.getenv("KEY_PASSWORD")
         }
     }
