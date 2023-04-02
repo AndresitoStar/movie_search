@@ -59,49 +59,49 @@ class TrendingPage extends StatelessWidget {
     return (width ~/ 150).clamp(1, 8);
   }
 
-  showYearFilter(BuildContext context, TrendingViewModel viewModel) async {
-    final dateTime = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Seleccione el año'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text('Limpiar'),
-              // style: ButtonStyle(
-              //   foregroundColor:
-              //       MaterialStateProperty.all<Color>(Colors.white70),
-              // ),
-              // style: ButtonStyle(textStyle),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cerrar'),
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
-              ),
-            ),
-          ],
-          content: AspectRatio(
-            aspectRatio: 2 / 3,
-            child: YearPicker(
-              firstDate: DateTime(1890, 1),
-              lastDate: DateTime(DateTime.now().year + 1, 1),
-              initialDate: DateTime.now(),
-              selectedDate: DateTime(viewModel.year ?? DateTime.now().year),
-              onChanged: (DateTime dateTime) {
-                Navigator.pop(context, dateTime);
-              },
-            ),
-          ),
-        );
-      },
-    );
-    if (dateTime != null && dateTime is DateTime)
-      viewModel.updateYear(dateTime.year);
-    else if (dateTime is bool) viewModel.updateYear(null);
-  }
+  // showYearFilter(BuildContext context, TrendingViewModel viewModel) async {
+  //   final dateTime = await showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Seleccione el año'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () => Navigator.pop(context, false),
+  //             child: Text('Limpiar'),
+  //             // style: ButtonStyle(
+  //             //   foregroundColor:
+  //             //       MaterialStateProperty.all<Color>(Colors.white70),
+  //             // ),
+  //             // style: ButtonStyle(textStyle),
+  //           ),
+  //           TextButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: Text('Cerrar'),
+  //             style: ButtonStyle(
+  //               foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
+  //             ),
+  //           ),
+  //         ],
+  //         content: AspectRatio(
+  //           aspectRatio: 2 / 3,
+  //           child: YearPicker(
+  //             firstDate: DateTime(1890, 1),
+  //             lastDate: DateTime(DateTime.now().year + 1, 1),
+  //             initialDate: DateTime.now(),
+  //             selectedDate: DateTime(viewModel.year ?? DateTime.now().year),
+  //             onChanged: (DateTime dateTime) {
+  //               Navigator.pop(context, dateTime);
+  //             },
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  //   if (dateTime != null && dateTime is DateTime)
+  //     viewModel.updateYear(dateTime.year);
+  //   else if (dateTime is bool) viewModel.updateYear(null);
+  // }
 
   showFilters(BuildContext context, String type, TrendingViewModel viewModel) async {
     final result = await showModalBottomSheet<Map<String, bool>>(
