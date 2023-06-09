@@ -48,7 +48,7 @@ class FavouriteScreen extends StatelessWidget {
                   itemBuilder: (ctx, i) => ItemGridView(item: snapshot.data![i]!, heroTagPrefix: ''),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: getColumns(context),
-                      childAspectRatio: 5 / 9,
+                      childAspectRatio: 0.667,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10),
                 );

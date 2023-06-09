@@ -19,6 +19,7 @@ class DiscoverScreen extends StatelessWidget {
       onModelReady: (model) => model.initializeFilters(),
       builder: (context, model, child) => CustomScaffold(
         bottomBarIndex: 2,
+        endDrawer: SearchAdvancedFilterView(),
         body: Column(
           children: [
             AppBar(
@@ -28,15 +29,7 @@ class DiscoverScreen extends StatelessWidget {
               title: Text('Explorar'),
               primary: true,
             ),
-            // Expanded(
-            //   child: AnimatedSlide(
-            //     offset: offset,
-            //     duration: Duration(milliseconds: 500),
-            //   ),
-            // ),
-            SearchAdvancedFilterView(GlobalKey()),
-            // SizedBox(height: 10),
-            if (!model.showFilterExpansion) Expanded(child: DiscoverResults()),
+            Expanded(child: DiscoverResults()),
           ],
         ),
       ),

@@ -26,10 +26,11 @@ class ItemListPage extends StatelessWidget {
         itemBuilder: (ctx, i) => ItemGridView(
           item: items[i],
           showData: false,
+          showTitles: true,
           heroTagPrefix: '$i-${this.heroTagPrefix ?? ''}-',
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: getColumns(context), childAspectRatio: 5 / 9, crossAxisSpacing: 10, mainAxisSpacing: 10),
+            crossAxisCount: getColumns(context), childAspectRatio: 0.667, crossAxisSpacing: 10, mainAxisSpacing: 10),
       ),
     );
   }

@@ -10,8 +10,7 @@ import 'search_viewmodel.dart';
 class SearchBar extends StatelessWidget {
   onLoad(SearchViewModel model) {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(
-          Duration(milliseconds: 500), () => model.queryControl.focus());
+      Future.delayed(Duration(milliseconds: 500), () => model.queryControl.focus());
     });
   }
 
@@ -36,8 +35,7 @@ class SearchBar extends StatelessWidget {
               formControl: model.queryControl,
               cursorColor: Theme.of(context).colorScheme.onBackground,
               autocorrect: false,
-              style:
-                  TextStyle(color: Theme.of(context).colorScheme.onBackground),
+              style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
                 prefixIcon: Icon(MyIcons.search, size: 16),

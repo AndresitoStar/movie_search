@@ -1,4 +1,5 @@
 import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/model/api/models/api.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/search/search_category.dart';
@@ -12,6 +13,8 @@ class DiscoverViewModel extends BaseViewModel {
   static const String FORM_GENRE = 'genre';
   static const String FORM_CAST = 'cast';
   static const String FORM_PROVIDERS = 'networks';
+  static const String FORM_SORT_ORDER = 'sort_order';
+  static const String FORM_SORT_DIRECTIONS = 'sort_direction';
 
   final MyDatabase _db;
   final FormGroup form = fb.group({
@@ -19,6 +22,8 @@ class DiscoverViewModel extends BaseViewModel {
     FORM_GENRE: FormControl<Set<GenreTableData>>(value: {}),
     FORM_CAST: FormControl<Set<BaseSearchResult>>(value: {}),
     FORM_PROVIDERS: FormControl<WatchProvider>(),
+    FORM_SORT_ORDER: FormControl<SortOrder>(value: SortOrder.POPULARITY),
+    FORM_SORT_DIRECTIONS: FormControl<SortDirection>(value: SortDirection.desc),
   });
 
   DiscoverViewModel(this._db) {
@@ -58,6 +63,11 @@ class DiscoverViewModel extends BaseViewModel {
   FormControl<Set<GenreTableData>> get genresControl => form.controls[FORM_GENRE] as FormControl<Set<GenreTableData>>;
 
   FormControl<WatchProvider> get providerControl => form.controls[FORM_PROVIDERS] as FormControl<WatchProvider>;
+
+  FormControl<SortOrder> get sortOrderControl => form.controls[FORM_SORT_ORDER] as FormControl<SortOrder>;
+
+  FormControl<SortDirection> get sortDirectionControl =>
+      form.controls[FORM_SORT_DIRECTIONS] as FormControl<SortDirection>;
 
   SearchCategory? get actualCategory => typeControl.value;
 
@@ -100,6 +110,8 @@ class DiscoverViewModel extends BaseViewModel {
         page: _page,
         genres: genresControl.value!.map((e) => e.id).toList(),
         watchProvider: providerControl.value,
+        sortDirection: sortDirectionControl.value,
+        sortOrder: sortOrderControl.value,
       );
       _searchResults.addAll(response.result);
       _total = response.totalResult;
@@ -119,6 +131,8 @@ class DiscoverViewModel extends BaseViewModel {
       page: _page,
       genres: genresControl.value!.map((e) => e.id).toList(),
       watchProvider: providerControl.value,
+      sortDirection: sortDirectionControl.value,
+      sortOrder: sortOrderControl.value,
     );
     _searchResults.addAll(response.result);
     _total = response.totalResult;

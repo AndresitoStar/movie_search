@@ -67,7 +67,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
         label: 'Productora',
         // content: movie.productionCompanies?.join(', '),
         subtitle: logoWidgets(context, movie.productionCompanies!),
-        forceLight: ThemeViewModel.of(context).isDark,
+        forceLight: Theme.of(context).brightness == Brightness.dark,
       ),
       if (movie.collection != null) ...[
         Divider(indent: 8, endIndent: 8),

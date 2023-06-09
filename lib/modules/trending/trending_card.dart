@@ -6,7 +6,6 @@ import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/trending/trending_page.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
-import 'package:movie_search/ui/widgets/default_image.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
 
@@ -43,7 +42,7 @@ class TrendingCard extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (ctx, i) => AnimatedCrossFade(
                   firstChild: AspectRatio(
-                    aspectRatio: 5 / 9,
+                    aspectRatio: 0.667,
                     key: UniqueKey(),
                     child: GridItemPlaceholder(),
                   ),
@@ -64,7 +63,7 @@ class TrendingCard extends StatelessWidget {
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: getColumns(context),
-                  childAspectRatio: 5 / 9,
+                  childAspectRatio: 0.667,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),

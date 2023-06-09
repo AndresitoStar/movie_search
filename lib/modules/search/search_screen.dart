@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/search/search_bar.dart';
+import 'package:movie_search/modules/search/search_bar.dart' as sb;
 import 'package:movie_search/modules/search/search_results.dart';
 import 'package:movie_search/modules/search/search_service.dart';
 import 'package:movie_search/modules/search/search_viewmodel.dart';
@@ -26,7 +26,7 @@ class SearchScreen extends StatelessWidget {
               title: Text(model.showFilter ? 'Búsqueda Avanzada' : 'Búsqueda'),
               primary: true,
             ),
-            SearchBar(),
+            sb.SearchBar(),
             // SizedBox(height: 10),
             Expanded(child: SearchResults()),
           ],

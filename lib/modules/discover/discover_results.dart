@@ -31,6 +31,7 @@ class DiscoverResults extends StatelessWidget {
                               ? ItemGridView(
                                   item: model.searchResults[i],
                                   showData: false,
+                                  showTitles: true,
                                   heroTagPrefix: '',
                                 )
                               : model.hasMore

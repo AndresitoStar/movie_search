@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:movie_search/model/api/models/api.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/providers/util.dart';
@@ -74,49 +74,38 @@ class TrendingService extends BaseService {
     List<String>? genres,
     List<String>? cast,
     WatchProvider? watchProvider,
+    SortDirection? sortDirection,
+    SortOrder? sortOrder,
   }) async {
-    List<BaseSearchResult> result = [];
-    int total = 0;
-    int totalPages = 0;
-    final region = await _fetchRegion();
     Map<String, String> params = {
-      ...baseParams,
+      'page': page.toString(),
       if (genres != null && genres.isNotEmpty) 'with_genres': genres.join(','),
       if (cast != null && cast.isNotEmpty) 'with_people': cast.join(','),
       if (watchProvider != null) 'with_watch_providers': '${watchProvider.providerId}',
-      if (watchProvider != null) 'watch_region': region,
-      'page': page.toString(),
+      if (watchProvider != null) 'watch_region': await _fetchRegion(),
+      if (sortDirection != null && sortOrder != null) 'sort_by': '${sortOrder.value}.${sortDirection.value}',
     };
-    StringBuffer key = StringBuffer('$type$page');
-    if (genres != null && genres.length > 0) {
-      key.write('-${genres.join('-')}');
-    }
-    if (watchProvider != null) {
-      key.write('-${watchProvider.providerId}');
-    }
-    if (_cacheDiscover.containsKey(key.toString())) return _cacheDiscover[key.toString()]!;
 
-    try {
-      var response = await clientTMDB.get('discover/$type', queryParameters: params);
-      if (response.statusCode == 200) {
+    return sendGET<SearchResponse>(
+      'discover/$type',
+      (body) {
+        List<BaseSearchResult> result = [];
+        int total = 0;
+        int totalPagesResult = -1;
+
         result = [];
-        final body = response.data;
         total = body['total_results'];
-        totalPages = body['total_pages'];
+        totalPagesResult = body['total_pages'];
         for (var data in body['results']) {
           BaseSearchResult b = BaseSearchResult.fromJson(type, data);
           result.add(b);
         }
-      }
-    } catch (e) {
-      print(e);
-      if (e is SocketException) {
-        throw e;
-      }
-    }
-    final r = SearchResponse(result: result, totalResult: total, totalPageResult: totalPages);
-    _cacheDiscover.putIfAbsent(key.toString(), () => r);
-    return r;
+        return SearchResponse(result: result, totalResult: total, totalPageResult: totalPagesResult);
+      },
+      idCache: '$type$page',
+      cacheMap: _cacheDiscover,
+      params: params,
+    );
   }
 
   Future<List<WatchProvider>> getWatchProviders(String type) async {
