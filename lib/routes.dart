@@ -43,7 +43,7 @@ class Routes {
       pageBuilder: (_, __, ___) => SafeArea(
         top: false,
         bottom: false,
-        child: Builder(builder: (context) => Container(constraints: BoxConstraints(maxWidth: 720), child: child)),
+        child: Builder(builder: (context) => child),
       ),
       settings: settings,
     );
@@ -56,8 +56,7 @@ class Routes {
         transitionDuration: _transitionDuration,
         transitionsBuilder: (context, animation, secondaryAnimation, child) =>
             _getTransitions(context, animation, secondaryAnimation, child),
-        pageBuilder: (_, __, ___) => Builder(
-            builder: (context) => Container(constraints: BoxConstraints(maxWidth: 720), child: _routes[settings.name])),
+        pageBuilder: (_, __, ___) => Builder(builder: (context) => Container(child: _routes[settings.name])),
         settings: settings,
       );
     }

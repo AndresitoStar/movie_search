@@ -8,6 +8,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:sqlite3/open.dart';
 import 'package:stacked/stacked.dart';
 
@@ -56,26 +57,29 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider<MyDatabase>(
-          create: (context) => MyDatabase(),
-          dispose: (context, db) => db.close(),
-        ),
-      ],
-      child: ViewModelBuilder<ThemeViewModel>.reactive(
-        viewModelBuilder: () => ThemeViewModel(
-          color,
-          themeMode: EasyDynamicTheme.of(context).themeMode ?? ThemeMode.light,
-        ),
-        builder: (context, model, child) => MaterialApp(
-          title: 'Movie Search',
-          debugShowCheckedModeBanner: false,
-          theme: model.theme,
-          darkTheme: model.darkTheme,
-          themeMode: EasyDynamicTheme.of(context).themeMode,
-          onGenerateRoute: (settings) => Routes.generateRoute(context, settings),
-          initialRoute: SplashScreen.route,
+    return ResponsiveSizer(
+      maxTabletWidth: 720,
+      builder: (context, orientation, screenType) => MultiProvider(
+        providers: [
+          Provider<MyDatabase>(
+            create: (context) => MyDatabase(),
+            dispose: (context, db) => db.close(),
+          ),
+        ],
+        child: ViewModelBuilder<ThemeViewModel>.reactive(
+          viewModelBuilder: () => ThemeViewModel(
+            color,
+            themeMode: EasyDynamicTheme.of(context).themeMode ?? ThemeMode.light,
+          ),
+          builder: (context, model, child) => MaterialApp(
+            title: 'Movie Search',
+            debugShowCheckedModeBanner: false,
+            theme: model.theme,
+            darkTheme: model.darkTheme,
+            themeMode: EasyDynamicTheme.of(context).themeMode,
+            onGenerateRoute: (settings) => Routes.generateRoute(context, settings),
+            initialRoute: SplashScreen.route,
+          ),
         ),
       ),
     );

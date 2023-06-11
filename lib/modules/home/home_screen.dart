@@ -5,6 +5,7 @@ import 'package:movie_search/modules/trending/trending_card.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:movie_search/ui/widgets/theme_switcher.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = "/home";
@@ -44,15 +45,16 @@ class HomeScreen extends StatelessWidget {
       bottomBarIndex: 0,
       body: Column(
         children: [
-          AppBar(
-            leading: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Image.asset('assets/images/ic_launcher.png'),
+          if (Device.screenType == ScreenType.mobile)
+            AppBar(
+              leading: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Image.asset('assets/images/ic_launcher.png'),
+              ),
+              actions: [MyThemeBtn()],
+              title: Text('Movie Search'),
+              titleSpacing: 0,
             ),
-            actions: [MyThemeBtn()],
-            title: Text('Movie Search'),
-            titleSpacing: 0,
-          ),
           Expanded(
             child: Container(
               padding: EdgeInsets.only(top: 10),
