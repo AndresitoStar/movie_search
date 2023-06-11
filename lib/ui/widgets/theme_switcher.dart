@@ -9,8 +9,8 @@ class MyThemeBtn extends StatelessWidget {
       scale: 0.5,
       child: DayNightSwitch(
         key: Key('EasyDynamicThemeAutoSwitch'),
-        value: EasyDynamicTheme.of(context).themeMode == ThemeMode.system,
-        onChanged: (value) => EasyDynamicTheme.of(context).changeTheme(dynamic: value),
+        value: EasyDynamicTheme.of(context).themeMode == ThemeMode.dark,
+        onChanged: (value) => EasyDynamicTheme.of(context).changeTheme(dark: value),
       ),
     );
   }

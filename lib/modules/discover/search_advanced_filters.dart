@@ -18,9 +18,7 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
           formGroup: model.form,
           child: Column(
             children: [
-              ListTile(
-                trailing: IconButton(onPressed: model.search, icon: Icon(Icons.check)),
-              ),
+              SizedBox(height: 10),
               ReactiveFormField<SearchCategory, SearchCategory>(
                 formControlName: DiscoverViewModel.FORM_TYPE,
                 builder: (field) => Padding(
@@ -99,10 +97,14 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                                                 : context.theme.chipTheme.backgroundColor,
                                             label: Text(
                                               e.name,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                               style: context.theme.chipTheme.labelStyle!.copyWith(
                                                 color: field.value!.contains(e)
                                                     ? context.theme.colorScheme.onPrimary
                                                     : context.theme.chipTheme.labelStyle!.color,
+                                                fontWeight:
+                                                    field.value!.contains(e) ? FontWeight.bold : FontWeight.normal,
                                               ),
                                             ),
                                           ),
@@ -186,6 +188,16 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                   ),
                 ),
               ),
+              SizedBox(height: 10),
+              ElevatedButton.icon(
+                onPressed: () {
+                  model.search();
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(Icons.check),
+                label: Text("Listo"),
+              ),
+              SizedBox(height: 10),
             ],
           ),
         ),

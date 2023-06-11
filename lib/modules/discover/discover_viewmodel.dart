@@ -97,6 +97,7 @@ class DiscoverViewModel extends BaseViewModel {
       final list = await TrendingService().getWatchProviders(c.value);
       _watchProvidersMap.putIfAbsent(c.value, () => list);
     }
+    // return search();
     setBusy(false);
   }
 
