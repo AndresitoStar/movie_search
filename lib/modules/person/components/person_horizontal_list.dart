@@ -31,7 +31,10 @@ class CreditHorizontalList extends StatelessWidget {
                       ListTile(
                         title: Text(
                           'Reparto',
-                          style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).primaryColor),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(color: Theme.of(context).primaryColor),
                         ),
                         trailing: IconButton(
                           icon: Icon(Icons.grid_view_rounded),

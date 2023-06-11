@@ -15,7 +15,7 @@ class FavouriteScreen extends StatelessWidget {
     final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
 
     return ViewModelBuilder<FavouritesViewModel>.nonReactive(
-      onModelReady: (model) => model.initialize(),
+      onViewModelReady: (model) => model.initialize(),
       builder: (context, model, _) => CustomScaffold(
         bottomBarIndex: 3,
         body: NestedScrollView(

@@ -71,24 +71,24 @@ class _Portrait extends ViewModelWidget<ItemEpisodeDetailViewModel> {
                     Text(
                       model.episode.name ?? '',
                       textAlign: TextAlign.center,
-                      style: theme.headline4,
+                      style: theme.headlineMedium,
                     ),
                     Text(
                       '${model.season.name ?? 'Temporada ${model.season.seasonNumber}'} / Capítulo ${model.episode.episodeNumber}',
                       textAlign: TextAlign.center,
-                      style: theme.headline5,
+                      style: theme.headlineSmall,
                     ),
                     Text(
                       model.tvShow.name ?? '',
                       textAlign: TextAlign.center,
-                      style: theme.headline6,
+                      style: theme.titleLarge,
                     ),
                     if (model.episode.overview != null && model.episode.overview!.isNotEmpty) ...[
                       SizedBox(height: 20),
                       Text(
                         model.episode.overview ?? '',
                         textAlign: TextAlign.center,
-                        style: theme.bodyText1,
+                        style: theme.bodyLarge,
                       ),
                     ],
                     SizedBox(height: 20),
@@ -113,7 +113,7 @@ class _Portrait extends ViewModelWidget<ItemEpisodeDetailViewModel> {
                                       child: ListTile(
                                         title: Text(
                                           video.name ?? '',
-                                          style: theme.subtitle1,
+                                          style: theme.titleMedium,
                                           textAlign: TextAlign.end,
                                         ),
                                       ),

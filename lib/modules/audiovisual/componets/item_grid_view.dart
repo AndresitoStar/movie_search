@@ -104,7 +104,7 @@ class ItemGridView extends StatelessWidget {
                               textAlign: useBackdrop ? TextAlign.start : TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
-                              style: theme.textTheme.headline6!.copyWith(fontSize: 16),
+                              style: theme.textTheme.titleLarge!.copyWith(fontSize: 16),
                             ),
                             subtitle: item.subtitle == null
                                 ? null
@@ -113,7 +113,7 @@ class ItemGridView extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
-                                    style: theme.textTheme.caption,
+                                    style: theme.textTheme.bodySmall,
                                   ),
                           ),
                         ),

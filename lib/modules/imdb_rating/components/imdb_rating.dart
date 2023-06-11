@@ -26,7 +26,7 @@ class ImbdbRatingView extends StatelessWidget {
                   ? CircularProgressIndicator(strokeWidth: 1)
                   : Text(
                       model.data! >= 0 ? '${model.data?.toStringAsFixed(1)}' : '-',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
             ),
         ],

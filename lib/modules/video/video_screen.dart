@@ -49,7 +49,7 @@ class VideoScreen extends StatelessWidget {
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                           child: Container(
-                            color: Theme.of(context).backgroundColor.withOpacity(0.25),
+                            color: Theme.of(context).colorScheme.background.withOpacity(0.25),
                             alignment: Alignment.center,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +65,7 @@ class VideoScreen extends StatelessWidget {
                                     video.name ?? '',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .subtitle1!
+                                        .titleMedium!
                                         .copyWith(color: Theme.of(context).colorScheme.background),
                                   ),
                                 ),

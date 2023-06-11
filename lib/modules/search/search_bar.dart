@@ -20,8 +20,8 @@ class SearchBar extends StatelessWidget {
 
     return ViewModelBuilder<SearchViewModel>.nonReactive(
       viewModelBuilder: () => context.read(),
-      onModelReady: (model) => this.onLoad(model),
-      fireOnModelReadyOnce: true,
+      onViewModelReady: (model) => this.onLoad(model),
+      fireOnViewModelReadyOnce: true,
       builder: (context, model, child) => Hero(
         tag: 'searchBar',
         child: Card(

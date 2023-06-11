@@ -38,7 +38,7 @@ class ItemDetailCarouselImages extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Divider(indent: 20, endIndent: 20),
-          ListTile(title: Text('Poster\'s', style: Theme.of(context).textTheme.headline5)),
+          ListTile(title: Text('Poster\'s', style: Theme.of(context).textTheme.headlineSmall)),
           Container(
             // height: 250,
             constraints: BoxConstraints(minHeight: height - 100, maxHeight: height + 50),

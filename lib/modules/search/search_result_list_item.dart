@@ -67,7 +67,7 @@ class SearchResultListItem extends StatelessWidget {
                           title: Text(
                             searchResult.title ?? '-',
                             textAlign: TextAlign.end,
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -77,7 +77,7 @@ class SearchResultListItem extends StatelessWidget {
                                 Text(
                                   searchResult.titleOriginal!,
                                   textAlign: TextAlign.end,
-                                  style: Theme.of(context).textTheme.subtitle1,
+                                  style: Theme.of(context).textTheme.titleMedium,
                                   maxLines: 1,
                                 ),
                               if (searchResult.type != TMDB_API_TYPE.PERSON) Text(searchResult.type.nameSingular)

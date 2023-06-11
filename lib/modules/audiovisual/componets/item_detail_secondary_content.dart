@@ -98,7 +98,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
         ListTile(
           title: Text(
             'Creadores',
-            style: Theme.of(context).textTheme.headline5!.copyWith(
+            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                   color: Theme.of(context).primaryColor,
                 ),
           ),
@@ -172,7 +172,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
                       )
                     : Text(
                         e.name!,
-                        style: Theme.of(context).textTheme.subtitle1,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
               )
               .toList(),

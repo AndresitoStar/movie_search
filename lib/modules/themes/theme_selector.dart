@@ -34,11 +34,11 @@ class ThemeSelectorDialog extends StatelessWidget {
               children: [
                 TextSpan(
                   text: 'Color Actual: ',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 TextSpan(
                   text: FlexColor.schemes[viewModel.flexColor]!.name,
-                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         color: isDarkModeOn
                             ? FlexColor.schemes[viewModel.flexColor]!.dark.primary
                             : FlexColor.schemes[viewModel.flexColor]!.light.primary,
@@ -47,7 +47,7 @@ class ThemeSelectorDialog extends StatelessWidget {
               ],
             ),
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           SizedBox(height: 20),
           SizedBox(

@@ -40,7 +40,7 @@ class ItemCollectionView extends StatelessWidget {
                   '${collection.name}',
                   style: Theme.of(context)
                       .textTheme
-                      .headline5!
+                      .headlineSmall!
                       .copyWith(color: Theme.of(context).colorScheme.onBackground),
                 ),
                 subtitle: Column(
@@ -51,7 +51,7 @@ class ItemCollectionView extends StatelessWidget {
                       '${model.collection.overview}',
                       style: Theme.of(context)
                           .primaryTextTheme
-                          .subtitle1!
+                          .titleMedium!
                           .copyWith(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8)),
                     ),
                     SizedBox(height: 5),

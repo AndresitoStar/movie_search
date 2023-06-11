@@ -27,10 +27,7 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
                 : DecorationImage(
                     fit: BoxFit.cover,
                     colorFilter: ColorFilter.mode(
-                      Theme.of(context)
-                          .colorScheme
-                          .onBackground
-                          .withOpacity(0.6),
+                      Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                       BlendMode.luminosity,
                     ),
                     image: NetworkImage(
@@ -42,16 +39,13 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
             title: RichText(
               text: TextSpan(
                   text: 'Temporadas:',
-                  style: Theme.of(context).textTheme.headline6!.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onPrimary
-                            .withOpacity(0.8),
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
                       ),
                   children: [
                     TextSpan(
                       text: ' ${model.data!.tvShow!.numberOfSeasons}',
-                      style: Theme.of(context).textTheme.headline4!.copyWith(
+                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
                     )
@@ -100,12 +94,7 @@ class _SeasonCard extends StatelessWidget {
   final TvShow tvApi;
   final bool isLast;
 
-  const _SeasonCard(
-      {Key? key,
-      required this.season,
-      this.isLast = false,
-      required this.tvApi})
-      : super(key: key);
+  const _SeasonCard({Key? key, required this.season, this.isLast = false, required this.tvApi}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +133,7 @@ class _SeasonCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Text(
                           'Ultima',
-                          style: Theme.of(context).primaryTextTheme.subtitle1,
+                          style: Theme.of(context).primaryTextTheme.titleMedium,
                         ),
                       ),
                     Padding(
@@ -155,12 +144,12 @@ class _SeasonCard extends StatelessWidget {
                           SizedBox(height: 10),
                           Text(
                             season.name ?? '',
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                           SizedBox(height: 8),
                           Text(
                             'Capitulos: ${season.episodeCount}',
-                            style: Theme.of(context).textTheme.subtitle1,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           SizedBox(height: 8),
                           Text(
@@ -168,7 +157,7 @@ class _SeasonCard extends StatelessWidget {
                             maxLines: 3,
                             textAlign: TextAlign.end,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
@@ -185,8 +174,7 @@ class _SeasonCard extends StatelessWidget {
 }
 
 class _SeasonScreen extends StatelessWidget {
-  const _SeasonScreen({Key? key, required this.seasons, required this.tv})
-      : super(key: key);
+  const _SeasonScreen({Key? key, required this.seasons, required this.tv}) : super(key: key);
   final List<Seasons> seasons;
   final TvShow tv;
 

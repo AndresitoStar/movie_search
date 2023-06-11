@@ -15,7 +15,7 @@ class ItemDetailSliverAppBar extends StatelessWidget {
       expandedHeight: mq.size.width * 12 / 16,
       elevation: 0,
       automaticallyImplyLeading: false,
-      // backgroundColor: Colors.transparent,
+      // colorScheme.background: Colors.transparent,
       leading: MyCircularButton(
         // color: Colors.transparent,
         icon: Icon(

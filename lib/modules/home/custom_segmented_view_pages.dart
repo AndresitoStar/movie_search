@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class CustomSegmentedPageView extends StatelessWidget {
   final List<Widget> pages;
@@ -30,7 +30,7 @@ class CustomSegmentedPageView extends StatelessWidget {
               ),
               onValueChanged: (v) => control.updateValue(v),
               groupValue: control.value,
-              unselectedColor: context.theme.backgroundColor,
+              unselectedColor: context.theme.colorScheme.background,
             ),
           ),
           Container(

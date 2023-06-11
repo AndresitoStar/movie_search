@@ -42,7 +42,7 @@ class DialogVideo extends StatelessWidget {
             ? Text(
                 dialogTitle!,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline5!.copyWith(
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                     ),
               )
@@ -54,11 +54,9 @@ class DialogVideo extends StatelessWidget {
                     child: Card(
                       color: Colors.black26,
                       elevation: 0,
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 5),
+                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                       child: ListTile(
-                        leading:
-                            Icon(v.isYoutube ? MyIcons.youtube : MyIcons.video),
+                        leading: Icon(v.isYoutube ? MyIcons.youtube : MyIcons.video),
                         title: Text(
                           v.name ?? '',
                           maxLines: 2,
@@ -76,9 +74,7 @@ class DialogVideo extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.red)),
+                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text('Cerrar'))
               ],

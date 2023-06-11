@@ -106,11 +106,11 @@ class TrendingPage extends StatelessWidget {
   showFilters(BuildContext context, String type, TrendingViewModel viewModel) async {
     final result = await showModalBottomSheet<Map<String, bool>>(
       context: context,
-      // backgroundColor: Theme.of(context).primaryColor,
+      // colorScheme.background: Theme.of(context).primaryColor,
       isDismissible: false,
       builder: (BuildContext context) => ViewModelBuilder<TrendingFilterViewModel>.reactive(
         viewModelBuilder: () => new TrendingFilterViewModel(context.read(), type, viewModel.filterGenre!),
-        createNewModelOnInsert: true,
+        createNewViewModelOnInsert: true,
         builder: (context, model, _) => model.isBusy
             ? Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
@@ -120,7 +120,7 @@ class TrendingPage extends StatelessWidget {
                     ListTile(
                       title: Text(
                         'Géneros de ${param.content.title}',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,

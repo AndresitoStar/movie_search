@@ -16,7 +16,7 @@ class DiscoverScreen extends StatelessWidget {
     print(myLocale);
     return ViewModelBuilder<DiscoverViewModel>.reactive(
       viewModelBuilder: () => DiscoverViewModel(context.read()),
-      onModelReady: (model) => model.initializeFilters(),
+      onViewModelReady: (model) => model.initializeFilters(),
       builder: (context, model, child) => CustomScaffold(
         bottomBarIndex: 2,
         endDrawer: SearchAdvancedFilterView(),

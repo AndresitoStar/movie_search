@@ -13,24 +13,19 @@ class ItemLikeButton extends StatelessWidget {
   final TMDB_API_TYPE type;
   final bool showDisabled;
 
-  ItemLikeButton(
-      {this.iconSize = 32,
-      this.showDisabled = true,
-      required this.id,
-      required this.type});
+  ItemLikeButton({this.iconSize = 32, this.showDisabled = true, required this.id, required this.type});
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ItemLikeButtonViewModel>.reactive(
       viewModelBuilder: () => ItemLikeButtonViewModel(context.read(), type),
       disposeViewModel: true,
-      onModelReady: (model) => model.initialize(),
+      onViewModelReady: (model) => model.initialize(),
       builder: (ctx, model, child) {
         if (model.hasError) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             if (model.hasError) {
-              MyDialogs.showError(ctx, error: model.modelError.toString(),
-                  onTapDismiss: () {
+              MyDialogs.showError(ctx, error: model.modelError.toString(), onTapDismiss: () {
                 model.clearErrors();
                 Navigator.pop(context);
               });
@@ -40,10 +35,7 @@ class ItemLikeButton extends StatelessWidget {
         return !model.initialised || model.isBusy
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                    height: iconSize,
-                    width: iconSize,
-                    child: CircularProgressIndicator(strokeWidth: 1)),
+                child: SizedBox(height: iconSize, width: iconSize, child: CircularProgressIndicator(strokeWidth: 1)),
               )
             : StreamBuilder<List<num?>>(
                 stream: model.stream,
@@ -53,17 +45,12 @@ class ItemLikeButton extends StatelessWidget {
                     return Container();
                   }
                   return IconButton(
-                    icon: Icon(snapshot.data!.contains(id)
-                        ? MyIcons.favourite_on
-                        : MyIcons.favourite_off),
+                    icon: Icon(snapshot.data!.contains(id) ? MyIcons.favourite_on : MyIcons.favourite_off),
                     iconSize: this.iconSize,
                     padding: EdgeInsets.zero,
-                    color: snapshot.data!.contains(id)
-                        ? Colors.red
-                        : Theme.of(context).colorScheme.onBackground,
+                    color: snapshot.data!.contains(id) ? Colors.red : Theme.of(context).colorScheme.onBackground,
                     onPressed: () {
-                      return _onLikeButtonTap(
-                          context, model, snapshot.data!.contains(id));
+                      return _onLikeButtonTap(context, model, snapshot.data!.contains(id));
                     },
                   );
                 },
@@ -72,14 +59,12 @@ class ItemLikeButton extends StatelessWidget {
     );
   }
 
-  _onLikeButtonTap(
-      BuildContext context, ItemLikeButtonViewModel model, bool isLiked) async {
+  _onLikeButtonTap(BuildContext context, ItemLikeButtonViewModel model, bool isLiked) async {
     await model.toggleFavourite(id, isLiked);
     context.scaffoldMessenger.hideCurrentSnackBar();
     context.scaffoldMessenger.showSnackBar(SnackBar(
       duration: Duration(seconds: 1),
-      content: Text(
-          isLiked ? 'Eliminado de Mis Favoritos' : 'Agregado a Mis Favoritos'),
+      content: Text(isLiked ? 'Eliminado de Mis Favoritos' : 'Agregado a Mis Favoritos'),
     ));
   }
 }

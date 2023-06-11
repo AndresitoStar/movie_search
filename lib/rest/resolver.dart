@@ -22,7 +22,7 @@ abstract class BaseService {
   late Dio clientOMDB;
   late Dio parseClient;
 
-  static const _DEFAULT_TIMEOUT = 20 * 1000;
+  static const _DEFAULT_TIMEOUT = Duration(seconds: 20);
 
   final Map<String, dynamic> _baseParams = {
     'api_key': '3e56846ee7cfb0b7d870484a9f66218c',

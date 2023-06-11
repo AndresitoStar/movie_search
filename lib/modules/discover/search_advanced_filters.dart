@@ -74,8 +74,8 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                             child: ExpansionTileCard(
                               title: Text('Generos ${field.value!.length > 0 ? '(${field.value!.length})' : ''}'),
                               elevation: 0,
-                              baseColor: context.theme.backgroundColor.withOpacity(0.05),
-                              expandedColor: context.theme.backgroundColor.withOpacity(0.5),
+                              baseColor: context.theme.colorScheme.background.withOpacity(0.05),
+                              expandedColor: context.theme.colorScheme.background.withOpacity(0.5),
                               borderRadius: BorderRadius.zero,
                               children: [
                                 Wrap(
@@ -125,8 +125,8 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                             child: ExpansionTileCard(
                               title: Text('Donde verlo...'),
                               elevation: 0,
-                              baseColor: context.theme.backgroundColor.withOpacity(0.05),
-                              expandedColor: context.theme.backgroundColor.withOpacity(0.5),
+                              baseColor: context.theme.colorScheme.background.withOpacity(0.05),
+                              expandedColor: context.theme.colorScheme.background.withOpacity(0.5),
                               borderRadius: BorderRadius.zero,
                               children: [
                                 Wrap(

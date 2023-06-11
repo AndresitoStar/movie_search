@@ -28,10 +28,9 @@ class TrendingCard extends StatelessWidget {
       viewModelBuilder: () => genre != null
           ? TrendingViewModel.homeHorizontal(this.content, genre!)
           : TrendingViewModel(this.content, trendingType: trendingType),
-      onModelReady: (model) => model.synchronize(),
+      onViewModelReady: (model) => model.synchronize(),
       builder: (context, model, child) {
         final doIt = model.items.length > _defaultLength;
-        ;
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 0).copyWith(bottom: 20),
           child: Column(

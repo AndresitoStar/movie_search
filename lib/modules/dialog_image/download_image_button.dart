@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
-
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/circular_button.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:stacked/stacked.dart';
-import 'package:movie_search/providers/util.dart';
 
 class ImageDownloadViewModel extends BaseViewModel {}
 
@@ -44,16 +43,16 @@ class ImageDownloadButton extends StatelessWidget {
       File file = new File(join(documentDirectory.path, '$imageName.png'));
 
       file.writeAsBytesSync(response.bodyBytes);
-      context.scaffoldMessenger.showSnackBar(
-        SnackBar(
-          duration: Duration(seconds: 5),
-          content: Text('Imagen descargada exitosamente.'),
-          action: SnackBarAction(
-            label: 'Abrir',
-            onPressed: () => OpenFile.open(file.path),
-          ),
-        ),
-      );
+      // context.scaffoldMessenger.showSnackBar(
+      //   SnackBar(
+      //     duration: Duration(seconds: 5),
+      //     content: Text('Imagen descargada exitosamente.'),
+      //     action: SnackBarAction(
+      //       label: 'Abrir',
+      //       onPressed: () => OpenFile.open(file.path),
+      //     ),
+      //   ),
+      // );
     } catch (err) {
       model.setError(err);
       context.showSnackbar('Ocurrio un error descargando la imagen.');

@@ -82,7 +82,7 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                 strokeColor: theme.colorScheme.primary,
                 child: Text(
                   '${model.title}',
-                  style: theme.textTheme.headline5!.copyWith(
+                  style: theme.textTheme.headlineSmall!.copyWith(
                     color: theme.colorScheme.onBackground,
                   ),
                 ),
@@ -92,17 +92,17 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                   Text(
                     '${model.data!.person!.birthday ?? ''} - ${model.data!.person!.deathday ?? 'actualidad'}',
                     textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Text(
                     '${_age(model.data!.person!.birthday!, model.data!.person!.deathday)} años',
                     textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ] else if (model.data!.genres != null && model.data!.genres!.isNotEmpty)
                   // Text(
                   //   "${model.year ?? '?'} - ${model.data!.genres!.join(' / ')}",
-                  //   style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).hintColor),
+                  //   style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).hintColor),
                   // ),
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
@@ -115,7 +115,7 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 color: Colors.transparent,
-                                border: Border.all(color: context.theme.textTheme.subtitle1!.color!),
+                                border: Border.all(color: context.theme.textTheme.titleMedium!.color!),
                               ),
                             ),
                           )
@@ -144,7 +144,7 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                       child: model.initialised
                           ? Text(
                               '${model.data!.voteAverage!.toStringAsFixed(1)}',
-                              style: theme.textTheme.headline6,
+                              style: theme.textTheme.titleLarge,
                             )
                           : CircularProgressIndicator.adaptive(strokeWidth: 1),
                     ),

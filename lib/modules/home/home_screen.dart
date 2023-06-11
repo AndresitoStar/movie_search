@@ -62,11 +62,11 @@ class HomeScreen extends StatelessWidget {
                     ListTile(
                       title: Text(
                         'Bienvenido(a)',
-                        style: theme.textTheme.headline5!.copyWith(color: theme.colorScheme.primary),
+                        style: theme.textTheme.headlineSmall!.copyWith(color: theme.colorScheme.primary),
                       ),
                       subtitle: Text(
                         'Millones de películas, programas de televisión y personas por descubrir. Explora ahora.',
-                        style: theme.textTheme.subtitle1!.copyWith(color: theme.hintColor),
+                        style: theme.textTheme.titleMedium!.copyWith(color: theme.hintColor),
                       ),
                     ),
                     Divider(),

@@ -27,7 +27,7 @@ class MyIcons {
   static const IconData star = FrinoIcons.f_star_filled;
   static const IconData movie = FrinoIcons.f_movie_tape;
   static const IconData tv = FrinoIcons.f_tv;
-  static const IconData trending = FontAwesomeIcons.hotTub;
+  static const IconData trending = FontAwesomeIcons.hotTubPerson;
   static const IconData popular = FrinoIcons.f_star_outline;
   static const IconData filter = FrinoIcons.f_filter;
   static const IconData calendar = FrinoIcons.f_calendar;
@@ -41,7 +41,7 @@ class MyIcons {
   static const IconData gallery = FontAwesomeIcons.images;
   static const IconData discover = FontAwesomeIcons.solidPaperPlane;
 
-  static const IconData facebook = FontAwesomeIcons.facebookSquare;
+  static const IconData facebook = FontAwesomeIcons.squareFacebook;
   static const IconData instagram = FontAwesomeIcons.instagram;
   static const IconData twitter = FrinoIcons.f_twitter_official;
 }

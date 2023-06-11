@@ -35,9 +35,9 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
         visible: tagline != null,
         child: ContentHorizontal(
           content: tagline,
-          contentStyle: context.theme.textTheme.subtitle1!.copyWith(
+          contentStyle: context.theme.textTheme.titleMedium!.copyWith(
             fontStyle: FontStyle.italic,
-            color: context.theme.textTheme.subtitle1!.color!.withOpacity(0.8),
+            color: context.theme.textTheme.titleMedium!.color!.withOpacity(0.8),
           ),
         ),
       ),

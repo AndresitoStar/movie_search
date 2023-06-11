@@ -73,19 +73,19 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
                     Text(
                       tvShow.name ?? '',
                       textAlign: TextAlign.center,
-                      style: theme.headline4,
+                      style: theme.headlineMedium,
                     ),
                     Text(
                       season.name ?? '',
                       textAlign: TextAlign.center,
-                      style: theme.headline5,
+                      style: theme.headlineSmall,
                     ),
                     if (season.overview != null && season.overview!.isNotEmpty) ...[
                       SizedBox(height: 20),
                       Text(
                         season.overview ?? '',
                         textAlign: TextAlign.center,
-                        style: theme.bodyText1,
+                        style: theme.bodyLarge,
                       ),
                     ],
                     SizedBox(height: 20),
@@ -124,17 +124,17 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
                                           children: [
                                             Text(
                                               'Capítulo: ${episode.episodeNumber}',
-                                              style: theme.subtitle1,
+                                              style: theme.titleMedium,
                                               textAlign: TextAlign.end,
                                             ),
                                             Text(
                                               episode.name ?? '',
-                                              style: theme.headline6,
+                                              style: theme.titleLarge,
                                               textAlign: TextAlign.end,
                                             ),
                                             Text(
                                               episode.overview ?? '',
-                                              style: theme.caption,
+                                              style: theme.bodySmall,
                                               textAlign: TextAlign.end,
                                             ),
                                             Divider(indent: 8, endIndent: 8),

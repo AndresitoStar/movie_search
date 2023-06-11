@@ -36,7 +36,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                               recommendationType.name,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline5!
+                                  .headlineSmall!
                                   .copyWith(color: Theme.of(context).primaryColor),
                             ),
                             trailing: IconButton(
