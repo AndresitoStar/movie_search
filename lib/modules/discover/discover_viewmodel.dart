@@ -98,7 +98,8 @@ class DiscoverViewModel extends BaseViewModel {
       _watchProvidersMap.putIfAbsent(c.value, () => list);
     }
     // return search();
-    setBusy(false);
+    // setBusy(false);
+    search();
   }
 
   Future search() async {

@@ -14,6 +14,7 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
   Widget build(BuildContext context, DiscoverViewModel model) {
     return SafeArea(
       child: Drawer(
+        elevation: 0,
         child: ReactiveForm(
           formGroup: model.form,
           child: Column(
@@ -21,7 +22,7 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
               SizedBox(height: 10),
               ReactiveFormField<SearchCategory, SearchCategory>(
                 formControlName: DiscoverViewModel.FORM_TYPE,
-                builder: (field) => Padding(
+                builder: (field) => Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
@@ -132,7 +133,7 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                               borderRadius: BorderRadius.zero,
                               children: [
                                 Wrap(
-                                  spacing: 10,
+                                  spacing: 5,
                                   runSpacing: 10,
                                   children: model.watchProviders
                                       .map(
@@ -141,25 +142,24 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                                           child: Card(
                                             color: e == field.value
                                                 ? context.theme.colorScheme.tertiary
-                                                : context.theme.chipTheme.backgroundColor,
+                                                : context.theme.colorScheme.background,
                                             elevation: 0,
-                                            child: Column(
+                                            shape: StadiumBorder(
+                                              side: BorderSide(color: context.theme.colorScheme.onBackground, width: 1),
+                                            ),
+                                            child: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Container(
                                                   clipBehavior: Clip.hardEdge,
-                                                  margin: EdgeInsets.all(5),
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: '$URL_IMAGE_MEDIUM${e.logoPath}',
-                                                    width: 40,
-                                                  ),
+                                                  margin: EdgeInsets.all(1),
+                                                  decoration: BoxDecoration(shape: BoxShape.circle),
+                                                  height: 32,
+                                                  width: 32,
+                                                  child: CachedNetworkImage(imageUrl: '$URL_IMAGE_MEDIUM${e.logoPath}'),
                                                 ),
                                                 Container(
-                                                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 8),
-                                                  width: 86,
+                                                  padding: EdgeInsets.symmetric(horizontal: 5),
                                                   child: Text(
                                                     e.providerName ?? '${e.providerId}',
                                                     overflow: TextOverflow.fade,

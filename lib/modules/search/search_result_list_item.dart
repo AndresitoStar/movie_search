@@ -29,67 +29,62 @@ class SearchResultListItem extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            if (searchResult.backDropImage != null || searchResult.posterImage != null) ...[
-              ...[
-                ContentImageWidget(
-                  searchResult.backDropImage ?? searchResult.posterImage,
-                  ignorePointer: true,
-                  isBackdrop: true,
-                ),
-              ],
-            ],
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            if (searchResult.backDropImage != null)
+              ContentImageWidget(
+                searchResult.backDropImage,
+                ignorePointer: true,
+                isBackdrop: true,
+              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                // AspectRatio(
-                //   aspectRatio: 9 / 16,
-                //   child: Card(
-                //     margin: const EdgeInsets.fromLTRB(3, 3, 0, 3),
-                //     child: Card(
-                //       clipBehavior: Clip.hardEdge,
-                //       child: ContentImageWidget(
-                //         searchResult.posterImage,
-                //         ignorePointer: true,
-                //         fit: BoxFit.cover,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Spacer(),
-                      Container(
-                        color: Theme.of(context).cardColor.withOpacity(0.7),
-                        child: ListTile(
-                          title: Text(
-                            searchResult.title ?? '-',
+                Spacer(),
+                Container(
+                  color: Theme.of(context).cardColor.withOpacity(0.7),
+                  child: ListTile(
+                    title: Text(
+                      searchResult.title ?? '-',
+                      textAlign: TextAlign.end,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        if (searchResult.titleOriginal != null && searchResult.titleOriginal != searchResult.title)
+                          Text(
+                            searchResult.titleOriginal!,
                             textAlign: TextAlign.end,
-                            style: Theme.of(context).textTheme.titleLarge,
+                            style: Theme.of(context).textTheme.titleMedium,
+                            maxLines: 1,
                           ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              if (searchResult.titleOriginal != null &&
-                                  searchResult.titleOriginal != searchResult.title)
-                                Text(
-                                  searchResult.titleOriginal!,
-                                  textAlign: TextAlign.end,
-                                  style: Theme.of(context).textTheme.titleMedium,
-                                  maxLines: 1,
-                                ),
-                              if (searchResult.type != TMDB_API_TYPE.PERSON) Text(searchResult.type.nameSingular)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                        if (searchResult.type != TMDB_API_TYPE.PERSON) Text(searchResult.type.nameSingular)
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
+            if (searchResult.backDropImage == null)
+              Row(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 9 / 16,
+                    child: Card(
+                      margin: const EdgeInsets.fromLTRB(3, 3, 0, 3),
+                      child: Card(
+                        clipBehavior: Clip.hardEdge,
+                        child: ContentImageWidget(
+                          searchResult.posterImage,
+                          ignorePointer: true,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                ],
+              ),
           ],
         ),
       ),

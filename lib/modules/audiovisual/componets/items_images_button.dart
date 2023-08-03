@@ -8,6 +8,7 @@ import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
+import 'package:movie_search/ui/widgets/dialog_image.dart';
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_main_image.dart';
@@ -26,27 +27,48 @@ class ItemImagesButtonView extends StatelessWidget {
               padding: const EdgeInsets.all(12.0),
               child: CircularProgressIndicator(strokeWidth: 1),
             )
-          : IconButton(
-              onPressed: model.images.isEmpty
-                  ? null
-                  : () => Navigator.push(
-                      context, Routes.defaultRoute(null, ItemImagesPage(param: param, imagesMap: model.images))),
-              icon: Icon(MyIcons.gallery)),
+          : ShowImagesButton(
+              images: model.images,
+              title: param.title!,
+            ),
+    );
+  }
+}
+
+class ShowImagesButton extends StatelessWidget {
+  final String title;
+  final Map<MediaImageType, List<MediaImage>> images;
+
+  const ShowImagesButton({super.key, required this.title, required this.images});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: images.isEmpty
+          ? null
+          : () => Navigator.push(context, Routes.defaultRoute(null, ItemImagesPage(title: title, imagesMap: images))),
+      icon: Icon(MyIcons.gallery),
     );
   }
 }
 
 class ItemImagesPage extends StatelessWidget {
-  final BaseSearchResult param;
+  final String title;
   final Map<MediaImageType, List<MediaImage>> imagesMap;
+  final List<String> _images = [];
 
-  const ItemImagesPage({Key? key, required this.param, required this.imagesMap}) : super(key: key);
+  ItemImagesPage({Key? key, required this.title, required this.imagesMap}) : super(key: key) {
+    for (MediaImageType type in [MediaImageType.POSTER, MediaImageType.BACKDROP, MediaImageType.PROFILES]) {
+      if (imagesMap.containsKey(type) && imagesMap[type]!.length > 0)
+        _images.addAll(imagesMap[type]!.map((e) => e.filePath!).toList());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(param.title ?? ''),
+        title: Text(title),
         primary: true,
         titleSpacing: 0,
         elevation: 0,
@@ -57,25 +79,26 @@ class ItemImagesPage extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                for (MediaImageType type in MediaImageType.values)
+                for (MediaImageType type in [MediaImageType.POSTER, MediaImageType.BACKDROP, MediaImageType.PROFILES])
                   if (imagesMap.containsKey(type) && imagesMap[type]!.length > 0)
-                    ExpansionTile(
-                      title: Text('${type.title} (${imagesMap[type]!.length})'),
-                      children: [
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          padding: const EdgeInsets.all(10.0),
-                          itemCount: imagesMap[type]!.length,
-                          itemBuilder: (ctx, i) => ContentImageWidget(imagesMap[type]![i].filePath, fit: BoxFit.cover),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: getColumns(context),
-                            childAspectRatio: imagesMap[type]!.map((e) => e.aspectRatio!).reduce(max),
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                        )
-                      ],
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      padding: const EdgeInsets.all(10.0),
+                      itemCount: imagesMap[type]!.length,
+                      itemBuilder: (ctx, i) {
+                        return ContentImageWidget(
+                          imagesMap[type]![i].filePath,
+                          fit: BoxFit.cover,
+                          onSelectImage: () => onSelectImage(context, imagesMap[type]![i].filePath),
+                        );
+                      },
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: getColumns(context),
+                        childAspectRatio: imagesMap[type]!.map((e) => e.aspectRatio!).reduce(max),
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
                     ),
               ],
             ),
@@ -87,6 +110,12 @@ class ItemImagesPage extends StatelessWidget {
 
   int getColumns(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return (width ~/ 150).clamp(1, 8);
+    return (width ~/ 150).clamp(1, 6);
+  }
+
+  onSelectImage(BuildContext context, String? filePath) {
+    if (filePath == null) return;
+    final index = _images.indexOf(filePath);
+    DialogImage.showCarousel(context: context, images: _images, currentImage: index);
   }
 }

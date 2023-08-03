@@ -58,31 +58,31 @@ class ItemGridView extends StatelessWidget {
                         )
                       : PlaceholderImage(),
                 ),
-                if (showData && item.year != null)
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        '${item.year}',
-                      ),
-                      decoration: BoxDecoration(
-                        color: theme.scaffoldBackgroundColor.withOpacity(0.8),
-                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(10)),
-                      ),
-                    ),
-                  ),
+                // if (showData && item.year != null)
+                //   Positioned(
+                //     top: 0,
+                //     left: 0,
+                //     child: Container(
+                //       padding: const EdgeInsets.all(8),
+                //       child: Text(
+                //         '${item.year}',
+                //       ),
+                //       decoration: BoxDecoration(
+                //         color: theme.scaffoldBackgroundColor.withOpacity(0.8),
+                //         borderRadius: BorderRadius.only(bottomRight: Radius.circular(10)),
+                //       ),
+                //     ),
+                //   ),
                 if (showData)
                   Positioned(
-                    top: 0,
+                    top: -1,
                     right: 0,
                     child: Container(
                       padding: const EdgeInsets.all(8),
-                      child: Icon(item.type.icon),
+                      child: Text(item.type.name, style: context.theme.primaryTextTheme.titleMedium),
                       decoration: BoxDecoration(
-                        color: theme.scaffoldBackgroundColor.withOpacity(0.8),
                         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10)),
+                        color: context.theme.primaryColor,
                       ),
                     ),
                   ),

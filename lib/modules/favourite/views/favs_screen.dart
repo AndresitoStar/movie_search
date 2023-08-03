@@ -74,6 +74,6 @@ class FavouriteScreen extends StatelessWidget {
 
   int getColumns(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return (width ~/ 160).clamp(1, 8);
+    return (width ~/ 160).clamp(1, 6);
   }
 }

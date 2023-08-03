@@ -326,6 +326,28 @@ class Episode {
   }
 }
 
+class WatchProviderResponse {
+  final Map<String, List<WatchProvider>> results;
+
+  WatchProviderResponse({required this.results});
+
+  factory WatchProviderResponse.fromJson(Map<String, dynamic> json) {
+    final Map<String, List<WatchProvider>> results = {};
+    for (final entry in json.entries) {
+      final data = entry.value as Map;
+      final list = <WatchProvider>[];
+      for (var k in ['flatrate', 'buy', 'rent']) {
+        if (data.containsKey(k) && data[k] is List) {
+          list.addAll((data[k] as List).map((e) => WatchProvider.fromJson(e)));
+        }
+      }
+      results.putIfAbsent(entry.key, () => list);
+    }
+    print(json.length);
+    return WatchProviderResponse(results: results);
+  }
+}
+
 class WatchProvider {
   int providerId;
   String? providerName;

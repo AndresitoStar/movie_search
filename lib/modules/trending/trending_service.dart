@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
 import 'package:movie_search/model/api/models/api.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
@@ -17,10 +14,10 @@ class TrendingService extends BaseService {
   TrendingService._internal() : super();
 
   final Map<String, SearchResponse> _cacheTrending = {};
+  final Map<String, SearchResponse> _cacheAny = {};
   final Map<String, SearchResponse> _cachePopular = {};
   final Map<String, SearchResponse> _cacheDiscover = {};
   final Map<String, List<WatchProvider>> _cacheNetworks = {};
-  final Map<String, String> _cacheRegion = {};
 
   Future<SearchResponse> getTrending(String type, {int page = 1}) async {
     return sendGET<SearchResponse>(
@@ -41,6 +38,16 @@ class TrendingService extends BaseService {
       },
       idCache: '$type$page',
       cacheMap: _cacheTrending,
+      params: {...baseParams, 'page': page.toString()},
+    );
+  }
+
+  Future<SearchResponse> getAny(String first, String second, {int page = 1, String? mediaType}) async {
+    return sendGET<SearchResponse>(
+      '$first/$second',
+      (body) => SearchResponse.parseResponse(body, mediaType: mediaType),
+      idCache: '$first-$second-$page',
+      cacheMap: _cacheAny,
       params: {...baseParams, 'page': page.toString()},
     );
   }
@@ -82,7 +89,7 @@ class TrendingService extends BaseService {
       if (genres != null && genres.isNotEmpty) 'with_genres': genres.join(','),
       if (cast != null && cast.isNotEmpty) 'with_people': cast.join(','),
       if (watchProvider != null) 'with_watch_providers': '${watchProvider.providerId}',
-      if (watchProvider != null) 'watch_region': await _fetchRegion(),
+      if (watchProvider != null) 'watch_region': await fetchRegion(),
       if (sortDirection != null && sortOrder != null) 'sort_by': '${sortOrder.value}.${sortDirection.value}',
     };
 
@@ -102,14 +109,12 @@ class TrendingService extends BaseService {
         }
         return SearchResponse(result: result, totalResult: total, totalPageResult: totalPagesResult);
       },
-      idCache: '$type$page',
-      cacheMap: _cacheDiscover,
       params: params,
     );
   }
 
   Future<List<WatchProvider>> getWatchProviders(String type) async {
-    final region = await _fetchRegion();
+    final region = await fetchRegion();
     return sendGET<List<WatchProvider>>(
       '/watch/providers/$type',
       (body) {
@@ -127,13 +132,5 @@ class TrendingService extends BaseService {
         'watch_region': region,
       },
     );
-  }
-
-  Future<String> _fetchRegion() async {
-    if (_cacheRegion.containsKey('region')) return _cacheRegion['region']!;
-    final response = await http.get(Uri.parse('http://ipwho.is/'));
-    final region = jsonDecode(response.body)['country_code'];
-    _cacheRegion.putIfAbsent('region', () => region);
-    return region;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class PlaceholderImage extends StatelessWidget {
   final double? height;
@@ -12,6 +13,7 @@ class PlaceholderImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
+      constraints: BoxConstraints(maxHeight: 60.h),
       child: LayoutBuilder(
         // builder: (context, constraint) => Icon(
         //   MyIcons.default_image,

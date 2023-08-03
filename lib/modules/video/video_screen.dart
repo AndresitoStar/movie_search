@@ -23,63 +23,62 @@ class VideoScreen extends StatelessWidget {
         titleSpacing: 0,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: ListTile.divideTiles(
-            context: context,
-            tiles: videosList.map<Widget>(
-              (video) => Stack(
-                children: [
-                  AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Image.network(
-                      video.youtubeThumbnail,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                  Positioned(
-                    top: 0,
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
-                    child: GestureDetector(
-                      onTap: video.isYoutube ? () => _launchYoutubeVideo(video) : null,
-                      child: ClipRRect(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                          child: Container(
-                            color: Theme.of(context).colorScheme.background.withOpacity(0.25),
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.play_circle_outline,
-                                  size: 64,
-                                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.65),
-                                ),
-                                Chip(
-                                  backgroundColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.85),
-                                  label: Text(
-                                    video.name ?? '',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(color: Theme.of(context).colorScheme.background),
-                                  ),
-                                ),
-                              ],
+      body: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 16 / 9,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
+        itemCount: videosList.length,
+        itemBuilder: (context, i) => Stack(
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image.network(
+                videosList[i].youtubeThumbnail,
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+            Positioned(
+              top: 0,
+              bottom: 0,
+              right: 0,
+              left: 0,
+              child: GestureDetector(
+                onTap: videosList[i].isYoutube ? () => _launchYoutubeVideo(videosList[i]) : null,
+                child: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                    child: Container(
+                      color: Theme.of(context).colorScheme.background.withOpacity(0.25),
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.play_circle_outline,
+                            size: 64,
+                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.65),
+                          ),
+                          Chip(
+                            backgroundColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.85),
+                            label: Text(
+                              videosList[i].name ?? '',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(color: Theme.of(context).colorScheme.background),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-          ).toList(),
+          ],
         ),
       ),
     );

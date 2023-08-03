@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/trending/trending_page.dart';
-import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
+import 'package:movie_search/ui/widgets/extensions.dart';
 
 import 'trending_viewmodel.dart';
 
@@ -19,60 +17,63 @@ class TrendingCard extends StatelessWidget {
   TrendingCard({Key? key, required this.content, this.genre, this.trendingType = TrendingType.TRENDING})
       : super(key: key);
 
-  final _defaultLength = Platform.isWindows || Platform.isLinux ? 15 : 4;
-
   @override
   Widget build(BuildContext context) {
-    final itemHeight = (MediaQuery.of(context).size.width * MediaQuery.of(context).size.aspectRatio);
     return ViewModelBuilder<TrendingViewModel>.reactive(
       viewModelBuilder: () => genre != null
           ? TrendingViewModel.homeHorizontal(this.content, genre!)
           : TrendingViewModel(this.content, trendingType: trendingType),
       onViewModelReady: (model) => model.synchronize(),
       builder: (context, model, child) {
-        final doIt = model.items.length > _defaultLength;
+        final columns = getColumns(context);
+        final totalItems = (columns * 3);
+        final doIt = model.items.length > totalItems;
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 0).copyWith(bottom: 20),
+          color: Theme.of(context).inputDecorationTheme.fillColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               GridView.builder(
-                itemCount: _defaultLength,
+                itemCount: totalItems,
                 physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (ctx, i) => AnimatedCrossFade(
-                  firstChild: AspectRatio(
-                    aspectRatio: 0.667,
-                    key: UniqueKey(),
-                    child: GridItemPlaceholder(),
-                  ),
-                  crossFadeState: doIt ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                  duration: Duration(milliseconds: 400),
-                  secondChild: Container(
-                    key: UniqueKey(),
-                    child: doIt
-                        ? ItemGridView(
-                            item: model.items[i],
-                            showData: false,
-                            showTitles: true,
-                            heroTagPrefix: genre != null ? genre!.id : '${content.type}${trendingType.index}',
-                          )
-                        : null,
-                  ),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                itemBuilder: (ctx, i) => i == totalItems - 1
+                    ? Container(
+                        child: Center(
+                          child: FloatingActionButton(
+                            child: Icon(Icons.keyboard_arrow_right),
+                            onPressed: () => _onPressed(context, model),
+                            heroTag: 'trendingCard${content.name}',
+                          ),
+                        ),
+                      )
+                    : AnimatedCrossFade(
+                        firstChild: AspectRatio(
+                          aspectRatio: 0.667,
+                          key: UniqueKey(),
+                          child: GridItemPlaceholder(),
+                        ),
+                        crossFadeState: doIt ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                        duration: Duration(milliseconds: 400),
+                        secondChild: Container(
+                          key: UniqueKey(),
+                          child: doIt
+                              ? ItemGridView(
+                                  item: model.items[i],
+                                  showData: false,
+                                  showTitles: true,
+                                  heroTagPrefix: genre != null ? genre!.id : '${content.type}${trendingType.index}',
+                                )
+                              : null,
+                        ),
+                      ),
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: getColumns(context),
                   childAspectRatio: 0.667,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                ),
-              ),
-              ElevatedButton(
-                child: Text('Ver Más...'),
-                onPressed: () => _onPressed(context, model),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: context.theme.colorScheme.background,
-                  foregroundColor: context.theme.colorScheme.onBackground,
                 ),
               ),
             ],
@@ -87,6 +88,6 @@ class TrendingCard extends StatelessWidget {
 
   int getColumns(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return (width ~/ 150).clamp(1, 8);
+    return (width ~/ 150).clamp(2, 6);
   }
 }

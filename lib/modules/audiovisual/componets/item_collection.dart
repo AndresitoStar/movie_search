@@ -112,6 +112,6 @@ class ItemCollectionScreen extends StatelessWidget {
 
   int getColumns(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return (width ~/ 150).clamp(1, 8);
+    return (width ~/ 150).clamp(1, 6);
   }
 }

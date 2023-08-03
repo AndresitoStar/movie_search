@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
+import 'package:movie_search/ui/widgets/extensions.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:sqlite3/open.dart';
@@ -79,6 +80,7 @@ class App extends StatelessWidget {
             themeMode: EasyDynamicTheme.of(context).themeMode,
             onGenerateRoute: (settings) => Routes.generateRoute(context, settings),
             initialRoute: SplashScreen.route,
+            scrollBehavior: MyCustomScrollBehavior(),
           ),
         ),
       ),

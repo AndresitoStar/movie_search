@@ -17,6 +17,7 @@ class SearchScreen extends StatelessWidget {
       builder: (context, model, child) => CustomScaffold(
         bottomBarIndex: 1,
         title: 'Búsqueda',
+        forceAppbar: true,
         body: Column(
           children: [
             sb.SearchBar(),

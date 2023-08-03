@@ -2,17 +2,34 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:movie_search/core/infinite_scroll_viewmodel.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SearchResponse {
+class SearchResponse extends AbstractSearchResponse<BaseSearchResult> {
   final List<BaseSearchResult> result;
   final int totalResult;
   final int totalPageResult;
 
-  SearchResponse({required this.totalResult, required this.totalPageResult, required this.result});
+  SearchResponse({required this.totalResult, required this.totalPageResult, required this.result})
+      : super(totalResult: totalResult, totalPageResult: totalPageResult, result: result);
+
+  factory SearchResponse.parseResponse(Map<String, dynamic> json, {String? mediaType}) {
+    List<BaseSearchResult> result = [];
+    int total = 0;
+    int totalPagesResult = -1;
+
+    result = [];
+    total = json['total_results'];
+    totalPagesResult = json['total_pages'];
+    for (var data in json['results']) {
+      BaseSearchResult b = BaseSearchResult.fromJson(mediaType ?? data['media_type'], data);
+      result.add(b);
+    }
+    return SearchResponse(result: result, totalResult: total, totalPageResult: totalPagesResult);
+  }
 }
 
 // const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w342';
@@ -62,11 +79,11 @@ extension tmdb_type on TMDB_API_TYPE {
   String get name {
     switch (this) {
       case TMDB_API_TYPE.MOVIE:
-        return 'Películas';
+        return 'FILM';
       case TMDB_API_TYPE.TV_SHOW:
-        return 'Series';
+        return 'SERIE';
       case TMDB_API_TYPE.PERSON:
-        return 'Personas';
+        return 'Celebridad';
     }
   }
 

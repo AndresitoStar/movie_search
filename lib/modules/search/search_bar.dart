@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
 import 'search_viewmodel.dart';
@@ -16,8 +17,6 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
-
     return ViewModelBuilder<SearchViewModel>.nonReactive(
       viewModelBuilder: () => context.read(),
       onViewModelReady: (model) => this.onLoad(model),
@@ -26,7 +25,7 @@ class SearchBar extends StatelessWidget {
         tag: 'searchBar',
         child: Card(
           clipBehavior: Clip.hardEdge,
-          margin: const EdgeInsets.symmetric(horizontal: 10),
+          margin: EdgeInsets.symmetric(horizontal: Device.screenType == ScreenType.mobile ? 15 : 10.w),
           elevation: 0,
           color: Theme.of(context).inputDecorationTheme.fillColor,
           child: ReactiveForm(

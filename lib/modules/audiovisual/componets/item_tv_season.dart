@@ -5,6 +5,7 @@ import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_main_image.dart';
@@ -40,13 +41,13 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
               text: TextSpan(
                   text: 'Temporadas:',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+                        color: Theme.of(context).colorScheme.background,
                       ),
                   children: [
                     TextSpan(
                       text: ' ${model.data!.tvShow!.numberOfSeasons}',
                       style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: Theme.of(context).colorScheme.background,
                           ),
                     )
                   ]),
@@ -189,15 +190,35 @@ class _SeasonScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(10.0),
-        itemCount: seasons.length,
-        itemBuilder: (ctx, i) => _SeasonCard(
-          season: seasons[i],
-          isLast: i == seasons.length - 1,
-          tvApi: tv,
-        ),
-      ),
+      body: Device.screenType == ScreenType.mobile
+          ? ListView.builder(
+              padding: const EdgeInsets.all(10.0),
+              itemCount: seasons.length,
+              itemBuilder: (ctx, i) => _SeasonCard(
+                season: seasons[i],
+                isLast: i == seasons.length - 1,
+                tvApi: tv,
+              ),
+            )
+          : GridView.builder(
+              itemCount: seasons.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: getColumns(context),
+                childAspectRatio: 2.667,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (ctx, i) => _SeasonCard(
+                season: seasons[i],
+                isLast: i == seasons.length - 1,
+                tvApi: tv,
+              ),
+            ),
     );
+  }
+
+  int getColumns(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return (width ~/ 350).clamp(1, 3);
   }
 }

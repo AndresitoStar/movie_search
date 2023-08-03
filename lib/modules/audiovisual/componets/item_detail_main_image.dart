@@ -6,6 +6,7 @@ import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
 import 'package:movie_search/ui/widgets/dialog_image.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
 class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
@@ -21,7 +22,9 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          model.withImage ? ContentImageWidget(model.posterImageUrl) : Card(child: PlaceholderImage(height: 250)),
+          model.withImage
+              ? ContentImageWidget(landscape ? model.backDropImageUrl : model.posterImageUrl, isBackdrop: landscape)
+              : Card(child: PlaceholderImage(height: 250)),
           if (!landscape)
             IgnorePointer(
               ignoring: true,
@@ -52,6 +55,7 @@ class ContentImageWidget extends StatefulWidget {
   final BoxFit fit;
   final bool ignorePointer;
   final bool isBackdrop;
+  final VoidCallback? onSelectImage;
 
   ContentImageWidget(
     this.imagePath, {
@@ -59,6 +63,7 @@ class ContentImageWidget extends StatefulWidget {
     this.fit = BoxFit.fitWidth,
     this.ignorePointer = false,
     this.isBackdrop = false,
+    this.onSelectImage,
   }) : super(key: key);
 
   @override
@@ -70,7 +75,7 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
 
   @override
   void initState() {
-    baseUrl = widget.isBackdrop ? URL_IMAGE_MEDIUM_BACKDROP : URL_IMAGE_MEDIUM;
+    baseUrl = URL_IMAGE_MEDIUM;
     // _checkImageCachedQuality();
     super.initState();
   }
@@ -80,11 +85,14 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
     if (widget.imagePath == null || widget.imagePath!.isEmpty) return PlaceholderImage();
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
+      constraints: BoxConstraints(maxHeight: 60.h),
       child: GestureDetector(
         onTap: widget.ignorePointer
             ? null
-            : () => DialogImage.show(context: context, imageUrl: widget.imagePath!, baseUrl: baseUrl)
-                .then((value) => _checkImageCachedQuality),
+            : widget.onSelectImage != null
+                ? () => widget.onSelectImage!.call()
+                : () => DialogImage.show(context: context, imageUrl: widget.imagePath!, baseUrl: baseUrl)
+                    .then((value) => _checkImageCachedQuality),
         child: CachedNetworkImage(
           imageUrl: '$baseUrl${widget.imagePath}',
           placeholder: (_, __) => CachedNetworkImage(

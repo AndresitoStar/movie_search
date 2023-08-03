@@ -72,6 +72,14 @@ class AudiovisualService extends BaseService {
         idCache: '$tvShowId-$seasonNumber-$episodeNumber',
       );
 
+  Future<WatchProviderResponse> getWatchProviders({required String type, required num id}) async =>
+      sendGET<WatchProviderResponse>(
+        '$type/$id/watch/providers',
+        (data) => WatchProviderResponse.fromJson(data['results']),
+        cacheMap: {},
+        idCache: '$type-$id-watch/providers',
+      );
+
   Future<List<BaseSearchResult>> getPersonCombinedCredits(num id) async =>
       sendGET<List<BaseSearchResult>>('person/$id/combined_credits', (data) {
         List<BaseSearchResult> result = [];

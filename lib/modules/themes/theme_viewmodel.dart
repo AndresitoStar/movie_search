@@ -1,7 +1,9 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
 class ThemeViewModel extends BaseViewModel {
@@ -30,7 +32,6 @@ class ThemeViewModel extends BaseViewModel {
 
   ThemeData get theme => FlexColorScheme.light(
         scheme: flexColor,
-        fontFamily: 'Dosis',
         transparentStatusBar: true,
         appBarElevation: 0,
         appBarStyle: FlexAppBarStyle.background,
@@ -38,11 +39,11 @@ class ThemeViewModel extends BaseViewModel {
             inputDecorationTheme: baseTheme.copyWith(fillColor: Colors.black12),
             elevatedButtonTheme: baseElevatedButtonThemeData,
             cardTheme: cardTheme,
+            // textTheme: baseTextTheme,
           );
 
   ThemeData get darkTheme => FlexColorScheme.dark(
         scheme: flexColor,
-        fontFamily: 'Dosis',
         transparentStatusBar: true,
         appBarElevation: 0,
         appBarStyle: FlexAppBarStyle.background,
@@ -50,6 +51,7 @@ class ThemeViewModel extends BaseViewModel {
             inputDecorationTheme: baseTheme.copyWith(fillColor: Colors.white12),
             elevatedButtonTheme: baseElevatedButtonThemeData,
             cardTheme: cardTheme,
+            // textTheme: baseTextTheme,
           );
 
   final OutlinedBorder _buttonsBorder = RoundedRectangleBorder(borderRadius: BorderRadius.circular(15));
@@ -78,5 +80,24 @@ class ThemeViewModel extends BaseViewModel {
         errorBorder: InputBorder.none,
         focusedErrorBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
+      );
+  TextTheme get googleTheme => GoogleFonts.sourceSansProTextTheme();
+
+  TextTheme get baseTextTheme => googleTheme.copyWith(
+        displayLarge: googleTheme.displayLarge!.copyWith(fontSize: 57.dp),
+        displayMedium: googleTheme.displayMedium!.copyWith(fontSize: 45.dp),
+        displaySmall: googleTheme.displaySmall!.copyWith(fontSize: 36.dp),
+        headlineLarge: googleTheme.headlineLarge!.copyWith(fontSize: 32.dp),
+        headlineMedium: googleTheme.headlineMedium!.copyWith(fontSize: 28.dp),
+        headlineSmall: googleTheme.headlineSmall!.copyWith(fontSize: 24.dp),
+        titleLarge: googleTheme.titleLarge!.copyWith(fontSize: 22.dp),
+        titleMedium: googleTheme.titleMedium!.copyWith(fontSize: 16.dp),
+        titleSmall: googleTheme.titleSmall!.copyWith(fontSize: 14.dp),
+        labelLarge: googleTheme.labelLarge!.copyWith(fontSize: 14.dp),
+        labelMedium: googleTheme.labelMedium!.copyWith(fontSize: 12.dp),
+        labelSmall: googleTheme.labelSmall!.copyWith(fontSize: 11.dp),
+        bodyLarge: googleTheme.bodyLarge!.copyWith(fontSize: 16.dp),
+        bodyMedium: googleTheme.bodyMedium!.copyWith(fontSize: 14.dp),
+        bodySmall: googleTheme.bodySmall!.copyWith(fontSize: 12.dp),
       );
 }

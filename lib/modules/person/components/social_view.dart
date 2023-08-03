@@ -20,29 +20,24 @@ class SocialView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: SizedBox(width: 100, child: LinearProgressIndicator()),
           );
-        if (model.hasError)
-          return IconButton(
-              onPressed: model.futureToRun, icon: Icon(Icons.refresh));
+        if (model.hasError) return IconButton(onPressed: model.futureToRun, icon: Icon(Icons.refresh));
         return ButtonBar(
-          alignment: MainAxisAlignment.start,
+          alignment: MainAxisAlignment.center,
           buttonPadding: EdgeInsets.zero,
           children: [
             if (model.social?.facebookId != null)
               IconButton(
-                onPressed: () => launchUrlString(
-                    'https://www.facebook.com/${model.social!.facebookId}'),
+                onPressed: () => launchUrlString('https://www.facebook.com/${model.social!.facebookId}'),
                 icon: Icon(MyIcons.facebook, color: Color(0xff4267b2)),
               ),
             if (model.social?.instagramId != null)
               IconButton(
-                onPressed: () => launchUrlString(
-                    'https://www.instagram.com/${model.social!.instagramId}'),
+                onPressed: () => launchUrlString('https://www.instagram.com/${model.social!.instagramId}'),
                 icon: Image.asset('assets/images/instagram.png', width: 24),
               ),
             if (model.social?.twitterId != null)
               IconButton(
-                onPressed: () => launchUrlString(
-                    'https://www.twitter.com/${model.social!.twitterId}'),
+                onPressed: () => launchUrlString('https://www.twitter.com/${model.social!.twitterId}'),
                 icon: Icon(MyIcons.twitter, color: Color(0xff00acee)),
               ),
           ],

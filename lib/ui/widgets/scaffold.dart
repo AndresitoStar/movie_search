@@ -9,13 +9,19 @@ class CustomScaffold extends StatelessWidget {
   final Widget body;
   final Widget? endDrawer;
   final String? title;
+  final bool forceAppbar;
+  final FloatingActionButton? floatingActionButton;
+  final Key? childKey;
 
   const CustomScaffold({
     Key? key,
+    this.childKey,
     required this.bottomBarIndex,
     required this.body,
     this.endDrawer,
     this.title,
+    this.forceAppbar = false,
+    this.floatingActionButton,
     // this.appBar,
   }) : super(key: key);
 
@@ -26,10 +32,12 @@ class CustomScaffold extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: showAppbar ? null : MyBottomBar(index: bottomBarIndex),
       endDrawer: endDrawer,
+      floatingActionButton: floatingActionButton,
+      key: this.childKey,
       appBar: showAppbar
           ? AppBar(
               title: SizedBox(
-                height: kToolbarHeight,
+                height: kToolbarHeight + 1,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -42,7 +50,9 @@ class CustomScaffold extends StatelessWidget {
                 ),
               ),
             )
-          : null,
+          : forceAppbar
+              ? AppBar(title: Text(title ?? 'Movie Search'))
+              : null,
       body: Center(child: body),
     );
   }

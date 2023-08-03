@@ -10,7 +10,7 @@ import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 
 class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
-  final BaseSearchResult _param;
+  late BaseSearchResult _param;
   final AudiovisualService _service;
 
   ItemDetailViewModel(this._param)
@@ -42,6 +42,7 @@ class ItemDetailViewModel extends FutureViewModel<BaseSearchResult> {
   @override
   Future<BaseSearchResult> futureToRun() async {
     final result = await _getData();
+    _param = result;
     clearErrors();
     setInitialised(true);
     return result;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/circular_button.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ItemDetailSliverAppBar extends StatelessWidget {
   final Widget child;
@@ -9,10 +10,9 @@ class ItemDetailSliverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mq = MediaQuery.of(context);
     return SliverAppBar(
       pinned: true,
-      expandedHeight: mq.size.width * 12 / 16,
+      expandedHeight: 75.w,
       elevation: 0,
       automaticallyImplyLeading: false,
       // colorScheme.background: Colors.transparent,

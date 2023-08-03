@@ -74,6 +74,14 @@ class BaseSearchResult {
     throw Exception('API TYPE NOT IMPLEMENTED!');
   }
 
+  BaseSearchResult._(num id, String? type)
+      : id = id,
+        type = TMDB_API_TYPE.values.singleWhere((element) => element.type == type);
+
+  static BaseSearchResult lite({required String mediaType, required num id}) {
+    return BaseSearchResult._(id, mediaType);
+  }
+
   static String? _parseStatus(String? value) {
     switch (value) {
       case 'Rumored':

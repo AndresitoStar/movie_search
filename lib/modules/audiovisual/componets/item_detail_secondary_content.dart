@@ -5,6 +5,7 @@ import 'package:movie_search/model/api/models/person.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_collection.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_tv_season.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_watch_providers_view.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
@@ -66,7 +67,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
         padding: 8,
         label: 'Productora',
         // content: movie.productionCompanies?.join(', '),
-        subtitle: logoWidgets(context, movie.productionCompanies!),
+        subtitle: LogosWidget.fromLogoList(movie.productionCompanies!),
         forceLight: Theme.of(context).brightness == Brightness.dark,
       ),
       if (movie.collection != null) ...[
@@ -75,7 +76,8 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
           collection: movie.collection!,
           sliver: false,
         ),
-      ]
+      ],
+      ItemWatchProvidersView(type: TMDB_API_TYPE.MOVIE.type, id: movie.id),
     ];
   }
 
@@ -124,21 +126,22 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
             ),
           ),
         ),
-      if (tvShow.productionCompanies != null)
+      if (tvShow.productionCompanies != null && tvShow.productionCompanies!.isNotEmpty)
         ContentHorizontal(
           padding: 8,
           label: 'Productora',
-          forceLight: ThemeViewModel.of(context).isDark,
+          forceLight: true,
           // content: tvShow.productionCompanies.join(', '),
-          subtitle: logoWidgets(context, tvShow.productionCompanies!),
+          subtitle: LogosWidget.fromLogoList(tvShow.productionCompanies!),
         ),
       if (tvShow.networks != null)
         ContentHorizontal(
           padding: 8,
           label: 'Cadenas Televisivas',
-          forceLight: ThemeViewModel.of(context).isDark,
-          subtitle: logoWidgets(context, tvShow.networks!),
+          forceLight: true,
+          subtitle: LogosWidget.fromLogoList(tvShow.networks!),
         ),
+      ItemWatchProvidersView(type: TMDB_API_TYPE.TV_SHOW.type, id: tvShow.id),
     ];
   }
 
@@ -152,30 +155,4 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
       ),
     ];
   }
-
-  Widget logoWidgets(BuildContext context, List<Logo> list) => Padding(
-        padding: const EdgeInsets.only(top: 5, bottom: 5),
-        child: Wrap(
-          runSpacing: 8,
-          spacing: 10,
-          runAlignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: list
-              .map(
-                (e) => e.logoPath != null
-                    ? Tooltip(
-                        message: e.name,
-                        child: CachedNetworkImage(
-                          imageUrl: '$URL_IMAGE_MEDIUM${e.logoPath}',
-                          width: 80,
-                        ),
-                      )
-                    : Text(
-                        e.name!,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-              )
-              .toList(),
-        ),
-      );
 }

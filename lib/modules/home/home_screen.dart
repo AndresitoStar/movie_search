@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/home/custom_segmented_view_pages.dart';
+import 'package:movie_search/modules/home/home_movie_now_playing.dart';
+import 'package:movie_search/modules/home/home_movie_top_rated.dart';
+import 'package:movie_search/modules/home/home_movie_upcoming.dart';
 import 'package:movie_search/modules/home/home_search_bar.dart';
-import 'package:movie_search/modules/trending/trending_card.dart';
-import 'package:movie_search/modules/trending/trending_viewmodel.dart';
+import 'package:movie_search/modules/home/home_trending_all.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:movie_search/ui/widgets/theme_switcher.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
+import 'custom_segmented_view_pages.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = "/home";
@@ -13,33 +16,24 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final movieTrending = TrendingCard(
-      content: TrendingContent.MOVIE,
-      key: UniqueKey(),
-    );
-    final moviePopular = TrendingCard(
-      content: TrendingContent.MOVIE,
-      trendingType: TrendingType.POPULAR,
-      key: UniqueKey(),
-    );
-    final tvTrending = TrendingCard(
-      content: TrendingContent.TV,
-      key: UniqueKey(),
-    );
-    final tvPopular = TrendingCard(
-      content: TrendingContent.TV,
-      trendingType: TrendingType.POPULAR,
-      key: UniqueKey(),
-    );
-    final personTrending = TrendingCard(
-      content: TrendingContent.PERSON,
-      key: UniqueKey(),
-    );
-    final personPopular = TrendingCard(
-      content: TrendingContent.PERSON,
-      trendingType: TrendingType.POPULAR,
-      key: UniqueKey(),
-    );
+    // final movieTrending = TrendingCard(content: TrendingContent.MOVIE, key: UniqueKey());
+    // final moviePopular = TrendingCard(
+    //   content: TrendingContent.MOVIE,
+    //   trendingType: TrendingType.POPULAR,
+    //   key: UniqueKey(),
+    // );
+    // final tvTrending = TrendingCard(content: TrendingContent.TV, key: UniqueKey());
+    // final tvPopular = TrendingCard(
+    //   content: TrendingContent.TV,
+    //   trendingType: TrendingType.POPULAR,
+    //   key: UniqueKey(),
+    // );
+    // final personTrending = TrendingCard(content: TrendingContent.PERSON, key: UniqueKey());
+    // final personPopular = TrendingCard(
+    //   content: TrendingContent.PERSON,
+    //   trendingType: TrendingType.POPULAR,
+    //   key: UniqueKey(),
+    // );
 
     return CustomScaffold(
       bottomBarIndex: 0,
@@ -74,35 +68,22 @@ class HomeScreen extends StatelessWidget {
                     Divider(),
                     HomeSearchBar(),
                     Divider(),
-                    ListTile(
-                      title: Text(
-                        'Peliculas',
-                        style: theme.textTheme.headlineMedium!.copyWith(color: theme.colorScheme.primary),
-                      ),
+                    CustomSegmentedPageView(
+                      title: 'Lo Ultimo en Tendencia',
+                      pages: [
+                        HomeTrendingAllView(window: TrendingWindow.DAY, key: UniqueKey()),
+                        HomeTrendingAllView(window: TrendingWindow.WEEK, key: UniqueKey()),
+                      ],
+                      tabs: [TrendingWindow.DAY.title, TrendingWindow.WEEK.title],
                     ),
                     CustomSegmentedPageView(
-                      pages: [movieTrending, moviePopular],
-                      tabs: ['Tendencia', 'Popular'],
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Series y Televisión',
-                        style: theme.textTheme.headlineMedium!.copyWith(color: theme.colorScheme.primary),
-                      ),
-                    ),
-                    CustomSegmentedPageView(
-                      pages: [tvTrending, tvPopular],
-                      tabs: ['Tendencia', 'Popular'],
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Personas',
-                        style: theme.textTheme.headlineMedium!.copyWith(color: theme.colorScheme.primary),
-                      ),
-                    ),
-                    CustomSegmentedPageView(
-                      pages: [personTrending, personPopular],
-                      tabs: ['Tendencia', 'Popular'],
+                      title: 'Lo Mas Popular',
+                      pages: [
+                        HomeNowPlayingView(key: UniqueKey()),
+                        HomeUpcomingView(key: UniqueKey()),
+                        HomeAiringView(key: UniqueKey()),
+                      ],
+                      tabs: ['Now Playing', 'Upcoming', 'Al Aire'],
                     ),
                   ],
                 ),

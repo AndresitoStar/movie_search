@@ -1,4 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/model/api/models/tv.dart';
+import 'package:movie_search/modules/themes/theme_viewmodel.dart';
+import 'package:movie_search/providers/util.dart';
 
 class ContentDivider extends StatelessWidget {
   const ContentDivider({
@@ -110,24 +114,68 @@ class ContentHorizontal extends StatelessWidget {
     final primaryColor = Theme.of(context).primaryColor;
     return Visibility(
       visible: subtitle != null || (content != null && content!.isNotEmpty && content != 'N/A'),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        color: forceLight ? Colors.white70 : Theme.of(context).colorScheme.background,
-        child: ListTile(
-          title: label != null
-              ? Text(
-                  label!,
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: forceLight ? Theme.of(context).primaryTextTheme.titleSmall!.color : primaryColor,
+      child: Theme(
+        data: forceLight ? ThemeViewModel.of(context).theme : Theme.of(context),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: padding),
+          color: forceLight ? Colors.white70 : Theme.of(context).colorScheme.background,
+          child: ListTile(
+            title: label != null
+                ? Text(
+                    label!,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: forceLight ? Theme.of(context).primaryColorDark : primaryColor,
+                        ),
+                  )
+                : null,
+            subtitle: subtitle ??
+                Text(
+                  content != null && content!.isNotEmpty ? content! : '',
+                  style: contentStyle ?? Theme.of(context).textTheme.titleMedium,
+                ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LogosWidget extends StatelessWidget {
+  final List<MapEntry<String, String?>> list;
+
+  const LogosWidget({super.key, required this.list});
+
+  static LogosWidget fromLogoList(List<Logo> list) =>
+      LogosWidget(list: list.map((e) => MapEntry(e.name!, e.logoPath)).toList());
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
+      child: Theme(
+        data: ThemeViewModel.of(context).theme,
+        child: Wrap(
+          runSpacing: 8,
+          spacing: 10,
+          runAlignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: list
+              .map(
+                (e) => e.value != null
+                    ? Tooltip(
+                        message: e.key,
+                        child: CachedNetworkImage(
+                          imageUrl: '$URL_IMAGE_MEDIUM${e.value}',
+                          width: 80,
+                        ),
+                      )
+                    : Text(
+                        e.key,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
-                )
-              : null,
-          subtitle: subtitle ??
-              Text(
-                content != null && content!.isNotEmpty ? content! : '',
-                style: contentStyle ?? Theme.of(context).textTheme.titleMedium,
-              ),
+              )
+              .toList(),
         ),
       ),
     );
