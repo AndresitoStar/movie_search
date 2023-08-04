@@ -11,8 +11,8 @@ class MyIcons {
   static const IconData arrow_right = Icons.arrow_forward_ios_rounded;
   static const IconData check = FrinoIcons.f_check;
   static const IconData clean = FrinoIcons.f_no_access;
-  static const IconData favourite_on = Icons.favorite_rounded;
-  static const IconData favourite_off = Icons.favorite_border_rounded;
+  static const IconData favourite_on = Icons.bookmark_rounded;
+  static const IconData favourite_off = Icons.bookmark_outline_rounded;
   static const IconData favourite_home_bar = FrinoIcons.f_heart;
   static const IconData clear = Icons.clear;
   static const IconData search = FrinoIcons.f_search_2;

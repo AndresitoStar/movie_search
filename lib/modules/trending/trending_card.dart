@@ -61,7 +61,7 @@ class TrendingCard extends StatelessWidget {
                           child: doIt
                               ? ItemGridView(
                                   item: model.items[i],
-                                  showData: false,
+                                  showType: false,
                                   showTitles: true,
                                   heroTagPrefix: genre != null ? genre!.id : '${content.type}${trendingType.index}',
                                 )

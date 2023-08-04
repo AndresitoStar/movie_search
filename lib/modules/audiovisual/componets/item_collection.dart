@@ -101,7 +101,7 @@ class ItemCollectionScreen extends StatelessWidget {
         itemCount: collection.parts?.length ?? 0,
         itemBuilder: (ctx, i) => ItemGridView(
           item: BaseSearchResult.fromMovie(collection.parts![i]),
-          showData: false,
+          showType: false,
           heroTagPrefix: 'collection',
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -38,7 +38,7 @@ class TrendingPage extends StatelessWidget {
                         child: i < viewModel.items.length
                             ? ItemGridView(
                                 item: viewModel.items[i],
-                                showData: false,
+                                showType: false,
                                 showTitles: param.content == TrendingContent.PERSON,
                                 heroTagPrefix: '',
                               )

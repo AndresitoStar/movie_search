@@ -12,7 +12,7 @@ import 'package:movie_search/ui/widgets/default_image.dart';
 import 'item_detail_page.dart';
 
 class ItemGridView extends StatelessWidget {
-  final bool showData;
+  final bool showType;
   final bool showTitles;
   final bool useBackdrop;
   final BaseSearchResult item;
@@ -23,7 +23,7 @@ class ItemGridView extends StatelessWidget {
     Key? key,
     required this.item,
     required this.heroTagPrefix,
-    this.showData = true,
+    this.showType = true,
     this.showTitles = false,
     this.useBackdrop = false,
     this.margin = const EdgeInsets.all(10),
@@ -73,13 +73,13 @@ class ItemGridView extends StatelessWidget {
                 //       ),
                 //     ),
                 //   ),
-                if (showData)
+                if (showType)
                   Positioned(
                     top: -1,
                     right: 0,
                     child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(item.type.name, style: context.theme.primaryTextTheme.titleMedium),
+                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                      child: Text(item.type.name.toLowerCase(), style: context.theme.primaryTextTheme.bodySmall),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10)),
                         color: context.theme.primaryColor,

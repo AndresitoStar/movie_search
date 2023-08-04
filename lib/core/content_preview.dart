@@ -48,7 +48,7 @@ abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollVi
                   child: doIt
                       ? ItemGridView(
                           item: viewModel.items[i],
-                          showData: itemShowData,
+                          showType: itemShowData,
                           showTitles: true,
                           heroTagPrefix: itemGridHeroTag,
                         )
@@ -66,16 +66,28 @@ abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollVi
     );
   }
 
-  int _getColumns(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return (width ~/ 150).clamp(2, 6);
-  }
+  int _getColumns(BuildContext context) =>
+      UiUtils.calculateColumns(context: context, itemWidth: 150, minValue: 2, maxValue: 6);
 
   onPressed(BuildContext context, InfiniteScrollViewModel viewModel) {
     Navigator.of(context).push(Routes.defaultRoute(null, ContentPreviewPage(param: viewModel, showData: itemShowData)));
   }
 
   String get viewMoreButtonHeroTag;
+
   String get itemGridHeroTag;
+
   bool get itemShowData => true;
+}
+
+class UiUtils {
+  static int calculateColumns({
+    required BuildContext context,
+    required int itemWidth,
+    required int minValue,
+    required int maxValue,
+  }) {
+    final width = MediaQuery.of(context).size.width;
+    return (width ~/ 150).clamp(2, 6);
+  }
 }

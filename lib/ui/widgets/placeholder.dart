@@ -12,7 +12,10 @@ class DefaultPlaceholder extends StatelessWidget {
     final colorHighlightValue = Theme.of(context).brightness == Brightness.dark ? 600 : 100;
     return Container(
       child: Shimmer.fromColors(
-          baseColor: color[colorBaseValue]!, highlightColor: color[colorHighlightValue]!, child: Container()),
+        baseColor: color[colorBaseValue]!,
+        highlightColor: color[colorHighlightValue]!,
+        child: Container(color: Theme.of(context).highlightColor),
+      ),
     );
   }
 }

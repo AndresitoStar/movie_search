@@ -33,7 +33,7 @@ class AudiovisualHorizontalList extends StatelessWidget {
                           aspectRatio: 0.667,
                           child: ItemGridView(
                             item: e,
-                            showData: false,
+                            showType: false,
                             heroTagPrefix: tag,
                           ),
                         ),

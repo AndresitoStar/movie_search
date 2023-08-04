@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:movie_search/core/content_preview.dart';
 import 'package:movie_search/model/api/models/video.dart';
+import 'package:movie_search/ui/frino_icons.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -25,10 +27,10 @@ class VideoScreen extends StatelessWidget {
       ),
       body: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
+          crossAxisCount: UiUtils.calculateColumns(context: context, itemWidth: 150, minValue: 1, maxValue: 8),
           childAspectRatio: 16 / 9,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 5,
         ),
         itemCount: videosList.length,
         itemBuilder: (context, i) => Stack(
@@ -45,32 +47,37 @@ class VideoScreen extends StatelessWidget {
               bottom: 0,
               right: 0,
               left: 0,
-              child: GestureDetector(
+              child: InkWell(
                 onTap: videosList[i].isYoutube ? () => _launchYoutubeVideo(videosList[i]) : null,
                 child: ClipRRect(
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                    filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
                     child: Container(
                       color: Theme.of(context).colorScheme.background.withOpacity(0.25),
-                      alignment: Alignment.center,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Icon(
-                            Icons.play_circle_outline,
-                            size: 64,
-                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.65),
-                          ),
-                          Chip(
-                            backgroundColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.85),
-                            label: Text(
-                              videosList[i].name ?? '',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: Theme.of(context).colorScheme.background),
+                          Expanded(
+                            child: Icon(
+                              FrinoIcons.f_play,
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.65),
                             ),
                           ),
+                          if (videosList[i].name != null)
+                            Container(
+                              color: Theme.of(context).colorScheme.tertiaryContainer,
+                              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+                              child: Text(
+                                videosList[i].name ?? '',
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(color: Theme.of(context).colorScheme.onTertiaryContainer),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -89,7 +96,7 @@ class VideoScreen extends StatelessWidget {
     // final Uri _url = Uri.parse(url);
 
     // if (await canLaunchUrlString(url)) {
-    await launchUrlString(url);
+    await launchUrlString(url, mode: LaunchMode.externalApplication);
     // } else {
     //   throw 'Could not launch $url';
     // }

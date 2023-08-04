@@ -64,11 +64,11 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                 left: mq.size.width - (mq.size.width * 10 / 16) + 10,
                 child: _buildTitle(theme, model, context, false),
               ),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: _buildButtons(model),
-              )
+              // Positioned(
+              //   top: 10,
+              //   right: 10,
+              //   child: _buildButtons(model),
+              // )
             ],
           );
   }

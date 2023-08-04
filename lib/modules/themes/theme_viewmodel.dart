@@ -32,26 +32,27 @@ class ThemeViewModel extends BaseViewModel {
 
   ThemeData get theme => FlexColorScheme.light(
         scheme: flexColor,
-        transparentStatusBar: true,
+        // transparentStatusBar: true,
         appBarElevation: 0,
-        appBarStyle: FlexAppBarStyle.background,
+        appBarStyle: FlexAppBarStyle.primary,
       ).toTheme.copyWith(
             inputDecorationTheme: baseTheme.copyWith(fillColor: Colors.black12),
             elevatedButtonTheme: baseElevatedButtonThemeData,
             cardTheme: cardTheme,
-            // textTheme: baseTextTheme,
+            textTheme: baseTextTheme(GoogleFonts.nunitoTextTheme()),
           );
 
   ThemeData get darkTheme => FlexColorScheme.dark(
         scheme: flexColor,
-        transparentStatusBar: true,
+        // transparentStatusBar: true,
         appBarElevation: 0,
-        appBarStyle: FlexAppBarStyle.background,
+        appBarStyle: FlexAppBarStyle.primary,
       ).toTheme.copyWith(
             inputDecorationTheme: baseTheme.copyWith(fillColor: Colors.white12),
             elevatedButtonTheme: baseElevatedButtonThemeData,
             cardTheme: cardTheme,
-            // textTheme: baseTextTheme,
+            brightness: Brightness.dark,
+            textTheme: baseTextTheme(GoogleFonts.nunitoTextTheme(ThemeData(brightness: Brightness.dark).textTheme)),
           );
 
   final OutlinedBorder _buttonsBorder = RoundedRectangleBorder(borderRadius: BorderRadius.circular(15));
@@ -81,23 +82,24 @@ class ThemeViewModel extends BaseViewModel {
         focusedErrorBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
       );
-  TextTheme get googleTheme => GoogleFonts.sourceSansProTextTheme();
 
-  TextTheme get baseTextTheme => googleTheme.copyWith(
-        displayLarge: googleTheme.displayLarge!.copyWith(fontSize: 57.dp),
-        displayMedium: googleTheme.displayMedium!.copyWith(fontSize: 45.dp),
-        displaySmall: googleTheme.displaySmall!.copyWith(fontSize: 36.dp),
-        headlineLarge: googleTheme.headlineLarge!.copyWith(fontSize: 32.dp),
-        headlineMedium: googleTheme.headlineMedium!.copyWith(fontSize: 28.dp),
-        headlineSmall: googleTheme.headlineSmall!.copyWith(fontSize: 24.dp),
-        titleLarge: googleTheme.titleLarge!.copyWith(fontSize: 22.dp),
-        titleMedium: googleTheme.titleMedium!.copyWith(fontSize: 16.dp),
-        titleSmall: googleTheme.titleSmall!.copyWith(fontSize: 14.dp),
-        labelLarge: googleTheme.labelLarge!.copyWith(fontSize: 14.dp),
-        labelMedium: googleTheme.labelMedium!.copyWith(fontSize: 12.dp),
-        labelSmall: googleTheme.labelSmall!.copyWith(fontSize: 11.dp),
-        bodyLarge: googleTheme.bodyLarge!.copyWith(fontSize: 16.dp),
-        bodyMedium: googleTheme.bodyMedium!.copyWith(fontSize: 14.dp),
-        bodySmall: googleTheme.bodySmall!.copyWith(fontSize: 12.dp),
-      );
+  TextTheme baseTextTheme(TextTheme baseTheme) {
+    return baseTheme.copyWith(
+      displayLarge: baseTheme.displayLarge!.copyWith(fontSize: 57.sp),
+      displayMedium: baseTheme.displayMedium!.copyWith(fontSize: 45.sp),
+      displaySmall: baseTheme.displaySmall!.copyWith(fontSize: 36.sp),
+      headlineLarge: baseTheme.headlineLarge!.copyWith(fontSize: 28.sp),
+      headlineMedium: baseTheme.headlineMedium!.copyWith(fontSize: 24.sp),
+      headlineSmall: baseTheme.headlineSmall!.copyWith(fontSize: 20.sp),
+      titleLarge: baseTheme.titleLarge!.copyWith(fontSize: 18.sp),
+      titleMedium: baseTheme.titleMedium!.copyWith(fontSize: 16.sp),
+      titleSmall: baseTheme.titleSmall!.copyWith(fontSize: 14.sp),
+      labelLarge: baseTheme.labelLarge!.copyWith(fontSize: 14.sp),
+      labelMedium: baseTheme.labelMedium!.copyWith(fontSize: 12.sp),
+      labelSmall: baseTheme.labelSmall!.copyWith(fontSize: 11.sp),
+      bodyLarge: baseTheme.bodyLarge!.copyWith(fontSize: 16.sp),
+      bodyMedium: baseTheme.bodyMedium!.copyWith(fontSize: 14.sp),
+      bodySmall: baseTheme.bodySmall!.copyWith(fontSize: 12.sp),
+    );
+  }
 }

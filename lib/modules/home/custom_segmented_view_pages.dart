@@ -21,15 +21,20 @@ class CustomSegmentedPageView extends StatelessWidget {
       builder: (context, control, _) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ListTile(
-            title: title != null ? Text(title!) : null,
-            titleTextStyle: context.theme.textTheme.headlineMedium,
-            trailing: tabs.length > 1 && Device.screenType != ScreenType.mobile
-                ? _buildSegmentedControl(control, context)
-                : null,
-            subtitle: tabs.length > 1 && Device.screenType == ScreenType.mobile
-                ? _buildSegmentedControl(control, context)
-                : null,
+          // if (tabs.length > 1)
+          //   if (Device.screenType != ScreenType.mobile) Text('asd') else Text('sda'),
+          OverflowBar(
+            alignment: MainAxisAlignment.spaceEvenly,
+            overflowAlignment: OverflowBarAlignment.end,
+            overflowSpacing: 10,
+            children: [
+              if (title != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(title!, style: context.theme.textTheme.headlineMedium),
+                ),
+              if (tabs.length > 1) _buildSegmentedControl(control, context),
+            ],
           ),
           Container(
             child: pages[control.value ?? 0],

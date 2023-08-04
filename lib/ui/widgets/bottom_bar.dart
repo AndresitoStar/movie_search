@@ -3,6 +3,7 @@ import 'package:movie_search/modules/discover/discover_screen.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
+import 'package:movie_search/ui/frino_icons.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/screens/settings.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -47,11 +48,7 @@ class MyBottomBar extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(MyIcons.home), label: '', tooltip: 'Inicio'),
           BottomNavigationBarItem(icon: Icon(MyIcons.search), label: '', tooltip: 'Buscar'),
           BottomNavigationBarItem(icon: Icon(MyIcons.discover), label: '', tooltip: 'Explorar'),
-          BottomNavigationBarItem(
-              icon: Icon(MyIcons.favourite_off),
-              label: '',
-              activeIcon: Icon(MyIcons.favourite_on),
-              tooltip: 'Favoritos'),
+          BottomNavigationBarItem(icon: Icon(FrinoIcons.f_bookmark), label: '', tooltip: 'Favoritos'),
           BottomNavigationBarItem(icon: Icon(MyIcons.settings), label: '', tooltip: 'Ajustes'),
         ],
       ),

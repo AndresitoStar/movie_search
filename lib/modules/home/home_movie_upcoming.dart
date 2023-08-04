@@ -31,5 +31,5 @@ class HomeUpcomingView extends ContentPreviewViewMoreWidget {
   String get viewMoreButtonHeroTag => 'view_more_btn';
 
   @override
-  bool get itemShowData => false;
+  bool get itemShowData => true;
 }

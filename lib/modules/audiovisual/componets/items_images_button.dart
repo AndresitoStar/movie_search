@@ -47,7 +47,7 @@ class ShowImagesButton extends StatelessWidget {
       onPressed: images.isEmpty
           ? null
           : () => Navigator.push(context, Routes.defaultRoute(null, ItemImagesPage(title: title, imagesMap: images))),
-      icon: Icon(MyIcons.gallery),
+      icon: Icon(MyIcons.gallery, color: Theme.of(context).colorScheme.onBackground,),
     );
   }
 }
@@ -84,7 +84,6 @@ class ItemImagesPage extends StatelessWidget {
                     GridView.builder(
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
-                      padding: const EdgeInsets.all(10.0),
                       itemCount: imagesMap[type]!.length,
                       itemBuilder: (ctx, i) {
                         return ContentImageWidget(
@@ -96,8 +95,8 @@ class ItemImagesPage extends StatelessWidget {
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: getColumns(context),
                         childAspectRatio: imagesMap[type]!.map((e) => e.aspectRatio!).reduce(max),
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 3,
+                        mainAxisSpacing: 3,
                       ),
                     ),
               ],

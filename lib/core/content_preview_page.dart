@@ -36,7 +36,7 @@ class ContentPreviewPage extends StatelessWidget {
                         child: i < viewModel.items.length
                             ? ItemGridView(
                                 item: viewModel.items[i],
-                                showData: showData,
+                                showType: showData,
                                 showTitles: true,
                                 heroTagPrefix: '',
                               )

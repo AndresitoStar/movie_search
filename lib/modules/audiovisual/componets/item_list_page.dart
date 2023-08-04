@@ -25,7 +25,7 @@ class ItemListPage extends StatelessWidget {
         itemCount: items.length,
         itemBuilder: (ctx, i) => ItemGridView(
           item: items[i],
-          showData: false,
+          showType: false,
           showTitles: true,
           heroTagPrefix: '$i-${this.heroTagPrefix ?? ''}-',
         ),

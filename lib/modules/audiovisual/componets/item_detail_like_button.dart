@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_like_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:movie_search/ui/frino_icons.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/dialogs.dart';
 import 'package:provider/provider.dart';
@@ -48,7 +49,7 @@ class ItemLikeButton extends StatelessWidget {
                     icon: Icon(snapshot.data!.contains(id) ? MyIcons.favourite_on : MyIcons.favourite_off),
                     iconSize: this.iconSize,
                     padding: EdgeInsets.zero,
-                    color: snapshot.data!.contains(id) ? Colors.red : Theme.of(context).colorScheme.onBackground,
+                    color: /*snapshot.data!.contains(id) ? Colors.red : */Theme.of(context).colorScheme.onBackground,
                     onPressed: () {
                       return _onLikeButtonTap(context, model, snapshot.data!.contains(id));
                     },

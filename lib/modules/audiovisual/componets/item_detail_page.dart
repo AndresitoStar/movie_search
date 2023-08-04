@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_appbar_extended.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_content.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_secondary_content.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_recomendation_horizontal_list.dart';
+import 'package:movie_search/modules/audiovisual/componets/items_images_button.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
+import 'package:movie_search/modules/video/video_button.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -31,19 +34,16 @@ class ItemDetailPage extends StatelessWidget {
       builder: (context, model, _) {
         return Container(
           color: Theme.of(context).scaffoldBackgroundColor,
-          child: SafeArea(
-            top: true,
-            child: Scaffold(
-              floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-              floatingActionButton: isTabletDesktop
-                  ? FloatingActionButton.extended(
-                      onPressed: () => Navigator.of(context).pop(),
-                      label: Text('ATRAS'),
-                      icon: Icon(MyIcons.arrow_left),
-                    )
-                  : null,
-              body: isTabletDesktop ? ItemDetailLandscape(heroTagPrefix) : ItemDetailPortrait(heroTagPrefix),
-            ),
+          child: Scaffold(
+            floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+            floatingActionButton: isTabletDesktop
+                ? FloatingActionButton.extended(
+                    onPressed: () => Navigator.of(context).pop(),
+                    label: Text('ATRAS'),
+                    icon: Icon(MyIcons.arrow_left),
+                  )
+                : null,
+            body: isTabletDesktop ? ItemDetailLandscape(heroTagPrefix) : ItemDetailPortrait(heroTagPrefix),
           ),
         );
       },
@@ -62,7 +62,17 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
       controller: model.scrollController,
       cacheExtent: 1000,
       slivers: <Widget>[
-        ItemDetailSliverAppBar(ItemDetailAppbarContentExtended(heroTagPrefix: heroTagPrefix)),
+        ItemDetailSliverAppBar(
+          ItemDetailAppbarContentExtended(heroTagPrefix: heroTagPrefix),
+          actions: [
+            ItemLikeButton(id: model.itemId, type: model.itemType),
+            if (model.dataReady)
+            ...[
+              ItemImagesButtonView(param: model.data!),
+              if (model.itemType != TMDB_API_TYPE.PERSON) VideoButton(param: model.data!),
+            ],
+          ],
+        ),
         if (model.hasError)
           SliverToBoxAdapter(child: ElevatedButton(onPressed: model.initialise, child: Text('Recargar')))
         else if (model.initialised) ...[

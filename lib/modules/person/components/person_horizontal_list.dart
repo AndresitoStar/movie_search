@@ -94,7 +94,7 @@ class PersonHorizontalList extends StatelessWidget {
         child: ItemGridView(
           item: BaseSearchResult.fromPerson(items[i]),
           heroTagPrefix: '$i-person-$tag-',
-          showData: false,
+          showType: false,
           showTitles: true,
         ),
         aspectRatio: 0.669,

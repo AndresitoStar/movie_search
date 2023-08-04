@@ -62,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       subtitle: Text(
                         'Millones de películas, programas de televisión y personas por descubrir. Explora ahora.',
-                        style: theme.textTheme.titleMedium!.copyWith(color: theme.hintColor),
+                        style: theme.textTheme.titleMedium/*!.copyWith(color: theme.hintColor)*/,
                       ),
                     ),
                     Divider(),
