@@ -13,7 +13,7 @@ jobs:
           java-version: "12.x"
       - uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          # channel: "stable"
           flutter-version: "3.10.3"
         env:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
