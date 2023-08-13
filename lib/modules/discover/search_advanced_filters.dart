@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/discover/discover_viewmodel.dart';
@@ -86,7 +87,6 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                                           onTap: () => model.toggleGenreFilter(e),
                                           child: Chip(
                                             elevation: 0,
-                                            deleteIcon: Icon(Icons.clear),
                                             side: field.value!.contains(e)
                                                 ? BorderSide(
                                                     color: context.theme.chipTheme.labelStyle!.color!.withOpacity(0.7),
@@ -121,65 +121,70 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                       Divider(),
                       ReactiveValueListenableBuilder(
                         formControlName: DiscoverViewModel.FORM_TYPE,
-                        builder: (context, typeControl, _) => ReactiveFormField<WatchProvider, WatchProvider>(
+                        builder: (context, typeControl, _) => ReactiveFormField<Set<WatchProvider>, Set<WatchProvider>>(
                           formControlName: DiscoverViewModel.FORM_PROVIDERS,
                           builder: (field) => Theme(
                             data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                             child: ExpansionTileCard(
                               title: Text('Donde verlo...'),
+                              subtitle: field.value!.isNotEmpty
+                                  ? Wrap(
+                                      spacing: 5,
+                                      children: field.value!
+                                          .map((e) => Chip(
+                                                label: Text(e.providerName!, style: context.theme.textTheme.bodyMedium),
+                                                side: BorderSide(color: context.theme.disabledColor),
+                                                backgroundColor: context.theme.colorScheme.background,
+                                                deleteIcon: Icon(Icons.clear, size: 12),
+                                                onDeleted: () => model.toggleProvider(e),
+                                                deleteIconColor: context.theme.colorScheme.onBackground,
+                                              ))
+                                          .toList(),
+                                    )
+                                  : null,
                               elevation: 0,
                               baseColor: context.theme.colorScheme.background.withOpacity(0.05),
                               expandedColor: context.theme.colorScheme.background.withOpacity(0.5),
                               borderRadius: BorderRadius.zero,
-                              children: [
-                                Wrap(
-                                  spacing: 5,
-                                  runSpacing: 10,
-                                  children: model.watchProviders
-                                      .map(
-                                        (e) => GestureDetector(
-                                          onTap: () => model.toggleProvider(e),
-                                          child: Card(
-                                            color: e == field.value
-                                                ? context.theme.colorScheme.tertiary
-                                                : context.theme.colorScheme.background,
-                                            elevation: 0,
-                                            shape: StadiumBorder(
-                                              side: BorderSide(color: context.theme.colorScheme.onBackground, width: 1),
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Container(
-                                                  clipBehavior: Clip.hardEdge,
-                                                  margin: EdgeInsets.all(1),
-                                                  decoration: BoxDecoration(shape: BoxShape.circle),
-                                                  height: 32,
-                                                  width: 32,
-                                                  child: CachedNetworkImage(imageUrl: '$URL_IMAGE_MEDIUM${e.logoPath}'),
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                                  child: Text(
-                                                    e.providerName ?? '${e.providerId}',
-                                                    overflow: TextOverflow.fade,
-                                                    textWidthBasis: TextWidthBasis.parent,
-                                                    textAlign: TextAlign.center,
-                                                    style: context.theme.chipTheme.labelStyle!.copyWith(
-                                                      color: e == field.value
-                                                          ? context.theme.colorScheme.onTertiary
-                                                          : context.theme.chipTheme.labelStyle!.color,
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
+                              children: ListTile.divideTiles(
+                                color: context.theme.dividerColor,
+                                context: context,
+                                tiles: model.watchProviders
+                                    .map(
+                                      (e) => ListTile(
+                                        onTap: () => model.toggleProvider(e),
+                                        // tileColor: field.value!.contains(e)
+                                        // ? context.theme.colorScheme.tertiary
+                                        // : context.theme.colorScheme.background,
+                                        leading: Container(
+                                          clipBehavior: Clip.hardEdge,
+                                          margin: EdgeInsets.all(1),
+                                          decoration: BoxDecoration(shape: BoxShape.circle),
+                                          height: 32,
+                                          width: 32,
+                                          child: CachedNetworkImage(imageUrl: '$URL_IMAGE_MEDIUM${e.logoPath}'),
+                                        ),
+                                        trailing: field.value!.contains(e)
+                                            ? Icon(
+                                                FontAwesomeIcons.check,
+                                                color: context.theme.colorScheme.tertiary,
+                                              )
+                                            : null,
+                                        title: Text(
+                                          e.providerName ?? '${e.providerId}',
+                                          overflow: TextOverflow.fade,
+                                          textWidthBasis: TextWidthBasis.parent,
+                                          // textAlign: TextAlign.center,
+                                          style: context.theme.chipTheme.labelStyle!.copyWith(
+                                            color: field.value!.contains(e)
+                                                ? context.theme.colorScheme.primary
+                                                : context.theme.chipTheme.labelStyle!.color,
                                           ),
                                         ),
-                                      )
-                                      .toList(),
-                                ),
-                              ],
+                                      ),
+                                    )
+                                    .toList(),
+                              ).toList(),
                             ),
                           ),
                         ),

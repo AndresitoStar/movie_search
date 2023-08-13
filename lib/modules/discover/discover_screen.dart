@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/discover/discover_results.dart';
 import 'package:movie_search/modules/discover/discover_viewmodel.dart';
 import 'package:movie_search/modules/discover/search_advanced_filters.dart';
-import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:provider/provider.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
 class DiscoverScreen extends StatelessWidget {
@@ -22,6 +19,7 @@ class DiscoverScreen extends StatelessWidget {
         endDrawer: SearchAdvancedFilterView(),
         body: DiscoverResults(),
         forceAppbar: true,
+        title: "Explorar",
       ),
     );
   }

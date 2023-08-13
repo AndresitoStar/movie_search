@@ -80,7 +80,7 @@ class TrendingService extends BaseService {
     int page = 1,
     List<String>? genres,
     List<String>? cast,
-    WatchProvider? watchProvider,
+    List<int>? watchProvider,
     SortDirection? sortDirection,
     SortOrder? sortOrder,
   }) async {
@@ -88,7 +88,7 @@ class TrendingService extends BaseService {
       'page': page.toString(),
       if (genres != null && genres.isNotEmpty) 'with_genres': genres.join(','),
       if (cast != null && cast.isNotEmpty) 'with_people': cast.join(','),
-      if (watchProvider != null) 'with_watch_providers': '${watchProvider.providerId}',
+      if (watchProvider != null) 'with_watch_providers': '${watchProvider.join('|')}',
       if (watchProvider != null) 'watch_region': await fetchRegion(),
       if (sortDirection != null && sortOrder != null) 'sort_by': '${sortOrder.value}.${sortDirection.value}',
     };

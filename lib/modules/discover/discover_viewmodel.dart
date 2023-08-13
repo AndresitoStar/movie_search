@@ -21,7 +21,7 @@ class DiscoverViewModel extends BaseViewModel {
     FORM_TYPE: FormControl<SearchCategory>(value: SearchCategory.getAll().first),
     FORM_GENRE: FormControl<Set<GenreTableData>>(value: {}),
     FORM_CAST: FormControl<Set<BaseSearchResult>>(value: {}),
-    FORM_PROVIDERS: FormControl<WatchProvider>(),
+    FORM_PROVIDERS: FormControl<Set<WatchProvider>>(value: {}),
     FORM_SORT_ORDER: FormControl<SortOrder>(value: SortOrder.POPULARITY),
     FORM_SORT_DIRECTIONS: FormControl<SortDirection>(value: SortDirection.desc),
   });
@@ -50,7 +50,8 @@ class DiscoverViewModel extends BaseViewModel {
   String get _activeGenres =>
       genresControl.value!.isNotEmpty ? '/ ${genresControl.value!.map((e) => e.name).join(',')} /' : '';
 
-  String get _activeWatchProvider => providerControl.value != null ? '${providerControl.value!.providerName}' : '';
+  String get _activeWatchProvider =>
+      providerControl.value != null ? '${providerControl.value!.map((e) => e.providerName).join(", ")}' : '';
 
   int _total = -1;
   int _page = 1;
@@ -62,7 +63,8 @@ class DiscoverViewModel extends BaseViewModel {
 
   FormControl<Set<GenreTableData>> get genresControl => form.controls[FORM_GENRE] as FormControl<Set<GenreTableData>>;
 
-  FormControl<WatchProvider> get providerControl => form.controls[FORM_PROVIDERS] as FormControl<WatchProvider>;
+  FormControl<Set<WatchProvider>> get providerControl =>
+      form.controls[FORM_PROVIDERS] as FormControl<Set<WatchProvider>>;
 
   FormControl<SortOrder> get sortOrderControl => form.controls[FORM_SORT_ORDER] as FormControl<SortOrder>;
 
@@ -86,7 +88,10 @@ class DiscoverViewModel extends BaseViewModel {
   }
 
   toggleProvider(WatchProvider provider) {
-    form.control(FORM_PROVIDERS).updateValue(provider);
+    if (!providerControl.value!.remove(provider)) {
+      providerControl.value!.add(provider);
+    }
+    providerControl.updateValueAndValidity();
   }
 
   initializeFilters() async {
@@ -111,7 +116,7 @@ class DiscoverViewModel extends BaseViewModel {
         actualCategory!.value,
         page: _page,
         genres: genresControl.value!.map((e) => e.id).toList(),
-        watchProvider: providerControl.value,
+        watchProvider: providerControl.value!.map((e) => e.providerId).toList(),
         sortDirection: sortDirectionControl.value,
         sortOrder: sortOrderControl.value,
       );
@@ -132,7 +137,7 @@ class DiscoverViewModel extends BaseViewModel {
       actualCategory!.value,
       page: _page,
       genres: genresControl.value!.map((e) => e.id).toList(),
-      watchProvider: providerControl.value,
+      watchProvider: providerControl.value!.map((e) => e.providerId).toList(),
       sortDirection: sortDirectionControl.value,
       sortOrder: sortOrderControl.value,
     );
