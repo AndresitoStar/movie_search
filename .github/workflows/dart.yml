@@ -17,9 +17,7 @@ jobs:
           flutter-version: "3.10.3"
         env:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      - run: flutter pub get
-      - run: flutter clean
-      - run: flutter build apk --release --split-per-abi
+          run: flutter pub get && flutter clean && flutter build apk --release --split-per-abi
       # - run: flutter build windows
   uploading:
     name: Uploading to Google Drive

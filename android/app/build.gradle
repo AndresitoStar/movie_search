@@ -62,9 +62,9 @@ android {
     signingConfigs {
         release {
             keyAlias "movie_search"
-            keyPassword System.getenv("KEY_PASSWORD")
+            keyPassword "$System.env.KEY_PASSWORD"
             storeFile file("key.jks")
-            storePassword System.getenv("KEY_PASSWORD")
+            storePassword "$System.env.KEY_PASSWORD"
         }
     }
 
