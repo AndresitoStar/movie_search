@@ -14,7 +14,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
-          flutter-version: "3.3.9"
+          flutter-version: "3.10.3"
       - run: flutter pub get
       - run: flutter clean
       - run: flutter build apk --release --split-per-abi
