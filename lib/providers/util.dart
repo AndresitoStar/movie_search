@@ -50,12 +50,18 @@ extension MediaQueryExtension on BuildContext {
 extension snackbar_extension on BuildContext {
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
 
-  void showSnackbar(String message) => ScaffoldMessenger.of(this).showSnackBar(
-        SnackBar(
-          duration: Duration(seconds: 1),
-          content: Text(message),
-        ),
-      );
+  void showSnackBar(String message) {
+    // Calcular la duración basada en la cantidad de caracteres
+    int messageLength = message.length;
+    int secondsToShow = messageLength ~/ 10 + 2;
+
+    ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: secondsToShow),
+        content: Text(message),
+      ),
+    );
+  }
 }
 
 extension DateFormatter on DateTime {
@@ -107,6 +113,17 @@ extension tmdb_type on TMDB_API_TYPE {
       case TMDB_API_TYPE.PERSON:
         return 'Persona';
     }
+  }
+}
+
+class MyLoadingIndicator extends StatelessWidget {
+  const MyLoadingIndicator({Key? key, this.size = 24}) : super(key: key);
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(height: size, width: size, child: CircularProgressIndicator(strokeWidth: 1));
   }
 }
 

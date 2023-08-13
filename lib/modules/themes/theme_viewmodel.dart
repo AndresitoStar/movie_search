@@ -34,7 +34,7 @@ class ThemeViewModel extends BaseViewModel {
         scheme: flexColor,
         // transparentStatusBar: true,
         appBarElevation: 0,
-        appBarStyle: FlexAppBarStyle.primary,
+        appBarStyle: FlexAppBarStyle.background,
       ).toTheme.copyWith(
             inputDecorationTheme: baseTheme.copyWith(fillColor: Colors.black12),
             elevatedButtonTheme: baseElevatedButtonThemeData,
@@ -46,7 +46,7 @@ class ThemeViewModel extends BaseViewModel {
         scheme: flexColor,
         // transparentStatusBar: true,
         appBarElevation: 0,
-        appBarStyle: FlexAppBarStyle.primary,
+        appBarStyle: FlexAppBarStyle.background,
       ).toTheme.copyWith(
             inputDecorationTheme: baseTheme.copyWith(fillColor: Colors.white12),
             elevatedButtonTheme: baseElevatedButtonThemeData,

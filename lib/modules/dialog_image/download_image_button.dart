@@ -51,7 +51,7 @@ class ImageDownloadButton extends StatelessWidget {
       // );
     } catch (err) {
       model.setError(err);
-      context.showSnackbar('Ocurrio un error descargando la imagen.');
+      context.showSnackBar('Ocurrio un error descargando la imagen.');
     }
     model.setBusy(false);
   }

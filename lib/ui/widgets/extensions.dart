@@ -1,8 +1,29 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
+import 'package:movie_search/ui/widgets/dialogs.dart';
+
+extension HowShowErrorExtension on BuildContext {
+  void showError({required String error, VoidCallback? onTapDismiss}) {
+    MyDialogs.showError(this, error: error, onTapDismiss: () {
+      onTapDismiss?.call();
+      Navigator.pop(this);
+    });
+  }
+
+  Future showLoginDialog() => MyDialogs.showLoginDialog(this);
+
+  Future runSafety(AsyncCallback run) async {
+    try {
+      await run();
+    } catch (e) {
+      showError(error: e.toString());
+    }
+  }
+}
 
 extension ExtensionTitleTrending on TrendingType {
   String get title {

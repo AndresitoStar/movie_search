@@ -39,6 +39,9 @@ dependencies:
   day_night_switch: ^1.0.3
   responsive_sizer: ^3.1.1
   google_fonts: ^4.0.4
+  firebase_auth: ^4.7.2
+  google_sign_in: ^6.1.4
+  firebase_database: ^10.2.4
 
 dev_dependencies:
   flutter_test:

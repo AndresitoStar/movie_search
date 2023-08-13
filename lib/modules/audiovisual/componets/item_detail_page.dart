@@ -43,7 +43,7 @@ class ItemDetailPage extends StatelessWidget {
                     icon: Icon(MyIcons.arrow_left),
                   )
                 : null,
-            body: isTabletDesktop ? ItemDetailLandscape(heroTagPrefix) : ItemDetailPortrait(heroTagPrefix),
+            body: isTabletDesktop ? ItemDetailLandscape(heroTagPrefix) : ItemDetailPortrait(heroTagPrefix, item),
           ),
         );
       },
@@ -53,8 +53,9 @@ class ItemDetailPage extends StatelessWidget {
 
 class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
   final String heroTagPrefix;
+  final BaseSearchResult item;
 
-  const ItemDetailPortrait(this.heroTagPrefix, {Key? key}) : super(key: key);
+  const ItemDetailPortrait(this.heroTagPrefix, this.item, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
@@ -65,9 +66,8 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
         ItemDetailSliverAppBar(
           ItemDetailAppbarContentExtended(heroTagPrefix: heroTagPrefix),
           actions: [
-            ItemLikeButton(id: model.itemId, type: model.itemType),
-            if (model.dataReady)
-            ...[
+            ItemLikeButton(item: item),
+            if (model.dataReady) ...[
               ItemImagesButtonView(param: model.data!),
               if (model.itemType != TMDB_API_TYPE.PERSON) VideoButton(param: model.data!),
             ],

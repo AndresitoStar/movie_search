@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/search/search_result_list_item.dart';
@@ -132,24 +131,23 @@ class ItemGridView extends StatelessWidget {
                     tag: '$heroTagPrefix${item.id}',
                     child: child,
                   ),
-            if (!useBackdrop)
-              Positioned(
-                bottom: 50,
-                right: 0,
-                child: Container(
-                  child: ItemLikeButton(
-                    id: item.id,
-                    type: item.type,
-                    iconSize: 28,
-                    showDisabled: false,
-                  ),
-                  width: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.9),
-                  ),
-                ),
-              )
+            // if (!useBackdrop)
+            //   Positioned(
+            //     bottom: 50,
+            //     right: 0,
+            //     child: Container(
+            //       child: ItemLikeButton(
+            //         item: item,
+            //         iconSize: 28,
+            //         showDisabled: false,
+            //       ),
+            //       width: 40,
+            //       decoration: BoxDecoration(
+            //         shape: BoxShape.circle,
+            //         color: Colors.white.withOpacity(0.9),
+            //       ),
+            //     ),
+            //   )
           ],
         );
       },

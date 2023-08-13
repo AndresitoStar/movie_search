@@ -79,7 +79,7 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
       overflowButtonSpacing: 0,
       alignment: MainAxisAlignment.center,
       children: [
-        ItemLikeButton(id: model.itemId, type: model.itemType),
+        ItemLikeButton(item: model.data!),
         ItemImagesButtonView(param: model.data!),
         if (model.itemType != TMDB_API_TYPE.PERSON) VideoButton(param: model.data!),
       ],

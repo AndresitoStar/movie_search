@@ -72,13 +72,17 @@ class ContentImageWidget extends StatefulWidget {
 
 class _ContentImageWidgetState extends State<ContentImageWidget> {
   late String baseUrl;
+  late String placeholderBaseUrl;
 
   @override
   void initState() {
-    baseUrl = URL_IMAGE_MEDIUM;
+    baseUrl = widget.isBackdrop ? URL_IMAGE_MEDIUM_BACKDROP : URL_IMAGE_MEDIUM;
+    placeholderBaseUrl = widget.isBackdrop ? URL_IMAGE_SMALL_BACKDROP : URL_IMAGE_SMALL;
     // _checkImageCachedQuality();
     super.initState();
   }
+
+  bool get _isOutsideTMDB => widget.imagePath != null && widget.imagePath!.startsWith('https://');
 
   @override
   Widget build(BuildContext context) {
@@ -94,12 +98,14 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
                 : () => DialogImage.show(context: context, imageUrl: widget.imagePath!, baseUrl: baseUrl)
                     .then((value) => _checkImageCachedQuality),
         child: CachedNetworkImage(
-          imageUrl: '$baseUrl${widget.imagePath}',
-          placeholder: (_, __) => CachedNetworkImage(
-            fit: widget.fit,
-            imageUrl: '${widget.isBackdrop ? URL_IMAGE_SMALL_BACKDROP : URL_IMAGE_SMALL}${widget.imagePath}',
-            placeholder: (context, _) => DefaultPlaceholder(),
-          ),
+          imageUrl: !_isOutsideTMDB ? '$baseUrl${widget.imagePath}' : widget.imagePath!,
+          placeholder: (_, __) => !_isOutsideTMDB
+              ? CachedNetworkImage(
+                  fit: widget.fit,
+                  imageUrl: '$placeholderBaseUrl${widget.imagePath}',
+                  placeholder: (context, _) => DefaultPlaceholder(),
+                )
+              : DefaultPlaceholder(),
           errorWidget: (ctx, _, __) => PlaceholderImage(/*height: MediaQuery.of(ctx).size.height * 0.6*/),
           fit: widget.fit,
           // width: double.infinity,

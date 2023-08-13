@@ -2,9 +2,12 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:movie_search/modules/account/viewModel/account_viewmodel.dart';
+import 'package:movie_search/modules/favourite/viewmodel/favourite_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/extensions.dart';
@@ -18,8 +21,11 @@ import 'modules/splash/splash_screen.dart';
 import 'modules/themes/theme_viewmodel.dart';
 
 final GlobalKey<ScaffoldState> drawerKey = new GlobalKey<ScaffoldState>();
+final GlobalKey<NavigatorState> globalNavigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await initializeDateFormatting("es_ES", null);
   if (Platform.isWindows) {
     _configureSqliteOnWindows();
@@ -66,11 +72,13 @@ class App extends StatelessWidget {
             create: (context) => MyDatabase(),
             dispose: (context, db) => db.close(),
           ),
+          ChangeNotifierProvider<AccountViewModel>(create: (context) => AccountViewModel()..checkUserLogged()),
+          ChangeNotifierProvider<FavouritesViewModel>(create: (context) => FavouritesViewModel()),
         ],
         child: ViewModelBuilder<ThemeViewModel>.reactive(
           viewModelBuilder: () => ThemeViewModel(
             color,
-            themeMode: EasyDynamicTheme.of(context).themeMode ?? ThemeMode.light,
+            themeMode: EasyDynamicTheme.of(context).themeMode ?? ThemeMode.system,
           ),
           builder: (context, model, child) => MaterialApp(
             title: 'Movie Search',
@@ -78,6 +86,7 @@ class App extends StatelessWidget {
             theme: model.theme,
             darkTheme: model.darkTheme,
             themeMode: EasyDynamicTheme.of(context).themeMode,
+            navigatorKey: globalNavigatorKey,
             onGenerateRoute: (settings) => Routes.generateRoute(context, settings),
             initialRoute: SplashScreen.route,
             scrollBehavior: MyCustomScrollBehavior(),
