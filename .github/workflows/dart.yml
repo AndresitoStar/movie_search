@@ -13,16 +13,16 @@ jobs:
           java-version: "12.x"
       - uses: subosito/flutter-action@v1
         with:
-          # channel: "stable"
+          channel: "stable"
           flutter-version: "3.10.3"
         env:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: flutter pub get && flutter clean && flutter build apk --release --split-per-abi
+      - run: flutter pub get && flutter clean && flutter build apk --release --split-per-abi
       # - run: flutter build windows
   uploading:
     name: Uploading to Google Drive
     runs-on: ubuntu-latest
-    needs: [ build-apk ]
+    needs: [build-apk]
     steps:
       - name: Upload to Google Drive
         uses: Jodebu/upload-to-drive@master
