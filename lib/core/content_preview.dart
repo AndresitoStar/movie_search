@@ -77,7 +77,7 @@ abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollVi
 
   String get itemGridHeroTag;
 
-  bool get itemShowData => true;
+  bool get itemShowData => false;
 }
 
 class UiUtils {

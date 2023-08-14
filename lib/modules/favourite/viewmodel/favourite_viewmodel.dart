@@ -73,4 +73,12 @@ class FavouritesViewModel extends BaseViewModel {
     _map.clear();
     notifyListeners();
   }
+
+  String? findTypeGivenId(num id) {
+    try {
+      return _map.entries.firstWhere((e) => e.value.any((e) => e?.id == id)).key;
+    } catch (e) {
+      return null;
+    }
+  }
 }

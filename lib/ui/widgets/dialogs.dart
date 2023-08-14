@@ -26,7 +26,7 @@ class MyDialogs {
         title: Text('Bienvenido'),
         contentPadding: const EdgeInsets.all(20),
         children: [
-          MyGoogleButton(),
+          MyGoogleButton(makePop: true),
         ],
       ),
     );
@@ -34,7 +34,9 @@ class MyDialogs {
 }
 
 class MyGoogleButton extends StatelessWidget {
-  const MyGoogleButton({Key? key}) : super(key: key);
+  const MyGoogleButton({Key? key, this.makePop = false}) : super(key: key);
+
+  final bool makePop;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +47,7 @@ class MyGoogleButton extends StatelessWidget {
       ),
       onPressed: () {
         context.read<AccountViewModel>().loginGoogle();
+        if (makePop) Navigator.of(context).pop();
       },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),

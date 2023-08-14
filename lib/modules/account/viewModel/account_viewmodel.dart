@@ -29,7 +29,7 @@ class AccountViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  loginGoogle() async {
+  Future loginGoogle() async {
     setBusy(true);
     try {
       GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();

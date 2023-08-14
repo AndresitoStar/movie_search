@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_list_page.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
@@ -37,7 +38,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall!
-                                  .copyWith(color: Theme.of(context).primaryColor),
+                                  .copyWith(color: context.theme.colorScheme.secondary),
                             ),
                             trailing: IconButton(
                               icon: Icon(Icons.grid_view_rounded),

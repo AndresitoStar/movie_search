@@ -31,5 +31,5 @@ class HomeNowPlayingView extends ContentPreviewViewMoreWidget {
   String get viewMoreButtonHeroTag => 'view_more_btn';
 
   @override
-  bool get itemShowData => true;
+  bool get itemShowData => false;
 }

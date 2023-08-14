@@ -38,7 +38,7 @@ class MyIcons {
   static const IconData drawerHamburger = FrinoIcons.f_menu;
   static const IconData maximize = Icons.crop_square;
   static const IconData minimize = Icons.minimize;
-  static const IconData gallery = FontAwesomeIcons.images;
+  static const IconData gallery = FrinoIcons.f_gallery;
   static const IconData discover = FontAwesomeIcons.solidPaperPlane;
 
   static const IconData facebook = FontAwesomeIcons.squareFacebook;

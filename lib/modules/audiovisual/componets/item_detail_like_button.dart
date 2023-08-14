@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/account/viewModel/account_viewmodel.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/favourite/viewmodel/favourite_viewmodel.dart';
+import 'package:movie_search/modules/favourite/views/bookmark_type_dialog.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/extensions.dart';
@@ -45,22 +46,56 @@ class ItemLikeButton extends ViewModelWidget<FavouritesViewModel> {
                         onPressed: () async {
                           if (accountViewModel.userUuid == null) {
                             await context.showLoginDialog();
-                            Navigator.of(context).pop();
                           }
                           if (accountViewModel.userUuid != null) {
-                            await model.toggleFavourite(
-                              isLiked: isLiked,
-                              data: item,
-                              type: item.type.type, // TODO Cambiar, aki viene en que lista se quiere guardar
-                              userUuid: accountViewModel.userUuid!,
-                              onError: (e) => context.showError(error: e.toString()),
-                            );
+                            final type =
+                                isLiked ? model.findTypeGivenId(item.id) : await SelectBookmarkTypeDialog.show(context);
+                            if (type != null) {
+                              await model.toggleFavourite(
+                                isLiked: isLiked,
+                                data: item,
+                                type: type,
+                                userUuid: accountViewModel.userUuid!,
+                                onError: (e) => context.showError(error: e.toString()),
+                              );
+                            }
                           }
                         },
                       );
                     },
                   );
       },
+    );
+  }
+}
+
+class ItemBookmarkTag extends ViewModelWidget<FavouritesViewModel> {
+  final BaseSearchResult item;
+
+  ItemBookmarkTag({required this.item});
+
+  @override
+  Widget build(BuildContext context, FavouritesViewModel model) {
+    final isLiked = model.listFavouriteId.contains(item.id);
+
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: isLiked
+          ? Builder(builder: (context) {
+              final type = model.findTypeGivenId(item.id);
+              if (type == null) {
+                return Container();
+              }
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                color: context.theme.colorScheme.tertiary,
+                child: Text(
+                  type,
+                  style: context.theme.textTheme.bodyMedium!.copyWith(color: context.theme.colorScheme.onTertiary),
+                ),
+              );
+            })
+          : Container(),
     );
   }
 }

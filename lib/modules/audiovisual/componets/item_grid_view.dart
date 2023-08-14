@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/search/search_result_list_item.dart';
@@ -18,7 +19,7 @@ class ItemGridView extends StatelessWidget {
   final EdgeInsets margin;
   final String heroTagPrefix;
 
-  const ItemGridView({
+  ItemGridView({
     Key? key,
     required this.item,
     required this.heroTagPrefix,
@@ -26,7 +27,7 @@ class ItemGridView extends StatelessWidget {
     this.showTitles = false,
     this.useBackdrop = false,
     this.margin = const EdgeInsets.all(10),
-  }) : super(key: key);
+  }) : super(key: UniqueKey());
 
   @override
   Widget build(BuildContext context) {
@@ -90,33 +91,38 @@ class ItemGridView extends StatelessWidget {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    child: ClipRect(
-                      child: BackdropFilter(
-                        filter: useBackdrop
-                            ? ImageFilter.blur(sigmaX: 7, sigmaY: 7)
-                            : ImageFilter.blur(sigmaX: 14.0, sigmaY: 14.0),
-                        child: Container(
-                          color: theme.scaffoldBackgroundColor.withOpacity(useBackdrop ? 0.5 : 0.7),
-                          child: ListTile(
-                            title: Text(
-                              item.title ?? '' + '\n',
-                              textAlign: useBackdrop ? TextAlign.start : TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: theme.textTheme.titleLarge!.copyWith(fontSize: 16),
+                    child: Column(
+                      children: [
+                        ItemBookmarkTag(item: item),
+                        ClipRect(
+                          child: BackdropFilter(
+                            filter: useBackdrop
+                                ? ImageFilter.blur(sigmaX: 7, sigmaY: 7)
+                                : ImageFilter.blur(sigmaX: 14.0, sigmaY: 14.0),
+                            child: Container(
+                              color: theme.scaffoldBackgroundColor.withOpacity(useBackdrop ? 0.5 : 0.7),
+                              child: ListTile(
+                                title: Text(
+                                  item.title ?? '' + '\n',
+                                  textAlign: useBackdrop ? TextAlign.start : TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: theme.textTheme.titleLarge!.copyWith(fontSize: 16),
+                                ),
+                                subtitle: item.subtitle == null
+                                    ? null
+                                    : Text(
+                                        item.subtitle!,
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: theme.textTheme.bodySmall,
+                                      ),
+                              ),
                             ),
-                            subtitle: item.subtitle == null
-                                ? null
-                                : Text(
-                                    item.subtitle!,
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: theme.textTheme.bodySmall,
-                                  ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
               ],

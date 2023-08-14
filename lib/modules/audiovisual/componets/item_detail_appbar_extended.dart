@@ -53,6 +53,8 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                   tag: '$heroTagPrefix${model.itemId}',
                   child: Card(
                     clipBehavior: Clip.hardEdge,
+                    color: Colors.transparent,
+                    // child: Container(),
                     child: ContentImageWidget(model.posterImageUrl, fit: BoxFit.cover),
                   ),
                 ),

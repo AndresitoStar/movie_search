@@ -12,7 +12,10 @@ class ItemWatchProvidersView extends StackedView<ItemWatchProviderViewModel> {
   @override
   Widget builder(BuildContext context, ItemWatchProviderViewModel viewModel, Widget? child) {
     return viewModel.isBusy
-        ? CircularProgressIndicator()
+        ? Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: LinearProgressIndicator(),
+          )
         : viewModel.hasError && viewModel.provider.every((element) => element.providerName != null)
             ? IconButton(onPressed: viewModel.futureToRun, icon: Icon(Icons.update))
             : viewModel.provider.isEmpty
