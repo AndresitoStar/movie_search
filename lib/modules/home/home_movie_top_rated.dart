@@ -11,8 +11,14 @@ class HomeAiringViewModel extends InfiniteScrollViewModel<BaseSearchResult> {
   HomeAiringViewModel() : _trendingService = TrendingService();
 
   @override
-  Future<AbstractSearchResponse<BaseSearchResult>> makeSearch({int? page}) {
-    return _trendingService.getAny('tv', 'on_the_air', page: page ?? 1, mediaType: TMDB_API_TYPE.TV_SHOW.type);
+  Future<AbstractSearchResponse<BaseSearchResult>> makeSearch({int? page, required bool force}) {
+    return _trendingService.getAny(
+      'tv',
+      'on_the_air',
+      page: page ?? 1,
+      mediaType: TMDB_API_TYPE.TV_SHOW.type,
+      force: force,
+    );
   }
 }
 

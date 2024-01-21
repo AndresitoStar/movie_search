@@ -99,6 +99,8 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
           strokeColor: theme.colorScheme.primary,
           child: Text(
             '${model.title}',
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: theme.textTheme.headlineSmall!.copyWith(
               color: theme.colorScheme.onBackground,
@@ -160,7 +162,7 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                 child: model.initialised
                     ? Text(
                         '${model.data!.voteAverage!.toStringAsFixed(1)}',
-                        style: theme.textTheme.titleLarge,
+                        style: theme.textTheme.titleMedium,
                       )
                     : CircularProgressIndicator.adaptive(strokeWidth: 1),
               ),

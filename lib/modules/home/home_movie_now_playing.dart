@@ -11,8 +11,14 @@ class HomeNowPlayingViewModel extends InfiniteScrollViewModel<BaseSearchResult> 
   HomeNowPlayingViewModel() : _trendingService = TrendingService();
 
   @override
-  Future<AbstractSearchResponse<BaseSearchResult>> makeSearch({int? page}) {
-    return _trendingService.getAny('movie', 'now_playing', page: page ?? 1, mediaType: TMDB_API_TYPE.MOVIE.type);
+  Future<AbstractSearchResponse<BaseSearchResult>> makeSearch({int? page, required bool force}) {
+    return _trendingService.getAny(
+      'movie',
+      'now_playing',
+      page: page ?? 1,
+      mediaType: TMDB_API_TYPE.MOVIE.type,
+      force: force,
+    );
   }
 }
 
@@ -31,5 +37,5 @@ class HomeNowPlayingView extends ContentPreviewViewMoreWidget {
   String get viewMoreButtonHeroTag => 'view_more_btn';
 
   @override
-  bool get itemShowData => false;
+  bool get itemShowData => true;
 }

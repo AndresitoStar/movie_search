@@ -30,10 +30,20 @@ class MyBottomBar extends StatelessWidget {
         children: [
           Positioned(
             left: MediaQuery.of(context).size.width / items.length * index,
+            bottom: 7,
             child: Container(
               width: MediaQuery.of(context).size.width / items.length,
-              height: kBottomNavigationBarHeight,
-              decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary, shape: BoxShape.circle),
+              height: 4,
+              child: Center(
+                child: Container(
+                  width: 5,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
             ),
           ),
           BottomNavigationBar(
@@ -43,7 +53,7 @@ class MyBottomBar extends StatelessWidget {
             elevation: 0,
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
+            // selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
             type: BottomNavigationBarType.fixed,
             onTap: (i) {
               switch (i) {

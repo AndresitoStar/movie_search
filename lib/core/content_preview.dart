@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:movie_search/core/content_preview_page.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
+import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
@@ -11,7 +13,12 @@ abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollVi
   ContentPreviewViewMoreWidget({Key? key}) : super(key: key);
 
   @override
-  void onViewModelReady(InfiniteScrollViewModel viewModel) => viewModel.fetch();
+  void onViewModelReady(InfiniteScrollViewModel viewModel) {
+    viewModel.fetch();
+    GetIt.instance<HomeController>().loadingStream.listen((event) {
+      viewModel.fetch(force: true);
+    });
+  }
 
   @override
   Widget builder(BuildContext context, InfiniteScrollViewModel viewModel, Widget? child) {
@@ -88,6 +95,6 @@ class UiUtils {
     required int maxValue,
   }) {
     final width = MediaQuery.of(context).size.width;
-    return (width ~/ 150).clamp(2, 6);
+    return (width ~/ itemWidth).clamp(minValue, maxValue);
   }
 }

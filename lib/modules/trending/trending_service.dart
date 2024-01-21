@@ -42,12 +42,19 @@ class TrendingService extends BaseService {
     );
   }
 
-  Future<SearchResponse> getAny(String first, String second, {int page = 1, String? mediaType}) async {
+  Future<SearchResponse> getAny(
+    String first,
+    String second, {
+    int page = 1,
+    String? mediaType,
+    bool force = false,
+  }) async {
     return sendGET<SearchResponse>(
       '$first/$second',
       (body) => SearchResponse.parseResponse(body, mediaType: mediaType),
       idCache: '$first-$second-$page',
       cacheMap: _cacheAny,
+      force: force,
       params: {...baseParams, 'page': page.toString()},
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_collection.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_page.dart';
+import 'package:movie_search/modules/audiovisual/componets/review_page.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/discover/discover_screen.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
@@ -21,6 +22,7 @@ final Map<String, Widget> routes = {
   ItemCollectionScreen.route: ItemCollectionScreen(),
   VideoScreen.route: VideoScreen(),
   DiscoverScreen.routeName: DiscoverScreen(),
+  ReviewPage.routeName: ReviewPage(),
 };
 
 class Routes {

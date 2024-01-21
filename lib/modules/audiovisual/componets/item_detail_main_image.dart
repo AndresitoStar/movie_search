@@ -6,7 +6,6 @@ import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
 import 'package:movie_search/ui/widgets/dialog_image.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
 class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
@@ -89,7 +88,7 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
     if (widget.imagePath == null || widget.imagePath!.isEmpty) return PlaceholderImage();
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
-      constraints: BoxConstraints(maxHeight: 60.h),
+      // constraints: BoxConstraints(maxHeight: 10.h),
       child: GestureDetector(
         onTap: widget.ignorePointer
             ? null

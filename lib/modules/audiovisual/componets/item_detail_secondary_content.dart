@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/model/api/models/movie.dart';
 import 'package:movie_search/model/api/models/person.dart';
@@ -9,7 +8,6 @@ import 'package:movie_search/modules/audiovisual/componets/item_watch_providers_
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
-import 'package:movie_search/modules/themes/theme_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -91,9 +89,9 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
       ),
       ContentRow(
         label1: 'Fecha de estreno',
-        label2: 'Ultima emisión',
+        label2: 'Duracion',
         value1: tvShow.firstAirDate == null ? null : DateTime.tryParse(tvShow.firstAirDate!)?.format,
-        value2: tvShow.lastAirDate == null ? null : DateTime.tryParse(tvShow.lastAirDate!)?.format,
+        value2: tvShow.episodeRuntimeAverage == null ? null : '${tvShow.episodeRuntimeAverage} minutos',
       ),
       if (tvShow.seasons != null && tvShow.seasons!.length > 0) ItemDetailTvSeasonView(false),
       if (tvShow.createdByPerson != null && tvShow.createdByPerson!.isNotEmpty)

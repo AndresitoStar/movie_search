@@ -7,8 +7,12 @@ class ThemeSelectorDialog extends StatelessWidget {
   static Future show(BuildContext context) {
     return showModalBottomSheet(
       context: context,
-      builder: (context) => ThemeSelectorDialog(),
+      builder: (context) => FractionallySizedBox(
+        heightFactor: 0.9,
+        child: ThemeSelectorDialog(),
+      ),
       isDismissible: true,
+      isScrollControlled: true,
     );
   }
 
@@ -39,6 +43,7 @@ class ThemeSelectorDialog extends StatelessWidget {
                 TextSpan(
                   text: FlexColor.schemes[viewModel.flexColor]!.name,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
                         color: isDarkModeOn
                             ? FlexColor.schemes[viewModel.flexColor]!.dark.primary
                             : FlexColor.schemes[viewModel.flexColor]!.light.primary,
@@ -50,28 +55,35 @@ class ThemeSelectorDialog extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           SizedBox(height: 20),
-          SizedBox(
-            height: 100,
-            child: ListView.builder(
-              itemCount: colors.length,
-              physics: ClampingScrollPhysics(),
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, i) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: InkWell(
-                  onTap: () {
-                    viewModel.setColor(colors[i]);
-                    Navigator.of(context).pop();
-                  },
-                  child: CircleAvatar(
-                    radius: 32,
-                    child: colors[i] == viewModel.flexColor
-                        ? Icon(Icons.check, color: Theme.of(context).colorScheme.onPrimary)
-                        : null,
-                    backgroundColor: isDarkModeOn
-                        ? FlexColor.schemes[colors[i]]!.dark.primary
-                        : FlexColor.schemes[colors[i]]!.light.primary,
+          Expanded(
+            child: SingleChildScrollView(
+              child: GridView.builder(
+                itemCount: colors.length,
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: _getColumns(context),
+                  childAspectRatio: 1,
+                  // crossAxisSpacing: 10,
+                  // mainAxisSpacing: 10,
+                ),
+                itemBuilder: (context, i) => Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(32),
+                    onTap: () {
+                      viewModel.setColor(colors[i]);
+                      // Navigator.of(context).pop();
+                    },
+                    child: CircleAvatar(
+                      radius: 32,
+                      child: colors[i] == viewModel.flexColor
+                          ? Icon(Icons.check, color: Theme.of(context).colorScheme.onPrimary)
+                          : null,
+                      backgroundColor: isDarkModeOn
+                          ? FlexColor.schemes[colors[i]]!.dark.primary
+                          : FlexColor.schemes[colors[i]]!.light.primary,
+                    ),
                   ),
                 ),
               ),
@@ -80,5 +92,10 @@ class ThemeSelectorDialog extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  int _getColumns(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return (width ~/ 64).clamp(3, 6);
   }
 }

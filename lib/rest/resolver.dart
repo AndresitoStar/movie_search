@@ -133,15 +133,16 @@ abstract class BaseService {
     T Function(dynamic data) onResult, {
     Map<String, T>? cacheMap,
     String? idCache,
+    bool force = false,
     Map<String, dynamic> params = const {},
   }) async {
     try {
-      if (cacheMap != null && idCache != null) if (cacheMap.containsKey(idCache)) return cacheMap[idCache]!;
+      if (!force && cacheMap != null && idCache != null) if (cacheMap.containsKey(idCache)) return cacheMap[idCache]!;
 
       var response = await clientTMDB.get(path, queryParameters: {...params, ...baseParams});
       if (response.statusCode == 200) {
         final result = onResult(response.data);
-        if (cacheMap != null && idCache != null) cacheMap.putIfAbsent(idCache, () => result);
+        if (cacheMap != null && idCache != null) cacheMap.update(idCache, (_) => result, ifAbsent: () => result);
         return result;
       }
       throw ApiException('<<$path>> ${response.statusMessage}');

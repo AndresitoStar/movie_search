@@ -5,9 +5,11 @@ import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:movie_search/modules/account/viewModel/account_viewmodel.dart';
 import 'package:movie_search/modules/favourite/viewmodel/favourite_viewmodel.dart';
+import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/extensions.dart';
@@ -34,6 +36,12 @@ void main() async {
   }
   final color = await _resolveColorSchema();
   SharedPreferencesHelper.wasHereBefore().then((value) => runApp(EasyDynamicThemeWidget(child: App(color: color))));
+  _configureSingleton();
+}
+
+_configureSingleton() {
+  final getIt = GetIt.instance;
+  getIt.registerSingleton<HomeController>(HomeController());
 }
 
 Future<FlexScheme> _resolveColorSchema() async {

@@ -27,17 +27,26 @@ class SocialView extends StatelessWidget {
           children: [
             if (model.social?.facebookId != null)
               IconButton(
-                onPressed: () => launchUrlString('https://www.facebook.com/${model.social!.facebookId}'),
+                onPressed: () => launchUrlString(
+                  'https://www.facebook.com/${model.social!.facebookId}',
+                  mode: LaunchMode.externalApplication,
+                ),
                 icon: Icon(MyIcons.facebook, color: Color(0xff4267b2)),
               ),
             if (model.social?.instagramId != null)
               IconButton(
-                onPressed: () => launchUrlString('https://www.instagram.com/${model.social!.instagramId}'),
+                onPressed: () => launchUrlString(
+                  'https://www.instagram.com/${model.social!.instagramId}',
+                  mode: LaunchMode.externalApplication,
+                ),
                 icon: Image.asset('assets/images/instagram.png', width: 24),
               ),
             if (model.social?.twitterId != null)
               IconButton(
-                onPressed: () => launchUrlString('https://www.twitter.com/${model.social!.twitterId}'),
+                onPressed: () => launchUrlString(
+                  'https://www.twitter.com/${model.social!.twitterId}',
+                  mode: LaunchMode.externalApplication,
+                ),
                 icon: Icon(MyIcons.twitter, color: Color(0xff00acee)),
               ),
           ],

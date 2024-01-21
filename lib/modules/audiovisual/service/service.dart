@@ -1,5 +1,6 @@
 import 'package:movie_search/model/api/models/movie.dart';
 import 'package:movie_search/model/api/models/person.dart';
+import 'package:movie_search/model/api/models/review.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
@@ -98,4 +99,12 @@ class AudiovisualService extends BaseService {
         result.sort((a, b) => a.year == null || b.year == null ? 1 : b.year!.compareTo(a.year!));
         return result;
       }, cacheMap: _cacheCredits, idCache: '$id');
+
+  Future<ReviewResponse> getReviews({required String type, required num id, int page = 1}) async {
+    return sendGET<ReviewResponse>(
+      '$type/$id/reviews',
+      (body) => ReviewResponse.fromJson(body),
+      params: {...baseParams, 'page': page.toString()},
+    );
+  }
 }

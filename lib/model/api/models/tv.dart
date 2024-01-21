@@ -182,6 +182,10 @@ class TvShow {
       'vote_count': this.voteCount,
     };
   }
+
+  num? get episodeRuntimeAverage => episodeRunTime != null && episodeRunTime!.isNotEmpty
+      ? episodeRunTime!.reduce((x, y) => x + y) / episodeRunTime!.length
+      : null;
 }
 
 class CreatedBy {

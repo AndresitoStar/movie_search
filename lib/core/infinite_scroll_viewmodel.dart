@@ -11,12 +11,13 @@ abstract class InfiniteScrollViewModel<ItemClass> extends BaseViewModel {
 
   int _actualPage = 1;
 
-  Future<AbstractSearchResponse<ItemClass>> makeSearch({int? page});
+  Future<AbstractSearchResponse<ItemClass>> makeSearch({int? page, required bool force});
 
-  Future fetch() async {
+  Future fetch({bool force = false}) async {
     setBusy(true);
     try {
-      AbstractSearchResponse<ItemClass> response = await makeSearch();
+      _items.clear();
+      AbstractSearchResponse<ItemClass> response = await makeSearch(force: force);
       _total = response.totalResult;
       _items = response.result;
       _actualPage = 1;
@@ -28,7 +29,7 @@ abstract class InfiniteScrollViewModel<ItemClass> extends BaseViewModel {
 
   Future fetchMore() async {
     _actualPage++;
-    AbstractSearchResponse<ItemClass> response = await makeSearch(page: _actualPage);
+    AbstractSearchResponse<ItemClass> response = await makeSearch(page: _actualPage, force: false);
     _items.addAll(response.result);
     notifyListeners();
   }

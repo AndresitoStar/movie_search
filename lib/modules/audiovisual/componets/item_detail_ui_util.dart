@@ -36,7 +36,7 @@ class ContentRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-        visible: value1 != null && value2 != null,
+        visible: value1 != null || value2 != null,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(

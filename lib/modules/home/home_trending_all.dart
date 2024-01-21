@@ -21,8 +21,13 @@ class HomeTrendingAllViewModel extends InfiniteScrollViewModel<BaseSearchResult>
   HomeTrendingAllViewModel({required this.window}) : _trendingService = TrendingService();
 
   @override
-  Future<AbstractSearchResponse<BaseSearchResult>> makeSearch({int? page}) {
-    return _trendingService.getAny('trending/all', window.apiName, page: page ?? 1);
+  Future<AbstractSearchResponse<BaseSearchResult>> makeSearch({int? page, required bool force}) {
+    return _trendingService.getAny(
+      'trending/all',
+      window.apiName,
+      page: page ?? 1,
+      force: force,
+    );
   }
 }
 
@@ -41,4 +46,7 @@ class HomeTrendingAllView extends ContentPreviewViewMoreWidget {
 
   @override
   String get viewMoreButtonHeroTag => 'view_more_btn_${window.apiName}';
+
+  @override
+  bool get itemShowData => true;
 }

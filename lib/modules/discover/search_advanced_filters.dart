@@ -3,6 +3,7 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/model/api/models/api.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/discover/discover_viewmodel.dart';
 import 'package:movie_search/modules/search/search_category.dart';
@@ -11,6 +12,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:stacked/stacked.dart';
 
 class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
+  final _keySortOrderCard = GlobalKey<ExpansionTileCardState>();
+
   @override
   Widget build(BuildContext context, DiscoverViewModel model) {
     return SafeArea(
@@ -20,46 +23,89 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
           formGroup: model.form,
           child: Column(
             children: [
-              SizedBox(height: 10),
-              ReactiveFormField<SearchCategory, SearchCategory>(
-                formControlName: DiscoverViewModel.FORM_TYPE,
-                builder: (field) => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: SearchCategory.getAll()
-                        .map(
-                          (e) => Expanded(
-                            child: Material(
-                              borderOnForeground: true,
-                              color: e == model.actualCategory
-                                  ? context.theme.colorScheme.secondary
-                                  : context.theme.chipTheme.backgroundColor,
-                              shape: RoundedRectangleBorder(side: BorderSide.none),
-                              child: InkWell(
-                                mouseCursor: SystemMouseCursors.click,
-                                onTap: () => field.control.updateValue(e, emitEvent: true),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                  child: Text(
+              Card(
+                margin: EdgeInsets.zero,
+                elevation: 10,
+                borderOnForeground: true,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.zero)),
+                child: Column(
+                  children: [
+                    ReactiveFormField<SearchCategory, SearchCategory>(
+                      formControlName: DiscoverViewModel.FORM_TYPE,
+                      builder: (field) => Column(
+                        children: ListTile.divideTiles(
+                          context: context,
+                          tiles: SearchCategory.getAll()
+                              .map(
+                                (e) => ListTile(
+                                  onTap: () => field.control.updateValue(e, emitEvent: true),
+                                  trailing: Icon(
+                                    e == field.value ? Icons.circle : Icons.circle_outlined,
+                                    color: e == field.value ? context.theme.colorScheme.tertiary : null,
+                                  ),
+                                  title: Text(
                                     e.label,
-                                    textAlign: TextAlign.center,
-                                    style: context.theme.chipTheme.labelStyle!.copyWith(
-                                      color: e == model.actualCategory
-                                          ? context.theme.colorScheme.onPrimary
-                                          : context.theme.chipTheme.labelStyle!.color,
-                                    ),
+                                    overflow: TextOverflow.fade,
+                                    textWidthBasis: TextWidthBasis.parent,
+                                    style: context.theme.chipTheme.labelStyle,
                                   ),
                                 ),
-                              ),
+                              )
+                              .toList(),
+                        ).toList(),
+                      ),
+                    ),
+                    Container(
+                      color: context.theme.dividerColor,
+                      height: 5,
+                    ),
+                    ReactiveFormField<SortOrder, SortOrder>(
+                      formControlName: DiscoverViewModel.FORM_SORT_ORDER,
+                      builder: (field) => Theme(
+                        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTileCard(
+                          key: _keySortOrderCard,
+                          elevation: 0,
+                          baseColor: context.theme.colorScheme.background.withOpacity(0.05),
+                          expandedColor: context.theme.colorScheme.background.withOpacity(0.5),
+                          borderRadius: BorderRadius.zero,
+                          title: Text('Ordenar por:'),
+                          subtitle: Text(
+                            field.value?.label ?? '',
+                            style: context.theme.textTheme.bodyMedium?.copyWith(
+                              color: context.theme.colorScheme.tertiary,
                             ),
                           ),
-                        )
-                        .toList(),
-                  ),
+                          children: ListTile.divideTiles(
+                            context: context,
+                            tiles: SortOrder.values
+                                .map(
+                                  (e) => ListTile(
+                                    onTap: () {
+                                      field.control.updateValue(e, emitEvent: true);
+                                      _keySortOrderCard.currentState?.collapse();
+                                    },
+                                    trailing: Icon(
+                                      e == field.value ? Icons.circle : Icons.circle_outlined,
+                                      color: e == field.value ? context.theme.colorScheme.tertiary : null,
+                                    ),
+                                    title: Text(
+                                      e.label,
+                                      overflow: TextOverflow.fade,
+                                      textWidthBasis: TextWidthBasis.parent,
+                                      style: context.theme.chipTheme.labelStyle,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ).toList(),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Divider(height: 20),
+              SizedBox(height: 5),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -126,7 +172,7 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                           builder: (field) => Theme(
                             data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                             child: ExpansionTileCard(
-                              title: Text('Donde verlo...'),
+                              title: Text('Plataforma'),
                               subtitle: field.value!.isNotEmpty
                                   ? Wrap(
                                       spacing: 5,
@@ -153,9 +199,6 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                                     .map(
                                       (e) => ListTile(
                                         onTap: () => model.toggleProvider(e),
-                                        // tileColor: field.value!.contains(e)
-                                        // ? context.theme.colorScheme.tertiary
-                                        // : context.theme.colorScheme.background,
                                         leading: Container(
                                           clipBehavior: Clip.hardEdge,
                                           margin: EdgeInsets.all(1),
