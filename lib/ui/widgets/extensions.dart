@@ -16,6 +16,8 @@ extension HowShowErrorExtension on BuildContext {
 
   Future showLoginDialog() => MyDialogs.showLoginDialog(this);
 
+  Future showLoginModalBottomSheet() => MyDialogs.showLoginModalBottomSheet(this);
+
   Future runSafety(AsyncCallback run) async {
     try {
       await run();

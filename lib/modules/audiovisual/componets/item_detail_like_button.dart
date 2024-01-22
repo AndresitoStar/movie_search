@@ -45,7 +45,7 @@ class ItemLikeButton extends ViewModelWidget<FavouritesViewModel> {
                             Theme.of(context).colorScheme.onBackground,
                         onPressed: () async {
                           if (accountViewModel.userUuid == null) {
-                            await context.showLoginDialog();
+                            await context.showLoginModalBottomSheet();
                           }
                           if (accountViewModel.userUuid != null) {
                             final type =

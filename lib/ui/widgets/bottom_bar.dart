@@ -19,7 +19,7 @@ class MyBottomBar extends StatelessWidget {
       BottomNavigationBarItem(icon: Icon(MyIcons.home), label: '', tooltip: 'Inicio'),
       BottomNavigationBarItem(icon: Icon(MyIcons.search), label: '', tooltip: 'Buscar'),
       BottomNavigationBarItem(icon: Icon(MyIcons.discover), label: '', tooltip: 'Explorar'),
-      BottomNavigationBarItem(icon: Icon(FrinoIcons.f_bookmark), label: '', tooltip: 'Favoritos'),
+      BottomNavigationBarItem(icon: Icon(FrinoIcons.f_user_circle), label: '', tooltip: 'Favoritos'),
       BottomNavigationBarItem(icon: Icon(MyIcons.settings), label: '', tooltip: 'Ajustes'),
     ];
 

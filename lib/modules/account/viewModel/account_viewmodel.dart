@@ -34,14 +34,12 @@ class AccountViewModel extends BaseViewModel {
     try {
       GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
       if (googleSignInAccount != null) {
-        print('akiii');
         GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
         AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken,
         );
         UserCredential authResult = await _auth.signInWithCredential(credential);
-        print('akiii');
         if (authResult.user != null) {
           assert(!authResult.user!.isAnonymous);
           assert(await authResult.user!.getIdToken() != null);

@@ -17,6 +17,8 @@ class FavouritesViewModel extends BaseViewModel {
 
   List<BaseSearchResult?> get favoriteList => _map.values.fold<List<BaseSearchResult?>>([], (a, b) => a..addAll(b));
 
+  Map<String, List<BaseSearchResult?>> get favoriteMap => _map;
+
   Future toggleFavourite({
     required bool isLiked,
     required String type,

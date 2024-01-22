@@ -3,6 +3,7 @@ import 'package:movie_search/modules/account/viewModel/account_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class MyDialogs {
   static Future showError(BuildContext context, {required String error, VoidCallback? onTapDismiss}) async {
@@ -31,6 +32,37 @@ class MyDialogs {
       ),
     );
   }
+
+  static Future showLoginModalBottomSheet(BuildContext context) async {
+    if (!context.mounted) return;
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: 5,
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 45.w),
+            decoration: BoxDecoration(
+              color: Theme.of(context).highlightColor,
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+          ListTile(
+            title: Text('Tus Favoritos', style: Theme.of(context).textTheme.headlineSmall),
+            subtitle: Text(
+              'Autenticate con Google para guardar tus listas de favoritos',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: MyGoogleButton(makePop: true),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class MyGoogleButton extends StatelessWidget {
@@ -40,10 +72,10 @@ class MyGoogleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        primary: Colors.white,
-        onPrimary: Colors.black,
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(width: 1, color: Theme.of(context).colorScheme.onBackground),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       onPressed: () {
         context.read<AccountViewModel>().loginGoogle();
@@ -53,7 +85,7 @@ class MyGoogleButton extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Image(
               image: AssetImage("assets/images/google_logo.png"),
@@ -61,10 +93,10 @@ class MyGoogleButton extends StatelessWidget {
               width: 24,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 24, right: 8),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Text(
                 'Sign in with Google',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.black87),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
           ],
