@@ -72,7 +72,7 @@ class Routes {
           final BaseSearchResult item = BaseSearchResult.lite(mediaType: type, id: id);
           return defaultRoute(settings, ItemDetailPage(item: item, heroTagPrefix: 'lala'));
         }
-      } on Exception catch (e) {
+      } on Exception {
         return defaultRoute(settings, routes[SplashScreen.route]!);
       }
     }

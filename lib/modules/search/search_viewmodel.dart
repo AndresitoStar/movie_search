@@ -115,7 +115,7 @@ class SearchViewModel extends BaseViewModel {
         SearchResponse response;
         if (showFilter) {
           response = await TrendingService()
-              .getDiscover(actualCategory!.value!, page: _page, genres: genresControl.value!.map((e) => e.id).toList());
+              .getDiscover(actualCategory!.value, page: _page, genres: genresControl.value!.map((e) => e.id).toList());
         } else {
           response = await _service.search(_query, page: _page);
         }
@@ -135,7 +135,7 @@ class SearchViewModel extends BaseViewModel {
     _page++;
     SearchResponse result;
     if (showFilter) {
-      result = await TrendingService().getDiscover(actualCategory!.value!, page: _page);
+      result = await TrendingService().getDiscover(actualCategory!.value, page: _page);
     } else {
       result = await _service.search(_query, page: _page);
     }

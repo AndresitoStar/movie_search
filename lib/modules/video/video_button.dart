@@ -4,7 +4,6 @@ import 'package:movie_search/modules/video/video_screen.dart';
 import 'package:movie_search/modules/video/video_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/frino_icons.dart';
-import 'package:movie_search/ui/icons.dart';
 import 'package:stacked/stacked.dart';
 
 class VideoButton extends StatelessWidget {
