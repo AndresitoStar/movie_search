@@ -23,16 +23,13 @@ class HomeScreen extends StatelessWidget {
       bottomBarIndex: 0,
       body: Column(
         children: [
-          if (Device.screenType == ScreenType.mobile)
+          if (Device.screenType == ScreenType.mobile) ...[
             AppBar(
-              leading: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Image.asset('assets/images/ic_launcher.png'),
-              ),
-              actions: [MyThemeBtn()],
               title: Text('Movie Search'),
-              titleSpacing: 0,
+              centerTitle: true,
             ),
+            Divider(height: 1),
+          ],
           Expanded(
             child: Container(
               padding: EdgeInsets.only(top: 10),
