@@ -253,6 +253,14 @@ class SharedPreferencesHelper {
   static void setFlexSchemaColor(String value) async {
     _setString('SCHEME_COLOR', value);
   }
+
+  static Future<String?> getContentTypeSelected() async {
+    return _getString('CONTENT_TYPE_SELECTED');
+  }
+
+  static void setContentTypeSelected(String value) async {
+    _setString('CONTENT_TYPE_SELECTED', value);
+  }
 }
 
 extension DurationExtension on Duration {

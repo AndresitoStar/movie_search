@@ -31,6 +31,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
     }
 
     final children = <Widget>[
+      ContentHorizontal(content: item.title),
       Visibility(
         visible: tagline != null,
         child: ContentHorizontal(
@@ -57,7 +58,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
         : Column(
             children: children,
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
           );
   }
 }

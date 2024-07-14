@@ -12,13 +12,20 @@ class ContentTypeController {
 
   TMDB_API_TYPE? _type;
 
-
+  TMDB_API_TYPE get currentType => _type!;
 
   loadCurrentType() async {
-    //TODO obtiene el type del storage si tiene, si no pone uno por defecto
+    try {
+      final type = await SharedPreferencesHelper.getContentTypeSelected();
+      if (type != null) _type = TMDB_API_TYPE.values.firstWhere((element) => element.toString() == type);
+      else _type = TMDB_API_TYPE.MOVIE;
+    } on Exception catch (e) {
+      _type = TMDB_API_TYPE.MOVIE;
+    }
   }
 
-  updateCurrentType() async {
-
+  updateCurrentType(TMDB_API_TYPE type) async {
+    SharedPreferencesHelper.setContentTypeSelected(type.toString());
+    _type = type;
   }
 }

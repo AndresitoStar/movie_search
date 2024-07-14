@@ -39,7 +39,7 @@ class MyIcons {
   static const IconData maximize = Icons.crop_square;
   static const IconData minimize = Icons.minimize;
   static const IconData gallery = FrinoIcons.f_gallery;
-  static const IconData discover = FontAwesomeIcons.solidPaperPlane;
+  static const IconData discover = FontAwesomeIcons.compass;
 
   static const IconData facebook = FontAwesomeIcons.squareFacebook;
   static const IconData instagram = FontAwesomeIcons.instagram;

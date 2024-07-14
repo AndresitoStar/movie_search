@@ -17,7 +17,7 @@ class MyBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = [
       BottomNavigationBarItem(icon: Icon(MyIcons.home), label: '', tooltip: 'Inicio'),
-      BottomNavigationBarItem(icon: Icon(MyIcons.search), label: '', tooltip: 'Buscar'),
+      // BottomNavigationBarItem(icon: Icon(MyIcons.search), label: '', tooltip: 'Buscar'),
       BottomNavigationBarItem(icon: Icon(MyIcons.discover), label: '', tooltip: 'Explorar'),
       BottomNavigationBarItem(icon: Icon(FrinoIcons.f_user_circle), label: '', tooltip: 'Favoritos'),
       BottomNavigationBarItem(icon: Icon(MyIcons.settings), label: '', tooltip: 'Ajustes'),
@@ -61,17 +61,17 @@ class MyBottomBar extends StatelessWidget {
                   if (index != 0) Navigator.of(context).popUntil(ModalRoute.withName(HomeScreen.routeName));
                   break;
                 case 1:
-                  if (index != 1) goToSearch(context);
+                  if (index != 1) goToDiscover(context);
                   break;
                 case 2:
-                  if (index != 2) goToDiscover(context);
+                  if (index != 2) goToFavourites(context);
                   break;
                 case 3:
-                  if (index != 3) goToFavourites(context);
+                  if (index != 3) goToSettings(context);
                   break;
-                case 4:
-                  if (index != 4) goToSettings(context);
-                  break;
+                // case 4:
+                //   if (index != 4) goToSettings(context);
+                //   break;
               }
             },
             items: items,

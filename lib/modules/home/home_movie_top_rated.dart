@@ -38,4 +38,7 @@ class HomeAiringView extends ContentPreviewViewMoreWidget {
 
   @override
   bool get itemShowData => true;
+
+  @override
+  String get title => 'Top Rated TV Shows';
 }

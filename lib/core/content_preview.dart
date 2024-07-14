@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:movie_search/core/content_preview_page.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
@@ -23,53 +26,67 @@ abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollVi
   @override
   Widget builder(BuildContext context, InfiniteScrollViewModel viewModel, Widget? child) {
     final columns = _getColumns(context);
-    final totalItems = (columns * 3);
+    final totalItems = 5;
     final doIt = viewModel.items.length > totalItems;
+    //final height = MediaQuery.of(context).size.longestSide / 3.5;
+    final height = MediaQuery.of(context).size.shortestSide / 1.5;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 0).copyWith(bottom: 20),
-      child: GridView.builder(
-        itemCount: totalItems,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        itemBuilder: (ctx, i) => i == totalItems - 1
-            ? Container(
-                child: Center(
-                  child: FloatingActionButton(
-                    child: Icon(Icons.keyboard_arrow_right),
-                    onPressed: () => onPressed(context, viewModel),
-                    heroTag: viewMoreButtonHeroTag,
-                  ),
-                ),
-              )
-            : AnimatedCrossFade(
-                firstChild: AspectRatio(
-                  aspectRatio: 0.667,
-                  key: UniqueKey(),
-                  child: GridItemPlaceholder(),
-                ),
-                crossFadeState: doIt ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                duration: Duration(milliseconds: 400),
-                secondChild: Container(
-                  key: UniqueKey(),
-                  child: doIt
-                      ? ItemGridView(
-                          item: viewModel.items[i],
-                          showType: itemShowData,
-                          showTitles: true,
-                          heroTagPrefix: itemGridHeroTag,
-                        )
-                      : null,
-                ),
-              ),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: columns,
-          childAspectRatio: 0.667,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ListTile(
+          title: Text(
+            title,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          trailing: TextButton(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Ver mas', style: Theme.of(context).textTheme.bodyMedium),
+                SizedBox(width: 4),
+                Icon(Icons.arrow_forward_ios, size: 8),
+              ],
+            ),
+            onPressed: () => onPressed(context, viewModel),
+          ),
         ),
-      ),
+        Container(
+          constraints: BoxConstraints(
+            minHeight: height,
+            maxHeight: height,
+          ),
+          child: ListView.builder(
+            physics: ClampingScrollPhysics(),
+            // shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: viewModel.items.length,
+            itemBuilder: (ctx, i) => AnimatedCrossFade(
+              crossFadeState:
+                  !viewModel.isBusy || !viewModel.initialised ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              duration: Duration(milliseconds: 400),
+              firstChild: AspectRatio(
+                aspectRatio: 0.667,
+                key: UniqueKey(),
+                child: GridItemPlaceholder(),
+              ),
+              secondChild: AspectRatio(
+                aspectRatio: 0.667,
+                key: UniqueKey(),
+                child: doIt
+                    ? ItemGridView(
+                        item: viewModel.items[i],
+                        showType: itemShowData,
+                        showTitles: true,
+                        heroTagPrefix: itemGridHeroTag,
+                      )
+                    : Container(),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -84,6 +101,8 @@ abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollVi
 
   String get itemGridHeroTag;
 
+  String get title;
+
   bool get itemShowData => false;
 }
 
@@ -96,5 +115,11 @@ class UiUtils {
   }) {
     final width = MediaQuery.of(context).size.width;
     return (width ~/ itemWidth).clamp(minValue, maxValue);
+  }
+
+  static String generateRandomString ({int length = 10}) {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    final random = Random.secure();
+    return List.generate(length, (index) => chars[random.nextInt(chars.length)]).join();
   }
 }

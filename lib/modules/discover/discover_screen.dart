@@ -15,7 +15,7 @@ class DiscoverScreen extends StatelessWidget {
       viewModelBuilder: () => DiscoverViewModel(context.read()),
       onViewModelReady: (model) => model.initializeFilters(),
       builder: (context, model, child) => CustomScaffold(
-        bottomBarIndex: 2,
+        bottomBarIndex: 1,
         endDrawer: SearchAdvancedFilterView(),
         body: DiscoverResults(),
         forceAppbar: true,

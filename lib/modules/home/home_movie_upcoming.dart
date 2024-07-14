@@ -31,11 +31,14 @@ class HomeUpcomingView extends ContentPreviewViewMoreWidget {
   }
 
   @override
-  String get itemGridHeroTag => 'home_now_playing';
+  String get itemGridHeroTag => 'home_upcoming';
 
   @override
   String get viewMoreButtonHeroTag => 'view_more_btn';
 
   @override
   bool get itemShowData => true;
+
+  @override
+  String get title => 'Upcoming Movies';
 }

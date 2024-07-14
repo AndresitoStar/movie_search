@@ -12,7 +12,7 @@ class SettingsScreen extends StatelessWidget {
     final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
 
     return CustomScaffold(
-      bottomBarIndex: 4,
+      bottomBarIndex: 3,
       body: Column(
         children: [
           Expanded(

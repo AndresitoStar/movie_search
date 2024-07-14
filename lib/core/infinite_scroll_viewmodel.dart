@@ -22,6 +22,7 @@ abstract class InfiniteScrollViewModel<ItemClass> extends BaseViewModel {
       _items = response.result;
       _actualPage = 1;
       setBusy(false);
+      setInitialised(true);
     } catch (e) {
       setError(e);
     }

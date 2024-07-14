@@ -38,4 +38,7 @@ class HomeNowPlayingView extends ContentPreviewViewMoreWidget {
 
   @override
   bool get itemShowData => true;
+
+  @override
+  String get title => 'Now Playing';
 }

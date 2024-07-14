@@ -8,17 +8,20 @@ import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel
 import 'package:movie_search/modules/imdb_rating/components/imdb_rating.dart';
 import 'package:movie_search/modules/person/components/social_view.dart';
 import 'package:movie_search/modules/video/video_button.dart';
+import 'package:movie_search/modules/video/video_carousel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_main_image.dart';
 
-class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewModel> {
+class ItemDetailAppbarContentExtended
+    extends ViewModelWidget<ItemDetailViewModel> {
   final String heroTagPrefix;
   final bool isLandscape;
 
-  ItemDetailAppbarContentExtended({required this.heroTagPrefix, this.isLandscape = false});
+  ItemDetailAppbarContentExtended(
+      {required this.heroTagPrefix, this.isLandscape = false});
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
@@ -33,7 +36,8 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                 tag: '$heroTagPrefix${model.itemId}',
                 child: Card(
                   clipBehavior: Clip.hardEdge,
-                  child: ContentImageWidget(model.posterImageUrl, fit: BoxFit.cover),
+                  child: ContentImageWidget(model.posterImageUrl,
+                      fit: BoxFit.cover),
                 ),
               ),
               _buildTitle(theme, model, context, true),
@@ -55,7 +59,8 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                     clipBehavior: Clip.hardEdge,
                     color: Colors.transparent,
                     // child: Container(),
-                    child: ContentImageWidget(model.posterImageUrl, fit: BoxFit.cover),
+                    child: ContentImageWidget(model.posterImageUrl,
+                        fit: BoxFit.cover),
                   ),
                 ),
               ),
@@ -83,12 +88,14 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
       children: [
         ItemLikeButton(item: model.data!),
         ItemImagesButtonView(param: model.data!),
-        if (model.itemType != TMDB_API_TYPE.PERSON) VideoButton(param: model.data!),
+        if (model.itemType != TMDB_API_TYPE.PERSON)
+          VideoButton(param: model.data!),
       ],
     );
   }
 
-  Column _buildTitle(ThemeData theme, ItemDetailViewModel model, BuildContext context, bool isLandscape) {
+  Column _buildTitle(ThemeData theme, ItemDetailViewModel model,
+      BuildContext context, bool isLandscape) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -108,7 +115,8 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
           ),
         ),
         if (model.initialised)
-          if (model.itemType == TMDB_API_TYPE.PERSON && model.data?.person?.birthday != null) ...[
+          if (model.itemType == TMDB_API_TYPE.PERSON &&
+              model.data?.person?.birthday != null) ...[
             Text(
               '${model.data!.person!.birthday ?? ''} - ${model.data!.person!.deathday ?? 'actualidad'}',
               textAlign: TextAlign.start,
@@ -119,7 +127,8 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-          ] else if (model.data!.genres != null && model.data!.genres!.isNotEmpty)
+          ] else if (model.data!.genres != null &&
+              model.data!.genres!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 5),
               child: Wrap(
@@ -128,11 +137,14 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
                     .map(
                       (e) => Container(
                         child: Text(e),
-                        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 3, vertical: 1),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           color: Colors.transparent,
-                          border: Border.all(color: context.theme.textTheme.titleMedium!.color!),
+                          border: Border.all(
+                              color:
+                                  context.theme.textTheme.titleMedium!.color!),
                         ),
                       ),
                     )
@@ -147,11 +159,14 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
             children: [
               if (model.year != null)
                 Chip(
-                  padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
                   elevation: 5,
                   label: Text(
                     '${model.year}',
-                    style: TextStyle(color: context.theme.colorScheme.onPrimary, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: context.theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold),
                   ),
                   backgroundColor: context.theme.colorScheme.secondary,
                 ),
@@ -196,7 +211,8 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
               theme.scaffoldBackgroundColor,
             ],
           ),
-          border: Border.symmetric(vertical: BorderSide(color: theme.scaffoldBackgroundColor)),
+          border: Border.symmetric(
+              vertical: BorderSide(color: theme.scaffoldBackgroundColor)),
         ),
       ),
     );
@@ -218,9 +234,61 @@ class ItemDetailAppbarContentExtended extends ViewModelWidget<ItemDetailViewMode
 
   String _age(String birthday, String? deathDay) {
     DateTime birth = DateTime.parse(birthday);
-    DateTime death = deathDay != null ? DateTime.parse(deathDay) : DateTime.now();
+    DateTime death =
+        deathDay != null ? DateTime.parse(deathDay) : DateTime.now();
 
     final age = death.difference(birth).inDays / 365.25;
     return age.floor().toStringAsFixed(0);
+  }
+}
+
+class ItemDetailAppbarContentSimple
+    extends ViewModelWidget<ItemDetailViewModel> {
+  @override
+  Widget build(BuildContext context, ItemDetailViewModel model) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        IgnorePointer(
+          ignoring: true,
+          child: ContentImageWidget(
+            model.backDropImageUrl ?? model.posterImageUrl,
+            fit: BoxFit.cover,
+            isBackdrop: model.backDropImageUrl != null,
+          ),
+        ),
+        IgnorePointer(
+          ignoring: true,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Theme.of(context).colorScheme.background.withOpacity(0.5),
+                  Theme.of(context).colorScheme.background.withOpacity(0.5),
+                  Theme.of(context).scaffoldBackgroundColor,
+                ],
+              ),
+              border: Border.symmetric(
+                  vertical: BorderSide(
+                      color: Theme.of(context).scaffoldBackgroundColor)),
+            ),
+          ),
+        ),
+        if (model.dataReady)
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: VideosCarousel(param: model.data!),
+          ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: 1,
+            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
+          ),
+        ),
+      ],
+    );
   }
 }

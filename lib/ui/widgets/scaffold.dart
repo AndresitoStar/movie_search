@@ -30,7 +30,7 @@ class CustomScaffold extends StatelessWidget {
     final showAppbar = Device.screenType == ScreenType.desktop || Device.screenType == ScreenType.tablet;
 
     return Scaffold(
-      bottomNavigationBar: showAppbar ? null : MyBottomBar(index: bottomBarIndex),
+      bottomNavigationBar: showAppbar || bottomBarIndex < 0 ? null : MyBottomBar(index: bottomBarIndex),
       endDrawer: endDrawer,
       floatingActionButton: floatingActionButton,
       key: this.childKey,

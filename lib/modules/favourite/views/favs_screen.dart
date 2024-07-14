@@ -25,7 +25,7 @@ class FavouriteScreen extends ViewModelWidget<FavouritesViewModel> {
     return Consumer<AccountViewModel>(
       builder: (context, provider, child) {
         return CustomScaffold(
-          bottomBarIndex: 3,
+          bottomBarIndex: 2,
           title: 'Mis Favoritos',
           forceAppbar: true,
           body: provider.isBusy

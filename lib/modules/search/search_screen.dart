@@ -15,7 +15,7 @@ class SearchScreen extends StatelessWidget {
     return ViewModelBuilder<SearchViewModel>.reactive(
       viewModelBuilder: () => SearchViewModel(SearchService(), context.read()),
       builder: (context, model, child) => CustomScaffold(
-        bottomBarIndex: 1,
+        bottomBarIndex: -1,
         title: 'Búsqueda',
         forceAppbar: true,
         body: Column(

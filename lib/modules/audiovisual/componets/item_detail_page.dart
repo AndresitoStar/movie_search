@@ -65,15 +65,16 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
       cacheExtent: 1000,
       slivers: <Widget>[
         ItemDetailSliverAppBar(
-          ItemDetailAppbarContentExtended(heroTagPrefix: heroTagPrefix),
-          actions: [
-            ItemLikeButton(item: item),
-            if (model.dataReady) ...[
-              if (model.itemType != TMDB_API_TYPE.PERSON) ReviewButton(param: model.data!),
-              ItemImagesButtonView(param: model.data!),
-              if (model.itemType != TMDB_API_TYPE.PERSON) VideoButton(param: model.data!),
-            ],
-          ],
+          // ItemDetailAppbarContentExtended(heroTagPrefix: heroTagPrefix),
+            ItemDetailAppbarContentSimple(),
+          // actions: [
+          //   ItemLikeButton(item: item),
+          //   if (model.dataReady) ...[
+          //     if (model.itemType != TMDB_API_TYPE.PERSON) ReviewButton(param: model.data!),
+          //     ItemImagesButtonView(param: model.data!),
+          //     if (model.itemType != TMDB_API_TYPE.PERSON) VideoButton(param: model.data!),
+          //   ],
+          // ],
         ),
         if (model.hasError)
           SliverToBoxAdapter(child: ElevatedButton(onPressed: model.initialise, child: Text('Recargar')))
