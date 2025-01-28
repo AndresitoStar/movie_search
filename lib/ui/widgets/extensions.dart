@@ -27,6 +27,16 @@ extension HowShowErrorExtension on BuildContext {
   }
 }
 
+extension NumExtension on num {
+  String minutesToHHMM() {
+    int hours = this ~/ 60;
+    num remainingMinutes = this % 60;
+    String formattedHours = hours.toString().padLeft(2, '0');
+    String formattedMinutes = remainingMinutes.toInt().toString().padLeft(2, '0');
+    return '$formattedHours:$formattedMinutes';
+  }
+}
+
 extension ExtensionTitleTrending on TrendingType {
   String get title {
     switch (this) {

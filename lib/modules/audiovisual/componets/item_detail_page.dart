@@ -67,13 +67,14 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
         ItemDetailSliverAppBar(
           // ItemDetailAppbarContentExtended(heroTagPrefix: heroTagPrefix),
             ItemDetailAppbarContentSimple(),
-          // actions: [
+          actions: [
           //   ItemLikeButton(item: item),
           //   if (model.dataReady) ...[
           //     if (model.itemType != TMDB_API_TYPE.PERSON) ReviewButton(param: model.data!),
-          //     ItemImagesButtonView(param: model.data!),
+            if (model.dataReady) ItemLikeButton(item: model.data!),
+            ItemImagesButtonView(id: model.itemId, type: model.itemType, title: model.title ?? ''),
           //     if (model.itemType != TMDB_API_TYPE.PERSON) VideoButton(param: model.data!),
-          //   ],
+            ],
           // ],
         ),
         if (model.hasError)

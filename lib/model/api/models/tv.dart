@@ -1,4 +1,5 @@
 import 'package:movie_search/model/api/models/person.dart';
+import 'package:movie_search/ui/widgets/extensions.dart';
 
 import 'movie.dart';
 
@@ -144,6 +145,8 @@ class TvShow {
         type = json['type'],
         voteAverage = json['vote_average'],
         voteCount = json['vote_count'];
+
+  String? get displayRuntime => episodeRuntimeAverage != null ? '${episodeRuntimeAverage!.minutesToHHMM()}' : null;
 
   Map<String, dynamic> toJson() {
     return {

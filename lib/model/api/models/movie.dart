@@ -1,4 +1,5 @@
 import 'package:movie_search/model/api/models/tv.dart';
+import 'package:movie_search/ui/widgets/extensions.dart';
 
 class Movie {
   Movie({
@@ -59,9 +60,11 @@ class Movie {
     final _data = <String, dynamic>{};
     _data['adult'] = adult;
     _data['backdrop_path'] = backdropPath;
-    _data['belongs_to_collection'] = collection != null ? collection!.toJson() : null;
+    _data['belongs_to_collection'] =
+        collection != null ? collection!.toJson() : null;
     _data['budget'] = budget;
-    _data['genres'] = genres == null ? null : genres!.map((e) => e.toJson()).toList();
+    _data['genres'] =
+        genres == null ? null : genres!.map((e) => e.toJson()).toList();
     _data['homepage'] = homepage;
     _data['id'] = id;
     _data['imdb_id'] = imdbId;
@@ -70,14 +73,18 @@ class Movie {
     _data['overview'] = overview;
     _data['popularity'] = popularity;
     _data['poster_path'] = posterPath;
-    _data['production_companies'] =
-        productionCompanies == null ? null : productionCompanies!.map((e) => e.toJson()).toList();
-    _data['production_countries'] =
-        productionCountries == null ? null : productionCountries!.map((e) => e.toJson()).toList();
+    _data['production_companies'] = productionCompanies == null
+        ? null
+        : productionCompanies!.map((e) => e.toJson()).toList();
+    _data['production_countries'] = productionCountries == null
+        ? null
+        : productionCountries!.map((e) => e.toJson()).toList();
     _data['release_date'] = releaseDate;
     _data['revenue'] = revenue;
     _data['runtime'] = runtime;
-    _data['spoken_languages'] = spokenLanguages == null ? null : spokenLanguages!.map((e) => e.toJson()).toList();
+    _data['spoken_languages'] = spokenLanguages == null
+        ? null
+        : spokenLanguages!.map((e) => e.toJson()).toList();
     _data['status'] = status;
     _data['tagline'] = tagline;
     _data['title'] = title;
@@ -87,12 +94,19 @@ class Movie {
     return _data;
   }
 
+  String? get displayRuntime =>
+      runtime != null ? runtime?.minutesToHHMM() : null;
+
   Movie.fromJson(Map<String, dynamic> json)
       : adult = json['adult'],
         backdropPath = json['backdrop_path'],
-        collection = json['belongs_to_collection'] == null ? null : Collection.fromJson(json['belongs_to_collection']),
+        collection = json['belongs_to_collection'] == null
+            ? null
+            : Collection.fromJson(json['belongs_to_collection']),
         budget = json['budget'],
-        genres = json['genres'] == null ? null : List.from(json['genres']).map((e) => Genres.fromJson(e)).toList(),
+        genres = json['genres'] == null
+            ? null
+            : List.from(json['genres']).map((e) => Genres.fromJson(e)).toList(),
         homepage = json['homepage'],
         id = json['id'],
         imdbId = json['imdb_id'],
@@ -103,16 +117,22 @@ class Movie {
         posterPath = json['poster_path'],
         productionCompanies = json['production_companies'] == null
             ? null
-            : List.from(json['production_companies']).map((e) => ProductionCompanies.fromJson(e)).toList(),
+            : List.from(json['production_companies'])
+                .map((e) => ProductionCompanies.fromJson(e))
+                .toList(),
         productionCountries = json['production_countries'] == null
             ? null
-            : List.from(json['production_countries']).map((e) => ProductionCountries.fromJson(e)).toList(),
+            : List.from(json['production_countries'])
+                .map((e) => ProductionCountries.fromJson(e))
+                .toList(),
         releaseDate = json['release_date'],
         revenue = json['revenue'],
         runtime = json['runtime'],
         spokenLanguages = json['spoken_languages'] == null
             ? null
-            : List.from(json['spoken_languages']).map((e) => SpokenLanguages.fromJson(e)).toList(),
+            : List.from(json['spoken_languages'])
+                .map((e) => SpokenLanguages.fromJson(e))
+                .toList(),
         status = json['status'],
         tagline = json['tagline'],
         title = json['title'],
@@ -177,6 +197,31 @@ class ProductionCountries {
   }
 }
 
+class ContentRating {
+  ContentRating({
+    required this.iso_3166_1,
+    this.rating,
+  });
+
+  final String iso_3166_1;
+  final String? rating;
+
+  ContentRating.fromJson(Map<String, dynamic> json)
+      : iso_3166_1 = json['iso_3166_1'],
+        rating = json['rating'];
+
+  ContentRating.fromJsonCertification(Map<String, dynamic> json)
+      : iso_3166_1 = json['iso_3166_1'],
+        rating = json['release_dates'] == null
+            ? null
+            : List.from(json['release_dates'])
+                .map((e) => e['certification'])
+                .firstWhere(
+                  (element) => element != null && element != '',
+                  orElse: () => null,
+                );
+}
+
 class SpokenLanguages {
   SpokenLanguages({
     required this.iso_639_1,
@@ -236,5 +281,7 @@ class Collection {
         posterPath = json['poster_path'],
         backdropPath = json['backdrop_path'],
         overview = json['overview'],
-        parts = json['parts'] == null ? null : List.from(json['parts']).map((e) => Movie.fromJson(e)).toList();
+        parts = json['parts'] == null
+            ? null
+            : List.from(json['parts']).map((e) => Movie.fromJson(e)).toList();
 }

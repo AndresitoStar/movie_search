@@ -22,8 +22,10 @@ class AudiovisualService extends BaseService {
   final Map<String, Seasons> _cacheSeason = {};
   final Map<String, Episode> _cacheEpisode = {};
   final Map<String, List<BaseSearchResult>> _cacheCredits = {};
+  final Map<String, List<ContentRating>> _cacheContentRatings = {};
 
-  Future<dynamic> getById({required String type, required num id}) async => sendGET(
+  Future<dynamic> getById({required String type, required num id}) async =>
+      sendGET(
         '$type/$id',
         (data) => type == 'person'
             ? Person.fromJson(data)
@@ -37,15 +39,18 @@ class AudiovisualService extends BaseService {
         cacheMap: _cacheById,
       );
 
-  Future<List<BaseSearchResult>> getRecommendations(
-          String type, num typeId, ERecommendationType recommendationType) async =>
+  Future<List<BaseSearchResult>> getRecommendations(String type, num typeId,
+          ERecommendationType recommendationType) async =>
       sendGET<List<BaseSearchResult>>(
         '$type/$typeId/${recommendationType.type}',
         (data) {
           final list = data['results'] as List;
-          final result = list.map((e) => BaseSearchResult.fromJson(type, e)).toList();
+          final result =
+              list.map((e) => BaseSearchResult.fromJson(type, e)).toList();
           if (result.isNotEmpty)
-            result.sort((a, b) => a.year == null || b.year == null ? 1 : b.year!.compareTo(a.year!));
+            result.sort((a, b) => a.year == null || b.year == null
+                ? 1
+                : b.year!.compareTo(a.year!));
           return result;
         },
         cacheMap: _cacheRecommendation,
@@ -66,14 +71,17 @@ class AudiovisualService extends BaseService {
         idCache: '$id$seasonNumber',
       );
 
-  Future<Episode> getEpisode(num tvShowId, num seasonNumber, num episodeNumber) async => sendGET<Episode>(
+  Future<Episode> getEpisode(
+          num tvShowId, num seasonNumber, num episodeNumber) async =>
+      sendGET<Episode>(
         'tv/$tvShowId/season/$seasonNumber/episode/$episodeNumber',
         (data) => Episode.fromJson(data),
         cacheMap: _cacheEpisode,
         idCache: '$tvShowId-$seasonNumber-$episodeNumber',
       );
 
-  Future<WatchProviderResponse> getWatchProviders({required String type, required num id}) async =>
+  Future<WatchProviderResponse> getWatchProviders(
+          {required String type, required num id}) async =>
       sendGET<WatchProviderResponse>(
         '$type/$id/watch/providers',
         (data) => WatchProviderResponse.fromJson(data['results']),
@@ -96,15 +104,42 @@ class AudiovisualService extends BaseService {
             result.add(BaseSearchResult.fromJson(type, v));
           });
         }
-        result.sort((a, b) => a.year == null || b.year == null ? 1 : b.year!.compareTo(a.year!));
+        result.sort((a, b) =>
+            a.year == null || b.year == null ? 1 : b.year!.compareTo(a.year!));
         return result;
       }, cacheMap: _cacheCredits, idCache: '$id');
 
-  Future<ReviewResponse> getReviews({required String type, required num id, int page = 1}) async {
+  Future<ReviewResponse> getReviews(
+      {required String type, required num id, int page = 1}) async {
     return sendGET<ReviewResponse>(
       '$type/$id/reviews',
       (body) => ReviewResponse.fromJson(body),
       params: {...baseParams, 'page': page.toString()},
     );
   }
+
+  Future<List<ContentRating>> getTVContentRating(String type, num id) async =>
+      sendGET<List<ContentRating>>(
+        '$type/$id/content_ratings',
+        (data) {
+          final list = data['results'] as List;
+          final result = list.map((e) => ContentRating.fromJson(e)).toList();
+          return result;
+        },
+        cacheMap: _cacheContentRatings,
+        idCache: '$id$type/ContentRatings',
+      );
+
+  Future<List<ContentRating>> getCertifications(String type, num id) async =>
+      sendGET<List<ContentRating>>(
+        '$type/$id/release_dates',
+        (data) {
+          final list = data['results'] as List;
+          final result =
+              list.map((e) => ContentRating.fromJsonCertification(e)).toList();
+          return result;
+        },
+        cacheMap: _cacheContentRatings,
+        idCache: '$id$type/ContentRatings',
+      );
 }

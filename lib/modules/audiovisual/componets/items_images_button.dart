@@ -14,14 +14,21 @@ import 'package:stacked/stacked.dart';
 import 'item_detail_main_image.dart';
 
 class ItemImagesButtonView extends StatelessWidget {
-  final BaseSearchResult param;
+  final num id;
+  final TMDB_API_TYPE type;
+  final String title;
 
-  const ItemImagesButtonView({Key? key, required this.param}) : super(key: key);
+  const ItemImagesButtonView({
+    Key? key,
+    required this.id,
+    required this.title,
+    required this.type,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ItemImagesViewModel>.reactive(
-      viewModelBuilder: () => ItemImagesViewModel(param.id, param.type.type),
+      viewModelBuilder: () => ItemImagesViewModel(id, type.type),
       builder: (context, model, child) => !model.initialised || model.isBusy
           ? Padding(
               padding: const EdgeInsets.all(12.0),
@@ -29,7 +36,7 @@ class ItemImagesButtonView extends StatelessWidget {
             )
           : ShowImagesButton(
               images: model.images,
-              title: param.title!,
+              title: title,
             ),
     );
   }
@@ -39,15 +46,22 @@ class ShowImagesButton extends StatelessWidget {
   final String title;
   final Map<MediaImageType, List<MediaImage>> images;
 
-  const ShowImagesButton({super.key, required this.title, required this.images});
+  const ShowImagesButton(
+      {super.key, required this.title, required this.images});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: images.isEmpty
           ? null
-          : () => Navigator.push(context, Routes.defaultRoute(null, ItemImagesPage(title: title, imagesMap: images))),
-      icon: Icon(MyIcons.gallery, color: Theme.of(context).colorScheme.onBackground,),
+          : () => Navigator.push(
+              context,
+              Routes.defaultRoute(
+                  null, ItemImagesPage(title: title, imagesMap: images))),
+      icon: Icon(
+        MyIcons.gallery,
+        color: Theme.of(context).colorScheme.onBackground,
+      ),
     );
   }
 }
@@ -57,8 +71,13 @@ class ItemImagesPage extends StatelessWidget {
   final Map<MediaImageType, List<MediaImage>> imagesMap;
   final List<String> _images = [];
 
-  ItemImagesPage({Key? key, required this.title, required this.imagesMap}) : super(key: key) {
-    for (MediaImageType type in [MediaImageType.POSTER, MediaImageType.BACKDROP, MediaImageType.PROFILES]) {
+  ItemImagesPage({Key? key, required this.title, required this.imagesMap})
+      : super(key: key) {
+    for (MediaImageType type in [
+      MediaImageType.POSTER,
+      MediaImageType.BACKDROP,
+      MediaImageType.PROFILES
+    ]) {
       if (imagesMap.containsKey(type) && imagesMap[type]!.length > 0)
         _images.addAll(imagesMap[type]!.map((e) => e.filePath!).toList());
     }
@@ -72,15 +91,22 @@ class ItemImagesPage extends StatelessWidget {
         primary: true,
         titleSpacing: 0,
         elevation: 0,
-        leading: IconButton(icon: Icon(MyIcons.arrow_left), onPressed: () => Navigator.of(context).pop()),
+        leading: IconButton(
+            icon: Icon(MyIcons.arrow_left),
+            onPressed: () => Navigator.of(context).pop()),
       ),
       body: Builder(builder: (context) {
         return Scrollbar(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                for (MediaImageType type in [MediaImageType.POSTER, MediaImageType.BACKDROP, MediaImageType.PROFILES])
-                  if (imagesMap.containsKey(type) && imagesMap[type]!.length > 0)
+                for (MediaImageType type in [
+                  MediaImageType.POSTER,
+                  MediaImageType.BACKDROP,
+                  MediaImageType.PROFILES
+                ])
+                  if (imagesMap.containsKey(type) &&
+                      imagesMap[type]!.length > 0)
                     GridView.builder(
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
@@ -89,12 +115,15 @@ class ItemImagesPage extends StatelessWidget {
                         return ContentImageWidget(
                           imagesMap[type]![i].filePath,
                           fit: BoxFit.cover,
-                          onSelectImage: () => onSelectImage(context, imagesMap[type]![i].filePath),
+                          onSelectImage: () => onSelectImage(
+                              context, imagesMap[type]![i].filePath),
                         );
                       },
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: getColumns(context),
-                        childAspectRatio: imagesMap[type]!.map((e) => e.aspectRatio!).reduce(max),
+                        childAspectRatio: imagesMap[type]!
+                            .map((e) => e.aspectRatio!)
+                            .reduce(max),
                         crossAxisSpacing: 3,
                         mainAxisSpacing: 3,
                       ),
@@ -115,6 +144,7 @@ class ItemImagesPage extends StatelessWidget {
   onSelectImage(BuildContext context, String? filePath) {
     if (filePath == null) return;
     final index = _images.indexOf(filePath);
-    DialogImage.showCarousel(context: context, images: _images, currentImage: index);
+    DialogImage.showCarousel(
+        context: context, images: _images, currentImage: index);
   }
 }

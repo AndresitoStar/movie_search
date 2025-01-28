@@ -87,7 +87,7 @@ class ItemDetailAppbarContentExtended
       alignment: MainAxisAlignment.center,
       children: [
         ItemLikeButton(item: model.data!),
-        ItemImagesButtonView(param: model.data!),
+        ItemImagesButtonView(id: model.itemId, type: model.itemType, title: model.title ?? ''),
         if (model.itemType != TMDB_API_TYPE.PERSON)
           VideoButton(param: model.data!),
       ],
@@ -265,8 +265,8 @@ class ItemDetailAppbarContentSimple
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Theme.of(context).colorScheme.background.withOpacity(0.5),
-                  Theme.of(context).colorScheme.background.withOpacity(0.5),
+                  Theme.of(context).colorScheme.background.withOpacity(0.2),
+                  Theme.of(context).colorScheme.background.withOpacity(0.1),
                   Theme.of(context).scaffoldBackgroundColor,
                 ],
               ),
