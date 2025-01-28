@@ -79,7 +79,7 @@ class _DialogImageState extends State<DialogImage> {
 
   @override
   Widget build(BuildContext context) {
-    CarouselControllerImpl _carouselController = CarouselControllerImpl();
+    CarouselSliderController _carouselController = CarouselSliderController();
     return AlertDialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
