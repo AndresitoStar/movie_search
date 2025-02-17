@@ -50,26 +50,28 @@ class ContentRatingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ContentRatingViewModel>.reactive(
       viewModelBuilder: () => ContentRatingViewModel(this.id, this.type),
-      builder: (context, model, child) => Chip(
-        backgroundColor: Colors.transparent,
-        onDeleted: model.hasError
-            ? () {
-                model.initialise();
-              }
-            : null,
-        deleteIcon: model.isBusy
-            ? CircularProgressIndicator(strokeWidth: 1)
-            : model.hasError
-                ? Icon(Icons.refresh)
-                : null,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-          side: BorderSide(color: context.theme.dividerColor),
-        ),
-        label: model.hasError || !model.initialised || model.isBusy
-            ? Text('-')
-            : Text(model.data ?? '-'),
-      ),
+      builder: (context, model, child) => model.hasError || !model.initialised || model.data?.isEmpty == true
+          ? SizedBox()
+          : Chip(
+              backgroundColor: Colors.transparent,
+              onDeleted: model.hasError
+                  ? () {
+                      model.initialise();
+                    }
+                  : null,
+              deleteIcon: model.isBusy
+                  ? CircularProgressIndicator(strokeWidth: 1)
+                  : model.hasError
+                      ? Icon(Icons.refresh)
+                      : null,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+                side: BorderSide(color: context.theme.dividerColor),
+              ),
+              label: model.hasError || !model.initialised || model.isBusy
+                  ? Text('-')
+                  : Text(model.data ?? '-'),
+            ),
     );
   }
 }

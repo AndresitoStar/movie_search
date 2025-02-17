@@ -12,19 +12,13 @@ class PlaceholderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.transparent,
+      color: Colors.white,
       constraints: BoxConstraints(maxHeight: 60.h),
-      child: LayoutBuilder(
-        // builder: (context, constraint) => Icon(
-        //   MyIcons.default_image,
-        //   color: Colors.grey.shade100,
-        //   size: constraint.biggest.width,
-        // ),
-        builder: (context, constraint) => Image.asset(
-          'assets/images/placeholder.jpg',
-          height: constraint.biggest.height,
-          fit: BoxFit.cover,
-        ),
+      child: Image.asset(
+        'assets/images/placeholder.jpg',
+        // height: constraint.biggest.height,
+        fit: BoxFit.contain,
+        width: double.infinity,
       ),
       height: height,
     );

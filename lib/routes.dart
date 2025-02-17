@@ -4,6 +4,7 @@ import 'package:movie_search/modules/audiovisual/componets/item_detail_page.dart
 import 'package:movie_search/modules/audiovisual/componets/review_page.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/discover/discover_screen.dart';
+import 'package:movie_search/modules/discover/search_by_person_page.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';

@@ -1,5 +1,6 @@
 import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/model/api/models/api.dart';
+import 'package:movie_search/model/api/models/person.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/search/search_category.dart';
@@ -63,6 +64,8 @@ class DiscoverViewModel extends BaseViewModel {
 
   FormControl<Set<GenreTableData>> get genresControl => form.controls[FORM_GENRE] as FormControl<Set<GenreTableData>>;
 
+  FormControl<Set<BaseSearchResult>> get castControl => form.controls[FORM_CAST] as FormControl<Set<BaseSearchResult>>;
+
   FormControl<Set<WatchProvider>> get providerControl =>
       form.controls[FORM_PROVIDERS] as FormControl<Set<WatchProvider>>;
 
@@ -94,6 +97,11 @@ class DiscoverViewModel extends BaseViewModel {
     providerControl.updateValueAndValidity();
   }
 
+  toggleByPersonFilter(Set<BaseSearchResult> persons) {
+    castControl.value = persons;
+    castControl.updateValueAndValidity();
+  }
+
   initializeFilters() async {
     setBusy(true);
     _allGenres = await _db.allGenres(null);
@@ -119,6 +127,7 @@ class DiscoverViewModel extends BaseViewModel {
         watchProvider: providerControl.value!.map((e) => e.providerId).toList(),
         sortDirection: sortDirectionControl.value,
         sortOrder: sortOrderControl.value,
+        cast: castControl.value!.map((e) => e.id.toString()).toList(),
       );
       _searchResults.addAll(response.result);
       _total = response.totalResult;
