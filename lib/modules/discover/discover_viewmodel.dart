@@ -13,6 +13,7 @@ class DiscoverViewModel extends BaseViewModel {
   static const String FORM_TYPE = 'type';
   static const String FORM_GENRE = 'genre';
   static const String FORM_CAST = 'cast';
+
   static const String FORM_PROVIDERS = 'networks';
   static const String FORM_SORT_ORDER = 'sort_order';
   static const String FORM_SORT_DIRECTIONS = 'sort_direction';
