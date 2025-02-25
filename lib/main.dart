@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:movie_search/core/content_type_controller.dart';
+import 'package:movie_search/firebase_options.dart';
 import 'package:movie_search/modules/account/viewModel/account_viewmodel.dart';
 import 'package:movie_search/modules/favourite/viewmodel/favourite_viewmodel.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
@@ -28,7 +29,9 @@ final GlobalKey<NavigatorState> globalNavigatorKey = GlobalKey<NavigatorState>()
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
   await initializeDateFormatting("es_ES", null);
   if (Platform.isWindows) {
     _configureSqliteOnWindows();

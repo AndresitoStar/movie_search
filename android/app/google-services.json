@@ -3,7 +3,7 @@
     "project_number": "309215705690",
     "firebase_url": "https://media-catalog-5af13.firebaseio.com",
     "project_id": "media-catalog-5af13",
-    "storage_bucket": "media-catalog-5af13.appspot.com"
+    "storage_bucket": "media-catalog-5af13.firebasestorage.app"
   },
   "client": [
     {
@@ -14,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "309215705690-kvqthjokn7hvqsghikq04bauc6k3q4j3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tko.movie_search",
+            "certificate_hash": "847142d0a1957bd1c51c1afa4c437e70ba83afc9"
+          }
+        },
         {
           "client_id": "309215705690-mdgsu71go9a0sa0tcdf91un1k4c7age2.apps.googleusercontent.com",
           "client_type": 3
@@ -30,6 +38,13 @@
             {
               "client_id": "309215705690-mdgsu71go9a0sa0tcdf91un1k4c7age2.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "309215705690-r725ca14qfhfmnu76b3t47a6jd2bvt0n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tko.movieSearch"
+              }
             }
           ]
         }
