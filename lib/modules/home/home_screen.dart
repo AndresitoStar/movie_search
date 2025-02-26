@@ -25,6 +25,11 @@ class HomeScreen extends StatelessWidget {
 
     return CustomScaffold(
       bottomBarIndex: 0,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =>
+            Navigator.of(context).pushNamed(SearchScreen.routeName),
+        child: Icon(MyIcons.search),
+      ),
       body: Column(
         children: [
           if (Device.screenType == ScreenType.mobile) ...[

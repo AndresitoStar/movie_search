@@ -5,7 +5,6 @@ import 'package:get_it/get_it.dart';
 import 'package:movie_search/core/content_preview_page.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
-import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';

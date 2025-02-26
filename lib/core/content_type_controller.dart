@@ -19,7 +19,7 @@ class ContentTypeController {
       final type = await SharedPreferencesHelper.getContentTypeSelected();
       if (type != null) _type = TMDB_API_TYPE.values.firstWhere((element) => element.toString() == type);
       else _type = TMDB_API_TYPE.MOVIE;
-    } on Exception catch (e) {
+    } on Exception {
       _type = TMDB_API_TYPE.MOVIE;
     }
   }

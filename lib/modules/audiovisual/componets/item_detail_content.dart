@@ -53,7 +53,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
                           )),
                     if (tagline.isNotEmpty)
                       Text(
-                        tagline ?? '',
+                        tagline,
                         style: context.theme.textTheme.titleMedium!.copyWith(
                           fontStyle: FontStyle.italic,
                           color: context.theme.textTheme.titleMedium!.color!
