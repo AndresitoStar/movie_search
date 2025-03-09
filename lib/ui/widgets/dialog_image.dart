@@ -165,15 +165,15 @@ class _DialogImageState extends State<DialogImage> {
                     widget.imageUrl ?? widget.images![widget.currentImage!],
                     DateTime.now().toString(),
                   ),
-                  if (!Platform.isAndroid || !Platform.isIOS)
-                    MyCircularButton(
-                      icon: Icon(MyIcons.quality),
-                      onPressed: () {
-                        setState(() {
-                          baseUrl = URL_IMAGE_BIG;
-                        });
-                      },
-                    ),
+                  // if (!Platform.isAndroid || !Platform.isIOS)
+                  //   MyCircularButton(
+                  //     icon: Icon(MyIcons.quality),
+                  //     onPressed: () {
+                  //       setState(() {
+                  //         baseUrl = URL_IMAGE_BIG;
+                  //       });
+                  //     },
+                  //   ),
                   MyCircularButton(
                     icon: Icon(MyIcons.clear),
                     color: Colors.red,
