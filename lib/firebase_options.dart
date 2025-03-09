@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -33,10 +30,7 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -60,13 +54,36 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCJ5IStXzNDkraidx-1bDVrd5X2voInXBg',
-    appId: '1:309215705690:ios:43e8e0df2361ee633d3663',
+    appId: '1:309215705690:ios:12db8310ad1af7393d3663',
     messagingSenderId: '309215705690',
     projectId: 'media-catalog-5af13',
     databaseURL: 'https://media-catalog-5af13.firebaseio.com',
     storageBucket: 'media-catalog-5af13.firebasestorage.app',
     androidClientId: '309215705690-kvqthjokn7hvqsghikq04bauc6k3q4j3.apps.googleusercontent.com',
-    iosClientId: '309215705690-qdr1jjpnj4kjj36ln8un62pksbbv05hp.apps.googleusercontent.com',
-    iosBundleId: 'com.tko.movieSearch.RunnerTests',
+    iosClientId: '309215705690-r725ca14qfhfmnu76b3t47a6jd2bvt0n.apps.googleusercontent.com',
+    iosBundleId: 'com.tko.movieSearch',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDcV8IsBtagBCAjFbCnXmv0EugQCHKtzIQ',
+    appId: '1:309215705690:web:b723b1070a4846063d3663',
+    messagingSenderId: '309215705690',
+    projectId: 'media-catalog-5af13',
+    authDomain: 'media-catalog-5af13.firebaseapp.com',
+    databaseURL: 'https://media-catalog-5af13.firebaseio.com',
+    storageBucket: 'media-catalog-5af13.firebasestorage.app',
+    measurementId: 'G-1TQ5432YB7',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDcV8IsBtagBCAjFbCnXmv0EugQCHKtzIQ',
+    appId: '1:309215705690:web:b723b1070a4846063d3663',
+    messagingSenderId: '309215705690',
+    projectId: 'media-catalog-5af13',
+    authDomain: 'media-catalog-5af13.firebaseapp.com',
+    databaseURL: 'https://media-catalog-5af13.firebaseio.com',
+    storageBucket: 'media-catalog-5af13.firebasestorage.app',
+    measurementId: 'G-1TQ5432YB7',
+  );
+
 }
