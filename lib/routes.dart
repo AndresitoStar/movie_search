@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_collection.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_page.dart';
+import 'package:movie_search/modules/audiovisual/componets/review_page.dart';
+import 'package:movie_search/modules/audiovisual/model/base.dart';
+import 'package:movie_search/modules/discover/discover_screen.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
@@ -17,6 +21,8 @@ final Map<String, Widget> routes = {
   OnboardScreen.routeName: OnboardScreen(),
   ItemCollectionScreen.route: ItemCollectionScreen(),
   VideoScreen.route: VideoScreen(),
+  DiscoverScreen.routeName: DiscoverScreen(),
+  ReviewPage.routeName: ReviewPage(),
 };
 
 class Routes {
@@ -41,7 +47,7 @@ class Routes {
       pageBuilder: (_, __, ___) => SafeArea(
         top: false,
         bottom: false,
-        child: Builder(builder: (context) => Container(constraints: BoxConstraints(maxWidth: 720), child: child)),
+        child: Builder(builder: (context) => child),
       ),
       settings: settings,
     );
@@ -54,10 +60,21 @@ class Routes {
         transitionDuration: _transitionDuration,
         transitionsBuilder: (context, animation, secondaryAnimation, child) =>
             _getTransitions(context, animation, secondaryAnimation, child),
-        pageBuilder: (_, __, ___) => Builder(
-            builder: (context) => Container(constraints: BoxConstraints(maxWidth: 720), child: _routes[settings.name])),
+        pageBuilder: (_, __, ___) => Builder(builder: (context) => Container(child: _routes[settings.name])),
         settings: settings,
       );
+    } else if (settings.name?.startsWith(ItemDetailPage.route) ?? false) {
+      try {
+        final paths = Uri.parse(settings.name!).pathSegments;
+        if (paths.length >= 3) {
+          final type = paths[1];
+          final id = num.parse(paths[2]);
+          final BaseSearchResult item = BaseSearchResult.lite(mediaType: type, id: id);
+          return defaultRoute(settings, ItemDetailPage(item: item, heroTagPrefix: 'lala'));
+        }
+      } on Exception {
+        return defaultRoute(settings, routes[SplashScreen.route]!);
+      }
     }
     return MaterialPageRoute(settings: settings, builder: (_) => Container());
   }

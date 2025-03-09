@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/model/api/models/tv.dart';
+import 'package:movie_search/providers/util.dart';
 
 class ContentDivider extends StatelessWidget {
   const ContentDivider({
@@ -33,7 +36,7 @@ class ContentRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-        visible: value1 != null && value2 != null,
+        visible: value1 != null || value2 != null,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
@@ -98,30 +101,82 @@ class ContentHorizontal extends StatelessWidget {
   final String? content;
   final double padding;
   final Widget? subtitle;
+  final TextStyle? contentStyle;
+  final bool forceLight;
 
-  const ContentHorizontal({Key? key, this.label, this.content, this.padding = 0, this.subtitle}) : super(key: key);
+  const ContentHorizontal({
+    Key? key,
+    this.label,
+    this.content,
+    this.padding = 0,
+    this.subtitle,
+    this.contentStyle,
+    this.forceLight = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).primaryColor;
     return Visibility(
       visible: subtitle != null || (content != null && content!.isNotEmpty && content != 'N/A'),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: padding),
+        // color: forceLight ? Colors.white10 : Theme.of(context).colorScheme.background,
         child: ListTile(
           title: label != null
               ? Text(
                   label!,
-                  style: Theme.of(context).textTheme.caption!.copyWith(
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: primaryColor,
+                        color: context.theme.colorScheme.secondary,
                       ),
                 )
               : null,
           subtitle: subtitle ??
-              Text(content != null && content!.isNotEmpty ? content! : '',
-                  style: Theme.of(context).textTheme.subtitle1),
+              Text(
+                content != null && content!.isNotEmpty ? content! : '',
+                style: contentStyle ?? Theme.of(context).textTheme.titleMedium,
+              ),
         ),
+      ),
+    );
+  }
+}
+
+class LogosWidget extends StatelessWidget {
+  final List<MapEntry<String, String?>> list;
+
+  const LogosWidget({super.key, required this.list});
+
+  static LogosWidget fromLogoList(List<Logo> list) =>
+      LogosWidget(list: list.map((e) => MapEntry(e.name!, e.logoPath)).toList());
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
+      child: Wrap(
+        runSpacing: 8,
+        spacing: 10,
+        runAlignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: list
+            .map(
+              (e) => e.value != null
+                  ? Tooltip(
+                      message: e.key,
+                      child: CachedNetworkImage(
+                        imageUrl: '$URL_IMAGE_MEDIUM${e.value}',
+                        color: Colors.white,
+                        colorBlendMode: BlendMode.dstATop,
+                        width: 80,
+                      ),
+                    )
+                  : Text(
+                      e.key,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+            )
+            .toList(),
       ),
     );
   }

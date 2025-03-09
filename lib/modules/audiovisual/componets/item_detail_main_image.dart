@@ -21,7 +21,9 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          model.withImage ? ContentImageWidget(model.posterImageUrl) : Card(child: PlaceholderImage(height: 250)),
+          model.withImage
+              ? ContentImageWidget(landscape ? model.backDropImageUrl : model.posterImageUrl, isBackdrop: landscape)
+              : Card(child: PlaceholderImage(height: 250)),
           if (!landscape)
             IgnorePointer(
               ignoring: true,
@@ -52,6 +54,7 @@ class ContentImageWidget extends StatefulWidget {
   final BoxFit fit;
   final bool ignorePointer;
   final bool isBackdrop;
+  final VoidCallback? onSelectImage;
 
   ContentImageWidget(
     this.imagePath, {
@@ -59,6 +62,7 @@ class ContentImageWidget extends StatefulWidget {
     this.fit = BoxFit.fitWidth,
     this.ignorePointer = false,
     this.isBackdrop = false,
+    this.onSelectImage,
   }) : super(key: key);
 
   @override
@@ -67,31 +71,40 @@ class ContentImageWidget extends StatefulWidget {
 
 class _ContentImageWidgetState extends State<ContentImageWidget> {
   late String baseUrl;
+  late String placeholderBaseUrl;
 
   @override
   void initState() {
     baseUrl = widget.isBackdrop ? URL_IMAGE_MEDIUM_BACKDROP : URL_IMAGE_MEDIUM;
+    placeholderBaseUrl = widget.isBackdrop ? URL_IMAGE_SMALL_BACKDROP : URL_IMAGE_SMALL;
     // _checkImageCachedQuality();
     super.initState();
   }
+
+  bool get _isOutsideTMDB => widget.imagePath != null && widget.imagePath!.startsWith('https://');
 
   @override
   Widget build(BuildContext context) {
     if (widget.imagePath == null || widget.imagePath!.isEmpty) return PlaceholderImage();
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
+      // constraints: BoxConstraints(maxHeight: 10.h),
       child: GestureDetector(
         onTap: widget.ignorePointer
             ? null
-            : () => DialogImage.show(context: context, imageUrl: widget.imagePath!, baseUrl: baseUrl)
-                .then((value) => _checkImageCachedQuality),
+            : widget.onSelectImage != null
+                ? () => widget.onSelectImage!.call()
+                : () => DialogImage.show(context: context, imageUrl: widget.imagePath!, baseUrl: baseUrl)
+                    .then((value) => _checkImageCachedQuality),
         child: CachedNetworkImage(
-          imageUrl: '$baseUrl${widget.imagePath}',
-          placeholder: (_, __) => CachedNetworkImage(
-            fit: widget.fit,
-            imageUrl: '${widget.isBackdrop ? URL_IMAGE_SMALL_BACKDROP : URL_IMAGE_SMALL}${widget.imagePath}',
-            placeholder: (context, _) => DefaultPlaceholder(),
-          ),
+          imageUrl: !_isOutsideTMDB ? '$baseUrl${widget.imagePath}' : widget.imagePath!,
+          placeholder: (_, __) => !_isOutsideTMDB
+              ? CachedNetworkImage(
+                  fit: widget.fit,
+                  imageUrl: '$placeholderBaseUrl${widget.imagePath}',
+                  placeholder: (context, _) => DefaultPlaceholder(),
+                )
+              : DefaultPlaceholder(),
           errorWidget: (ctx, _, __) => PlaceholderImage(/*height: MediaQuery.of(ctx).size.height * 0.6*/),
           fit: widget.fit,
           // width: double.infinity,

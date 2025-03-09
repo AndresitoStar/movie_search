@@ -7,8 +7,11 @@ class ThemeSelectorDialog extends StatelessWidget {
   static Future show(BuildContext context) {
     return showModalBottomSheet(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.5),
-      builder: (context) => ThemeSelectorDialog(),
+      builder: (context) => FractionallySizedBox(
+        heightFactor: 0.9,
+        child: ThemeSelectorDialog(),
+      ),
+      isDismissible: true,
       isScrollControlled: true,
     );
   }
@@ -17,64 +20,82 @@ class ThemeSelectorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeViewModel viewModel = Provider.of(context);
     bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: ListTile(
-        title: Text.rich(
-          TextSpan(
-            text: 'Seleccione el color principal\n'.toUpperCase(),
-            children: [
-              TextSpan(
-                text: 'Color Actual: ',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              TextSpan(
-                text: FlexColor.schemes[viewModel.flexColor]!.name,
-                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      color: isDarkModeOn
-                          ? FlexColor.schemes[viewModel.flexColor]!.dark.primary
-                          : FlexColor.schemes[viewModel.flexColor]!.light.primary,
+    final colors = FlexScheme.values.where((e) => FlexColor.schemes.containsKey(e)).toList();
+    // final ItemScrollController itemScrollController = ItemScrollController();
+    // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+    //   final int index = colors.indexWhere((element) => viewModel.flexColor == element);
+    //   if (index > -1) Future.delayed(Duration(milliseconds: 500), () => itemScrollController.jumpTo(index: index));
+    // });
+
+    return Material(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: 20),
+          Text.rich(
+            TextSpan(
+              text: 'Seleccione el color principal\n'.toUpperCase(),
+              children: [
+                TextSpan(
+                  text: 'Color Actual: ',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                TextSpan(
+                  text: FlexColor.schemes[viewModel.flexColor]!.name,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isDarkModeOn
+                            ? FlexColor.schemes[viewModel.flexColor]!.dark.primary
+                            : FlexColor.schemes[viewModel.flexColor]!.light.primary,
+                      ),
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: GridView.builder(
+                itemCount: colors.length,
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: _getColumns(context),
+                  childAspectRatio: 1,
+                  // crossAxisSpacing: 10,
+                  // mainAxisSpacing: 10,
+                ),
+                itemBuilder: (context, i) => Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(32),
+                    onTap: () {
+                      viewModel.setColor(colors[i]);
+                      // Navigator.of(context).pop();
+                    },
+                    child: CircleAvatar(
+                      radius: 32,
+                      child: colors[i] == viewModel.flexColor
+                          ? Icon(Icons.check, color: Theme.of(context).colorScheme.onPrimary)
+                          : null,
+                      backgroundColor: isDarkModeOn
+                          ? FlexColor.schemes[colors[i]]!.dark.primary
+                          : FlexColor.schemes[colors[i]]!.light.primary,
                     ),
+                  ),
+                ),
               ),
-            ],
+            ),
           ),
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline6,
-        ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Wrap(
-            spacing: 14,
-            runSpacing: 16,
-            alignment: WrapAlignment.center,
-            children: FlexScheme.values
-                .map((e) => FlexColor.schemes.containsKey(e)
-                    ? InkWell(
-                        onTap: () {
-                          viewModel.setColor(e);
-                          Navigator.of(context).pop();
-                        },
-                        child: Chip(
-                          elevation: 2,
-                          avatar: e == viewModel.flexColor
-                              ? Icon(
-                                  Icons.check_circle_rounded,
-                                  color: Theme.of(context).colorScheme.onPrimary,
-                                )
-                              : null,
-                          label: Text(
-                            FlexColor.schemes[e]!.name,
-                            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                          ),
-                          backgroundColor:
-                              isDarkModeOn ? FlexColor.schemes[e]!.dark.primary : FlexColor.schemes[e]!.light.primary,
-                        ),
-                      )
-                    : Container())
-                .toList(),
-          ),
-        ),
+        ],
       ),
     );
+  }
+
+  int _getColumns(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return (width ~/ 64).clamp(3, 6);
   }
 }

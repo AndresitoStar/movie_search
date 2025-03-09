@@ -3,7 +3,7 @@ import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/video/video_screen.dart';
 import 'package:movie_search/modules/video/video_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/ui/icons.dart';
+import 'package:movie_search/ui/frino_icons.dart';
 import 'package:stacked/stacked.dart';
 
 class VideoButton extends StatelessWidget {
@@ -22,25 +22,14 @@ class VideoButton extends StatelessWidget {
             )
           : !model.hasVideos
               ? Container()
-              : TextButton.icon(
+              : IconButton(
                   onPressed: model.hasVideos
                       ? () => Navigator.of(context).pushNamed(VideoScreen.route, arguments: [model.videos, param.title])
                       : null,
-                  icon: Icon(MyIcons.youtube),
-                  label: Text('YouTube'),
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.disabled)) return Colors.transparent;
-                        return Colors.red;
-                      },
-                    ),
-                  )
-                  // color: Colors.red,
-                  // disabledColor: Theme.of(context).hintColor,
-                  ),
+                  icon: Icon(FrinoIcons.f_video),
+                  color: Theme.of(context).colorScheme.onSurface,
+                  disabledColor: Theme.of(context).hintColor,
+                ),
     );
   }
 }

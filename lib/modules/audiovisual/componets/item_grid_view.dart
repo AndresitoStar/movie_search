@@ -12,20 +12,22 @@ import 'package:movie_search/ui/widgets/default_image.dart';
 import 'item_detail_page.dart';
 
 class ItemGridView extends StatelessWidget {
-  final bool showData;
+  final bool showType;
+  final bool showTitles;
   final bool useBackdrop;
   final BaseSearchResult item;
   final EdgeInsets margin;
   final String heroTagPrefix;
 
-  const ItemGridView({
+  ItemGridView({
     Key? key,
     required this.item,
     required this.heroTagPrefix,
-    this.showData = true,
+    this.showType = true,
+    this.showTitles = false,
     this.useBackdrop = false,
     this.margin = const EdgeInsets.all(10),
-  }) : super(key: key);
+  }) : super(key: UniqueKey());
 
   @override
   Widget build(BuildContext context) {
@@ -46,107 +48,86 @@ class ItemGridView extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 AspectRatio(
-                  aspectRatio: 9 / 16,
-                  child: (useBackdrop && item.backDropImage != null) || item.posterImage != null
+                  aspectRatio:
+                      item.type == TMDB_API_TYPE.PERSON ? 0.669 : 0.667,
+                  child: item.posterImage != null
                       ? ContentImageWidget(
                           '${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
                           fit: BoxFit.cover,
                           ignorePointer: true,
-                          isBackdrop: useBackdrop && item.backDropImage != null,
+                          isBackdrop: item.backDropImage != null,
                         )
                       : PlaceholderImage(),
                 ),
-                if (showData && item.year != null)
+                if (showType)
                   Positioned(
-                    top: 0,
-                    left: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        '${item.year}',
-                      ),
-                      decoration: BoxDecoration(
-                        color: theme.scaffoldBackgroundColor.withOpacity(0.8),
-                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(10)),
-                      ),
-                    ),
-                  ),
-                if (showData)
-                  Positioned(
-                    top: 0,
+                    top: -1,
                     right: 0,
                     child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Icon(item.type.icon),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 5),
+                      child: Text(item.type.name.toLowerCase(),
+                          style: context.theme.primaryTextTheme.bodySmall),
                       decoration: BoxDecoration(
-                        color: theme.scaffoldBackgroundColor.withOpacity(0.8),
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10)),
+                        borderRadius:
+                            BorderRadius.only(bottomLeft: Radius.circular(10)),
+                        color: context.theme.primaryColor,
                       ),
                     ),
                   ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: ClipRect(
-                    child: BackdropFilter(
-                      filter: useBackdrop
-                          ? ImageFilter.blur(sigmaX: 7, sigmaY: 7)
-                          : ImageFilter.blur(sigmaX: 14.0, sigmaY: 14.0),
-                      child: Container(
-                        color: theme.scaffoldBackgroundColor.withOpacity(useBackdrop ? 0.5 : 0.7),
-                        child: ListTile(
-                          title: Text(
-                            item.title ?? '' + '\n',
-                            textAlign: useBackdrop ? TextAlign.start : TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: theme.textTheme.headline6!.copyWith(fontSize: 16),
-                          ),
-                          subtitle: item.subtitle == null
-                              ? null
-                              : Text(
-                                  item.subtitle!,
-                                  textAlign: TextAlign.center,
+                if (this.showTitles)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Column(
+                      children: [
+                        ItemBookmarkTag(item: item),
+                        ClipRect(
+                          child: BackdropFilter(
+                            filter: useBackdrop
+                                ? ImageFilter.blur(sigmaX: 7, sigmaY: 7)
+                                : ImageFilter.blur(sigmaX: 14.0, sigmaY: 14.0),
+                            child: Container(
+                              color: theme.scaffoldBackgroundColor
+                                  .withOpacity(useBackdrop ? 0.5 : 0.7),
+                              child: ListTile(
+                                title: Text(
+                                  item.title ?? '' + '\n',
+                                  textAlign: useBackdrop
+                                      ? TextAlign.start
+                                      : TextAlign.center,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
-                                  style: theme.textTheme.caption,
+                                  style: theme.textTheme.titleLarge!
+                                      .copyWith(fontSize: 16),
                                 ),
+                                subtitle: item.subtitle == null
+                                    ? null
+                                    : Text(
+                                        item.subtitle!,
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: theme.textTheme.bodySmall,
+                                      ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                ),
               ],
             ),
           ),
         );
         return Stack(
           children: [
-            useBackdrop
-                ? child
-                : Hero(
-                    tag: '$heroTagPrefix${item.id}',
-                    child: child,
-                  ),
-            if (!useBackdrop)
-              Positioned(
-                bottom: 50,
-                right: 0,
-                child: Container(
-                  child: ItemLikeButton(
-                    id: item.id,
-                    type: item.type,
-                    iconSize: 28,
-                    showDisabled: false,
-                  ),
-                  width: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.9),
-                  ),
-                ),
-              )
+            Hero(
+              tag: '$heroTagPrefix${item.id}',
+              child: child,
+            ),
           ],
         );
       },

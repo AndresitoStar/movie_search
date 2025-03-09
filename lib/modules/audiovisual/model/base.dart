@@ -74,6 +74,25 @@ class BaseSearchResult {
     throw Exception('API TYPE NOT IMPLEMENTED!');
   }
 
+  BaseSearchResult._(
+    num id,
+    String? type,
+    String? title,
+    String? posterImage,
+  )   : id = id,
+        title = title,
+        posterImage = posterImage,
+        type = TMDB_API_TYPE.values.singleWhere((element) => element.type == type);
+
+  static BaseSearchResult lite({
+    required String mediaType,
+    required num id,
+    String? title,
+    String? posterImage,
+  }) {
+    return BaseSearchResult._(id, mediaType, title, posterImage);
+  }
+
   static String? _parseStatus(String? value) {
     switch (value) {
       case 'Rumored':
@@ -93,5 +112,23 @@ class BaseSearchResult {
       default:
         return value;
     }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': this.id,
+      'title': this.title,
+      'posterImage': this.posterImage,
+      'type': this.type.type,
+    };
+  }
+
+  factory BaseSearchResult.fromMap(Map<String, dynamic> map) {
+    return BaseSearchResult.lite(
+      id: map['id'] as num,
+      title: map['title'] as String,
+      posterImage: map['posterImage'] as String,
+      mediaType: map['type'] as String,
+    );
   }
 }

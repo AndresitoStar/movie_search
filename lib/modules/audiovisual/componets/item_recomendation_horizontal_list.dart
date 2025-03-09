@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_list_page.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
@@ -36,8 +37,8 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                               recommendationType.name,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline5!
-                                  .copyWith(color: Theme.of(context).primaryColor),
+                                  .headlineSmall!
+                                  .copyWith(color: context.theme.colorScheme.secondary),
                             ),
                             trailing: IconButton(
                               icon: Icon(Icons.grid_view_rounded),
@@ -64,7 +65,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                                     itemCount: 3,
                                     itemBuilder: (ctx, i) => AspectRatio(
                                       child: GridItemPlaceholder(),
-                                      aspectRatio: 8 / 16,
+                                      aspectRatio: 0.667,
                                     ),
                                   )
                                 : ListView.builder(
@@ -77,7 +78,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
                                         item: model.items[i],
                                         heroTagPrefix: '$i-${recommendationType.type}-',
                                       ),
-                                      aspectRatio: 8 / 15,
+                                      aspectRatio: 0.667,
                                     ),
                                   ),
                           ),

@@ -16,7 +16,7 @@
    <application
         android:name="${applicationName}"
         android:label="Movie Search"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -46,6 +46,14 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
+				<data android:scheme="tko" android:host="app.moviesearch.com" />
+			</intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

@@ -1,10 +1,18 @@
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/home/custom_segmented_view_pages.dart';
-import 'package:movie_search/modules/home/home_search_bar.dart';
-import 'package:movie_search/modules/trending/trending_card.dart';
-import 'package:movie_search/modules/trending/trending_viewmodel.dart';
+import 'package:get_it/get_it.dart';
+import 'package:movie_search/modules/home/content_type_widget.dart';
+import 'package:movie_search/modules/home/genre_carousel.dart';
+import 'package:movie_search/modules/home/home_movie_now_playing.dart';
+import 'package:movie_search/modules/home/home_movie_top_rated.dart';
+import 'package:movie_search/modules/home/home_movie_upcoming.dart';
+import 'package:movie_search/modules/home/home_trending_all.dart';
+import 'package:movie_search/modules/search/search_screen.dart';
+import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:rxdart/rxdart.dart';
+
+import 'home_popular.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = "/home";
@@ -12,102 +20,59 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final movieTrending = TrendingCard(
-      content: TrendingContent.MOVIE,
-      key: UniqueKey(),
-    );
-    final moviePopular = TrendingCard(
-      content: TrendingContent.MOVIE,
-      trendingType: TrendingType.POPULAR,
-      key: UniqueKey(),
-    );
-    final tvTrending = TrendingCard(
-      content: TrendingContent.TV,
-      key: UniqueKey(),
-    );
-    final tvPopular = TrendingCard(
-      content: TrendingContent.TV,
-      trendingType: TrendingType.POPULAR,
-      key: UniqueKey(),
-    );
-    final personTrending = TrendingCard(
-      content: TrendingContent.PERSON,
-      key: UniqueKey(),
-    );
-    final personPopular = TrendingCard(
-      content: TrendingContent.PERSON,
-      trendingType: TrendingType.POPULAR,
-      key: UniqueKey(),
-    );
 
     return CustomScaffold(
       bottomBarIndex: 0,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =>
+            Navigator.of(context).pushNamed(SearchScreen.routeName),
+        child: Icon(MyIcons.search),
+        backgroundColor: theme.colorScheme.primary,
+      ),
       body: Column(
         children: [
-          AppBar(
-            leading: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Image.asset('assets/images/ic_launcher.png'),
+          if (Device.screenType == ScreenType.mobile) ...[
+            AppBar(
+              title: ContentTypeWidget(),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(SearchScreen.routeName),
+                  icon: Icon(MyIcons.search),
+                ),
+              ],
             ),
-            actions: [EasyDynamicThemeBtn()],
-            title: Text('Movie Search'),
-            titleSpacing: 0,
-          ),
+            Divider(height: 1, color: theme.colorScheme.onSurface),
+          ],
           Expanded(
             child: Container(
               padding: EdgeInsets.only(top: 10),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: Text(
-                        'Bienvenido(a)',
-                        style: theme.textTheme.headline5!
-                            .copyWith(color: theme.colorScheme.primary),
+              child: RefreshIndicator(
+                onRefresh: () => GetIt.instance<HomeController>().loading(),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      GenreCarouselWidget(),
+                      HomeTrendingAllView(
+                        window: TrendingWindow.DAY,
+                        key: UniqueKey(),
                       ),
-                      subtitle: Text(
-                        'Millones de películas, programas de televisión y personas por descubrir. Explora ahora.',
-                        style: theme.textTheme.subtitle1!
-                            .copyWith(color: theme.hintColor),
-                      ),
-                    ),
-                    Divider(),
-                    HomeSearchBar(),
-                    Divider(),
-                    ListTile(
-                      title: Text(
-                        'Peliculas',
-                        style: theme.textTheme.headlineMedium!
-                            .copyWith(color: theme.colorScheme.primary),
-                      ),
-                    ),
-                    CustomSegmentedPageView(
-                      pages: [movieTrending, moviePopular],
-                      tabs: ['Tendencia', 'Popular'],
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Series y Televisión',
-                        style: theme.textTheme.headlineMedium!
-                            .copyWith(color: theme.colorScheme.primary),
-                      ),
-                    ),
-                    CustomSegmentedPageView(
-                      pages: [tvTrending, tvPopular],
-                      tabs: ['Tendencia', 'Popular'],
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Personas',
-                        style: theme.textTheme.headlineMedium!
-                            .copyWith(color: theme.colorScheme.primary),
-                      ),
-                    ),
-                    CustomSegmentedPageView(
-                      pages: [personTrending, personPopular],
-                      tabs: ['Tendencia', 'Popular'],
-                    ),
-                  ],
+                      // HomeTrendingAllView(window: TrendingWindow.WEEK, key: UniqueKey()),
+                      // CustomSegmentedPageView(
+                      //   title: 'Lo Ultimo en Tendencia',
+                      //   pages: [
+                      //     HomeTrendingAllView(window: TrendingWindow.DAY, key: UniqueKey()),
+                      //     HomeTrendingAllView(window: TrendingWindow.WEEK, key: UniqueKey()),
+                      //   ],
+                      //   tabs: [TrendingWindow.DAY.title, TrendingWindow.WEEK.title],
+                      // ),
+                      HomeNowPlayingView(key: UniqueKey()),
+                      HomeUpcomingView(key: UniqueKey()),
+                      HomePopularView(key: UniqueKey()),
+                      HomeTopRatedView(key: UniqueKey()),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -115,5 +80,19 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class HomeController {
+  final _loadingSubject = BehaviorSubject<bool>.seeded(false);
+
+  Stream<bool> get loadingStream => _loadingSubject.stream;
+
+  Future loading() async {
+    _loadingSubject.add(true);
+  }
+
+  void finishLoading() {
+    _loadingSubject.add(false);
   }
 }

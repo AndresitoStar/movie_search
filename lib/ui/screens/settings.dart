@@ -1,8 +1,8 @@
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/themes/theme_selector.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
+import 'package:movie_search/ui/widgets/theme_switcher.dart';
 
 class SettingsScreen extends StatelessWidget {
   static const String routeName = "/settings";
@@ -44,27 +44,18 @@ class SettingsScreen extends StatelessWidget {
       children: [
         Image.asset('assets/images/ic_launcher.png', width: 150, height: 150),
         SizedBox(height: 30),
-        Text(appName, style: theme.textTheme.headline4!.copyWith(color: theme.colorScheme.secondary)),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: Icon(Icons.color_lens_rounded),
-              onPressed: () => ThemeSelectorDialog.show(context),
-            ),
-            EasyDynamicThemeBtn(),
-            // IconButton(
-            //   icon: Icon(Icons.high_quality),
-            //   onPressed: () => _showImageQualityDialog(context),
-            // ),
-          ],
+        Text(appName, style: theme.textTheme.headlineMedium!.copyWith(color: theme.colorScheme.primary)),
+        IconButton(
+          icon: Icon(Icons.color_lens_rounded),
+          onPressed: () => ThemeSelectorDialog.show(context),
         ),
+        MyThemeBtn(),
         SizedBox(height: 30),
-        Text('Desarrollador', style: theme.textTheme.subtitle2!.copyWith(color: theme.hintColor)),
-        Text('Ing. Andrés Forns Jusino', style: theme.textTheme.headline6),
+        Text('Made by', style: theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
+        Text('Andrés Forns Jusino', style: theme.textTheme.titleLarge),
         SizedBox(height: 30),
-        Text('Version', style: theme.textTheme.subtitle2!.copyWith(color: theme.hintColor)),
-        Text(version, style: theme.textTheme.headline6),
+        Text('Version', style: theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
+        Text(version, style: theme.textTheme.titleLarge),
       ],
     );
   }

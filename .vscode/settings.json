@@ -1,3 +1,9 @@
 {
-    "dart.flutterSdkPath": "D:\\Desarrollo\\flutter-windows\\flutter-2.10.0"
+    "dart.flutterSdkPath": "D:\\Desarrollo\\flutter-windows\\flutter-2.10.0",
+    "dart.lineLength": 120,
+    "[dart]": {
+        "editor.rulers": [
+            120
+        ],
+    }
 }

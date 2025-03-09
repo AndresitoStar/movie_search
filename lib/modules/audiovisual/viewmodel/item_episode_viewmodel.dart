@@ -1,5 +1,6 @@
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/model/api/models/video.dart';
+import 'package:movie_search/modules/audiovisual/model/image.dart';
 import 'package:movie_search/modules/audiovisual/service/service.dart';
 import 'package:movie_search/modules/video/service.dart';
 import 'package:stacked/stacked.dart';
@@ -11,6 +12,7 @@ class ItemEpisodeDetailViewModel extends FutureViewModel {
   final Seasons season;
   Episode episode;
   final List<Video> videos = [];
+  final List<MediaImage> images = [];
 
   ItemEpisodeDetailViewModel({required this.season, required this.episode, required this.tvShow})
       : _service = AudiovisualService.getInstance(),
@@ -20,7 +22,7 @@ class ItemEpisodeDetailViewModel extends FutureViewModel {
   Future futureToRun() async {
     setBusy(true);
     try {
-      await Future.wait([_loadEpisodeData(), _loadVideos()]);
+      await Future.wait([_loadEpisodeData(), _loadVideos(), _loadEpisodeImages()]);
       setInitialised(true);
       setBusy(false);
     } catch (e) {
@@ -31,6 +33,12 @@ class ItemEpisodeDetailViewModel extends FutureViewModel {
   Future _loadEpisodeData() async {
     if (season.seasonNumber != null && episode.episodeNumber != null) {
       this.episode = await _service.getEpisode(tvShow.id, season.seasonNumber!, episode.episodeNumber!);
+    }
+  }
+
+  Future _loadEpisodeImages() async {
+    if (season.seasonNumber != null && episode.episodeNumber != null) {
+      this.images.addAll(await _videoService.getEpisodeImages(tvShow.id, season.seasonNumber!, episode.episodeNumber!));
     }
   }
 

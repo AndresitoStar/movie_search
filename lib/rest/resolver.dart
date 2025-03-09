@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 import 'package:movie_search/model/api/models/api.dart';
 import 'package:movie_search/modules/audiovisual/model/image.dart';
 
@@ -22,7 +25,7 @@ abstract class BaseService {
   late Dio clientOMDB;
   late Dio parseClient;
 
-  static const _DEFAULT_TIMEOUT = 20 * 1000;
+  static const _DEFAULT_TIMEOUT = Duration(seconds: 20);
 
   final Map<String, dynamic> _baseParams = {
     'api_key': '3e56846ee7cfb0b7d870484a9f66218c',
@@ -84,6 +87,16 @@ abstract class BaseService {
     return result;
   }
 
+  final Map<String, String> _cacheRegion = {};
+
+  Future<String> fetchRegion() async {
+    if (_cacheRegion.containsKey('region')) return _cacheRegion['region']!;
+    final response = await http.get(Uri.parse('http://ipwho.is/'));
+    final region = jsonDecode(response.body)['country_code'];
+    _cacheRegion.putIfAbsent('region', () => region);
+    return region;
+  }
+
   Future<Map<MediaImageType, List<MediaImage>>> getImagesGroup(String type, num typeId) async {
     Map<MediaImageType, List<MediaImage>> result = {};
     try {
@@ -120,15 +133,16 @@ abstract class BaseService {
     T Function(dynamic data) onResult, {
     Map<String, T>? cacheMap,
     String? idCache,
+    bool force = false,
     Map<String, dynamic> params = const {},
   }) async {
     try {
-      if (cacheMap != null && idCache != null) if (cacheMap.containsKey(idCache)) return cacheMap[idCache]!;
+      if (!force && cacheMap != null && idCache != null) if (cacheMap.containsKey(idCache)) return cacheMap[idCache]!;
 
       var response = await clientTMDB.get(path, queryParameters: {...params, ...baseParams});
       if (response.statusCode == 200) {
         final result = onResult(response.data);
-        if (cacheMap != null && idCache != null) cacheMap.putIfAbsent(idCache, () => result);
+        if (cacheMap != null && idCache != null) cacheMap.update(idCache, (_) => result, ifAbsent: () => result);
         return result;
       }
       throw ApiException('<<$path>> ${response.statusMessage}');

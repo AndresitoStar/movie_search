@@ -1,18 +1,18 @@
 import 'package:movie_search/providers/util.dart';
 
 class SearchCategory {
-  String? label, value;
+  String label, value;
 
   SearchCategory(this.label, this.value);
 
-  SearchCategory.all()
-      : label = 'Todos',
-        value = null;
-
   static Set<SearchCategory> getAll() {
-    final categories = TMDB_API_TYPE.values.map((e) => SearchCategory(e.name, e.type)).toSet();
-    categories.add(SearchCategory.all());
-    return categories;
+    // final categories = TMDB_API_TYPE.values.map((e) => SearchCategory(e.name, e.type)).toSet();
+    // categories.add(SearchCategory.all());
+    // return categories;
+    return {
+      SearchCategory(TMDB_API_TYPE.MOVIE.name, TMDB_API_TYPE.MOVIE.type),
+      SearchCategory(TMDB_API_TYPE.TV_SHOW.name, TMDB_API_TYPE.TV_SHOW.type),
+    };
   }
 
   @override

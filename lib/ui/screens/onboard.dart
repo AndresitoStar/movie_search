@@ -56,7 +56,7 @@ class OnboardScreen extends StatelessWidget {
             child: Text(
               text,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white70),
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.white70),
             ),
           ),
           if (last)
@@ -66,7 +66,7 @@ class OnboardScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () => navigateToHome(context),
                 child: Text('Comenzar'),
-                style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.secondary),
+                style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
               ),
             ),
         ],

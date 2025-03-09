@@ -4,6 +4,7 @@ import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_list_page.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/person/viewmodel/cast_list_viewmodel.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:stacked/stacked.dart';
@@ -31,7 +32,10 @@ class CreditHorizontalList extends StatelessWidget {
                       ListTile(
                         title: Text(
                           'Reparto',
-                          style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).primaryColor),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(color: context.theme.colorScheme.secondary),
                         ),
                         trailing: IconButton(
                           icon: Icon(Icons.grid_view_rounded),
@@ -91,9 +95,10 @@ class PersonHorizontalList extends StatelessWidget {
         child: ItemGridView(
           item: BaseSearchResult.fromPerson(items[i]),
           heroTagPrefix: '$i-person-$tag-',
-          showData: false,
+          showType: false,
+          showTitles: true,
         ),
-        aspectRatio: 8 / 16,
+        aspectRatio: 0.669,
       ),
     );
   }

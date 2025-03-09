@@ -2,23 +2,40 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:movie_search/core/infinite_scroll_viewmodel.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SearchResponse {
+class SearchResponse extends AbstractSearchResponse<BaseSearchResult> {
   final List<BaseSearchResult> result;
   final int totalResult;
   final int totalPageResult;
 
-  SearchResponse({required this.totalResult, required this.totalPageResult, required this.result});
+  SearchResponse({required this.totalResult, required this.totalPageResult, required this.result})
+      : super(totalResult: totalResult, totalPageResult: totalPageResult, result: result);
+
+  factory SearchResponse.parseResponse(Map<String, dynamic> json, {String? mediaType}) {
+    List<BaseSearchResult> result = [];
+    int total = 0;
+    int totalPagesResult = -1;
+
+    result = [];
+    total = json['total_results'];
+    totalPagesResult = json['total_pages'];
+    for (var data in json['results']) {
+      BaseSearchResult b = BaseSearchResult.fromJson(mediaType ?? data['media_type'], data);
+      result.add(b);
+    }
+    return SearchResponse(result: result, totalResult: total, totalPageResult: totalPagesResult);
+  }
 }
 
 // const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w342';
 const String URL_IMAGE_SMALL = 'https://image.tmdb.org/t/p/w92';
-const String URL_IMAGE_SMALL_BACKDROP = 'https://image.tmdb.org/t/p/w780';
-const String URL_IMAGE_MEDIUM = 'https://image.tmdb.org/t/p/w342';
+const String URL_IMAGE_SMALL_BACKDROP = 'https://image.tmdb.org/t/p/w300';
+const String URL_IMAGE_MEDIUM = 'https://image.tmdb.org/t/p/w780';
 const String URL_IMAGE_MEDIUM_BACKDROP = 'https://image.tmdb.org/t/p/w1280';
 const String URL_IMAGE_BIG = 'https://image.tmdb.org/t/p/original';
 
@@ -33,12 +50,18 @@ extension MediaQueryExtension on BuildContext {
 extension snackbar_extension on BuildContext {
   ScaffoldMessengerState get scaffoldMessenger => ScaffoldMessenger.of(this);
 
-  void showSnackbar(String message) => ScaffoldMessenger.of(this).showSnackBar(
-        SnackBar(
-          duration: Duration(seconds: 1),
-          content: Text(message),
-        ),
-      );
+  void showSnackBar(String message) {
+    // Calcular la duración basada en la cantidad de caracteres
+    int messageLength = message.length;
+    int secondsToShow = messageLength ~/ 10 + 2;
+
+    ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: secondsToShow),
+        content: Text(message),
+      ),
+    );
+  }
 }
 
 extension DateFormatter on DateTime {
@@ -62,11 +85,11 @@ extension tmdb_type on TMDB_API_TYPE {
   String get name {
     switch (this) {
       case TMDB_API_TYPE.MOVIE:
-        return 'Películas';
+        return 'MOVIE';
       case TMDB_API_TYPE.TV_SHOW:
-        return 'Series';
+        return 'SERIE';
       case TMDB_API_TYPE.PERSON:
-        return 'Personas';
+        return 'Celebridad';
     }
   }
 
@@ -90,6 +113,17 @@ extension tmdb_type on TMDB_API_TYPE {
       case TMDB_API_TYPE.PERSON:
         return 'Persona';
     }
+  }
+}
+
+class MyLoadingIndicator extends StatelessWidget {
+  const MyLoadingIndicator({Key? key, this.size = 24}) : super(key: key);
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(height: size, width: size, child: CircularProgressIndicator(strokeWidth: 1));
   }
 }
 
@@ -218,6 +252,14 @@ class SharedPreferencesHelper {
 
   static void setFlexSchemaColor(String value) async {
     _setString('SCHEME_COLOR', value);
+  }
+
+  static Future<String?> getContentTypeSelected() async {
+    return _getString('CONTENT_TYPE_SELECTED');
+  }
+
+  static void setContentTypeSelected(String value) async {
+    _setString('CONTENT_TYPE_SELECTED', value);
   }
 }
 

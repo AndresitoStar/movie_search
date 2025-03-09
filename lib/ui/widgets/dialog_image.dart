@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -5,7 +6,6 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:moor/moor.dart';
 import 'package:movie_search/modules/dialog_image/dialog_image_viewmodel.dart';
 import 'package:movie_search/modules/dialog_image/download_image_button.dart';
 import 'package:movie_search/providers/util.dart';
@@ -44,7 +44,7 @@ class DialogImage extends StatefulWidget {
   }) {
     return showDialog(
       context: context,
-      builder: (context) => DialogImage(currentImage: currentImage, images: images),
+      builder: (context) => DialogImage(currentImage: currentImage, images: images, baseUrl: URL_IMAGE_BIG),
     );
   }
 
@@ -79,7 +79,7 @@ class _DialogImageState extends State<DialogImage> {
 
   @override
   Widget build(BuildContext context) {
-    CarouselController _carouselController = CarouselController();
+    CarouselSliderController _carouselController = CarouselSliderController();
     return AlertDialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -105,14 +105,15 @@ class _DialogImageState extends State<DialogImage> {
                 carouselController: _carouselController,
                 items: widget.images!.map<Widget>((e) => _getImage(e)).toList(),
                 options: CarouselOptions(
-                  viewportFraction: 0.95,
+                  viewportFraction: 0.8,
+                  // enlargeStrategy: CenterPageEnlargeStrategy.height,
+                  enlargeCenterPage: true,
                   initialPage: widget.currentImage!,
                   enableInfiniteScroll: false,
                   disableCenter: true,
                   reverse: false,
                   onPageChanged: (index, reason) => model.updateIndex(index),
                   autoPlay: false,
-                  enlargeCenterPage: false,
                   scrollDirection: Axis.horizontal,
                 ),
               ),
@@ -156,36 +157,31 @@ class _DialogImageState extends State<DialogImage> {
                 ),
               ),
             Positioned(
-              right: 50,
-              top: 0,
-              child: ImageDownloadButton(
-                widget.imageUrl ?? widget.images![widget.currentImage!],
-                DateTime.now().toString(),
-              ),
-            ),
-            Positioned(
               right: 10,
               top: 0,
-              child: MyCircularButton(
-                icon: Icon(MyIcons.clear),
-                color: Colors.red,
-                onPressed: () => Navigator.of(context).pop(),
+              child: OverflowBar(
+                children: [
+                  ImageDownloadButton(
+                    widget.imageUrl ?? widget.images![widget.currentImage!],
+                    DateTime.now().toString(),
+                  ),
+                  // if (!Platform.isAndroid || !Platform.isIOS)
+                  //   MyCircularButton(
+                  //     icon: Icon(MyIcons.quality),
+                  //     onPressed: () {
+                  //       setState(() {
+                  //         baseUrl = URL_IMAGE_BIG;
+                  //       });
+                  //     },
+                  //   ),
+                  MyCircularButton(
+                    icon: Icon(MyIcons.clear),
+                    color: Colors.red,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
               ),
             ),
-            if (baseUrl != URL_IMAGE_BIG)
-              Positioned(
-                right: 72,
-                top: 0,
-                child: MyCircularButton(
-                  icon: Icon(MyIcons.quality, color: Theme.of(context).colorScheme.onPrimary),
-                  color: Theme.of(context).colorScheme.primary,
-                  onPressed: () {
-                    setState(() {
-                      baseUrl = URL_IMAGE_BIG;
-                    });
-                  },
-                ),
-              )
           ],
         ),
       ),

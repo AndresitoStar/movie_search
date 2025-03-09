@@ -1,16 +1,12 @@
-# movie_search
+# movie_search_v2
 
-A new Flutter project.
+# My Movie Search App.
 
-## Getting Started
+### TODO
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+-x- agregar filtro al descubrir de listado de actores
+- selector de paises
+- COMPARTIR & SHARE
+- deeplink
+- agregar alerta en calendario cuando sale un nuevo capitulo de una serie
+- redisennar vista de usuario y de favoritos

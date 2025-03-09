@@ -1,32 +1,86 @@
-import 'dart:convert';
+import 'dart:async';
 
-import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/model/api/models/movie.dart';
-import 'package:movie_search/model/api/models/person.dart';
-import 'package:movie_search/model/api/models/tv.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:movie_search/data/firebase_database.dart';
+import 'package:movie_search/main.dart';
+import 'package:movie_search/model/api/models/favourite.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 
 class FavouritesViewModel extends BaseViewModel {
-  final MyDatabase _db;
+  Set<int> _listFavouriteId = {};
+  List<BaseFavouriteItem> _listFavourite = [];
+  Map<String, List<BaseSearchResult?>> _map = {};
 
-  FavouritesViewModel(this._db);
+  Set<int> get listFavouriteId => {..._listFavouriteId};
 
-  Stream<List<BaseSearchResult?>> get stream => _db.watchAllFavourites().map((event) => event.map((e) {
-        Map<String, dynamic> json = jsonDecode(e.json);
-        if (e.type == TMDB_API_TYPE.PERSON.type) {
-          return BaseSearchResult.fromPerson(Person.fromJson(json));
-        } else if (e.type == TMDB_API_TYPE.MOVIE.type) {
-          return BaseSearchResult.fromMovie(Movie.fromJson(json));
-        } else if (e.type == TMDB_API_TYPE.TV_SHOW.type) {
-          return BaseSearchResult.fromTv(TvShow.fromJson(json));
+  List<BaseSearchResult?> get favoriteList => _map.values.fold<List<BaseSearchResult?>>([], (a, b) => a..addAll(b));
+
+  Map<String, List<BaseSearchResult?>> get favoriteMap => _map;
+
+  Future toggleFavourite({
+    required bool isLiked,
+    required String type,
+    required String userUuid,
+    required BaseSearchResult data,
+    Function(dynamic e)? onError,
+  }) async {
+    setBusyForObject(data.id, true);
+    try {
+      if (isLiked) {
+        await MyFirebaseService.instance.removeFavourite(id: data.id.toInt(), type: type, userUuid: userUuid);
+        globalNavigatorKey.currentContext?.showSnackBar('${data.title} ha sido eliminado de $type');
+      } else {
+        await MyFirebaseService.instance
+            .insertFavourite(id: data.id.toInt(), type: type, userUuid: userUuid, jsonData: data.toJson());
+        globalNavigatorKey.currentContext?.showSnackBar('${data.title} ha sido agregado a $type');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      setBusyForObject(data.id, false);
+    }
+  }
+
+  initialize(String? userUuid) async {
+    setBusy(true);
+    if (userUuid != null) {
+      DatabaseReference ref = FirebaseDatabase.instance.ref('${MyFirebaseService.instance.bookmarksPath}/$userUuid');
+      ref.onValue.listen((event) {
+        try {
+          if (event.snapshot.value == null) return;
+          _listFavouriteId.clear();
+          _map.clear();
+          final bookmarks = event.snapshot.value as Map;
+          for (final typeEntry in bookmarks.entries) {
+            final Map itemsMap = typeEntry.value as Map;
+            _listFavouriteId.addAll(itemsMap.keys.map((e) => int.parse(e)).toSet());
+            final list = itemsMap.values.map((e) {
+              final mediaType = e['type'];
+              return BaseSearchResult.fromMap((e as Map<Object?, Object?>).cast<String, dynamic>());
+            }).toList();
+            _map.putIfAbsent(typeEntry.key.toString(), () => list);
+          }
+          notifyListeners();
+        } catch (e) {
+          print(e);
         }
-        return null;
-      }).toList());
+      });
+    }
+    setBusy(false);
+  }
 
-  initialize() {
-    stream.listen((event) => notifyListeners());
-    setInitialised(true);
+  logout() async {
+    _map.clear();
+    notifyListeners();
+  }
+
+  String? findTypeGivenId(num id) {
+    try {
+      return _map.entries.firstWhere((e) => e.value.any((e) => e?.id == id)).key;
+    } catch (e) {
+      return null;
+    }
   }
 }

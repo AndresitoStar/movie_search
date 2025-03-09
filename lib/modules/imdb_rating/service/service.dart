@@ -8,6 +8,7 @@ class ImdbService extends BaseService {
     if (response.statusCode == 200) {
       final body = response.data as Map;
       if (body.containsKey('imdbRating')) {
+        if (body['imdbRating'] == 'N/A') return -1;
         final result = num.tryParse(body['imdbRating'])!;
         _cacheImdbRating.putIfAbsent(id, () => result);
         return result;
@@ -19,8 +20,10 @@ class ImdbService extends BaseService {
   final Map<String, String> _cacheImbdIdByTmdbId = {};
   Future<String> getImbdIdByTmdbId(num id, String type) async {
     final cacheId = '$type$id';
-    if (_cacheImbdIdByTmdbId.containsKey(cacheId)) return _cacheImbdIdByTmdbId[cacheId]!;
-    var response = await clientTMDB.get('/$type/$id/external_ids', queryParameters: baseParams);
+    if (_cacheImbdIdByTmdbId.containsKey(cacheId))
+      return _cacheImbdIdByTmdbId[cacheId]!;
+    var response = await clientTMDB.get('/$type/$id/external_ids',
+        queryParameters: baseParams);
     if (response.statusCode == 200) {
       final body = response.data;
       final result = body['imdb_id'];

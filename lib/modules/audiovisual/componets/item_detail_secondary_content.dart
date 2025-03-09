@@ -1,16 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/model/api/models/movie.dart';
 import 'package:movie_search/model/api/models/person.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_collection.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_tv_season.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_watch_providers_view.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'item_detail_ui_util.dart';
 
@@ -32,12 +33,12 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
 
   List<Widget> _movieContentWidgets(BuildContext context, Movie movie) {
     return [
-      if (movie.homepage != null)
+      if (movie.homepage != null && movie.homepage!.isNotEmpty)
         ContentHorizontal(
           padding: 8,
           label: 'Sitio Oficial',
           subtitle: GestureDetector(
-            onTap: () => launch(movie.homepage!),
+            onTap: () => launchUrl(Uri.parse(movie.homepage!)),
             child: Text(
               movie.homepage!,
               style: TextStyle(
@@ -63,7 +64,9 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
       ContentHorizontal(
         padding: 8,
         label: 'Productora',
-        content: movie.productionCompanies?.join(', '),
+        // content: movie.productionCompanies?.join(', '),
+        subtitle: LogosWidget.fromLogoList(movie.productionCompanies!),
+        forceLight: Theme.of(context).brightness == Brightness.dark,
       ),
       if (movie.collection != null) ...[
         Divider(indent: 8, endIndent: 8),
@@ -71,7 +74,8 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
           collection: movie.collection!,
           sliver: false,
         ),
-      ]
+      ],
+      ItemWatchProvidersView(type: TMDB_API_TYPE.MOVIE.type, id: movie.id),
     ];
   }
 
@@ -85,16 +89,16 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
       ),
       ContentRow(
         label1: 'Fecha de estreno',
-        label2: 'Ultima emisión',
+        label2: 'Duracion',
         value1: tvShow.firstAirDate == null ? null : DateTime.tryParse(tvShow.firstAirDate!)?.format,
-        value2: tvShow.lastAirDate == null ? null : DateTime.tryParse(tvShow.lastAirDate!)?.format,
+        value2: tvShow.episodeRuntimeAverage == null ? null : '${tvShow.episodeRuntimeAverage} minutos',
       ),
       if (tvShow.seasons != null && tvShow.seasons!.length > 0) ItemDetailTvSeasonView(false),
       if (tvShow.createdByPerson != null && tvShow.createdByPerson!.isNotEmpty)
         ListTile(
           title: Text(
             'Creadores',
-            style: Theme.of(context).textTheme.headline5!.copyWith(
+            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                   color: Theme.of(context).primaryColor,
                 ),
           ),
@@ -111,7 +115,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
           padding: 8,
           label: 'Sitio Oficial',
           subtitle: GestureDetector(
-            onTap: () => launch(tvShow.homepage!),
+            onTap: () => launchUrlString(tvShow.homepage!),
             child: Text(
               tvShow.homepage!,
               style: TextStyle(
@@ -120,19 +124,22 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
             ),
           ),
         ),
-      if (tvShow.productionCompanies != null)
+      if (tvShow.productionCompanies != null && tvShow.productionCompanies!.isNotEmpty)
         ContentHorizontal(
           padding: 8,
           label: 'Productora',
+          forceLight: true,
           // content: tvShow.productionCompanies.join(', '),
-          subtitle: logoWidgets(context, tvShow.productionCompanies!),
+          subtitle: LogosWidget.fromLogoList(tvShow.productionCompanies!),
         ),
       if (tvShow.networks != null)
         ContentHorizontal(
           padding: 8,
           label: 'Cadenas Televisivas',
-          subtitle: logoWidgets(context, tvShow.networks!),
+          forceLight: true,
+          subtitle: LogosWidget.fromLogoList(tvShow.networks!),
         ),
+      ItemWatchProvidersView(type: TMDB_API_TYPE.TV_SHOW.type, id: tvShow.id),
     ];
   }
 
@@ -146,30 +153,4 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
       ),
     ];
   }
-
-  Widget logoWidgets(BuildContext context, List<Logo> list) => Padding(
-        padding: const EdgeInsets.only(top: 5, bottom: 5),
-        child: Wrap(
-          runSpacing: 8,
-          spacing: 10,
-          runAlignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: list
-              .map(
-                (e) => e.logoPath != null
-                    ? Tooltip(
-                        message: e.name,
-                        child: CachedNetworkImage(
-                          imageUrl: '$URL_IMAGE_MEDIUM${e.logoPath}',
-                          width: 80,
-                        ),
-                      )
-                    : Text(
-                        e.name!,
-                        style: Theme.of(context).textTheme.subtitle1,
-                      ),
-              )
-              .toList(),
-        ),
-      );
 }

@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/circular_button.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ItemDetailSliverAppBar extends StatelessWidget {
   final Widget child;
+  final List<Widget>? actions;
 
-  const ItemDetailSliverAppBar(this.child, {Key? key}) : super(key: key);
+  const ItemDetailSliverAppBar(this.child, {Key? key, this.actions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final mq = MediaQuery.of(context);
     return SliverAppBar(
       pinned: true,
-      expandedHeight: mq.size.width * 12 / 16,
+      expandedHeight: 75.w,
       elevation: 0,
       automaticallyImplyLeading: false,
-      // backgroundColor: Colors.transparent,
+      // colorScheme.background: Colors.transparent,
       leading: MyCircularButton(
-        // color: Colors.transparent,
+        color: Colors.transparent,
         icon: Icon(
           MyIcons.arrow_left,
-          color: Theme.of(context).colorScheme.onBackground,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         onPressed: () => Navigator.of(context).pop(),
       ),
+      actions: actions,
       flexibleSpace: FlexibleSpaceBar(
         background: child,
         collapseMode: CollapseMode.pin,

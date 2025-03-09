@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:movie_search/providers/util.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class CustomSegmentedPageView extends StatelessWidget {
   final List<Widget> pages;
   final List<String> tabs;
   final FormControl<int> _indexSelectedFormControl = fb.control(0);
+  final String? title;
 
-  CustomSegmentedPageView({Key? key, required this.pages, required this.tabs})
+  CustomSegmentedPageView({Key? key, required this.pages, required this.tabs, this.title})
       : assert(pages.length == tabs.length),
         super(key: key);
 
@@ -18,20 +19,20 @@ class CustomSegmentedPageView extends StatelessWidget {
       builder: (context, control, _) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            child: CupertinoSegmentedControl<int>(
-              children: Map<int, Widget>.fromIterable(
-                tabs,
-                key: (k) => tabs.indexOf(k),
-                value: (k) => Text(
-                  tabs[tabs.indexOf(k)].toUpperCase(),
+          // if (tabs.length > 1)
+          //   if (Device.screenType != ScreenType.mobile) Text('asd') else Text('sda'),
+          OverflowBar(
+            alignment: MainAxisAlignment.spaceEvenly,
+            overflowAlignment: OverflowBarAlignment.end,
+            overflowSpacing: 10,
+            children: [
+              if (title != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(title!, style: context.theme.textTheme.headlineMedium),
                 ),
-              ),
-              onValueChanged: (v) => control.updateValue(v),
-              groupValue: control.value,
-              unselectedColor: context.theme.backgroundColor,
-            ),
+              if (tabs.length > 1) _buildSegmentedControl(control, context),
+            ],
           ),
           Container(
             child: pages[control.value ?? 0],
@@ -39,6 +40,22 @@ class CustomSegmentedPageView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSegmentedControl(AbstractControl<int> control, BuildContext context) {
+    return CupertinoSegmentedControl<int>(
+      children: Map<int, Widget>.fromIterable(
+        tabs,
+        key: (k) => tabs.indexOf(k),
+        value: (k) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Text(tabs[tabs.indexOf(k)].toUpperCase()),
+        ),
+      ),
+      onValueChanged: (v) => control.updateValue(v),
+      groupValue: control.value,
+      unselectedColor: context.theme.colorScheme.background,
     );
   }
 }

@@ -1,46 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_appbar_extended.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_content.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_secondary_content.dart';
+import 'package:movie_search/modules/audiovisual/componets/item_recomendation_horizontal_list.dart';
+import 'package:movie_search/modules/audiovisual/componets/items_images_button.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_appbar.dart';
-import 'item_detail_main_image.dart';
-import 'item_recomendation_horizontal_list.dart';
 
 class ItemDetailPage extends StatelessWidget {
   final BaseSearchResult item;
   final String heroTagPrefix;
 
+  static final String route = '/detail';
+
   const ItemDetailPage({Key? key, required this.item, this.heroTagPrefix = ''}) : super(key: key);
+
+  bool get isTabletDesktop => Device.screenType == ScreenType.tablet || Device.screenType == ScreenType.desktop;
 
   @override
   Widget build(BuildContext context) {
-    final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
     return ViewModelBuilder<ItemDetailViewModel>.reactive(
       viewModelBuilder: () => ItemDetailViewModel(item),
       builder: (context, model, _) {
         return Container(
           color: Theme.of(context).scaffoldBackgroundColor,
-          child: SafeArea(
-            top: true,
-            child: Scaffold(
-              floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-              floatingActionButton: landscape
-                  ? FloatingActionButton.extended(
-                      onPressed: () => Navigator.of(context).pop(),
-                      label: Text('ATRAS'),
-                      icon: Icon(MyIcons.arrow_left),
-                    )
-                  : null,
-              body: landscape ? ItemDetailLandscape() : ItemDetailPortrait(heroTagPrefix),
-            ),
+          child: Scaffold(
+            floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+            floatingActionButton: isTabletDesktop
+                ? FloatingActionButton.extended(
+                    onPressed: () => Navigator.of(context).pop(),
+                    label: Text('ATRAS'),
+                    icon: Icon(MyIcons.arrow_left),
+                  )
+                : null,
+            body: isTabletDesktop ? ItemDetailLandscape(heroTagPrefix) : ItemDetailPortrait(heroTagPrefix, item),
           ),
         );
       },
@@ -50,8 +52,9 @@ class ItemDetailPage extends StatelessWidget {
 
 class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
   final String heroTagPrefix;
+  final BaseSearchResult item;
 
-  const ItemDetailPortrait(this.heroTagPrefix, {Key? key}) : super(key: key);
+  const ItemDetailPortrait(this.heroTagPrefix, this.item, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
@@ -59,7 +62,19 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
       controller: model.scrollController,
       cacheExtent: 1000,
       slivers: <Widget>[
-        ItemDetailSliverAppBar(ItemDetailAppbarContentExtended(heroTagPrefix)),
+        ItemDetailSliverAppBar(
+          // ItemDetailAppbarContentExtended(heroTagPrefix: heroTagPrefix),
+            ItemDetailAppbarContentSimple(),
+          actions: [
+          //   ItemLikeButton(item: item),
+          //   if (model.dataReady) ...[
+          //     if (model.itemType != TMDB_API_TYPE.PERSON) ReviewButton(param: model.data!),
+            if (model.dataReady) ItemLikeButton(item: model.data!),
+            ItemImagesButtonView(id: model.itemId, type: model.itemType, title: model.title ?? ''),
+          //     if (model.itemType != TMDB_API_TYPE.PERSON) VideoButton(param: model.data!),
+            ],
+          // ],
+        ),
         if (model.hasError)
           SliverToBoxAdapter(child: ElevatedButton(onPressed: model.initialise, child: Text('Recargar')))
         else if (model.initialised) ...[
@@ -85,32 +100,39 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
 }
 
 class ItemDetailLandscape extends ViewModelWidget<ItemDetailViewModel> {
-  const ItemDetailLandscape({Key? key}) : super(key: key);
+  final String heroTagPrefix;
+
+  const ItemDetailLandscape(this.heroTagPrefix, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
-    final width = MediaQuery.of(context).size.width;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: width / 2.5),
-          child: Container(
-            alignment: Alignment.center,
-            child: AspectRatio(
-              aspectRatio: 9 / 16,
-              child: DetailMainImage(landscape: true),
-            ),
+        SizedBox(width: 16),
+        Expanded(
+          flex: 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              // AspectRatio(
+              //   aspectRatio: 0.667,
+              //   child: DetailMainImage(landscape: true),
+              // ),
+              ItemDetailAppbarContentExtended(heroTagPrefix: heroTagPrefix, isLandscape: true),
+            ],
           ),
         ),
         Expanded(
+          flex: 3,
           child: SingleChildScrollView(
             // physics: PageScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+            padding: const EdgeInsets.fromLTRB(16, 8, 0, 20),
             controller: model.scrollController,
             child: Column(
               children: [
                 if (model.initialised) ...[
+                  // ItemDetailAppbarContentExtended(heroTagPrefix),
                   ItemDetailMainContent(isSliver: false),
                   if (model.itemType != TMDB_API_TYPE.PERSON)
                     CreditHorizontalList(
@@ -119,16 +141,13 @@ class ItemDetailLandscape extends ViewModelWidget<ItemDetailViewModel> {
                       isSliver: false,
                     ),
                   ItemDetailSecondaryContent(isSliver: false),
-                  if (model.itemType != TMDB_API_TYPE.PERSON)
+                  if (model.itemType == TMDB_API_TYPE.PERSON)
                     ItemDetailRecommendationHorizontalList(
                       model.itemType.type,
                       model.itemId,
-                      ERecommendationType.Recommendation,
                       sliver: false,
+                      ERecommendationType.Credit,
                     ),
-                  if (model.itemType == TMDB_API_TYPE.PERSON)
-                    ItemDetailRecommendationHorizontalList(
-                        model.itemType.type, model.itemId, ERecommendationType.Credit),
                 ],
               ],
             ),

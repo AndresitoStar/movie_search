@@ -25,17 +25,18 @@ class ItemListPage extends StatelessWidget {
         itemCount: items.length,
         itemBuilder: (ctx, i) => ItemGridView(
           item: items[i],
-          showData: false,
+          showType: false,
+          showTitles: true,
           heroTagPrefix: '$i-${this.heroTagPrefix ?? ''}-',
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: getColumns(context), childAspectRatio: 5 / 9, crossAxisSpacing: 10, mainAxisSpacing: 10),
+            crossAxisCount: getColumns(context), childAspectRatio: 0.667, crossAxisSpacing: 10, mainAxisSpacing: 10),
       ),
     );
   }
 
   int getColumns(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return (width ~/ 150).clamp(1, 8);
+    return (width ~/ 150).clamp(1, 6);
   }
 }

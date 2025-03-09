@@ -5,6 +5,7 @@ import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/icons.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
 import 'item_detail_main_image.dart';
@@ -21,16 +22,13 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
             image: model.data!.tvShow!.backdropPath == null
                 ? null
                 : DecorationImage(
                     fit: BoxFit.cover,
                     colorFilter: ColorFilter.mode(
-                      Theme.of(context)
-                          .colorScheme
-                          .onBackground
-                          .withOpacity(0.6),
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                       BlendMode.luminosity,
                     ),
                     image: NetworkImage(
@@ -42,17 +40,14 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
             title: RichText(
               text: TextSpan(
                   text: 'Temporadas:',
-                  style: Theme.of(context).textTheme.headline6!.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onPrimary
-                            .withOpacity(0.8),
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.surface,
                       ),
                   children: [
                     TextSpan(
                       text: ' ${model.data!.tvShow!.numberOfSeasons}',
-                      style: Theme.of(context).textTheme.headline4!.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimary,
+                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.surface,
                           ),
                     )
                   ]),
@@ -100,12 +95,7 @@ class _SeasonCard extends StatelessWidget {
   final TvShow tvApi;
   final bool isLast;
 
-  const _SeasonCard(
-      {Key? key,
-      required this.season,
-      this.isLast = false,
-      required this.tvApi})
-      : super(key: key);
+  const _SeasonCard({Key? key, required this.season, this.isLast = false, required this.tvApi}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +134,7 @@ class _SeasonCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Text(
                           'Ultima',
-                          style: Theme.of(context).primaryTextTheme.subtitle1,
+                          style: Theme.of(context).primaryTextTheme.titleMedium,
                         ),
                       ),
                     Padding(
@@ -155,12 +145,12 @@ class _SeasonCard extends StatelessWidget {
                           SizedBox(height: 10),
                           Text(
                             season.name ?? '',
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                           SizedBox(height: 8),
                           Text(
                             'Capitulos: ${season.episodeCount}',
-                            style: Theme.of(context).textTheme.subtitle1,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           SizedBox(height: 8),
                           Text(
@@ -168,7 +158,7 @@ class _SeasonCard extends StatelessWidget {
                             maxLines: 3,
                             textAlign: TextAlign.end,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
@@ -185,8 +175,7 @@ class _SeasonCard extends StatelessWidget {
 }
 
 class _SeasonScreen extends StatelessWidget {
-  const _SeasonScreen({Key? key, required this.seasons, required this.tv})
-      : super(key: key);
+  const _SeasonScreen({Key? key, required this.seasons, required this.tv}) : super(key: key);
   final List<Seasons> seasons;
   final TvShow tv;
 
@@ -201,15 +190,35 @@ class _SeasonScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(10.0),
-        itemCount: seasons.length,
-        itemBuilder: (ctx, i) => _SeasonCard(
-          season: seasons[i],
-          isLast: i == seasons.length - 1,
-          tvApi: tv,
-        ),
-      ),
+      body: Device.screenType == ScreenType.mobile
+          ? ListView.builder(
+              padding: const EdgeInsets.all(10.0),
+              itemCount: seasons.length,
+              itemBuilder: (ctx, i) => _SeasonCard(
+                season: seasons[i],
+                isLast: i == seasons.length - 1,
+                tvApi: tv,
+              ),
+            )
+          : GridView.builder(
+              itemCount: seasons.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: getColumns(context),
+                childAspectRatio: 2.667,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (ctx, i) => _SeasonCard(
+                season: seasons[i],
+                isLast: i == seasons.length - 1,
+                tvApi: tv,
+              ),
+            ),
     );
+  }
+
+  int getColumns(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return (width ~/ 350).clamp(1, 3);
   }
 }

@@ -15,4 +15,6 @@ class Credit {
       });
     }
   }
+  // TODO solo coger los 10 primeros
+  // TODO ademas, coger el director y productor
 }

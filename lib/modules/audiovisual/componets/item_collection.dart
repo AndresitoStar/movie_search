@@ -23,13 +23,13 @@ class ItemCollectionView extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
                 image: collection.backdropPath == null
                     ? null
                     : DecorationImage(
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.background.withOpacity(0.6),
+                          Theme.of(context).colorScheme.surface.withOpacity(0.6),
                           BlendMode.luminosity,
                         ),
                         image: NetworkImage('$URL_IMAGE_MEDIUM${collection.backdropPath}'),
@@ -40,15 +40,19 @@ class ItemCollectionView extends StatelessWidget {
                   '${collection.name}',
                   style: Theme.of(context)
                       .textTheme
-                      .headline5!
-                      .copyWith(color: Theme.of(context).colorScheme.onBackground),
+                      .headlineSmall!
+                      .copyWith(color: Theme.of(context).colorScheme.onSurface),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 5),
                     Text(
                       '${model.collection.overview}',
-                      style: Theme.of(context).primaryTextTheme.caption,
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .titleMedium!
+                          .copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
                     ),
                     SizedBox(height: 5),
                     Row(
@@ -97,17 +101,17 @@ class ItemCollectionScreen extends StatelessWidget {
         itemCount: collection.parts?.length ?? 0,
         itemBuilder: (ctx, i) => ItemGridView(
           item: BaseSearchResult.fromMovie(collection.parts![i]),
-          showData: false,
+          showType: false,
           heroTagPrefix: 'collection',
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: getColumns(context), childAspectRatio: 5 / 9, crossAxisSpacing: 10, mainAxisSpacing: 10),
+            crossAxisCount: getColumns(context), childAspectRatio: 0.667, crossAxisSpacing: 10, mainAxisSpacing: 10),
       ),
     );
   }
 
   int getColumns(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return (width ~/ 150).clamp(1, 8);
+    return (width ~/ 150).clamp(1, 6);
   }
 }
