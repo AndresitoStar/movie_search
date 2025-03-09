@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
@@ -61,7 +60,7 @@ class SearchByPersonButton extends ViewModelWidget<DiscoverViewModel> {
                   field.control.updateValueAndValidity();
                 },
                 deleteIconColor: context.theme
-                    .colorScheme.onBackground,
+                    .colorScheme.onSurface,
               ))
                   .toList(),
             ),

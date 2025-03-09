@@ -2,12 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/model/api/models/api.dart';
+import 'package:movie_search/model/api/models/country.dart';
+import 'package:movie_search/model/api/models/genre.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/discover/discover_viewmodel.dart';
 import 'package:movie_search/modules/discover/search_by_person.dart';
 import 'package:movie_search/modules/search/search_category.dart';
+import 'package:movie_search/modules/splash/config_singleton.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:stacked/stacked.dart';
@@ -18,9 +20,13 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
   @override
   Widget build(BuildContext context, DiscoverViewModel model) {
     return SafeArea(
-      child: Drawer(
-        elevation: 0,
-        child: ReactiveForm(
+      child: Scaffold(
+        // elevation: 0,
+        appBar: AppBar(
+          title: Text('Filtros avanzados'),
+          titleSpacing: 0,
+        ),
+        body: ReactiveForm(
           formGroup: model.form,
           child: Column(
             children: [
@@ -74,9 +80,9 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                         child: ExpansionTileCard(
                           key: _keySortOrderCard,
                           elevation: 0,
-                          baseColor: context.theme.colorScheme.background
+                          baseColor: context.theme.colorScheme.surface
                               .withOpacity(0.05),
-                          expandedColor: context.theme.colorScheme.background
+                          expandedColor: context.theme.colorScheme.surface
                               .withOpacity(0.5),
                           borderRadius: BorderRadius.zero,
                           title: Text('Ordenar por:'),
@@ -134,8 +140,8 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                       Divider(),
                       ReactiveValueListenableBuilder(
                         formControlName: DiscoverViewModel.FORM_TYPE,
-                        builder: (context, typeControl, _) => ReactiveFormField<
-                            Set<GenreTableData>, Set<GenreTableData>>(
+                        builder: (context, typeControl, _) =>
+                            ReactiveFormField<Set<Genre>, Set<Genre>>(
                           formControlName: DiscoverViewModel.FORM_GENRE,
                           builder: (field) => Theme(
                             data: Theme.of(context)
@@ -178,7 +184,7 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                                                 onDeleted: () =>
                                                     model.toggleGenreFilter(e),
                                                 deleteIconColor: context.theme
-                                                    .colorScheme.onBackground,
+                                                    .colorScheme.onSurface,
                                               ))
                                           .toList(),
                                     )
@@ -201,7 +207,6 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                                   spacing: 10,
                                   alignment: WrapAlignment.start,
                                   children: model.allFilterGenres
-                                      .toList()
                                       .where((s) => !field.value!
                                           .map((e) => e.id)
                                           .toList()
@@ -299,7 +304,7 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                                                   width: 20,
                                                   child: CachedNetworkImage(
                                                     imageUrl:
-                                                    '$URL_IMAGE_MEDIUM${e.logoPath}',
+                                                        '$URL_IMAGE_MEDIUM${e.logoPath}',
                                                   ),
                                                 ),
                                                 side: BorderSide(
@@ -321,16 +326,15 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                                                 onDeleted: () =>
                                                     model.toggleProvider(e),
                                                 deleteIconColor: context.theme
-                                                    .colorScheme.onBackground,
+                                                    .colorScheme.onSurface,
                                               ))
                                           .toList(),
                                     )
                                   : null,
                               elevation: 0,
-                              baseColor: context.theme.colorScheme.background
+                              baseColor: context.theme.colorScheme.surface
                                   .withOpacity(0.05),
-                              expandedColor: context
-                                  .theme.colorScheme.background
+                              expandedColor: context.theme.colorScheme.surface
                                   .withOpacity(0.5),
                               borderRadius: BorderRadius.zero,
                               children: ListTile.divideTiles(
@@ -387,6 +391,58 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                           ),
                         ),
                       ),
+                      Divider(),
+                      ReactiveValueListenableBuilder(
+                        formControlName: DiscoverViewModel.FORM_COUNTRY,
+                        builder: (context, typeControl, _) =>
+                            ReactiveFormField<Country, Country>(
+                          formControlName: DiscoverViewModel.FORM_COUNTRY,
+                          builder: (field) => Theme(
+                            data: Theme.of(context)
+                                .copyWith(dividerColor: Colors.transparent),
+                            child: ListTile(
+                              title: Text('Origen'),
+                              subtitle: field.value != null
+                                  ? Text(
+                                      field.value!.name,
+                                      style: context.theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                        color: context.theme.colorScheme.tertiary,
+                                      ),
+                                    )
+                                  : Text(
+                                      'Todos',
+                                      style: context.theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                        color: context.theme.colorScheme.tertiary,
+                                      ),
+                                    ),
+                              onTap: () async {
+                                final country = await showDialog<Country>(
+                                  context: context,
+                                  builder: (context) => SimpleDialog(
+                                    title: Text('Selecciona un pais'),
+                                    children: [
+                                      ...ConfigSingleton.instance.countries
+                                          .map(
+                                            (e) => ListTile(
+                                              title: Text(e.name),
+                                              onTap: () =>
+                                                  Navigator.of(context).pop(e),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ],
+                                  ),
+                                );
+                                if (country != null) {
+                                  field.control.updateValue(country);
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -394,7 +450,8 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
               SizedBox(height: 10),
               ListTile(
                 title: Text('Buscar'),
-                tileColor: context.theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                tileColor:
+                    context.theme.colorScheme.onSurface.withValues(alpha: 0.05),
                 titleTextStyle: context.theme.textTheme.titleLarge,
                 leading: Icon(Icons.check_rounded),
                 minLeadingWidth: 0,

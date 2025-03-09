@@ -22,7 +22,7 @@ class SplashScreen extends StatelessWidget {
                     return _buildBusyIndicator(context);
                   }),
       ),
-      viewModelBuilder: () => SplashViewModel(context.read()),
+      viewModelBuilder: () => SplashViewModel(),
     );
   }
 
@@ -33,8 +33,10 @@ class SplashScreen extends StatelessWidget {
           children: [
             Icon(Icons.network_locked, size: 160),
             SizedBox(height: 20),
-            Text('Parece que ocurrio un error, verifica que tengas conexión a Internet.',
-                textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
+            Text(
+                'Parece que ocurrio un error, verifica que tengas conexión a Internet.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleLarge),
           ],
         ),
       );
@@ -67,7 +69,8 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('Movie Search', style: context.theme.textTheme.headlineSmall),
+              Text('Movie Search',
+                  style: context.theme.textTheme.headlineSmall),
               SizedBox(height: 10),
               Text('by Andrés Forns', style: context.theme.textTheme.bodySmall),
             ],
@@ -79,7 +82,8 @@ class SplashScreen extends StatelessWidget {
 
   _navigateHome(BuildContext context) {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      Navigator.of(context).pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
     });
   }
 }

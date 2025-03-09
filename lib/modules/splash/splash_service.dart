@@ -1,3 +1,5 @@
+import 'package:movie_search/model/api/models/country.dart';
+import 'package:movie_search/model/api/models/genre.dart';
 import 'package:movie_search/rest/resolver.dart';
 
 class SplashService extends BaseService {
@@ -12,7 +14,8 @@ class SplashService extends BaseService {
 
   Future<bool> checkIsDeviceEnable(String deviceId) async {
     // try {
-    final response = await parseClient.get('/classes/devices', queryParameters: {
+    final response =
+        await parseClient.get('/classes/devices', queryParameters: {
       'where': {"deviceId": deviceId},
     });
     final results = response.data['results'] as List;
@@ -29,9 +32,11 @@ class SplashService extends BaseService {
     return false;
   }
 
-  Future updateMyDevice(String deviceId, {String? email, String? phoneModel}) async {
+  Future updateMyDevice(String deviceId,
+      {String? email, String? phoneModel}) async {
     // try {
-    final response = await parseClient.get('/classes/devices', queryParameters: {
+    final response =
+        await parseClient.get('/classes/devices', queryParameters: {
       'where': {"deviceId": deviceId},
     });
     final results = response.data['results'] as List;
@@ -58,15 +63,16 @@ class SplashService extends BaseService {
     // }
   }
 
-  Future<Map<String, String>> getCountries() async {
-    Map<String, String> result = {};
+  Future<List<Country>> getCountries() async {
+    List<Country> result = [];
 
     // try {
-    var response = await clientTMDB.get('/configuration/countries', queryParameters: baseParams);
+    var response = await clientTMDB.get('/configuration/countries',
+        queryParameters: baseParams);
     if (response.statusCode == 200) {
       var body = response.data as List<dynamic>;
       if (body.isNotEmpty) {
-        result = Map.fromIterable(body, key: (item) => item['iso_3166_1'], value: (item) => item['english_name']);
+        result = body.map((e) => Country.fromJson(e)).toList();
       }
     } else {
       print(response.statusCode);
@@ -83,11 +89,14 @@ class SplashService extends BaseService {
     Map<String, String> result = {};
 
     // try {
-    var response = await clientTMDB.get('/configuration/languages', queryParameters: baseParams);
+    var response = await clientTMDB.get('/configuration/languages',
+        queryParameters: baseParams);
     if (response.statusCode == 200) {
       var body = response.data as List<dynamic>;
       if (body.isNotEmpty) {
-        result = Map.fromIterable(body, key: (item) => item['iso_639_1'], value: (item) => item['english_name']);
+        result = Map.fromIterable(body,
+            key: (item) => item['iso_639_1'],
+            value: (item) => item['english_name']);
       }
       // } else {
       //   print(response.statusCode);
@@ -104,11 +113,35 @@ class SplashService extends BaseService {
     Map<int, String> result = {};
 
     // try {
-    var response = await clientTMDB.get('/genre/$type/list', queryParameters: baseParams);
+    var response =
+        await clientTMDB.get('/genre/$type/list', queryParameters: baseParams);
     if (response.statusCode == 200) {
       var body = response.data['genres'] as List<dynamic>;
       if (body.isNotEmpty) {
-        result = Map.fromIterable(body, key: (item) => item['id'], value: (item) => item['name']);
+        result = Map.fromIterable(body,
+            key: (item) => item['id'], value: (item) => item['name']);
+      }
+    } else {
+      print(response.statusCode);
+      //TODO LANZAR EXCEPTION
+    }
+    // } catch (e) {
+    // print(e);
+    // }
+
+    return result;
+  }
+
+  Future<List<Genre>> getGenreByType(String type) async {
+    List<Genre> result = [];
+
+    // try {
+    var response =
+        await clientTMDB.get('/genre/$type/list', queryParameters: baseParams);
+    if (response.statusCode == 200) {
+      var body = response.data['genres'] as List<dynamic>;
+      if (body.isNotEmpty) {
+        result = body.map((e) => Genre.fromJson(e)).toList();
       }
     } else {
       print(response.statusCode);

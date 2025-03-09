@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:movie_search/core/content_type_controller.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/providers/util.dart';

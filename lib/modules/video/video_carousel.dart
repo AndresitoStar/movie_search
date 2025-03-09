@@ -58,13 +58,13 @@ class VideosCarousel extends StatelessWidget {
                                 child: Container(
                                   color: Theme.of(context)
                                       .colorScheme
-                                      .background
+                                      .surface
                                       .withOpacity(0.25),
                                   child: Icon(
                                     FrinoIcons.f_play,
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .onBackground
+                                        .onSurface
                                         .withOpacity(0.65),
                                   ),
                                 ),

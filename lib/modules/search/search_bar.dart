@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -41,10 +40,10 @@ class SearchBar extends StatelessWidget {
                 formGroup: model.form,
                 child: ReactiveTextField(
                   formControl: model.queryControl,
-                  cursorColor: Theme.of(context).colorScheme.onBackground,
+                  cursorColor: Theme.of(context).colorScheme.onSurface,
                   autocorrect: false,
                   style:
-                      TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                      TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
                     prefixIcon: Icon(MyIcons.search, size: 16),

@@ -8,6 +8,7 @@ class CustomScaffold extends StatelessWidget {
   final int bottomBarIndex;
   final Widget body;
   final Widget? endDrawer;
+  final List<Widget> actions;
   final String? title;
   final bool forceAppbar;
   final FloatingActionButton? floatingActionButton;
@@ -22,15 +23,19 @@ class CustomScaffold extends StatelessWidget {
     this.title,
     this.forceAppbar = false,
     this.floatingActionButton,
+    this.actions = const [],
     // this.appBar,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final showAppbar = Device.screenType == ScreenType.desktop || Device.screenType == ScreenType.tablet;
+    final showAppbar = Device.screenType == ScreenType.desktop ||
+        Device.screenType == ScreenType.tablet;
 
     return Scaffold(
-      bottomNavigationBar: showAppbar || bottomBarIndex < 0 ? null : MyBottomBar(index: bottomBarIndex),
+      bottomNavigationBar: showAppbar || bottomBarIndex < 0
+          ? null
+          : MyBottomBar(index: bottomBarIndex),
       endDrawer: endDrawer,
       floatingActionButton: floatingActionButton,
       key: this.childKey,
@@ -51,7 +56,11 @@ class CustomScaffold extends StatelessWidget {
               ),
             )
           : forceAppbar
-              ? AppBar(title: Text(title ?? 'Movie Search'))
+              ? AppBar(
+                  title: Text(title ?? 'Movie Search'),
+                  elevation: 1,
+                  actions: actions,
+                )
               : null,
       body: Center(child: body),
     );

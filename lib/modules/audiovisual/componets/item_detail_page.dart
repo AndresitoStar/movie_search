@@ -5,12 +5,10 @@ import 'package:movie_search/modules/audiovisual/componets/item_detail_like_butt
 import 'package:movie_search/modules/audiovisual/componets/item_detail_secondary_content.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_recomendation_horizontal_list.dart';
 import 'package:movie_search/modules/audiovisual/componets/items_images_button.dart';
-import 'package:movie_search/modules/audiovisual/componets/review_button.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
-import 'package:movie_search/modules/video/video_button.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

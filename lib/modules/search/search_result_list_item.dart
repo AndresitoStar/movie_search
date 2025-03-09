@@ -28,10 +28,10 @@ class SearchResultListItem extends StatelessWidget {
         _onPressed(context);
       },
       child: Card(
-        elevation: 5,
+        elevation: 0,
         clipBehavior: Clip.hardEdge,
         margin: const EdgeInsets.all(10),
-        child: _ResultListItem(searchResult: searchResult),
+        child: _ResultListItem(searchResult: searchResult, showTitles: true),
       ),
     );
   }
@@ -57,7 +57,7 @@ class ItemGridViewListItem extends StatelessWidget {
       onTap: () {
         _onPressed(context);
       },
-      child: _ResultListItem(searchResult: searchResult),
+      child: _ResultListItem(searchResult: searchResult, showTitles: true),
     );
   }
 
@@ -72,9 +72,8 @@ class ItemGridViewListItem extends StatelessWidget {
 
 class _ResultListItem extends StatelessWidget {
   const _ResultListItem({
-    super.key,
     required this.searchResult,
-    this.showTitles = true,
+    this.showTitles = false,
   });
 
   final BaseSearchResult searchResult;
@@ -82,69 +81,74 @@ class _ResultListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        if (searchResult.backDropImage != null)
-          ContentImageWidget(
-            searchResult.backDropImage,
-            ignorePointer: true,
-            isBackdrop: true,
-          ),
-        if (showTitles)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Spacer(),
-              Container(
-                color: Theme.of(context).cardColor.withOpacity(0.7),
-                child: ListTile(
-                  title: Text(
-                    searchResult.title ?? '-',
-                    textAlign: TextAlign.end,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      if (searchResult.titleOriginal != null &&
-                          searchResult.titleOriginal != searchResult.title)
-                        Text(
-                          searchResult.titleOriginal!,
-                          textAlign: TextAlign.end,
-                          style: Theme.of(context).textTheme.titleMedium,
-                          maxLines: 1,
-                        ),
-                      if (searchResult.type != TMDB_API_TYPE.PERSON)
-                        Text(searchResult.type.nameSingular)
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        if (searchResult.backDropImage == null)
-          Row(
-            children: [
-              AspectRatio(
-                aspectRatio: 9 / 16,
-                child: Card(
-                  margin: const EdgeInsets.fromLTRB(3, 3, 0, 3),
-                  child: Card(
-                    clipBehavior: Clip.hardEdge,
-                    child: ContentImageWidget(
-                      searchResult.posterImage,
-                      ignorePointer: true,
-                      fit: BoxFit.cover,
+    return Card(
+      clipBehavior: Clip.hardEdge,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      elevation: 3,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (searchResult.backDropImage != null)
+            ContentImageWidget(
+              searchResult.backDropImage,
+              ignorePointer: true,
+              isBackdrop: true,
+            ),
+          if (showTitles)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Spacer(),
+                Container(
+                  color: Theme.of(context).cardColor.withOpacity(0.7),
+                  child: ListTile(
+                    title: Text(
+                      searchResult.title ?? '-',
+                      textAlign: TextAlign.end,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        if (searchResult.titleOriginal != null &&
+                            searchResult.titleOriginal != searchResult.title)
+                          Text(
+                            searchResult.titleOriginal!,
+                            textAlign: TextAlign.end,
+                            style: Theme.of(context).textTheme.titleMedium,
+                            maxLines: 1,
+                          ),
+                        if (searchResult.type != TMDB_API_TYPE.PERSON)
+                          Text(searchResult.type.nameSingular)
+                      ],
                     ),
                   ),
                 ),
-              ),
-              Spacer(),
-            ],
-          ),
-      ],
+              ],
+            ),
+          if (searchResult.backDropImage == null)
+            Row(
+              children: [
+                AspectRatio(
+                  aspectRatio: 9 / 16,
+                  child: Card(
+                    margin: const EdgeInsets.fromLTRB(3, 3, 0, 3),
+                    child: Card(
+                      clipBehavior: Clip.hardEdge,
+                      child: ContentImageWidget(
+                        searchResult.posterImage,
+                        ignorePointer: true,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                Spacer(),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }

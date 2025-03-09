@@ -42,7 +42,7 @@ class ItemLikeButton extends ViewModelWidget<FavouritesViewModel> {
                         iconSize: this.iconSize,
                         padding: EdgeInsets.zero,
                         color: /*snapshot.data!.contains(id) ? Colors.red : */
-                            Theme.of(context).colorScheme.onBackground,
+                            Theme.of(context).colorScheme.onSurface,
                         onPressed: () async {
                           if (accountViewModel.userUuid == null) {
                             await context.showLoginModalBottomSheet();

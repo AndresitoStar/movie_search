@@ -158,7 +158,7 @@ class _Content extends ViewModelWidget<ItemEpisodeDetailViewModel> {
                                     image: DecorationImage(
                                       fit: BoxFit.cover,
                                       colorFilter: ColorFilter.mode(
-                                        Theme.of(context).colorScheme.background.withOpacity(0.7),
+                                        Theme.of(context).colorScheme.surface.withOpacity(0.7),
                                         BlendMode.luminosity,
                                       ),
                                       image: NetworkImage(video.youtubeThumbnail),

@@ -159,7 +159,7 @@ class _DialogImageState extends State<DialogImage> {
             Positioned(
               right: 10,
               top: 0,
-              child: ButtonBar(
+              child: OverflowBar(
                 children: [
                   ImageDownloadButton(
                     widget.imageUrl ?? widget.images![widget.currentImage!],

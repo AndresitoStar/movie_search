@@ -1,4 +1,5 @@
 import 'package:movie_search/model/api/models/api.dart';
+import 'package:movie_search/model/api/models/country.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/providers/util.dart';
@@ -34,7 +35,10 @@ class TrendingService extends BaseService {
           BaseSearchResult b = BaseSearchResult.fromJson(type, data);
           result.add(b);
         }
-        return SearchResponse(result: result, totalResult: total, totalPageResult: totalPagesResult);
+        return SearchResponse(
+            result: result,
+            totalResult: total,
+            totalPageResult: totalPagesResult);
       },
       idCache: '$type$page',
       cacheMap: _cacheTrending,
@@ -74,7 +78,10 @@ class TrendingService extends BaseService {
           BaseSearchResult b = BaseSearchResult.fromJson(type, data);
           result.add(b);
         }
-        return SearchResponse(result: result, totalResult: total, totalPageResult: totalPagesResult);
+        return SearchResponse(
+            result: result,
+            totalResult: total,
+            totalPageResult: totalPagesResult);
       },
       idCache: '$type$page',
       cacheMap: _cachePopular,
@@ -88,6 +95,7 @@ class TrendingService extends BaseService {
     List<String>? genres,
     List<String>? cast,
     List<int>? watchProvider,
+    Country? country,
     SortDirection? sortDirection,
     SortOrder? sortOrder,
   }) async {
@@ -95,9 +103,12 @@ class TrendingService extends BaseService {
       'page': page.toString(),
       if (genres != null && genres.isNotEmpty) 'with_genres': genres.join(','),
       if (cast != null && cast.isNotEmpty) 'with_people': cast.join(','),
-      if (watchProvider != null) 'with_watch_providers': '${watchProvider.join('|')}',
+      if (watchProvider != null)
+        'with_watch_providers': '${watchProvider.join('|')}',
       if (watchProvider != null) 'watch_region': await fetchRegion(),
-      if (sortDirection != null && sortOrder != null) 'sort_by': '${sortOrder.value}.${sortDirection.value}',
+      if (country != null) 'with_origin_country': country.iso31661,
+      if (sortDirection != null && sortOrder != null)
+        'sort_by': '${sortOrder.value}.${sortDirection.value}',
     };
 
     return sendGET<SearchResponse>(
@@ -114,7 +125,10 @@ class TrendingService extends BaseService {
           BaseSearchResult b = BaseSearchResult.fromJson(type, data);
           result.add(b);
         }
-        return SearchResponse(result: result, totalResult: total, totalPageResult: totalPagesResult);
+        return SearchResponse(
+            result: result,
+            totalResult: total,
+            totalPageResult: totalPagesResult);
       },
       params: params,
     );

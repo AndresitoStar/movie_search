@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/model/image.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_images_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
@@ -60,7 +59,7 @@ class ShowImagesButton extends StatelessWidget {
                   null, ItemImagesPage(title: title, imagesMap: images))),
       icon: Icon(
         MyIcons.gallery,
-        color: Theme.of(context).colorScheme.onBackground,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
     );
   }

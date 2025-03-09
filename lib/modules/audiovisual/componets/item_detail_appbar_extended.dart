@@ -82,8 +82,8 @@ class ItemDetailAppbarContentExtended
 
   Widget _buildButtons(ItemDetailViewModel model) {
     if (!model.dataReady) return Container();
-    return ButtonBar(
-      overflowButtonSpacing: 0,
+    return OverflowBar(
+      overflowSpacing: 0,
       alignment: MainAxisAlignment.center,
       children: [
         ItemLikeButton(item: model.data!),
@@ -110,7 +110,7 @@ class ItemDetailAppbarContentExtended
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: theme.textTheme.headlineSmall!.copyWith(
-              color: theme.colorScheme.onBackground,
+              color: theme.colorScheme.onSurface,
             ),
           ),
         ),
@@ -206,8 +206,8 @@ class ItemDetailAppbarContentExtended
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              theme.colorScheme.background.withOpacity(0.5),
-              theme.colorScheme.background.withOpacity(0.5),
+              theme.colorScheme.surface.withOpacity(0.5),
+              theme.colorScheme.surface.withOpacity(0.5),
               theme.scaffoldBackgroundColor,
             ],
           ),
@@ -265,8 +265,8 @@ class ItemDetailAppbarContentSimple
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Theme.of(context).colorScheme.background.withOpacity(0.2),
-                  Theme.of(context).colorScheme.background.withOpacity(0.1),
+                  Theme.of(context).colorScheme.surface.withOpacity(0.2),
+                  Theme.of(context).colorScheme.surface.withOpacity(0.1),
                   Theme.of(context).scaffoldBackgroundColor,
                 ],
               ),
@@ -285,7 +285,7 @@ class ItemDetailAppbarContentSimple
           alignment: Alignment.bottomCenter,
           child: Container(
             height: 1,
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
           ),
         ),
       ],

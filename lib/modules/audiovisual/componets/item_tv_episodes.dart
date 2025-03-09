@@ -152,7 +152,7 @@ class _Portrait extends ViewModelWidget<ItemSeasonViewModel> {
                                               image: DecorationImage(
                                                 fit: BoxFit.cover,
                                                 colorFilter: ColorFilter.mode(
-                                                  Theme.of(context).colorScheme.background.withOpacity(0.7),
+                                                  Theme.of(context).colorScheme.surface.withOpacity(0.7),
                                                   BlendMode.luminosity,
                                                 ),
                                                 image: NetworkImage('$URL_IMAGE_MEDIUM${episode.stillPath}'),
@@ -295,7 +295,7 @@ class _Landscape extends ViewModelWidget<ItemSeasonViewModel> {
                                             image: DecorationImage(
                                               fit: BoxFit.cover,
                                               colorFilter: ColorFilter.mode(
-                                                Theme.of(context).colorScheme.background.withOpacity(0.7),
+                                                Theme.of(context).colorScheme.surface.withOpacity(0.7),
                                                 BlendMode.luminosity,
                                               ),
                                               image: NetworkImage('$URL_IMAGE_MEDIUM${episode.stillPath}'),

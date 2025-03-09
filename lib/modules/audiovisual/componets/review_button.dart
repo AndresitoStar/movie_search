@@ -33,7 +33,7 @@ class ReviewButton extends StatelessWidget {
                   child: IconButton(
                     onPressed: () => Navigator.of(context).pushNamed(ReviewPage.routeName, arguments: param),
                     icon: Icon(FrinoIcons.f_chat_text),
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     disabledColor: Theme.of(context).hintColor,
                   ),
                 ),

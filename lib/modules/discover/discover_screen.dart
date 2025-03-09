@@ -12,7 +12,7 @@ class DiscoverScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DiscoverViewModel>.reactive(
-      viewModelBuilder: () => DiscoverViewModel(context.read()),
+      viewModelBuilder: () => DiscoverViewModel(),
       onViewModelReady: (model) => model.initializeFilters(),
       builder: (context, model, child) => CustomScaffold(
         bottomBarIndex: 1,

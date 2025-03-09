@@ -18,7 +18,7 @@ class MyCircularButton extends StatelessWidget {
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: color ?? Theme.of(context).buttonTheme.colorScheme!.background,
+        color: color ?? Theme.of(context).buttonTheme.colorScheme!.surface,
       ),
       child: IconButton(
         icon: icon,

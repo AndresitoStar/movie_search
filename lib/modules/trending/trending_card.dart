@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/model/api/models/genre.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/trending/trending_page.dart';
 import 'package:movie_search/routes.dart';
@@ -12,7 +12,7 @@ import 'trending_viewmodel.dart';
 class TrendingCard extends StatelessWidget {
   final TrendingContent content;
   final TrendingType trendingType;
-  final GenreTableData? genre;
+  final Genre? genre;
 
   TrendingCard({Key? key, required this.content, this.genre, this.trendingType = TrendingType.TRENDING})
       : super(key: key);

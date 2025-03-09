@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/account/viewModel/account_viewmodel.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_list_page.dart';
@@ -7,7 +8,6 @@ import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/favourite/viewmodel/favourite_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
-import 'package:movie_search/ui/frino_icons.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/dialogs.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
@@ -28,73 +28,74 @@ class FavouriteScreen extends ViewModelWidget<FavouritesViewModel> {
           bottomBarIndex: 2,
           title: 'Mis Favoritos',
           forceAppbar: true,
+          actions: [
+            if (provider.isLogged)
+              IconButton(
+                onPressed: () => MyDialogs.showConfirmationDialog(
+                  context,
+                  title: 'Cerrar Sesión',
+                  message: '¿Estás seguro de que deseas cerrar la sesión?',
+                  onConfirm: () {
+                    provider.logout();
+                  },
+                ),
+                icon: Icon(Icons.logout_outlined),
+                color: Colors.red,
+              ),
+          ],
           body: provider.isBusy
               ? Center(child: CircularProgressIndicator())
               : Column(
                   children: [
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: ClipRRect(
-                              clipBehavior: Clip.hardEdge,
-                              borderRadius: BorderRadius.circular(40.w),
-
-                              child: provider.photoUrl != null
-                                  ? Image.network(
-                                      provider.photoUrl!,
-                                      fit: BoxFit.fill,
-                                      width: 40.w,
-                                    )
-                                  : Icon(
-                                      Icons.account_circle,
-                                      size: 40.w,
-                                    ),
-                            ),
-                          ),
-                          if (provider.isLogged) ...[
-                            Center(
-                              child: Text(provider.displayName ?? 'Usuario',
-                                  style: Theme.of(context).textTheme.headlineSmall),
-                            ),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: provider.logout,
-                              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                              child: Text(
-                                'Cerrar Sesion',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
-                              ),
-                            ),
-                          ] else
-                            MyGoogleButton(),
-                        ],
-                      ),
-                    ),
-                    if (model.favoriteMap.isNotEmpty)
-                      Expanded(
-                        flex: 1,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          physics: ClampingScrollPhysics(),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              ...model.favoriteMap.entries
-                                  .map(
-                                    (e) => AspectRatio(
-                                      aspectRatio: 1,
-                                      child: _buildItemList(context, e),
-                                    ),
+                    const SizedBox(height: 20),
+                    if (provider.isLogged) ...[
+                      Center(
+                        child: Card(
+                          elevation: 5,
+                          clipBehavior: Clip.hardEdge,
+                          shape: CircleBorder(),
+                          child: ClipOval(
+                            child: provider.photoUrl != null
+                                ? Image.network(
+                                    provider.photoUrl!,
+                                    width: 8.h,
+                                    fit: BoxFit.cover,
                                   )
-                                  .toList(),
-                            ],
+                                : Icon(
+                                    Icons.account_circle,
+                                    size: 8.h,
+                                  ),
                           ),
                         ),
                       ),
-                    const SizedBox(height: 30),
+                      Text(
+                        provider.displayName ?? 'Usuario',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      Divider(),
+                    ] else
+                      MyGoogleButton(),
+                    Expanded(
+                      child: model.favoriteMap.isEmpty
+                          ? _buildEmptyList()
+                          : GridView.builder(
+                              padding: EdgeInsets.all(10),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: getColumns(context),
+                                childAspectRatio: 0.7,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                              ),
+                              itemCount: model.favoriteMap.length,
+                              itemBuilder: (ctx, i) {
+                                final entry =
+                                    model.favoriteMap.entries.elementAt(i);
+                                return _buildItemList(context, entry);
+                              },
+                            ),
+                    ),
                   ],
                 ),
         );
@@ -102,7 +103,8 @@ class FavouriteScreen extends ViewModelWidget<FavouritesViewModel> {
     );
   }
 
-  Widget _buildItemList(BuildContext context, MapEntry<String, List<BaseSearchResult?>> entry) {
+  Widget _buildItemList(
+      BuildContext context, MapEntry<String, List<BaseSearchResult?>> entry) {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         Routes.defaultRoute(
@@ -114,42 +116,40 @@ class FavouriteScreen extends ViewModelWidget<FavouritesViewModel> {
         ),
       ),
       child: Container(
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: Theme.of(context).highlightColor,
-          border: Border.all(color: Theme.of(context).highlightColor),
+          color: context.theme.colorScheme.onSurface.withValues(alpha: 0.1),
+          border: Border.all(
+            color: context.theme.colorScheme.onSurface.withValues(alpha: 0.1),
+            width: 1,
+            strokeAlign: BorderSide.strokeAlignOutside,
+          ),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // GridView.builder(
-            //   itemCount: 4,
-            //   padding: EdgeInsets.zero,
-            //   itemBuilder: (ctx, i) => entry.value.length > i
-            //       ? ImageFiltered(
-            //           imageFilter: ImageFilter.blur(sigmaX: 3, sigmaY: 3, tileMode: TileMode.decal),
-            //           child: Image.network('${URL_IMAGE_MEDIUM}${entry.value[i]?.posterImage}', fit: BoxFit.fitWidth))
-            //       : Container(color: Theme.of(context).canvasColor),
-            //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //     crossAxisCount: 2,
-            //     childAspectRatio: 1,
-            //     crossAxisSpacing: 1,
-            //     mainAxisSpacing: 1,
-            //   ),
-            // ),
             entry.value.first?.posterImage != null
                 ? ImageFiltered(
-                    imageFilter: ImageFilter.blur(sigmaX: 3, sigmaY: 3, tileMode: TileMode.decal),
-                    child: Image.network('${URL_IMAGE_MEDIUM}${entry.value.first?.posterImage}', fit: BoxFit.cover))
+                    imageFilter: ImageFilter.blur(
+                        sigmaX: 1, sigmaY: 1, tileMode: TileMode.decal),
+                    child: Image.network(
+                        '${URL_IMAGE_MEDIUM}${entry.value.first?.posterImage}',
+                        fit: BoxFit.cover))
                 : Container(color: Theme.of(context).canvasColor),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                color: Theme.of(context).colorScheme.background.withOpacity(0.8),
+                color:
+                    Theme.of(context).colorScheme.surface.withOpacity(0.99),
                 child: ListTile(
-                  title: Text(entry.key, style: TextStyle(color: Theme.of(context).colorScheme.onBackground)),
+                  title: Text(entry.key.capitalize,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface)),
                   subtitle: Text(
                     '${entry.value.length} elementos',
-                    style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface),
                   ),
                 ),
               ),

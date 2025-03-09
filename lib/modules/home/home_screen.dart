@@ -5,16 +5,14 @@ import 'package:movie_search/modules/home/genre_carousel.dart';
 import 'package:movie_search/modules/home/home_movie_now_playing.dart';
 import 'package:movie_search/modules/home/home_movie_top_rated.dart';
 import 'package:movie_search/modules/home/home_movie_upcoming.dart';
-import 'package:movie_search/modules/home/home_search_bar.dart';
 import 'package:movie_search/modules/home/home_trending_all.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
-import 'package:movie_search/ui/widgets/theme_switcher.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'custom_segmented_view_pages.dart';
+import 'home_popular.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = "/home";
@@ -29,6 +27,7 @@ class HomeScreen extends StatelessWidget {
         onPressed: () =>
             Navigator.of(context).pushNamed(SearchScreen.routeName),
         child: Icon(MyIcons.search),
+        backgroundColor: theme.colorScheme.primary,
       ),
       body: Column(
         children: [
@@ -44,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(height: 1, color: theme.colorScheme.onBackground),
+            Divider(height: 1, color: theme.colorScheme.onSurface),
           ],
           Expanded(
             child: Container(
@@ -56,7 +55,9 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       GenreCarouselWidget(),
                       HomeTrendingAllView(
-                          window: TrendingWindow.DAY, key: UniqueKey()),
+                        window: TrendingWindow.DAY,
+                        key: UniqueKey(),
+                      ),
                       // HomeTrendingAllView(window: TrendingWindow.WEEK, key: UniqueKey()),
                       // CustomSegmentedPageView(
                       //   title: 'Lo Ultimo en Tendencia',
@@ -68,16 +69,8 @@ class HomeScreen extends StatelessWidget {
                       // ),
                       HomeNowPlayingView(key: UniqueKey()),
                       HomeUpcomingView(key: UniqueKey()),
-                      HomeAiringView(key: UniqueKey()),
-                      // CustomSegmentedPageView(
-                      //   title: 'Lo Mas Popular',
-                      //   pages: [
-                      //     HomeNowPlayingView(key: UniqueKey()),
-                      //     HomeUpcomingView(key: UniqueKey()),
-                      //     HomeAiringView(key: UniqueKey()),
-                      //   ],
-                      //   tabs: ['Now Playing', 'Upcoming', 'Al Aire'],
-                      // ),
+                      HomePopularView(key: UniqueKey()),
+                      HomeTopRatedView(key: UniqueKey()),
                     ],
                   ),
                 ),

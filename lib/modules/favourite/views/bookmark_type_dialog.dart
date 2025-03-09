@@ -72,7 +72,7 @@ class SelectBookmarkTypeDialog extends StatelessWidget {
                                     onTap: () => _onSelected(context: context, value: entry.key),
                                     leading: Icon(Icons.bookmark),
                                     title: Text('${entry.key} (${(entry.value as Map).length})', style: context.theme.textTheme.bodyLarge),
-                                    tileColor: context.theme.colorScheme.background.withOpacity(0.5),
+                                    tileColor: context.theme.colorScheme.surface.withOpacity(0.5),
                                   ),
                                 ),
                           ReactiveValueListenableBuilder<bool>(
@@ -80,7 +80,7 @@ class SelectBookmarkTypeDialog extends StatelessWidget {
                             builder: (context, control, child) {
                               if (control.value ?? false) {
                                 return Container(
-                                  color: context.theme.colorScheme.background.withOpacity(0.5),
+                                  color: context.theme.colorScheme.surface.withOpacity(0.5),
                                   padding: const EdgeInsets.all(8),
                                   child: Card(
                                     clipBehavior: Clip.hardEdge,
@@ -118,7 +118,7 @@ class SelectBookmarkTypeDialog extends StatelessWidget {
                                 );
                               }
                               return Container(
-                                color: context.theme.colorScheme.background.withOpacity(0.5),
+                                color: context.theme.colorScheme.surface.withOpacity(0.5),
                                 padding: const EdgeInsets.all(8),
                                 child: InkWell(
                                   onTap: () {

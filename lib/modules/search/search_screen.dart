@@ -13,15 +13,15 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SearchViewModel>.reactive(
-      viewModelBuilder: () => SearchViewModel(SearchService(), context.read()),
+      viewModelBuilder: () => SearchViewModel(SearchService()),
       builder: (context, model, child) => CustomScaffold(
         bottomBarIndex: -1,
         title: 'Búsqueda',
         forceAppbar: true,
         body: Column(
           children: [
+            SizedBox(height: 10),
             sb.SearchBar(),
-            // SizedBox(height: 10),
             Expanded(child: SearchResults()),
           ],
         ),

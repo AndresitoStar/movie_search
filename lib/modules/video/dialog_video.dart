@@ -74,7 +74,7 @@ class DialogVideo extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
+                    style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(Colors.red)),
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text('Cerrar'))
               ],

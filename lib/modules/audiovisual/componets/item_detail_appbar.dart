@@ -21,7 +21,7 @@ class ItemDetailSliverAppBar extends StatelessWidget {
         color: Colors.transparent,
         icon: Icon(
           MyIcons.arrow_left,
-          color: Theme.of(context).colorScheme.onBackground,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         onPressed: () => Navigator.of(context).pop(),
       ),

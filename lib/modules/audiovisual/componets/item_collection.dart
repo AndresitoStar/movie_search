@@ -23,13 +23,13 @@ class ItemCollectionView extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
                 image: collection.backdropPath == null
                     ? null
                     : DecorationImage(
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.background.withOpacity(0.6),
+                          Theme.of(context).colorScheme.surface.withOpacity(0.6),
                           BlendMode.luminosity,
                         ),
                         image: NetworkImage('$URL_IMAGE_MEDIUM${collection.backdropPath}'),
@@ -41,7 +41,7 @@ class ItemCollectionView extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .headlineSmall!
-                      .copyWith(color: Theme.of(context).colorScheme.onBackground),
+                      .copyWith(color: Theme.of(context).colorScheme.onSurface),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +52,7 @@ class ItemCollectionView extends StatelessWidget {
                       style: Theme.of(context)
                           .primaryTextTheme
                           .titleMedium!
-                          .copyWith(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8)),
+                          .copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
                     ),
                     SizedBox(height: 5),
                     Row(

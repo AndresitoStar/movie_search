@@ -2,10 +2,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/core/content_type_controller.dart';
-import 'package:movie_search/data/moor_database.dart';
-import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
+import 'package:movie_search/model/api/models/genre.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
+import 'package:movie_search/modules/splash/config_singleton.dart';
 import 'package:movie_search/modules/trending/trending_service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -50,7 +50,7 @@ class GenreCarouselWidget extends StackedView<GenreCarouselViewModel> {
 
   @override
   GenreCarouselViewModel viewModelBuilder(BuildContext context) =>
-      GenreCarouselViewModel(context.read());
+      GenreCarouselViewModel();
 
   @override
   void onViewModelReady(GenreCarouselViewModel viewModel) {
@@ -98,12 +98,12 @@ class _ActualGenreWidget extends ViewModelWidget<GenreCarouselViewModel> {
                     scrollDirection: Axis.horizontal,
                   )),
               decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).colorScheme.onBackground,
-                    width: 1,
-                  ),
-                ),
+                // border: Border(
+                //   bottom: BorderSide(
+                //     color: Theme.of(context).colorScheme.onBackground,
+                //     width: 1,
+                //   ),
+                // ),
               ),
             ),
             Align(
@@ -117,9 +117,9 @@ class _ActualGenreWidget extends ViewModelWidget<GenreCarouselViewModel> {
                     decorator: DotsDecorator(
                       color: Theme.of(context)
                           .colorScheme
-                          .onBackground
+                          .onSurface
                           .withOpacity(0.2),
-                      activeColor: Theme.of(context).colorScheme.onBackground,
+                      activeColor: Theme.of(context).colorScheme.onSurface,
                     ),
                   );
                 },
@@ -133,24 +133,23 @@ class _ActualGenreWidget extends ViewModelWidget<GenreCarouselViewModel> {
 }
 
 class GenreCarouselViewModel extends BaseViewModel {
-  final MyDatabase _db;
   final TrendingService _trendingService = TrendingService();
 
-  GenreCarouselViewModel(this._db);
+  GenreCarouselViewModel();
 
-  Map<String, List<GenreTableData>> _genres = {};
+  Map<String, List<Genre>> _genres = {};
 
-  Map<String, List<GenreTableData>> get genres => {..._genres};
+  Map<String, List<Genre>> get genres => {..._genres};
 
-  Map<GenreTableData, List<BaseSearchResult>> _allGenreMap = {};
+  Map<Genre, List<BaseSearchResult>> _allGenreMap = {};
 
-  Map<GenreTableData, List<BaseSearchResult>> get allGenreMap =>
+  Map<Genre, List<BaseSearchResult>> get allGenreMap =>
       {..._allGenreMap};
 
-  FormControl<GenreTableData> _actualGenreControl =
-      FormControl<GenreTableData>();
+  FormControl<Genre> _actualGenreControl =
+      FormControl<Genre>();
 
-  GenreTableData? get actualGenre => _actualGenreControl.value;
+  Genre? get actualGenre => _actualGenreControl.value;
 
   List<BaseSearchResult> get itemsForActualGenre =>
       _allGenreMap[_actualGenreControl.value] ?? [];
@@ -160,7 +159,7 @@ class GenreCarouselViewModel extends BaseViewModel {
     return _genres[type.type]?.length ?? 0;
   }
 
-  List<GenreTableData> get genresForCurrentType {
+  List<Genre> get genresForCurrentType {
     final type = ContentTypeController.getInstance().currentType;
     return _genres[type.type] ?? [];
   }
@@ -183,8 +182,8 @@ class GenreCarouselViewModel extends BaseViewModel {
     setBusy(true);
     try {
       Future loadGenre(String type) async {
-        final genres = await _db.allGenres(type);
-        final items = Map<GenreTableData, List<BaseSearchResult>>.fromIterable(
+        final genres = ConfigSingleton.instance.getGenresByType(type);
+        final items = Map<Genre, List<BaseSearchResult>>.fromIterable(
             genres,
             key: (genre) => genre,
             value: (genre) => []);
@@ -205,7 +204,7 @@ class GenreCarouselViewModel extends BaseViewModel {
     }
   }
 
-  Future loadGenreItems(GenreTableData genre) async {
+  Future loadGenreItems(Genre genre) async {
     if (busy(genre)) return;
     setBusyForObject(genre, true);
     _actualGenreControl.updateValue(genre);

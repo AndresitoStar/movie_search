@@ -37,7 +37,6 @@ class SearchPersonListPage extends StatelessWidget {
         body: ViewModelBuilder<SearchViewModel>.reactive(
             viewModelBuilder: () => SearchViewModel(
                   SearchService(type: TMDB_API_TYPE.PERSON.type),
-                  context.read(),
                 ),
             builder: (context, model, child) {
               return Column(

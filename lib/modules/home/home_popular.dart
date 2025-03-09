@@ -6,10 +6,10 @@ import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/trending/trending_service.dart';
 import 'package:movie_search/providers/util.dart';
 
-class HomeTopRatedViewModel extends InfiniteScrollViewModel<BaseSearchResult> {
+class HomePopularViewModel extends InfiniteScrollViewModel<BaseSearchResult> {
   final TrendingService _trendingService;
 
-  HomeTopRatedViewModel() : _trendingService = TrendingService();
+  HomePopularViewModel() : _trendingService = TrendingService();
 
   @override
   Future<AbstractSearchResponse<BaseSearchResult>> makeSearch(
@@ -17,7 +17,7 @@ class HomeTopRatedViewModel extends InfiniteScrollViewModel<BaseSearchResult> {
     final type = ContentTypeController.getInstance().currentType;
     return _trendingService.getAny(
       type.type,
-      'top_rated',
+      'popular',
       page: page ?? 1,
       mediaType: type.type,
       force: force,
@@ -25,23 +25,23 @@ class HomeTopRatedViewModel extends InfiniteScrollViewModel<BaseSearchResult> {
   }
 }
 
-class HomeTopRatedView extends ContentPreviewViewMoreWidget {
-  HomeTopRatedView({Key? key}) : super(key: key);
+class HomePopularView extends ContentPreviewViewMoreWidget {
+  HomePopularView({Key? key}) : super(key: key);
 
   @override
   InfiniteScrollViewModel viewModelBuilder(BuildContext context) {
-    return HomeTopRatedViewModel();
+    return HomePopularViewModel();
   }
 
   @override
-  String get itemGridHeroTag => 'home_airing_today';
+  String get itemGridHeroTag => 'popular';
 
   @override
-  String get viewMoreButtonHeroTag => 'view_more_btn';
+  String get viewMoreButtonHeroTag => 'view_more_popular_btn';
 
   @override
   bool get itemShowData => true;
 
   @override
-  String get title => 'Top Rated';
+  String get title => 'Most Popular';
 }

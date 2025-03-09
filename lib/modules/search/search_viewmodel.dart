@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/model/api/models/genre.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/search/search_category.dart';
 import 'package:movie_search/modules/search/search_service.dart';
@@ -11,12 +11,11 @@ import 'package:stacked/stacked.dart';
 
 class SearchViewModel extends BaseViewModel {
   final SearchService _service;
-  final MyDatabase _db;
   final FormGroup form = fb.group({
     FORM_QUERY: FormControl<String>(value: ''),
     'filter': fb.group({
       FORM_TYPE: FormControl<SearchCategory>(value: SearchCategory.getAll().first),
-      FORM_GENRE: FormControl<Set<GenreTableData>>(value: {}),
+      FORM_GENRE: FormControl<Set<Genre>>(value: {}),
       FORM_CAST: FormControl<Set<BaseSearchResult>>(value: {}),
     }),
   });
@@ -24,10 +23,6 @@ class SearchViewModel extends BaseViewModel {
   final List<BaseSearchResult> _searchResults = [];
 
   List<BaseSearchResult> get searchResults => [..._searchResults];
-
-  List<GenreTableData> _allGenres = [];
-
-  Iterable<GenreTableData> get allFilterGenres => _allGenres.where((element) => element.type == actualCategory!.value);
 
   FormGroup get filterForm => form.control('filter') as FormGroup;
 
@@ -53,8 +48,8 @@ class SearchViewModel extends BaseViewModel {
 
   FormControl<SearchCategory> get typeControl => filterForm.controls[FORM_TYPE] as FormControl<SearchCategory>;
 
-  FormControl<Set<GenreTableData>> get genresControl =>
-      filterForm.controls[FORM_GENRE] as FormControl<Set<GenreTableData>>;
+  FormControl<Set<Genre>> get genresControl =>
+      filterForm.controls[FORM_GENRE] as FormControl<Set<Genre>>;
 
   SearchCategory? get actualCategory => typeControl.value;
 
@@ -74,21 +69,21 @@ class SearchViewModel extends BaseViewModel {
     // print(filterForm.value);
     filterForm.reset(value: {
       FORM_TYPE: SearchCategory.getAll().first,
-      FORM_GENRE: <GenreTableData>{},
+      FORM_GENRE: <Genre>{},
       FORM_CAST: <BaseSearchResult>{},
     });
 
     notifyListeners();
   }
 
-  toggleGenreFilter(GenreTableData genre) {
+  toggleGenreFilter(Genre genre) {
     if (!genresControl.value!.remove(genre)) {
       genresControl.value!.add(genre);
     }
     genresControl.updateValueAndValidity();
   }
 
-  SearchViewModel(this._service, this._db) {
+  SearchViewModel(this._service) {
     final onData = (event) {
       _debounce.run(() async {
         await search();
@@ -98,10 +93,6 @@ class SearchViewModel extends BaseViewModel {
     typeControl.valueChanges.listen((event) {
       genresControl.updateValue({});
     });
-  }
-
-  initializeFilters() async {
-    _allGenres = await _db.allGenres(null);
   }
 
   Future search() async {

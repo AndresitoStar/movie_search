@@ -22,13 +22,13 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
             image: model.data!.tvShow!.backdropPath == null
                 ? null
                 : DecorationImage(
                     fit: BoxFit.cover,
                     colorFilter: ColorFilter.mode(
-                      Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                       BlendMode.luminosity,
                     ),
                     image: NetworkImage(
@@ -41,13 +41,13 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
               text: TextSpan(
                   text: 'Temporadas:',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.background,
+                        color: Theme.of(context).colorScheme.surface,
                       ),
                   children: [
                     TextSpan(
                       text: ' ${model.data!.tvShow!.numberOfSeasons}',
                       style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.background,
+                            color: Theme.of(context).colorScheme.surface,
                           ),
                     )
                   ]),

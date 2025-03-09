@@ -27,7 +27,7 @@ class VideoButton extends StatelessWidget {
                       ? () => Navigator.of(context).pushNamed(VideoScreen.route, arguments: [model.videos, param.title])
                       : null,
                   icon: Icon(FrinoIcons.f_video),
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: Theme.of(context).colorScheme.onSurface,
                   disabledColor: Theme.of(context).hintColor,
                 ),
     );

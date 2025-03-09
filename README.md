@@ -4,7 +4,7 @@
 
 ### TODO
 
-- agregar filtro al descubrir de listado de actores
+-x- agregar filtro al descubrir de listado de actores
 - selector de paises
 - COMPARTIR & SHARE
 - deeplink

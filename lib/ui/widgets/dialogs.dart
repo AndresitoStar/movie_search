@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class MyDialogs {
-  static Future showError(BuildContext context, {required String error, VoidCallback? onTapDismiss}) async {
+  static Future showError(BuildContext context,
+      {required String error, VoidCallback? onTapDismiss}) async {
     if (!context.mounted) return;
     PanaraInfoDialog.show(
       context,
@@ -33,6 +34,32 @@ class MyDialogs {
     );
   }
 
+  static showConfirmationDialog(
+    BuildContext context, {
+    required String title,
+    required String message,
+    required VoidCallback onConfirm,
+  }) {
+    if (!context.mounted) return;
+    return PanaraConfirmDialog.show(
+      context,
+      message: message,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      onTapConfirm: () {
+        onConfirm();
+        Navigator.of(context).pop();
+      },
+      onTapCancel: () {
+        Navigator.of(context).pop();
+      },
+      panaraDialogType: PanaraDialogType.normal,
+      title: title,
+      noImage: true,
+      barrierDismissible: true,
+    );
+  }
+
   static Future showLoginModalBottomSheet(BuildContext context) async {
     if (!context.mounted) return;
     return showModalBottomSheet(
@@ -49,7 +76,8 @@ class MyDialogs {
             ),
           ),
           ListTile(
-            title: Text('Tus Favoritos', style: Theme.of(context).textTheme.headlineSmall),
+            title: Text('Tus Favoritos',
+                style: Theme.of(context).textTheme.headlineSmall),
             subtitle: Text(
               'Autenticate con Google para guardar tus listas de favoritos',
               style: Theme.of(context).textTheme.titleMedium,
@@ -74,7 +102,8 @@ class MyGoogleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        side: BorderSide(width: 1, color: Theme.of(context).colorScheme.onBackground),
+        side: BorderSide(
+            width: 1, color: Theme.of(context).colorScheme.onSurface),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       onPressed: () {
@@ -96,7 +125,10 @@ class MyGoogleButton extends StatelessWidget {
               padding: EdgeInsets.only(left: 10, right: 10),
               child: Text(
                 'Sign in with Google',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
           ],

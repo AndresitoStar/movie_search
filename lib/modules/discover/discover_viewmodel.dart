@@ -1,9 +1,10 @@
-import 'package:movie_search/data/moor_database.dart';
 import 'package:movie_search/model/api/models/api.dart';
-import 'package:movie_search/model/api/models/person.dart';
+import 'package:movie_search/model/api/models/country.dart';
+import 'package:movie_search/model/api/models/genre.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/search/search_category.dart';
+import 'package:movie_search/modules/splash/config_singleton.dart';
 import 'package:movie_search/modules/trending/trending_service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -13,22 +14,23 @@ class DiscoverViewModel extends BaseViewModel {
   static const String FORM_TYPE = 'type';
   static const String FORM_GENRE = 'genre';
   static const String FORM_CAST = 'cast';
+  static const String FORM_COUNTRY = 'with_origin_country';
 
   static const String FORM_PROVIDERS = 'networks';
   static const String FORM_SORT_ORDER = 'sort_order';
   static const String FORM_SORT_DIRECTIONS = 'sort_direction';
 
-  final MyDatabase _db;
   final FormGroup form = fb.group({
     FORM_TYPE: FormControl<SearchCategory>(value: SearchCategory.getAll().first),
-    FORM_GENRE: FormControl<Set<GenreTableData>>(value: {}),
+    FORM_GENRE: FormControl<Set<Genre>>(value: {}),
     FORM_CAST: FormControl<Set<BaseSearchResult>>(value: {}),
+    FORM_COUNTRY: FormControl<Country>(),
     FORM_PROVIDERS: FormControl<Set<WatchProvider>>(value: {}),
     FORM_SORT_ORDER: FormControl<SortOrder>(value: SortOrder.POPULARITY),
     FORM_SORT_DIRECTIONS: FormControl<SortDirection>(value: SortDirection.desc),
   });
 
-  DiscoverViewModel(this._db) {
+  DiscoverViewModel() {
     typeControl.valueChanges.listen((event) {
       genresControl.updateValue({});
     });
@@ -38,9 +40,7 @@ class DiscoverViewModel extends BaseViewModel {
 
   List<BaseSearchResult> get searchResults => [..._searchResults];
 
-  List<GenreTableData> _allGenres = [];
-
-  Iterable<GenreTableData> get allFilterGenres => _allGenres.where((element) => element.type == actualCategory!.value);
+  List<Genre> get allFilterGenres => ConfigSingleton.instance.getGenresByType(actualCategory!.value);
 
   String get filterText => '${actualCategory!.label} $_activeGenres $_activeWatchProvider';
 
@@ -63,7 +63,7 @@ class DiscoverViewModel extends BaseViewModel {
 
   FormControl<SearchCategory> get typeControl => form.controls[FORM_TYPE] as FormControl<SearchCategory>;
 
-  FormControl<Set<GenreTableData>> get genresControl => form.controls[FORM_GENRE] as FormControl<Set<GenreTableData>>;
+  FormControl<Set<Genre>> get genresControl => form.controls[FORM_GENRE] as FormControl<Set<Genre>>;
 
   FormControl<Set<BaseSearchResult>> get castControl => form.controls[FORM_CAST] as FormControl<Set<BaseSearchResult>>;
 
@@ -75,6 +75,8 @@ class DiscoverViewModel extends BaseViewModel {
   FormControl<SortDirection> get sortDirectionControl =>
       form.controls[FORM_SORT_DIRECTIONS] as FormControl<SortDirection>;
 
+  FormControl<Country> get countryControl => form.controls[FORM_COUNTRY] as FormControl<Country>;
+
   SearchCategory? get actualCategory => typeControl.value;
 
   bool showFilterExpansion = true;
@@ -84,7 +86,7 @@ class DiscoverViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  toggleGenreFilter(GenreTableData genre) {
+  toggleGenreFilter(Genre genre) {
     if (!genresControl.value!.remove(genre)) {
       genresControl.value!.add(genre);
     }
@@ -105,8 +107,6 @@ class DiscoverViewModel extends BaseViewModel {
 
   initializeFilters() async {
     setBusy(true);
-    _allGenres = await _db.allGenres(null);
-
     for (var c in SearchCategory.getAll()) {
       final list = await TrendingService().getWatchProviders(c.value);
       _watchProvidersMap.putIfAbsent(c.value, () => list);
@@ -128,6 +128,7 @@ class DiscoverViewModel extends BaseViewModel {
         watchProvider: providerControl.value!.map((e) => e.providerId).toList(),
         sortDirection: sortDirectionControl.value,
         sortOrder: sortOrderControl.value,
+        country: countryControl.value,
         cast: castControl.value!.map((e) => e.id.toString()).toList(),
       );
       _searchResults.addAll(response.result);

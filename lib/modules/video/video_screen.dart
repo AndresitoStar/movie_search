@@ -53,14 +53,14 @@ class VideoScreen extends StatelessWidget {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
                     child: Container(
-                      color: Theme.of(context).colorScheme.background.withOpacity(0.25),
+                      color: Theme.of(context).colorScheme.surface.withOpacity(0.25),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Expanded(
                             child: Icon(
                               FrinoIcons.f_play,
-                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.65),
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.65),
                             ),
                           ),
                           if (videosList[i].name != null)

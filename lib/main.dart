@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:io';
-
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
@@ -17,29 +14,22 @@ import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/extensions.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:sqlite3/open.dart';
 import 'package:stacked/stacked.dart';
 
-import 'data/moor_database.dart';
 import 'modules/splash/splash_screen.dart';
 import 'modules/themes/theme_viewmodel.dart';
 
 final GlobalKey<ScaffoldState> drawerKey = new GlobalKey<ScaffoldState>();
-final GlobalKey<NavigatorState> globalNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> globalNavigatorKey =
+    GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDateFormatting("es_ES", null);
-  if (Platform.isWindows) {
-    _configureSqliteOnWindows();
-  } else if (Platform.isLinux) {
-    _configureSqliteOnLinux();
-  }
   final color = await _resolveColorSchema();
-  SharedPreferencesHelper.wasHereBefore().then((value) => runApp(EasyDynamicThemeWidget(child: App(color: color))));
+  SharedPreferencesHelper.wasHereBefore().then(
+      (value) => runApp(EasyDynamicThemeWidget(child: App(color: color))));
   await ContentTypeController.getInstance().loadCurrentType();
   _configureSingleton();
 }
@@ -55,20 +45,6 @@ Future<FlexScheme> _resolveColorSchema() async {
   return FlexScheme.values.singleWhere((c) => c.toString() == color);
 }
 
-_configureSqliteOnWindows() {
-  open.overrideFor(OperatingSystem.windows, _openOnWindows);
-}
-
-DynamicLibrary _openOnWindows() {
-  final scriptDir = File(Platform.script.toFilePath()).parent;
-  final libraryNextToScript = File('${scriptDir.path}/sqlite3.dll');
-  return DynamicLibrary.open(libraryNextToScript.path);
-}
-
-_configureSqliteOnLinux() {
-  // open.overrideFor(OperatingSystem.linux, _openOnLinux);
-}
-
 class App extends StatelessWidget {
   final navigatorKey = GlobalKey<NavigatorState>();
   final FlexScheme color;
@@ -81,17 +57,16 @@ class App extends StatelessWidget {
       maxTabletWidth: 720,
       builder: (context, orientation, screenType) => MultiProvider(
         providers: [
-          Provider<MyDatabase>(
-            create: (context) => MyDatabase(),
-            dispose: (context, db) => db.close(),
-          ),
-          ChangeNotifierProvider<AccountViewModel>(create: (context) => AccountViewModel()..checkUserLogged()),
-          ChangeNotifierProvider<FavouritesViewModel>(create: (context) => FavouritesViewModel()),
+          ChangeNotifierProvider<AccountViewModel>(
+              create: (context) => AccountViewModel()..checkUserLogged()),
+          ChangeNotifierProvider<FavouritesViewModel>(
+              create: (context) => FavouritesViewModel()),
         ],
         child: ViewModelBuilder<ThemeViewModel>.reactive(
           viewModelBuilder: () => ThemeViewModel(
             color,
-            themeMode: EasyDynamicTheme.of(context).themeMode ?? ThemeMode.system,
+            themeMode:
+                EasyDynamicTheme.of(context).themeMode ?? ThemeMode.system,
           ),
           builder: (context, model, child) => MaterialApp(
             title: 'Movie Search',
@@ -100,7 +75,8 @@ class App extends StatelessWidget {
             darkTheme: model.darkTheme,
             themeMode: EasyDynamicTheme.of(context).themeMode,
             navigatorKey: globalNavigatorKey,
-            onGenerateRoute: (settings) => Routes.generateRoute(context, settings),
+            onGenerateRoute: (settings) =>
+                Routes.generateRoute(context, settings),
             initialRoute: SplashScreen.route,
             scrollBehavior: MyCustomScrollBehavior(),
           ),

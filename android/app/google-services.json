@@ -40,10 +40,10 @@
               "client_type": 3
             },
             {
-              "client_id": "309215705690-r725ca14qfhfmnu76b3t47a6jd2bvt0n.apps.googleusercontent.com",
+              "client_id": "309215705690-qdr1jjpnj4kjj36ln8un62pksbbv05hp.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.tko.movieSearch"
+                "bundle_id": "com.tko.movieSearch.RunnerTests"
               }
             }
           ]

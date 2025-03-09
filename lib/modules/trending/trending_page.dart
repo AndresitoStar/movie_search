@@ -16,7 +16,8 @@ class TrendingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TrendingViewModel>.reactive(
-        viewModelBuilder: () => TrendingViewModel.forPage(param.content, param.items, param.total, context.read(),
+        viewModelBuilder: () => TrendingViewModel.forPage(
+            param.content, param.items, param.total,
             filterGenre: param.filterGenre),
         builder: (context, viewModel, child) => Scaffold(
               appBar: AppBar(
@@ -25,7 +26,9 @@ class TrendingPage extends StatelessWidget {
                 primary: true,
                 titleSpacing: 0,
                 elevation: 0,
-                leading: IconButton(icon: Icon(MyIcons.arrow_left), onPressed: () => Navigator.of(context).pop()),
+                leading: IconButton(
+                    icon: Icon(MyIcons.arrow_left),
+                    onPressed: () => Navigator.of(context).pop()),
               ),
               body: viewModel.isBusy
                   ? Center(child: CircularProgressIndicator())
@@ -39,13 +42,15 @@ class TrendingPage extends StatelessWidget {
                             ? ItemGridView(
                                 item: viewModel.items[i],
                                 showType: false,
-                                showTitles: param.content == TrendingContent.PERSON,
+                                showTitles:
+                                    param.content == TrendingContent.PERSON,
                                 heroTagPrefix: '',
                               )
                             : viewModel.hasMore
                                 ? Builder(
                                     builder: (context) {
-                                      if (i == viewModel.items.length) viewModel.fetchMore();
+                                      if (i == viewModel.items.length)
+                                        viewModel.fetchMore();
                                       return GridItemPlaceholder();
                                     },
                                   )

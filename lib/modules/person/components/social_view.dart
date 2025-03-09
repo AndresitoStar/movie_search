@@ -21,9 +21,9 @@ class SocialView extends StatelessWidget {
             child: SizedBox(width: 100, child: LinearProgressIndicator()),
           );
         if (model.hasError) return IconButton(onPressed: model.futureToRun, icon: Icon(Icons.refresh));
-        return ButtonBar(
+        return OverflowBar(
           alignment: MainAxisAlignment.center,
-          buttonPadding: EdgeInsets.zero,
+          // buttonPadding: EdgeInsets.zero,
           children: [
             if (model.social?.facebookId != null)
               IconButton(

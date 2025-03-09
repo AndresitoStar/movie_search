@@ -1,5 +1,6 @@
-import 'package:movie_search/data/moor_database.dart';
+import 'package:movie_search/model/api/models/genre.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
+import 'package:movie_search/modules/splash/config_singleton.dart';
 import 'package:movie_search/modules/trending/trending_service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/extensions.dart';
@@ -13,7 +14,6 @@ class TrendingViewModel extends BaseViewModel {
   final TrendingContent content;
   final TrendingType trendingType;
   final TrendingService _trendingService;
-  final MyDatabase? _db;
 
   List<BaseSearchResult> _items = [];
 
@@ -41,10 +41,13 @@ class TrendingViewModel extends BaseViewModel {
   }
 
   List<int> get activeGenres => filterGenre != null
-      ? filterGenre!.entries.where((element) => element.value).map<int>((e) => int.parse(e.key)).toList()
+      ? filterGenre!.entries
+          .where((element) => element.value)
+          .map<int>((e) => int.parse(e.key))
+          .toList()
       : [];
 
-  List<GenreTableData> _allGenres = [];
+  List<Genre> _allGenres = [];
 
   List<String> get activeGenresNames => filterGenre != null
       ? _allGenres
@@ -54,16 +57,15 @@ class TrendingViewModel extends BaseViewModel {
       : [];
 
   TrendingViewModel(this.content, {this.trendingType = TrendingType.TRENDING})
-      : _db = null,
-        _trendingService = TrendingService();
+      : _trendingService = TrendingService();
 
-  TrendingViewModel.forPage(this.content, this._items, this._total, this._db,
+  TrendingViewModel.forPage(this.content, this._items, this._total,
       {this.filterGenre = const {}, this.trendingType = TrendingType.TRENDING})
       : _trendingService = TrendingService();
 
-  TrendingViewModel.homeHorizontal(this.content, GenreTableData genre, {this.trendingType = TrendingType.TRENDING})
-      : _db = null,
-        filterGenre = {genre.id: true},
+  TrendingViewModel.homeHorizontal(this.content, Genre genre,
+      {this.trendingType = TrendingType.TRENDING})
+      : filterGenre = {genre.id: true},
         _allGenres = [genre],
         _trendingService = TrendingService();
 
@@ -75,7 +77,7 @@ class TrendingViewModel extends BaseViewModel {
     _total = response.totalResult;
     _items = response.result;
     _actualPage = 1;
-    if (_db != null) _allGenres = await _db!.allGenres(content.type);
+    _allGenres = await ConfigSingleton.instance.getGenresByType(content.type);
     setBusy(false);
   }
 
