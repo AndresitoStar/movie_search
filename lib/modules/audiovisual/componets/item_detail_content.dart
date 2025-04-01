@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
 import 'package:movie_search/modules/imdb_rating/components/imdb_rating.dart';
+import 'package:movie_search/modules/video/video_button.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:stacked/stacked.dart';
 
+import 'item_detail_like_button.dart';
 import 'item_detail_ui_util.dart';
+import 'items_images_button.dart';
 
 class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
   final bool isSliver;
+  final bool showActions;
 
-  ItemDetailMainContent({this.isSliver = true});
+  ItemDetailMainContent({this.isSliver = true, this.showActions = false});
 
   @override
   Widget build(BuildContext context, model) {
@@ -64,49 +68,66 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
                 )
               : null,
         ),
-      if (item.type != TMDB_API_TYPE.PERSON)
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: OverflowBar(
-            spacing: 10,
-            children: [
-              Chip(
-                backgroundColor: Colors.transparent,
-                avatar: Icon(Icons.star, color: Colors.yellow),
-                label: Text(
-                  item.voteAverage != null
-                      ? item.voteAverage!.toStringAsFixed(1)
-                      : 'N/A',
-                  style: context.theme.textTheme.titleMedium!.copyWith(
-                    color: context.theme.textTheme.titleMedium!.color!
-                        .withOpacity(0.8),
+      Row(
+        children: [
+          if (item.type != TMDB_API_TYPE.PERSON)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: OverflowBar(
+                spacing: 10,
+                children: [
+                  Chip(
+                    backgroundColor: Colors.transparent,
+                    avatar: Icon(Icons.star, color: Colors.yellow),
+                    label: Text(
+                      item.voteAverage != null
+                          ? item.voteAverage!.toStringAsFixed(1)
+                          : 'N/A',
+                      style: context.theme.textTheme.titleMedium!.copyWith(
+                        color: context.theme.textTheme.titleMedium!.color!
+                            .withOpacity(0.8),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              ImbdbRatingView(
-                model.itemId,
-                model.itemType.type,
-                imdbId: model.data?.movie?.imdbId,
-                key: ValueKey(model.data!.id),
-              ),
-              ContentRatingView(model.itemId, model.itemType),
-              Chip(
-                backgroundColor: Colors.transparent,
-                avatar: Icon(
-                  Icons.access_time,
-                  color: context.theme.colorScheme.tertiary,
-                ),
-                label: Text(
-                  item.movie?.displayRuntime ?? item.tvShow?.displayRuntime ?? 'N/A',
-                  style: context.theme.textTheme.titleMedium!.copyWith(
-                    color: context.theme.textTheme.titleMedium!.color!
-                        .withOpacity(0.8),
+                  ImbdbRatingView(
+                    model.itemId,
+                    model.itemType.type,
+                    imdbId: model.data?.movie?.imdbId,
+                    key: ValueKey(model.data!.id),
                   ),
-                ),
+                  ContentRatingView(model.itemId, model.itemType),
+                  Chip(
+                    backgroundColor: Colors.transparent,
+                    avatar: Icon(
+                      Icons.access_time,
+                      color: context.theme.colorScheme.tertiary,
+                    ),
+                    label: Text(
+                      item.movie?.displayRuntime ??
+                          item.tvShow?.displayRuntime ??
+                          'N/A',
+                      style: context.theme.textTheme.titleMedium!.copyWith(
+                        color: context.theme.textTheme.titleMedium!.color!
+                            .withOpacity(0.8),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          Spacer(),
+          if (showActions) ...[
+            ItemLikeButton(item: model.data!),
+            ItemImagesButtonView(
+                id: model.itemId,
+                type: model.itemType,
+                title: model.title ?? ''),
+            if (model.itemType != TMDB_API_TYPE.PERSON)
+              VideoButton(param: model.data!),
+            const SizedBox(width: 20),
+          ],
+        ],
+      ),
       ContentHorizontal(
         content: overview,
         label: item.type == TMDB_API_TYPE.PERSON ? 'Biografía' : 'Sinopsis',
@@ -119,7 +140,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
         : Column(
             children: children,
             mainAxisSize: MainAxisSize.min,
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
           );
   }
 }

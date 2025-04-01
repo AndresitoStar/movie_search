@@ -8,6 +8,8 @@ import 'package:stacked/stacked.dart';
 import 'discover_viewmodel.dart';
 
 class DiscoverResults extends StatelessWidget {
+  final scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DiscoverViewModel>.nonReactive(
@@ -19,12 +21,17 @@ class DiscoverResults extends StatelessWidget {
                 ? Center(child: Text('Sin resultados'))
                 : GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onPanDown: (_) => FocusScope.of(context).requestFocus(FocusNode()),
+                    onPanDown: (_) =>
+                        FocusScope.of(context).requestFocus(FocusNode()),
                     child: Scrollbar(
+                      thumbVisibility: false,
+                      thickness: 10,
+                      controller: scrollController, // Here
                       child: MasonryGridView.count(
                         padding: const EdgeInsets.all(10.0),
                         itemCount: model.searchResults.length + 2,
                         crossAxisCount: getColumns(context),
+                        controller: scrollController,
                         itemBuilder: (ctx, i) => AspectRatio(
                           aspectRatio: 0.667,
                           child: i < model.searchResults.length
@@ -37,7 +44,8 @@ class DiscoverResults extends StatelessWidget {
                               : model.hasMore
                                   ? Builder(
                                       builder: (context) {
-                                        if (i == model.searchResults.length) model.fetchMore();
+                                        if (i == model.searchResults.length)
+                                          model.fetchMore();
                                         return GridItemPlaceholder();
                                       },
                                     )
@@ -52,6 +60,6 @@ class DiscoverResults extends StatelessWidget {
 
   int getColumns(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return (width ~/ 150).clamp(1, 6);
+    return (width ~/ 200).clamp(1, 8);
   }
 }

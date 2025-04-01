@@ -11,7 +11,8 @@ import 'package:stacked/stacked.dart';
 
 import 'infinite_scroll_viewmodel.dart';
 
-abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollViewModel> {
+abstract class ContentPreviewViewMoreWidget
+    extends StackedView<InfiniteScrollViewModel> {
   ContentPreviewViewMoreWidget({Key? key}) : super(key: key);
 
   @override
@@ -23,12 +24,17 @@ abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollVi
   }
 
   @override
-  Widget builder(BuildContext context, InfiniteScrollViewModel viewModel, Widget? child) {
-    final columns = _getColumns(context);
+  Widget builder(
+      BuildContext context, InfiniteScrollViewModel viewModel, Widget? child) {
+    final isLandsCape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final totalItems = 5;
     final doIt = viewModel.items.length > totalItems;
     //final height = MediaQuery.of(context).size.longestSide / 3.5;
-    final height = MediaQuery.of(context).size.shortestSide / 1.5;
+    final height = isLandsCape
+        ? MediaQuery.of(context).size.shortestSide / 3
+        : MediaQuery.of(context).size.shortestSide / 1.5;
+    final aspectRatio = isLandsCape ? 16/9 : 0.669;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -62,22 +68,24 @@ abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollVi
             scrollDirection: Axis.horizontal,
             itemCount: viewModel.items.length,
             itemBuilder: (ctx, i) => AnimatedCrossFade(
-              crossFadeState:
-                  !viewModel.isBusy || !viewModel.initialised ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              crossFadeState: !viewModel.isBusy || !viewModel.initialised
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
               duration: Duration(milliseconds: 400),
               firstChild: AspectRatio(
-                aspectRatio: 0.667,
+                aspectRatio: aspectRatio,
                 key: UniqueKey(),
                 child: GridItemPlaceholder(),
               ),
               secondChild: AspectRatio(
-                aspectRatio: 0.667,
+                aspectRatio: aspectRatio,
                 key: UniqueKey(),
                 child: doIt
                     ? ItemGridView(
                         item: viewModel.items[i],
                         showType: itemShowData,
                         showTitles: true,
+                        useBackdrop: isLandsCape,
                         heroTagPrefix: itemGridHeroTag,
                       )
                     : Container(),
@@ -89,11 +97,12 @@ abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollVi
     );
   }
 
-  int _getColumns(BuildContext context) =>
-      UiUtils.calculateColumns(context: context, itemWidth: 150, minValue: 2, maxValue: 6);
+  int _getColumns(BuildContext context) => UiUtils.calculateColumns(
+      context: context, itemWidth: 150, minValue: 2, maxValue: 6);
 
   onPressed(BuildContext context, InfiniteScrollViewModel viewModel) {
-    Navigator.of(context).push(Routes.defaultRoute(null, ContentPreviewPage(param: viewModel, showData: itemShowData)));
+    Navigator.of(context).push(Routes.defaultRoute(
+        null, ContentPreviewPage(param: viewModel, showData: itemShowData)));
   }
 
   String get viewMoreButtonHeroTag;
@@ -116,9 +125,10 @@ class UiUtils {
     return (width ~/ itemWidth).clamp(minValue, maxValue);
   }
 
-  static String generateRandomString ({int length = 10}) {
+  static String generateRandomString({int length = 10}) {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     final random = Random.secure();
-    return List.generate(length, (index) => chars[random.nextInt(chars.length)]).join();
+    return List.generate(length, (index) => chars[random.nextInt(chars.length)])
+        .join();
   }
 }

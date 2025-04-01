@@ -85,21 +85,21 @@ class ThemeViewModel extends BaseViewModel {
 
   TextTheme baseTextTheme(TextTheme baseTheme) {
     return baseTheme.copyWith(
-      displayLarge: baseTheme.displayLarge!.copyWith(fontSize: 57.sp),
-      displayMedium: baseTheme.displayMedium!.copyWith(fontSize: 45.sp),
-      displaySmall: baseTheme.displaySmall!.copyWith(fontSize: 36.sp),
-      headlineLarge: baseTheme.headlineLarge!.copyWith(fontSize: 28.sp),
-      headlineMedium: baseTheme.headlineMedium!.copyWith(fontSize: 24.sp),
-      headlineSmall: baseTheme.headlineSmall!.copyWith(fontSize: 20.sp),
-      titleLarge: baseTheme.titleLarge!.copyWith(fontSize: 18.sp),
-      titleMedium: baseTheme.titleMedium!.copyWith(fontSize: 16.sp),
-      titleSmall: baseTheme.titleSmall!.copyWith(fontSize: 14.sp),
-      labelLarge: baseTheme.labelLarge!.copyWith(fontSize: 14.sp),
-      labelMedium: baseTheme.labelMedium!.copyWith(fontSize: 12.sp),
-      labelSmall: baseTheme.labelSmall!.copyWith(fontSize: 11.sp),
-      bodyLarge: baseTheme.bodyLarge!.copyWith(fontSize: 16.sp),
-      bodyMedium: baseTheme.bodyMedium!.copyWith(fontSize: 14.sp),
-      bodySmall: baseTheme.bodySmall!.copyWith(fontSize: 12.sp),
+      displayLarge: baseTheme.displayLarge!.copyWith(fontSize: 57),
+      displayMedium: baseTheme.displayMedium!.copyWith(fontSize: 45),
+      displaySmall: baseTheme.displaySmall!.copyWith(fontSize: 36),
+      headlineLarge: baseTheme.headlineLarge!.copyWith(fontSize: 28),
+      headlineMedium: baseTheme.headlineMedium!.copyWith(fontSize: 24),
+      headlineSmall: baseTheme.headlineSmall!.copyWith(fontSize: 20),
+      titleLarge: baseTheme.titleLarge!.copyWith(fontSize: 18),
+      titleMedium: baseTheme.titleMedium!.copyWith(fontSize: 16),
+      titleSmall: baseTheme.titleSmall!.copyWith(fontSize: 14),
+      labelLarge: baseTheme.labelLarge!.copyWith(fontSize: 14),
+      labelMedium: baseTheme.labelMedium!.copyWith(fontSize: 12),
+      labelSmall: baseTheme.labelSmall!.copyWith(fontSize: 11),
+      bodyLarge: baseTheme.bodyLarge!.copyWith(fontSize: 16),
+      bodyMedium: baseTheme.bodyMedium!.copyWith(fontSize: 14),
+      bodySmall: baseTheme.bodySmall!.copyWith(fontSize: 12),
     );
   }
 }

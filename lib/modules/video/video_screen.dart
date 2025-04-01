@@ -21,6 +21,7 @@ class VideoScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        forceMaterialTransparency: true,
         leading: IconButton(icon: Icon(MyIcons.arrow_left), onPressed: () => Navigator.of(context).pop()),
         titleSpacing: 0,
         elevation: 0,

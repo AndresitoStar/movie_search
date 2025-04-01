@@ -9,6 +9,7 @@ import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
 import 'package:movie_search/modules/splash/splash_screen.dart';
 import 'package:movie_search/modules/video/video_screen.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/screens/onboard.dart';
 import 'package:movie_search/ui/screens/settings.dart';
 
@@ -28,7 +29,8 @@ final Map<String, Widget> routes = {
 class Routes {
   static const Duration _transitionDuration = Duration(milliseconds: 400);
 
-  static _getTransitions(context, Animation<double> animation, Animation<double> secondary, Widget child) {
+  static _getTransitions(context, Animation<double> animation,
+      Animation<double> secondary, Widget child) {
     // switch (name) {
     //   case SearchScreen.routeName:
     //     // case SettingsScreen.routeName:

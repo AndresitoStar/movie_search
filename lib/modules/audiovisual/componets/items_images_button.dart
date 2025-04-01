@@ -87,6 +87,7 @@ class ItemImagesPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        forceMaterialTransparency: true,
         primary: true,
         titleSpacing: 0,
         elevation: 0,

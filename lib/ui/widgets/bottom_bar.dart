@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/account/viewModel/account_viewmodel.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:provider/provider.dart';
 import 'package:movie_search/modules/discover/discover_screen.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
@@ -46,9 +47,10 @@ class MyBottomBar extends StatelessWidget {
           icon: Icon(MyIcons.settings), label: '', tooltip: 'Ajustes'),
     ];
 
+    final isLandscape = Device.screenType == ScreenType.desktop ||
+        Device.screenType == ScreenType.tablet;
     return SizedBox(
-      width: Device.screenType == ScreenType.desktop ||
-              Device.screenType == ScreenType.tablet
+      width: isLandscape
           ? Adaptive.pc(20)
           : 100.w,
       child: Stack(
@@ -72,13 +74,11 @@ class MyBottomBar extends StatelessWidget {
             ),
           ),
           BottomNavigationBar(
-            // backgroundColor: Colors.transparent,
             currentIndex: index,
             mouseCursor: MouseCursor.uncontrolled,
             elevation: 2,
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            // selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
             type: BottomNavigationBarType.fixed,
             onTap: (i) {
               switch (i) {

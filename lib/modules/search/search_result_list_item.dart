@@ -45,11 +45,10 @@ class SearchResultListItem extends StatelessWidget {
   }
 }
 
-class ItemGridViewListItem extends StatelessWidget {
+class ItemGridCarousel extends StatelessWidget {
   final BaseSearchResult searchResult;
 
-  ItemGridViewListItem({Key? key, required this.searchResult})
-      : super(key: key);
+  ItemGridCarousel({Key? key, required this.searchResult}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,10 @@ class ItemGridViewListItem extends StatelessWidget {
       onTap: () {
         _onPressed(context);
       },
-      child: _ResultListItem(searchResult: searchResult, showTitles: true),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        child: _ResultListItem(searchResult: searchResult, showTitles: true),
+      ),
     );
   }
 
@@ -83,7 +85,7 @@ class _ResultListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.hardEdge,
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      margin: EdgeInsets.zero,
       elevation: 3,
       child: Stack(
         fit: StackFit.expand,
@@ -101,12 +103,12 @@ class _ResultListItem extends StatelessWidget {
               children: [
                 Spacer(),
                 Container(
-                  color: Theme.of(context).cardColor.withOpacity(0.7),
+                  color: context.theme.colorScheme.surface.withOpacity(0.7),
                   child: ListTile(
                     title: Text(
                       searchResult.title ?? '-',
                       textAlign: TextAlign.end,
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: context.theme.textTheme.headlineSmall,
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -116,7 +118,7 @@ class _ResultListItem extends StatelessWidget {
                           Text(
                             searchResult.titleOriginal!,
                             textAlign: TextAlign.end,
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: context.theme.textTheme.titleMedium,
                             maxLines: 1,
                           ),
                         if (searchResult.type != TMDB_API_TYPE.PERSON)

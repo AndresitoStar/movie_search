@@ -35,6 +35,7 @@ class HomeScreen extends StatelessWidget {
             AppBar(
               title: ContentTypeWidget(),
               centerTitle: true,
+              forceMaterialTransparency: true,
               actions: [
                 IconButton(
                   onPressed: () =>
@@ -43,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(height: 1, color: theme.colorScheme.onSurface),
+            Divider(height: 1, color: theme.colorScheme.onSurface.withValues(alpha: 0.1)),
           ],
           Expanded(
             child: Container(

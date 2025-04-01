@@ -22,7 +22,9 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
         fit: StackFit.expand,
         children: [
           model.withImage
-              ? ContentImageWidget(landscape ? model.backDropImageUrl : model.posterImageUrl, isBackdrop: landscape)
+              ? ContentImageWidget(
+                  landscape ? model.backDropImageUrl : model.posterImageUrl,
+                  isBackdrop: landscape)
               : Card(child: PlaceholderImage(height: 250)),
           if (!landscape)
             IgnorePointer(
@@ -30,8 +32,11 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: landscape ? Alignment.centerLeft : Alignment.topCenter,
-                    end: landscape ? Alignment.centerRight : Alignment.bottomCenter,
+                    begin:
+                        landscape ? Alignment.centerLeft : Alignment.topCenter,
+                    end: landscape
+                        ? Alignment.centerRight
+                        : Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
                       Colors.transparent,
@@ -39,7 +44,8 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
                       Theme.of(context).scaffoldBackgroundColor
                     ],
                   ),
-                  border: Border.all(color: Theme.of(context).scaffoldBackgroundColor),
+                  border: Border.all(
+                      color: Theme.of(context).scaffoldBackgroundColor),
                 ),
               ),
             ),
@@ -49,7 +55,7 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
   }
 }
 
-class ContentImageWidget extends StatefulWidget {
+class ContentImageWidget extends StatelessWidget {
   final String? imagePath;
   final BoxFit fit;
   final bool ignorePointer;
@@ -58,55 +64,50 @@ class ContentImageWidget extends StatefulWidget {
 
   ContentImageWidget(
     this.imagePath, {
-    Key? key,
     this.fit = BoxFit.fitWidth,
     this.ignorePointer = false,
     this.isBackdrop = false,
     this.onSelectImage,
-  }) : super(key: key);
+  }) : super(key: UniqueKey()) {
+    baseUrl = isBackdrop ? URL_IMAGE_MEDIUM_BACKDROP : URL_IMAGE_MEDIUM;
+    placeholderBaseUrl =
+        isBackdrop ? URL_IMAGE_SMALL_BACKDROP : URL_IMAGE_SMALL;
+  }
 
-  @override
-  _ContentImageWidgetState createState() => _ContentImageWidgetState();
-}
-
-class _ContentImageWidgetState extends State<ContentImageWidget> {
   late String baseUrl;
   late String placeholderBaseUrl;
 
-  @override
-  void initState() {
-    baseUrl = widget.isBackdrop ? URL_IMAGE_MEDIUM_BACKDROP : URL_IMAGE_MEDIUM;
-    placeholderBaseUrl = widget.isBackdrop ? URL_IMAGE_SMALL_BACKDROP : URL_IMAGE_SMALL;
-    // _checkImageCachedQuality();
-    super.initState();
-  }
-
-  bool get _isOutsideTMDB => widget.imagePath != null && widget.imagePath!.startsWith('https://');
+  bool get _isOutsideTMDB =>
+      imagePath != null && imagePath!.startsWith('https://');
 
   @override
   Widget build(BuildContext context) {
-    if (widget.imagePath == null || widget.imagePath!.isEmpty) return PlaceholderImage();
+    if (imagePath == null || imagePath!.isEmpty) return PlaceholderImage();
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       // constraints: BoxConstraints(maxHeight: 10.h),
       child: GestureDetector(
-        onTap: widget.ignorePointer
+        onTap: ignorePointer
             ? null
-            : widget.onSelectImage != null
-                ? () => widget.onSelectImage!.call()
-                : () => DialogImage.show(context: context, imageUrl: widget.imagePath!, baseUrl: baseUrl)
+            : onSelectImage != null
+                ? () => onSelectImage!.call()
+                : () => DialogImage.show(
+                        context: context,
+                        imageUrl: imagePath!,
+                        baseUrl: baseUrl)
                     .then((value) => _checkImageCachedQuality),
         child: CachedNetworkImage(
-          imageUrl: !_isOutsideTMDB ? '$baseUrl${widget.imagePath}' : widget.imagePath!,
+          imageUrl: !_isOutsideTMDB ? '$baseUrl${imagePath}' : imagePath!,
           placeholder: (_, __) => !_isOutsideTMDB
               ? CachedNetworkImage(
-                  fit: widget.fit,
-                  imageUrl: '$placeholderBaseUrl${widget.imagePath}',
+                  fit: fit,
+                  imageUrl: '$placeholderBaseUrl${imagePath}',
                   placeholder: (context, _) => DefaultPlaceholder(),
                 )
               : DefaultPlaceholder(),
-          errorWidget: (ctx, _, __) => PlaceholderImage(/*height: MediaQuery.of(ctx).size.height * 0.6*/),
-          fit: widget.fit,
+          errorWidget: (ctx, _, __) =>
+              PlaceholderImage(height: MediaQuery.of(ctx).size.height * 0.6),
+          fit: fit,
           // width: double.infinity,
         ),
       ),
@@ -115,19 +116,20 @@ class _ContentImageWidgetState extends State<ContentImageWidget> {
 
   Future _checkImageCachedQuality() async {
     String result;
-    if (await _checkImageCachedExist('$URL_IMAGE_BIG${widget.imagePath}')) {
+    if (await _checkImageCachedExist('$URL_IMAGE_BIG${imagePath}')) {
       result = URL_IMAGE_BIG;
     } else {
-      result = widget.isBackdrop ? URL_IMAGE_MEDIUM : URL_IMAGE_MEDIUM_BACKDROP;
+      result = isBackdrop ? URL_IMAGE_MEDIUM : URL_IMAGE_MEDIUM_BACKDROP;
     }
-    if (mounted) {
-      setState(() => baseUrl = result);
-    }
+    // if (mounted) {
+    //   setState(() => baseUrl = result);
+    // }
   }
 
   Future<bool> _checkImageCachedExist(String url) async {
     try {
-      final FileInfo? fileInfo = await DefaultCacheManager().getFileFromCache(url);
+      final FileInfo? fileInfo =
+          await DefaultCacheManager().getFileFromCache(url);
       return await fileInfo?.file.exists() ?? false;
     } catch (e) {
       return false;

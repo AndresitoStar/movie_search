@@ -18,7 +18,7 @@ class ImbdbRatingView extends StatelessWidget {
           ImdbRatingViewModel(this.tmdbId, this.type, imdbId: this.imdbId),
       staticChild: Image.asset('assets/images/imdb.png', height: 34),
       builder: (context, model, child) => Chip(
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.transparent,
         avatar: child,
         onDeleted: model.hasError
             ? () {

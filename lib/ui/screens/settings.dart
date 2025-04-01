@@ -22,6 +22,7 @@ class SettingsScreen extends StatelessWidget {
                 if (!landscape)
                   AppBar(
                     title: Text('Acerca de'),
+                    forceMaterialTransparency: true,
                     leading: IconButton(
                       icon: Icon(MyIcons.arrow_left),
                       onPressed: () => Navigator.of(context).pop(),
