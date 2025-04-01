@@ -8,6 +8,7 @@ import 'package:movie_search/ui/icons.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../core/content_preview.dart' show UiUtils;
 import 'item_detail_main_image.dart';
 
 class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
@@ -46,9 +47,10 @@ class ItemDetailTvSeasonView extends ViewModelWidget<ItemDetailViewModel> {
                   children: [
                     TextSpan(
                       text: ' ${model.data!.tvShow!.numberOfSeasons}',
-                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.surface,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                color: Theme.of(context).colorScheme.surface,
+                              ),
                     )
                   ]),
             ),
@@ -95,7 +97,12 @@ class _SeasonCard extends StatelessWidget {
   final TvShow tvApi;
   final bool isLast;
 
-  const _SeasonCard({Key? key, required this.season, this.isLast = false, required this.tvApi}) : super(key: key);
+  const _SeasonCard(
+      {Key? key,
+      required this.season,
+      this.isLast = false,
+      required this.tvApi})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +182,8 @@ class _SeasonCard extends StatelessWidget {
 }
 
 class _SeasonScreen extends StatelessWidget {
-  const _SeasonScreen({Key? key, required this.seasons, required this.tv}) : super(key: key);
+  const _SeasonScreen({Key? key, required this.seasons, required this.tv})
+      : super(key: key);
   final List<Seasons> seasons;
   final TvShow tv;
 
@@ -184,6 +192,7 @@ class _SeasonScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(tv.name ?? ''),
+        forceMaterialTransparency: true,
         titleSpacing: 0,
         leading: IconButton(
           icon: Icon(MyIcons.arrow_left),
@@ -203,7 +212,12 @@ class _SeasonScreen extends StatelessWidget {
           : GridView.builder(
               itemCount: seasons.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: getColumns(context),
+                crossAxisCount: UiUtils.calculateColumns(
+                  context: context,
+                  itemWidth: 350,
+                  minValue: 1,
+                  maxValue: 2,
+                ),
                 childAspectRatio: 2.667,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
@@ -215,10 +229,5 @@ class _SeasonScreen extends StatelessWidget {
               ),
             ),
     );
-  }
-
-  int getColumns(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return (width ~/ 350).clamp(1, 3);
   }
 }

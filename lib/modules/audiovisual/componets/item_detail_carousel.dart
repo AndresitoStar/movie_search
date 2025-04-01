@@ -8,7 +8,8 @@ import 'package:movie_search/ui/widgets/dialog_image.dart';
 class ItemDetailCarouselImages extends StatelessWidget {
   final List<String> imageList;
 
-  const ItemDetailCarouselImages({Key? key, required this.imageList}) : super(key: key);
+  const ItemDetailCarouselImages({Key? key, required this.imageList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +39,13 @@ class ItemDetailCarouselImages extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Divider(indent: 20, endIndent: 20),
-          ListTile(title: Text('Poster\'s', style: Theme.of(context).textTheme.headlineSmall)),
+          ListTile(
+              title: Text('Poster\'s',
+                  style: Theme.of(context).textTheme.headlineSmall)),
           Container(
             // height: 250,
-            constraints: BoxConstraints(minHeight: height - 100, maxHeight: height + 50),
+            constraints:
+                BoxConstraints(minHeight: height - 100, maxHeight: height + 50),
             child: CarouselSlider(
                 items: items,
                 options: CarouselOptions(

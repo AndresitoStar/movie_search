@@ -8,6 +8,7 @@ import 'package:movie_search/modules/search/search_result_list_item.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:movie_search/ui/widgets/default_image.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'item_detail_page.dart';
 
@@ -33,6 +34,9 @@ class ItemGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     if (useBackdrop) return SearchResultListItem(searchResult: item);
     final theme = Theme.of(context);
+    final showTitlesWidget = Device.screenType == ScreenType.desktop
+        ? false
+        : showTitles && item.title != null;
     return Builder(
       builder: (context) {
         final child = Card(
@@ -46,6 +50,7 @@ class ItemGridView extends StatelessWidget {
             onTap: () => _onPressed(context),
             child: Stack(
               fit: StackFit.expand,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
               children: [
                 AspectRatio(
                   aspectRatio:
@@ -75,7 +80,7 @@ class ItemGridView extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (this.showTitles)
+                if (showTitlesWidget)
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -84,34 +89,29 @@ class ItemGridView extends StatelessWidget {
                       children: [
                         ItemBookmarkTag(item: item),
                         ClipRect(
-                          child: BackdropFilter(
-                            filter: useBackdrop
-                                ? ImageFilter.blur(sigmaX: 7, sigmaY: 7)
-                                : ImageFilter.blur(sigmaX: 14.0, sigmaY: 14.0),
-                            child: Container(
-                              color: theme.scaffoldBackgroundColor
-                                  .withOpacity(useBackdrop ? 0.5 : 0.7),
-                              child: ListTile(
-                                title: Text(
-                                  item.title ?? '' + '\n',
-                                  textAlign: useBackdrop
-                                      ? TextAlign.start
-                                      : TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: theme.textTheme.titleLarge!
-                                      .copyWith(fontSize: 16),
-                                ),
-                                subtitle: item.subtitle == null
-                                    ? null
-                                    : Text(
-                                        item.subtitle!,
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: theme.textTheme.bodySmall,
-                                      ),
+                          child: Container(
+                            color: theme.colorScheme.surface
+                                .withOpacity(0.95),
+                            child: ListTile(
+                              title: Text(
+                                item.title ?? '' + '\n',
+                                textAlign: useBackdrop
+                                    ? TextAlign.start
+                                    : TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: theme.textTheme.titleLarge!
+                                    .copyWith(fontSize: 16),
                               ),
+                              subtitle: item.subtitle == null
+                                  ? null
+                                  : Text(
+                                      item.subtitle!,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: theme.textTheme.bodySmall,
+                                    ),
                             ),
                           ),
                         ),
@@ -122,14 +122,7 @@ class ItemGridView extends StatelessWidget {
             ),
           ),
         );
-        return Stack(
-          children: [
-            Hero(
-              tag: '$heroTagPrefix${item.id}',
-              child: child,
-            ),
-          ],
-        );
+        return child;
       },
     );
   }

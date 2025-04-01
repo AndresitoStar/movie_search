@@ -33,6 +33,7 @@ class SearchPersonListPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Cast by:'),
+          forceMaterialTransparency: true,
         ),
         body: ViewModelBuilder<SearchViewModel>.reactive(
             viewModelBuilder: () => SearchViewModel(

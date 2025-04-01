@@ -4,6 +4,7 @@ import 'package:movie_search/modules/video/video_screen.dart';
 import 'package:movie_search/modules/video/video_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/frino_icons.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class VideoButton extends StatelessWidget {
@@ -23,13 +24,19 @@ class VideoButton extends StatelessWidget {
           : !model.hasVideos
               ? Container()
               : IconButton(
-                  onPressed: model.hasVideos
-                      ? () => Navigator.of(context).pushNamed(VideoScreen.route, arguments: [model.videos, param.title])
-                      : null,
+                  onPressed: model.hasVideos ? () => _onPressed(context) : null,
                   icon: Icon(FrinoIcons.f_video),
                   color: Theme.of(context).colorScheme.onSurface,
                   disabledColor: Theme.of(context).hintColor,
                 ),
     );
+  }
+
+  _onPressed(
+    BuildContext context,
+  ) {
+    final model = context.read<VideoViewModel>();
+    return Navigator.of(context)
+        .pushNamed(VideoScreen.route, arguments: [model.videos, param.title]);
   }
 }

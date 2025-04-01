@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_search/core/content_preview.dart';
 import 'package:movie_search/core/content_type_controller.dart';
 import 'package:movie_search/model/api/models/genre.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
@@ -11,7 +12,6 @@ import 'package:movie_search/providers/util.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:stacked/stacked.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
 import '../search/search_result_list_item.dart';
 
@@ -65,70 +65,65 @@ class _ActualGenreWidget extends ViewModelWidget<GenreCarouselViewModel> {
 
   @override
   Widget build(BuildContext context, GenreCarouselViewModel viewModel) {
-    return AspectRatio(
-      aspectRatio: 1.778,
-      child: Builder(builder: (context) {
-        final genre = viewModel.actualGenre;
-        if (viewModel.busy(genre) || viewModel.itemsForActualGenre.isEmpty) {
-          return Center(child: CircularProgressIndicator());
-        }
-        final control = FormControl<int>(value: 0);
-        final items = viewModel.itemsForActualGenre
-            .where((element) => element.backDropImage != null)
-            .toList()
-            .sublist(0, itemsCount)
-            .map((item) => ItemGridViewListItem(searchResult: item))
-            .toList();
-        return Stack(
-          children: [
-            Container(
-              child: CarouselSlider(
-                  items: items,
-                  options: CarouselOptions(
-                    initialPage: 0,
-                    viewportFraction: 1,
-                    enableInfiniteScroll: true,
-                    disableCenter: true,
-                    onPageChanged: (index, reason) {
-                      control.updateValue(index);
-                    },
-                    reverse: false,
-                    autoPlay: true,
-                    enlargeCenterPage: true,
-                    scrollDirection: Axis.horizontal,
-                  )),
-              decoration: BoxDecoration(
-                // border: Border(
-                //   bottom: BorderSide(
-                //     color: Theme.of(context).colorScheme.onBackground,
-                //     width: 1,
-                //   ),
-                // ),
-              ),
+    int columns = UiUtils.calculateColumns(
+        context: context, itemWidth: 400, minValue: 1, maxValue: 5);
+
+    return Builder(builder: (context) {
+      final genre = viewModel.actualGenre;
+      if (viewModel.busy(genre) || viewModel.itemsForActualGenre.isEmpty) {
+        return Center(child: CircularProgressIndicator());
+      }
+      final control = FormControl<int>(value: 0);
+      final items = viewModel.itemsForActualGenre
+          .where((element) => element.backDropImage != null)
+          .toList()
+          .sublist(0, itemsCount)
+          .map((item) => ItemGridCarousel(searchResult: item))
+          .toList();
+      return Stack(
+        children: [
+          Container(
+            child: CarouselSlider(
+                items: items,
+                options: CarouselOptions(
+                  initialPage: 0,
+                  viewportFraction: 1 / columns,
+                  aspectRatio: 1.778 * columns,
+                  enableInfiniteScroll: true,
+                  disableCenter: true,
+                  onPageChanged: (index, reason) {
+                    control.updateValue(index);
+                  },
+                  reverse: false,
+                  autoPlay: true,
+                  enlargeCenterPage: false,
+                  scrollDirection: Axis.horizontal,
+                )),
+          ),
+          Positioned(
+            bottom: 80,
+            right: 0,
+            left: 0,
+            child: ReactiveFormField<int, int>(
+              formControl: control,
+              builder: (field) {
+                return DotsIndicator(
+                  dotsCount: items.length,
+                  position: field.value?.toDouble() ?? 0.0,
+                  decorator: DotsDecorator(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.2),
+                    activeColor: Theme.of(context).colorScheme.onSurface,
+                  ),
+                );
+              },
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: ReactiveFormField<int, int>(
-                formControl: control,
-                builder: (field) {
-                  return DotsIndicator(
-                    dotsCount: items.length,
-                    position: field.value ?? 0,
-                    decorator: DotsDecorator(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.2),
-                      activeColor: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        );
-      }),
-    );
+          ),
+        ],
+      );
+    });
   }
 }
 
@@ -143,11 +138,9 @@ class GenreCarouselViewModel extends BaseViewModel {
 
   Map<Genre, List<BaseSearchResult>> _allGenreMap = {};
 
-  Map<Genre, List<BaseSearchResult>> get allGenreMap =>
-      {..._allGenreMap};
+  Map<Genre, List<BaseSearchResult>> get allGenreMap => {..._allGenreMap};
 
-  FormControl<Genre> _actualGenreControl =
-      FormControl<Genre>();
+  FormControl<Genre> _actualGenreControl = FormControl<Genre>();
 
   Genre? get actualGenre => _actualGenreControl.value;
 
@@ -182,11 +175,10 @@ class GenreCarouselViewModel extends BaseViewModel {
     setBusy(true);
     try {
       Future loadGenre(String type) async {
+        await ConfigSingleton.instance.syncGenres();
         final genres = ConfigSingleton.instance.getGenresByType(type);
-        final items = Map<Genre, List<BaseSearchResult>>.fromIterable(
-            genres,
-            key: (genre) => genre,
-            value: (genre) => []);
+        final items = Map<Genre, List<BaseSearchResult>>.fromIterable(genres,
+            key: (genre) => genre, value: (genre) => []);
         _allGenreMap.addAll(items);
         _genres[type] = genres;
       }

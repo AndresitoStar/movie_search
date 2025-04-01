@@ -23,6 +23,7 @@ class ConfigSingleton {
   List<Country> get countries => _cacheCountries;
 
   Future syncGenres() async {
+    if (_cacheGenres.isNotEmpty) return;
     final types = [
       TMDB_API_TYPE.MOVIE,
       TMDB_API_TYPE.TV_SHOW,

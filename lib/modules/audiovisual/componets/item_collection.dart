@@ -7,11 +7,15 @@ import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../core/content_preview.dart';
+
 class ItemCollectionView extends StatelessWidget {
   final bool sliver;
   final Collection collection;
 
-  const ItemCollectionView({Key? key, required this.sliver, required this.collection}) : super(key: key);
+  const ItemCollectionView(
+      {Key? key, required this.sliver, required this.collection})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +33,14 @@ class ItemCollectionView extends StatelessWidget {
                     : DecorationImage(
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.surface.withOpacity(0.6),
+                          Theme.of(context)
+                              .colorScheme
+                              .surface
+                              .withOpacity(0.6),
                           BlendMode.luminosity,
                         ),
-                        image: NetworkImage('$URL_IMAGE_MEDIUM${collection.backdropPath}'),
+                        image: NetworkImage(
+                            '$URL_IMAGE_MEDIUM${collection.backdropPath}'),
                       ),
               ),
               child: ListTile(
@@ -52,7 +60,11 @@ class ItemCollectionView extends StatelessWidget {
                       style: Theme.of(context)
                           .primaryTextTheme
                           .titleMedium!
-                          .copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
+                          .copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.8)),
                     ),
                     SizedBox(height: 5),
                     Row(
@@ -60,8 +72,9 @@ class ItemCollectionView extends StatelessWidget {
                         ElevatedButton(
                           onPressed: model.isBusy
                               ? null
-                              : () => Navigator.of(context)
-                                  .pushNamed(ItemCollectionScreen.route, arguments: model.collection),
+                              : () => Navigator.of(context).pushNamed(
+                                  ItemCollectionScreen.route,
+                                  arguments: model.collection),
                           child: Text('Ver colección'),
                         ),
                         Spacer(),
@@ -86,13 +99,15 @@ class ItemCollectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Collection collection = ModalRoute.of(context)!.settings.arguments as Collection;
+    final Collection collection =
+        ModalRoute.of(context)!.settings.arguments as Collection;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(MyIcons.arrow_left),
           onPressed: () => Navigator.pop(context),
         ),
+        forceMaterialTransparency: true,
         titleSpacing: 0,
         title: Text(collection.name ?? '-'),
       ),
@@ -105,13 +120,16 @@ class ItemCollectionScreen extends StatelessWidget {
           heroTagPrefix: 'collection',
         ),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: getColumns(context), childAspectRatio: 0.667, crossAxisSpacing: 10, mainAxisSpacing: 10),
+            crossAxisCount: UiUtils.calculateColumns(
+              context: context,
+              itemWidth: 200,
+              minValue: 1,
+              maxValue: 8,
+            ),
+            childAspectRatio: 0.667,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10),
       ),
     );
-  }
-
-  int getColumns(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return (width ~/ 150).clamp(1, 6);
   }
 }

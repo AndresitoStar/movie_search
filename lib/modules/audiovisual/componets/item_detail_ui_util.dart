@@ -31,7 +31,9 @@ class ContentRow extends StatelessWidget {
   final String? label2;
   final String? value2;
 
-  const ContentRow({Key? key, this.value1, this.value2, this.label1, this.label2}) : super(key: key);
+  const ContentRow(
+      {Key? key, this.value1, this.value2, this.label1, this.label2})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,8 @@ class ContentDynamic extends StatelessWidget {
                   for (var i = 0; i < labels!.length; i++)
                     values![i] != null
                         ? Expanded(
-                            child: ContentHorizontal(label: labels![i], content: values![i]),
+                            child: ContentHorizontal(
+                                label: labels![i], content: values![i]),
                           )
                         : Container(),
                 ],
@@ -117,7 +120,8 @@ class ContentHorizontal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: subtitle != null || (content != null && content!.isNotEmpty && content != 'N/A'),
+      visible: subtitle != null ||
+          (content != null && content!.isNotEmpty && content != 'N/A'),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: padding),
         // color: forceLight ? Colors.white10 : Theme.of(context).colorScheme.background,
@@ -147,8 +151,8 @@ class LogosWidget extends StatelessWidget {
 
   const LogosWidget({super.key, required this.list});
 
-  static LogosWidget fromLogoList(List<Logo> list) =>
-      LogosWidget(list: list.map((e) => MapEntry(e.name!, e.logoPath)).toList());
+  static LogosWidget fromLogoList(List<Logo> list) => LogosWidget(
+      list: list.map((e) => MapEntry(e.name!, e.logoPath)).toList());
 
   @override
   Widget build(BuildContext context) {

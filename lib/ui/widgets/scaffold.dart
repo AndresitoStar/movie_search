@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/ui/widgets/theme_switcher.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'bottom_bar.dart';
@@ -29,8 +28,7 @@ class CustomScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showAppbar = Device.screenType == ScreenType.desktop ||
-        Device.screenType == ScreenType.tablet;
+    final showAppbar = Device.screenType != ScreenType.mobile;
 
     return Scaffold(
       bottomNavigationBar: showAppbar || bottomBarIndex < 0
@@ -39,18 +37,19 @@ class CustomScaffold extends StatelessWidget {
       endDrawer: endDrawer,
       floatingActionButton: floatingActionButton,
       key: this.childKey,
-      appBar: showAppbar
+      appBar: showAppbar && bottomBarIndex >= 0
           ? AppBar(
+              actions: actions,
+              forceMaterialTransparency: true,
+              elevation: 2,
               title: SizedBox(
-                height: kToolbarHeight + 1,
+                height: kToolbarHeight + 2,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Center(child: Text(title ?? 'Movie Search')),
                     Spacer(),
                     MyBottomBar(index: bottomBarIndex),
-                    Spacer(),
-                    Center(child: MyThemeBtn()),
                   ],
                 ),
               ),
@@ -58,6 +57,7 @@ class CustomScaffold extends StatelessWidget {
           : forceAppbar
               ? AppBar(
                   title: Text(title ?? 'Movie Search'),
+                  forceMaterialTransparency: true,
                   elevation: 1,
                   actions: actions,
                 )
