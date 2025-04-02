@@ -12,57 +12,6 @@ class SplashService extends BaseService {
 
   SplashService._() : super();
 
-  Future<bool> checkIsDeviceEnable(String deviceId) async {
-    // try {
-    final response =
-        await parseClient.get('/classes/devices', queryParameters: {
-      'where': {"deviceId": deviceId},
-    });
-    final results = response.data['results'] as List;
-    if (results.isNotEmpty) {
-      final config = results[0]['isEnabled'] as bool;
-      return config;
-    } else {
-      await insertMyDevice(deviceId);
-    }
-    // }
-    // catch (e) {
-    // print(e);
-    // }
-    return false;
-  }
-
-  Future updateMyDevice(String deviceId,
-      {String? email, String? phoneModel}) async {
-    // try {
-    final response =
-        await parseClient.get('/classes/devices', queryParameters: {
-      'where': {"deviceId": deviceId},
-    });
-    final results = response.data['results'] as List;
-    if (results.isNotEmpty) {
-      final id = results[0]['objectId'] as String;
-      return parseClient.put('/classes/devices/$id', data: {
-        if (email != null) "email": email,
-        "phone_model": phoneModel,
-      });
-    }
-    // } catch (e) {}
-  }
-
-  Future insertMyDevice(String deviceId) async {
-    // try {
-    return parseClient.post('/classes/devices', data: {
-      "deviceId": deviceId,
-    }, queryParameters: {
-      ...baseParseParams,
-      "Content-Type": 'application/json',
-    });
-    // } catch (e) {
-    //   print(e);
-    // }
-  }
-
   Future<List<Country>> getCountries() async {
     List<Country> result = [];
 
