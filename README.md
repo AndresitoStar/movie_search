@@ -12,3 +12,7 @@
 - deeplink
 - agregar alerta en calendario cuando sale un nuevo capitulo de una serie
 - redisennar vista de usuario y de favoritos
+- carousel de backdrops en detalle
+- horizontal list portrait
+- items de buscador solo con texto, click muestra dialogo con imagen title y ver mas
+

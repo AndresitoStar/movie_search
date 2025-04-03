@@ -340,9 +340,8 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                                             side: BorderSide(
                                               color: context
                                                   .theme
-                                                  .chipTheme
-                                                  .secondaryLabelStyle!
-                                                  .color!
+                                                  .colorScheme
+                                                  .secondary
                                                   .withOpacity(0.7),
                                             ),
                                             backgroundColor: context.theme

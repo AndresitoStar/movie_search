@@ -21,29 +21,26 @@ class SearchResults extends StatelessWidget {
                     model.queryControl.value != null &&
                     model.queryControl.isNullOrEmpty &&
                     !model.showFilter
-                ? SearchHistoryView(onTap: (value) => model.queryControl.value = value)
+                ? SearchHistoryView(
+                    onTap: (value) => model.queryControl.value = value)
                 : model.searchResults.isEmpty
                     ? Center(child: Text('Sin resultados'))
                     : GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onPanDown: (_) => FocusScope.of(context).requestFocus(FocusNode()),
+                        onPanDown: (_) =>
+                            FocusScope.of(context).requestFocus(FocusNode()),
                         child: Scrollbar(
-                          child: GridView.builder(
+                          child: ListView.separated(
                               itemCount: model.searchResults.length + 1,
-                              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                                  // crossAxisCount: getColumns(context),
-                                  maxCrossAxisExtent: 600,
-                                  mainAxisExtent: 150,
-                                  childAspectRatio:
-                                      MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 4),
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10),
-                              padding: EdgeInsets.zero,
+                              separatorBuilder: (context, index) => Divider(),
+                              // padding: EdgeInsets.zero,
                               physics: BouncingScrollPhysics(),
-                              itemBuilder: (ctx, i) => i < model.searchResults.length
+                              itemBuilder: (ctx, i) => i <
+                                      model.searchResults.length
                                   ? SearchResultListItem(
                                       searchResult: model.searchResults[i],
                                       searchCriteria: model.queryControl.value,
+                                      conpactMode: true,
                                     )
                                   : model.hasMore
                                       ? Builder(

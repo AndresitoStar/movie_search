@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:ip_country_lookup/ip_country_lookup.dart';
+import 'package:ip_country_lookup/models/ip_country_data_model.dart';
 import 'package:movie_search/model/api/models/api.dart';
 import 'package:movie_search/modules/audiovisual/model/image.dart';
 
@@ -91,10 +93,12 @@ abstract class BaseService {
 
   Future<String> fetchRegion() async {
     if (_cacheRegion.containsKey('region')) return _cacheRegion['region']!;
-    final response = await http.get(Uri.parse('http://ipwho.is/'));
-    final region = jsonDecode(response.body)['country_code'];
-    _cacheRegion.putIfAbsent('region', () => region);
-    return region;
+    IpCountryData countryData = await IpCountryLookup().getIpLocationData();
+    if (countryData.country_code != null) {
+      _cacheRegion.putIfAbsent('region', () => countryData.country_code!);
+      return countryData.country_code!;
+    }
+    return 'N/A';
   }
 
   Future<Map<MediaImageType, List<MediaImage>>> getImagesGroup(String type, num typeId) async {
