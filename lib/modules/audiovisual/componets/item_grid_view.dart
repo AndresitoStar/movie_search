@@ -57,10 +57,10 @@ class ItemGridView extends StatelessWidget {
                       item.type == TMDB_API_TYPE.PERSON ? 0.669 : 0.667,
                   child: item.posterImage != null
                       ? ContentImageWidget(
-                          '${useBackdrop ? item.backDropImage ?? item.posterImage : item.posterImage}',
+                          item.posterImage,
                           fit: BoxFit.cover,
                           ignorePointer: true,
-                          isBackdrop: item.backDropImage != null,
+                          isBackdrop: false,
                         )
                       : PlaceholderImage(),
                 ),

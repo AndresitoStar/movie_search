@@ -55,7 +55,7 @@ class DetailMainImage extends ViewModelWidget<ItemDetailViewModel> {
   }
 }
 
-class ContentImageWidget extends StatelessWidget {
+class ContentImageWidget extends StackedView<ContentImageViewModel> {
   final String? imagePath;
   final BoxFit fit;
   final bool ignorePointer;
@@ -69,19 +69,28 @@ class ContentImageWidget extends StatelessWidget {
     this.isBackdrop = false,
     this.onSelectImage,
   }) : super(key: UniqueKey()) {
-    baseUrl = isBackdrop ? URL_IMAGE_MEDIUM_BACKDROP : URL_IMAGE_MEDIUM;
     placeholderBaseUrl =
         isBackdrop ? URL_IMAGE_SMALL_BACKDROP : URL_IMAGE_SMALL;
   }
 
-  late String baseUrl;
   late String placeholderBaseUrl;
 
   bool get _isOutsideTMDB =>
       imagePath != null && imagePath!.startsWith('https://');
 
   @override
-  Widget build(BuildContext context) {
+  ContentImageViewModel viewModelBuilder(BuildContext context) {
+    return ContentImageViewModel(imagePath: imagePath, isBackdrop: isBackdrop);
+  }
+
+  @override
+  void onViewModelReady(ContentImageViewModel viewModel) {
+    viewModel.checkImageCachedQuality();
+  }
+
+  @override
+  Widget builder(
+      BuildContext context, ContentImageViewModel model, Widget? child) {
     if (imagePath == null || imagePath!.isEmpty) return PlaceholderImage();
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
@@ -92,12 +101,13 @@ class ContentImageWidget extends StatelessWidget {
             : onSelectImage != null
                 ? () => onSelectImage!.call()
                 : () => DialogImage.show(
-                        context: context,
-                        imageUrl: imagePath!,
-                        baseUrl: baseUrl)
-                    .then((value) => _checkImageCachedQuality),
+                      context: context,
+                      imageUrl: imagePath!,
+                      baseUrl: URL_IMAGE_BIG,
+                    ),
         child: CachedNetworkImage(
-          imageUrl: !_isOutsideTMDB ? '$baseUrl${imagePath}' : imagePath!,
+          imageUrl:
+              !_isOutsideTMDB ? '$URL_IMAGE_BIG${imagePath}' : imagePath!,
           placeholder: (_, __) => !_isOutsideTMDB
               ? CachedNetworkImage(
                   fit: fit,
@@ -113,17 +123,24 @@ class ContentImageWidget extends StatelessWidget {
       ),
     );
   }
+}
 
-  Future _checkImageCachedQuality() async {
-    String result;
+class ContentImageViewModel extends BaseViewModel {
+  final String? imagePath;
+  final bool isBackdrop;
+  late String baseUrl;
+
+  ContentImageViewModel({required this.imagePath, required this.isBackdrop}) {
+    baseUrl = isBackdrop ? URL_IMAGE_MEDIUM_BACKDROP : URL_IMAGE_MEDIUM;
+  }
+
+  Future checkImageCachedQuality() async {
     if (await _checkImageCachedExist('$URL_IMAGE_BIG${imagePath}')) {
-      result = URL_IMAGE_BIG;
+      baseUrl = URL_IMAGE_BIG;
     } else {
-      result = isBackdrop ? URL_IMAGE_MEDIUM : URL_IMAGE_MEDIUM_BACKDROP;
+      baseUrl = isBackdrop ? URL_IMAGE_MEDIUM : URL_IMAGE_MEDIUM_BACKDROP;
     }
-    // if (mounted) {
-    //   setState(() => baseUrl = result);
-    // }
+    notifyListeners();
   }
 
   Future<bool> _checkImageCachedExist(String url) async {
