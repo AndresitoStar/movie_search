@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master  # Cambia esto si usas otra rama principal
+      - deploy  # Rama de despliegue
 
 jobs:
   build_and_deploy:
@@ -16,7 +17,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          channel: "stable"
+          flutter-version: "3.29.1"
 
       - name: Enable Flutter web
         run: flutter config --enable-web
