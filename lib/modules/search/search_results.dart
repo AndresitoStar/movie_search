@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/modules/search/search_history.dart';
 import 'package:movie_search/modules/search/search_viewmodel.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:stacked/stacked.dart';
@@ -32,7 +33,18 @@ class SearchResults extends StatelessWidget {
                         child: Scrollbar(
                           child: ListView.separated(
                               itemCount: model.searchResults.length + 1,
-                              separatorBuilder: (context, index) => Divider(),
+                              separatorBuilder: (context, index) {
+                                print('Cantidad de resultados >>>>>> ${model.searchResults.length}');
+                                if (index < model.searchResults.length ||
+                                    model.searchResults[index].type !=
+                                        TMDB_API_TYPE.UNKNOWN) {
+                                  return Divider(
+                                    height: 1,
+                                    color: Theme.of(context).dividerColor,
+                                  );
+                                }
+                                return Container();
+                              },
                               // padding: EdgeInsets.zero,
                               physics: BouncingScrollPhysics(),
                               itemBuilder: (ctx, i) => i <

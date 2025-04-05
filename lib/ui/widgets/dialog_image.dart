@@ -92,13 +92,6 @@ class _DialogImageState extends State<DialogImage> {
           fit: StackFit.expand,
           alignment: Alignment.center,
           children: [
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 6.0),
-              child: Container(
-                decoration: BoxDecoration(color: Colors.transparent),
-                width: MediaQuery.of(context).size.width,
-              ),
-            ),
             if (widget.imageUrl != null) _getImage(widget.imageUrl!),
             if (widget.images != null && widget.currentImage != null)
               CarouselSlider(

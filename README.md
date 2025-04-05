@@ -14,5 +14,5 @@
 - redisennar vista de usuario y de favoritos
 - carousel de backdrops en detalle
 - horizontal list portrait
-- items de buscador solo con texto, click muestra dialogo con imagen title y ver mas
+- peticion a /configuration para permitir seleccionar el tamanno de las imagenes y el base_url
 

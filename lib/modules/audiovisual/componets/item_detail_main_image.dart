@@ -60,6 +60,7 @@ class ContentImageWidget extends StackedView<ContentImageViewModel> {
   final BoxFit fit;
   final bool ignorePointer;
   final bool isBackdrop;
+  final bool withPlaceholder;
   final VoidCallback? onSelectImage;
 
   ContentImageWidget(
@@ -67,6 +68,7 @@ class ContentImageWidget extends StackedView<ContentImageViewModel> {
     this.fit = BoxFit.fitWidth,
     this.ignorePointer = false,
     this.isBackdrop = false,
+    this.withPlaceholder = true,
     this.onSelectImage,
   }) : super(key: UniqueKey()) {
     placeholderBaseUrl =
@@ -108,7 +110,7 @@ class ContentImageWidget extends StackedView<ContentImageViewModel> {
         child: CachedNetworkImage(
           imageUrl:
               !_isOutsideTMDB ? '$URL_IMAGE_BIG${imagePath}' : imagePath!,
-          placeholder: (_, __) => !_isOutsideTMDB
+          placeholder: (_, __) => withPlaceholder && !_isOutsideTMDB
               ? CachedNetworkImage(
                   fit: fit,
                   imageUrl: '$placeholderBaseUrl${imagePath}',

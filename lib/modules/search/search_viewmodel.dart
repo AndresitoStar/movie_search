@@ -14,7 +14,8 @@ class SearchViewModel extends BaseViewModel {
   final FormGroup form = fb.group({
     FORM_QUERY: FormControl<String>(value: ''),
     'filter': fb.group({
-      FORM_TYPE: FormControl<SearchCategory>(value: SearchCategory.getAll().first),
+      FORM_TYPE:
+          FormControl<SearchCategory>(value: SearchCategory.getAll().first),
       FORM_GENRE: FormControl<Set<Genre>>(value: {}),
       FORM_CAST: FormControl<Set<BaseSearchResult>>(value: {}),
     }),
@@ -28,8 +29,9 @@ class SearchViewModel extends BaseViewModel {
 
   String get filterText => '${actualCategory!.label} $_activeGenres';
 
-  String get _activeGenres =>
-      genresControl.value!.isNotEmpty ? '(${genresControl.value!.map((e) => e.name).join(',')})' : '';
+  String get _activeGenres => genresControl.value!.isNotEmpty
+      ? '(${genresControl.value!.map((e) => e.name).join(',')})'
+      : '';
 
   int _total = -1;
   int _page = 1;
@@ -44,9 +46,11 @@ class SearchViewModel extends BaseViewModel {
   static const String FORM_GENRE = 'genre';
   static const String FORM_CAST = 'cast';
 
-  FormControl<String> get queryControl => this.form.controls[FORM_QUERY] as FormControl<String>;
+  FormControl<String> get queryControl =>
+      this.form.controls[FORM_QUERY] as FormControl<String>;
 
-  FormControl<SearchCategory> get typeControl => filterForm.controls[FORM_TYPE] as FormControl<SearchCategory>;
+  FormControl<SearchCategory> get typeControl =>
+      filterForm.controls[FORM_TYPE] as FormControl<SearchCategory>;
 
   FormControl<Set<Genre>> get genresControl =>
       filterForm.controls[FORM_GENRE] as FormControl<Set<Genre>>;
@@ -103,13 +107,7 @@ class SearchViewModel extends BaseViewModel {
       if (queryControl.isNullOrEmpty && !showFilter) {
         _total = -1;
       } else {
-        SearchResponse response;
-        if (showFilter) {
-          response = await TrendingService()
-              .getDiscover(actualCategory!.value, page: _page, genres: genresControl.value!.map((e) => e.id).toList());
-        } else {
-          response = await _service.search(_query, page: _page);
-        }
+        SearchResponse response = await _service.search(_query, page: _page);
         _searchResults.addAll(response.result);
         _total = response.totalResult;
         _totalPage = response.totalPageResult;
@@ -126,7 +124,8 @@ class SearchViewModel extends BaseViewModel {
     _page++;
     SearchResponse result;
     if (showFilter) {
-      result = await TrendingService().getDiscover(actualCategory!.value, page: _page);
+      result = await TrendingService()
+          .getDiscover(actualCategory!.value, page: _page);
     } else {
       result = await _service.search(_query, page: _page);
     }

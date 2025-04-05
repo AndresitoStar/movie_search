@@ -10,6 +10,7 @@ import 'package:movie_search/modules/splash/config_singleton.dart';
 import 'package:movie_search/modules/trending/trending_service.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 import 'package:get_it/get_it.dart';
 
@@ -32,14 +33,25 @@ class GenreCarouselWidget extends StackedView<GenreCarouselViewModel> {
         });
         return Column(
           children: [
-            TabBar(
-              indicatorSize: TabBarIndicatorSize.tab,
-              isScrollable: true,
-              labelColor: Theme.of(context).colorScheme.primary,
-              indicatorColor: Theme.of(context).colorScheme.primary,
-              tabs: viewModel.genresForCurrentType
-                  .map((e) => Tab(text: e.name))
-                  .toList(),
+            Container(
+              color: context.theme.colorScheme.primary,
+              child: TabBar(
+                indicatorSize: TabBarIndicatorSize.tab,
+                isScrollable: true,
+                labelColor: Theme.of(context).colorScheme.onPrimary,
+                tabAlignment: Device.screenType == ScreenType.mobile
+                    ? TabAlignment.start
+                    : TabAlignment.center,
+                indicatorColor: Theme.of(context).colorScheme.onPrimary,
+                unselectedLabelColor: context.theme.colorScheme.onPrimary,
+                labelStyle: context.theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                unselectedLabelStyle: context.theme.textTheme.titleSmall,
+                tabs: viewModel.genresForCurrentType
+                    .map((e) => Tab(text: e.name))
+                    .toList(),
+              ),
             ),
             _ActualGenreWidget(),
           ],
@@ -61,7 +73,7 @@ class GenreCarouselWidget extends StackedView<GenreCarouselViewModel> {
 }
 
 class _ActualGenreWidget extends ViewModelWidget<GenreCarouselViewModel> {
-  final int itemsCount = 3;
+  final int itemsCount = 5;
 
   @override
   Widget build(BuildContext context, GenreCarouselViewModel viewModel) {
@@ -80,48 +92,23 @@ class _ActualGenreWidget extends ViewModelWidget<GenreCarouselViewModel> {
           .sublist(0, itemsCount)
           .map((item) => ItemGridCarousel(searchResult: item))
           .toList();
-      return Stack(
-        children: [
-          Container(
-            child: CarouselSlider(
-                items: items,
-                options: CarouselOptions(
-                  initialPage: 0,
-                  viewportFraction: 1 / columns,
-                  aspectRatio: 1.778 * columns,
-                  enableInfiniteScroll: true,
-                  disableCenter: true,
-                  onPageChanged: (index, reason) {
-                    control.updateValue(index);
-                  },
-                  reverse: false,
-                  autoPlay: true,
-                  enlargeCenterPage: false,
-                  scrollDirection: Axis.horizontal,
-                )),
-          ),
-          Positioned(
-            bottom: 80,
-            right: 0,
-            left: 0,
-            child: ReactiveFormField<int, int>(
-              formControl: control,
-              builder: (field) {
-                return DotsIndicator(
-                  dotsCount: items.length,
-                  position: field.value?.toDouble() ?? 0.0,
-                  decorator: DotsDecorator(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.2),
-                    activeColor: Theme.of(context).colorScheme.onSurface,
-                  ),
-                );
+      return Container(
+        child: CarouselSlider(
+            items: items,
+            options: CarouselOptions(
+              initialPage: 0,
+              viewportFraction: 1 / columns,
+              aspectRatio: 1.778 * columns,
+              enableInfiniteScroll: true,
+              disableCenter: true,
+              onPageChanged: (index, reason) {
+                control.updateValue(index);
               },
-            ),
-          ),
-        ],
+              reverse: false,
+              autoPlay: true,
+              enlargeCenterPage: false,
+              scrollDirection: Axis.horizontal,
+            )),
       );
     });
   }
