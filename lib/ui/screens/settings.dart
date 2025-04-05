@@ -29,6 +29,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     titleSpacing: 0,
                     elevation: 0,
+                  )
               ],
             ),
           ),
@@ -45,17 +46,23 @@ class SettingsScreen extends StatelessWidget {
       children: [
         Image.asset('assets/images/ic_launcher.png', width: 150, height: 150),
         SizedBox(height: 30),
-        Text(appName, style: theme.textTheme.headlineMedium!.copyWith(color: theme.colorScheme.primary)),
+        Text(appName,
+            style: theme.textTheme.headlineMedium!
+                .copyWith(color: theme.colorScheme.primary)),
         IconButton(
           icon: Icon(Icons.color_lens_rounded),
           onPressed: () => ThemeSelectorDialog.show(context),
         ),
         MyThemeBtn(),
         SizedBox(height: 30),
-        Text('Made by', style: theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
+        Text('Made by',
+            style:
+                theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
         Text('Andrés Forns Jusino', style: theme.textTheme.titleLarge),
         SizedBox(height: 30),
-        Text('Version', style: theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
+        Text('Version',
+            style:
+                theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
         Text(version, style: theme.textTheme.titleLarge),
       ],
     );
