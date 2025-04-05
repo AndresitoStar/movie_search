@@ -52,21 +52,17 @@ class VideosCarousel extends StatelessWidget {
                                 ? () => _launchYoutubeVideo(model.videos[i])
                                 : null,
                             child: ClipRRect(
-                              child: BackdropFilter(
-                                filter:
-                                    ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
-                                child: Container(
+                              child: Container(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surface
+                                    .withOpacity(0.25),
+                                child: Icon(
+                                  FrinoIcons.f_play,
                                   color: Theme.of(context)
                                       .colorScheme
-                                      .surface
-                                      .withOpacity(0.25),
-                                  child: Icon(
-                                    FrinoIcons.f_play,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withOpacity(0.65),
-                                  ),
+                                      .onSurface
+                                      .withOpacity(0.65),
                                 ),
                               ),
                             ),

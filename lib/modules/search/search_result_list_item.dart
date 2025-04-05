@@ -173,18 +173,25 @@ class _ResultListItemCompact extends ViewModelWidget<SearchViewModel> {
       context,
       barrierDismissible: true,
       children: [
-        Text(
-          searchResult.title ?? '-',
-          style: context.theme.textTheme.headlineMedium,
-          textAlign: TextAlign.center,
+        ListTile(
+          title: Text(
+            searchResult.title ?? '-',
+            style: context.theme.textTheme.headlineMedium,
+          ),
+          subtitle: Text(
+            searchResult.type.nameSingular ?? '-',
+            style: context.theme.textTheme.titleMedium,
+          ),
         ),
-        if (searchResult.posterImage != null) ...[
-          const SizedBox(height: 10),
+        if (searchResult.posterImage != null)
           Card(
             clipBehavior: Clip.hardEdge,
-            child: ContentImageWidget(searchResult.posterImage),
+            child: ContentImageWidget(
+              searchResult.posterImage,
+              fit: BoxFit.fitHeight,
+              withPlaceholder: false,
+            ),
           ),
-        ],
         const SizedBox(height: 10),
         PanaraButton(
           buttonTextColor: Colors.white,
@@ -206,6 +213,9 @@ class _ResultListItemCompact extends ViewModelWidget<SearchViewModel> {
 
   @override
   Widget build(BuildContext context, SearchViewModel searchViewModel) {
+    if (searchResult.type == TMDB_API_TYPE.UNKNOWN) {
+      return const SizedBox();
+    }
     return ListTile(
       onTap: () => _onPressed(context),
       title: RichText(

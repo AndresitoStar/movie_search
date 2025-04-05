@@ -71,7 +71,12 @@ class BaseSearchResult {
     } else if (mediaType == 'tv') {
       return BaseSearchResult.fromTv(TvShow.fromJson(data));
     }
-    throw Exception('API TYPE NOT IMPLEMENTED!');
+
+    return BaseSearchResult.lite(
+      mediaType: mediaType,
+      id: data['id'] as num,
+      title: data['title'],
+    )..type = TMDB_API_TYPE.UNKNOWN;
   }
 
   BaseSearchResult._(
@@ -82,7 +87,7 @@ class BaseSearchResult {
   )   : id = id,
         title = title,
         posterImage = posterImage,
-        type = TMDB_API_TYPE.values.singleWhere((element) => element.type == type);
+        type = _parseType(type);
 
   static BaseSearchResult lite({
     required String mediaType,
@@ -91,6 +96,14 @@ class BaseSearchResult {
     String? posterImage,
   }) {
     return BaseSearchResult._(id, mediaType, title, posterImage);
+  }
+
+  static TMDB_API_TYPE _parseType(String? type) {
+    try {
+      return TMDB_API_TYPE.values.singleWhere((element) => element.type == type);
+    } catch (e) {
+      return TMDB_API_TYPE.UNKNOWN;
+    }
   }
 
   static String? _parseStatus(String? value) {
@@ -131,4 +144,6 @@ class BaseSearchResult {
       mediaType: map['type'] as String,
     );
   }
+
+
 }

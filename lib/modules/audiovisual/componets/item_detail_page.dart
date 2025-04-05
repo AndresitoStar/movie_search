@@ -66,10 +66,8 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
         ItemDetailSliverAppBar(
           // ItemDetailAppbarContentExtended(heroTagPrefix: heroTagPrefix),
           ItemDetailAppbarContentSimple(),
+          expandedHeight: 100.w / 0.667,
           actions: [
-            //   ItemLikeButton(item: item),
-            //   if (model.dataReady) ...[
-            //     if (model.itemType != TMDB_API_TYPE.PERSON) ReviewButton(param: model.data!),
             if (model.dataReady) ItemLikeButton(item: model.data!),
             ItemImagesButtonView(
                 id: model.itemId,
@@ -81,11 +79,14 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
         ),
         if (model.hasError)
           SliverToBoxAdapter(
-              child: ElevatedButton(
-                  onPressed: model.initialise, child: Text('Recargar')))
+            child: ElevatedButton(
+              onPressed: model.initialise,
+              child: Text('Recargar'),
+            ),
+          )
         else if (model.initialised) ...[
-          ItemDetailMainContent(),
           if (model.itemType != TMDB_API_TYPE.PERSON) ...[
+            ItemDetailOverview(isSliver: true),
             CreditHorizontalList(model.itemType.type, model.itemId),
             ItemDetailSecondaryContent(),
             ItemDetailRecommendationHorizontalList(

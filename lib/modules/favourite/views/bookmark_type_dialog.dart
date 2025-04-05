@@ -123,7 +123,8 @@ class SelectBookmarkTypeDialog extends StatelessWidget {
                                 child: InkWell(
                                   onTap: () {
                                     control.updateValue(true);
-                                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                                    SchedulerBinding.instance.addPostFrameCallback((_) async {
+                                      await Future.delayed(Duration(milliseconds: 100));
                                       _newTypeControl.focus();
                                     });
                                   },

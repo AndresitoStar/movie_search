@@ -27,8 +27,6 @@ class DiscoverScreen extends StatelessWidget {
           onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
           child: Icon(FontAwesomeIcons.filter),
         ),
-        actions: [Container()],
-        forceAppbar: Device.screenType == ScreenType.mobile /*true*/,
         title: "Explorar",
       ),
     );
