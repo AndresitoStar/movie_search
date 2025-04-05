@@ -7,7 +7,9 @@ import 'package:movie_search/modules/home/home_movie_top_rated.dart';
 import 'package:movie_search/modules/home/home_movie_upcoming.dart';
 import 'package:movie_search/modules/home/home_trending_all.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/icons.dart';
+import 'package:movie_search/ui/widgets/bottom_bar.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:rxdart/rxdart.dart';
@@ -20,32 +22,50 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isMobile = Device.screenType == ScreenType.mobile;
 
     return CustomScaffold(
       bottomBarIndex: 0,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            Navigator.of(context).pushNamed(SearchScreen.routeName),
-        child: Icon(MyIcons.search),
-        backgroundColor: theme.colorScheme.primary,
+      floatingActionButton: isMobile
+          ? FloatingActionButton(
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(SearchScreen.routeName),
+              child: Icon(MyIcons.search),
+              foregroundColor: theme.colorScheme.onPrimary,
+              backgroundColor: theme.colorScheme.primary,
+            )
+          : null,
+      appBar: AppBar(
+        title: ContentTypeWidget(),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: isMobile
+            ? Center(
+              child: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  child: Image.asset('assets/images/ic_launcher.png'),
+                  radius: kToolbarHeight / 3,
+                ),
+            )
+            : Center(
+                child: Text(
+                  ' Movie Search',
+                  style: context.theme.textTheme.titleLarge,
+                ),
+              ),
+        leadingWidth: 120,
+        forceMaterialTransparency: true,
+        actions: [
+          IconButton(
+            onPressed: () =>
+                Navigator.of(context).pushNamed(SearchScreen.routeName),
+            icon: Icon(MyIcons.search),
+          ),
+          if (!isMobile) MyNavigationBar(index: 0),
+        ],
       ),
       body: Column(
         children: [
-          if (Device.screenType == ScreenType.mobile) ...[
-            AppBar(
-              title: ContentTypeWidget(),
-              centerTitle: true,
-              forceMaterialTransparency: true,
-              actions: [
-                IconButton(
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed(SearchScreen.routeName),
-                  icon: Icon(MyIcons.search),
-                ),
-              ],
-            ),
-            Divider(height: 1, color: theme.colorScheme.onSurface.withValues(alpha: 0.1)),
-          ],
           Expanded(
             child: Container(
               padding: EdgeInsets.only(top: 10),

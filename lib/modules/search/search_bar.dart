@@ -58,6 +58,11 @@ class SearchBar extends StatelessWidget {
                             ..reset(value: '')
                             ..focus(),
                         ),
+                        IconButton(
+                          icon: Icon(Icons.send),
+                          color: Theme.of(context).iconTheme.color,
+                          onPressed: () => model.search(),
+                        ),
                       ],
                     ),
                   ),

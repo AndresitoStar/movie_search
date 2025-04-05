@@ -13,26 +13,26 @@ import 'items_images_button.dart';
 class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
   final bool isSliver;
   final bool showActions;
+  final bool showOverview;
 
-  ItemDetailMainContent({this.isSliver = true, this.showActions = false});
+  ItemDetailMainContent({
+    this.isSliver = true,
+    this.showActions = false,
+    this.showOverview = true,
+  });
 
   @override
   Widget build(BuildContext context, model) {
     final BaseSearchResult item = model.data!;
 
     String? originalTitle;
-    String? overview;
     String? tagline;
     if (item.type == TMDB_API_TYPE.MOVIE) {
       originalTitle = item.movie!.originalTitle ?? '';
-      overview = item.movie!.overview ?? '';
       tagline = item.movie!.tagline;
     } else if (item.type == TMDB_API_TYPE.TV_SHOW) {
       originalTitle = item.tvShow!.originalName ?? '';
-      overview = item.tvShow!.overview ?? '';
       tagline = item.tvShow!.tagline;
-    } else if (item.type == TMDB_API_TYPE.PERSON) {
-      overview = item.person!.biography ?? '';
     }
 
     final children = <Widget>[
@@ -128,10 +128,7 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
           ],
         ],
       ),
-      ContentHorizontal(
-        content: overview,
-        label: item.type == TMDB_API_TYPE.PERSON ? 'Biografía' : 'Sinopsis',
-      ),
+      if (showOverview) ItemDetailOverview() else const SizedBox(height: 10),
       // Divider(indent: 8, endIndent: 8),
     ];
 
@@ -142,5 +139,29 @@ class ItemDetailMainContent extends ViewModelWidget<ItemDetailViewModel> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
           );
+  }
+}
+
+class ItemDetailOverview extends ViewModelWidget<ItemDetailViewModel> {
+  final bool isSliver;
+
+  const ItemDetailOverview({Key? key, this.isSliver = false}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, ItemDetailViewModel model) {
+    final BaseSearchResult item = model.data!;
+    String? overview;
+    if (item.type == TMDB_API_TYPE.MOVIE) {
+      overview = item.movie!.overview ?? '';
+    } else if (item.type == TMDB_API_TYPE.TV_SHOW) {
+      overview = item.tvShow!.overview ?? '';
+    } else if (item.type == TMDB_API_TYPE.PERSON) {
+      overview = item.person!.biography ?? '';
+    }
+    final child = ContentHorizontal(
+      content: overview,
+      label: item.type == TMDB_API_TYPE.PERSON ? 'Biografía' : 'Sinopsis',
+    );
+    return isSliver ? SliverToBoxAdapter(child: child) : child;
   }
 }

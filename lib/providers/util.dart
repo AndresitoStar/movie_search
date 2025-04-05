@@ -68,7 +68,7 @@ extension DateFormatter on DateTime {
   String get format => DateFormat('dd MMMM yyyy', Locale('es', 'ES').toString()).format(this);
 }
 
-enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON }
+enum TMDB_API_TYPE { MOVIE, TV_SHOW, PERSON, UNKNOWN }
 
 extension tmdb_type on TMDB_API_TYPE {
   String get type {
@@ -79,6 +79,8 @@ extension tmdb_type on TMDB_API_TYPE {
         return 'tv';
       case TMDB_API_TYPE.PERSON:
         return 'person';
+      default:
+        return 'unknown';
     }
   }
 
@@ -90,6 +92,8 @@ extension tmdb_type on TMDB_API_TYPE {
         return 'SERIE';
       case TMDB_API_TYPE.PERSON:
         return 'Celebridad';
+      default:
+        return 'unknown';
     }
   }
 
@@ -101,6 +105,8 @@ extension tmdb_type on TMDB_API_TYPE {
         return MyIcons.tv;
       case TMDB_API_TYPE.PERSON:
         return MyIcons.castMale;
+      default:
+        return Icons.adb;
     }
   }
 
@@ -112,6 +118,8 @@ extension tmdb_type on TMDB_API_TYPE {
         return 'Serie';
       case TMDB_API_TYPE.PERSON:
         return 'Persona';
+      default:
+        return 'unknown';
     }
   }
 }

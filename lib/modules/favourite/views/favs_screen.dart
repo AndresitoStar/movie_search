@@ -130,12 +130,9 @@ class FavouriteScreen extends ViewModelWidget<FavouritesViewModel> {
           fit: StackFit.expand,
           children: [
             entry.value.first?.posterImage != null
-                ? ImageFiltered(
-                    imageFilter: ImageFilter.blur(
-                        sigmaX: 1, sigmaY: 1, tileMode: TileMode.decal),
-                    child: Image.network(
-                        '${URL_IMAGE_MEDIUM}${entry.value.first?.posterImage}',
-                        fit: BoxFit.cover))
+                ? Image.network(
+                    '${URL_IMAGE_MEDIUM}${entry.value.first?.posterImage}',
+                    fit: BoxFit.cover)
                 : Container(color: Theme.of(context).canvasColor),
             Align(
               alignment: Alignment.bottomCenter,

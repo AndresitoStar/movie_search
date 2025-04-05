@@ -19,38 +19,33 @@ class DiscoverResults extends StatelessWidget {
             ? Center(child: CircularProgressIndicator())
             : model.searchResults.isEmpty
                 ? Center(child: Text('Sin resultados'))
-                : GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onPanDown: (_) =>
-                        FocusScope.of(context).requestFocus(FocusNode()),
-                    child: Scrollbar(
-                      thumbVisibility: false,
-                      thickness: 10,
-                      controller: scrollController, // Here
-                      child: MasonryGridView.count(
-                        padding: const EdgeInsets.all(10.0),
-                        itemCount: model.searchResults.length + 2,
-                        crossAxisCount: getColumns(context),
-                        controller: scrollController,
-                        itemBuilder: (ctx, i) => AspectRatio(
-                          aspectRatio: 0.667,
-                          child: i < model.searchResults.length
-                              ? ItemGridView(
-                                  item: model.searchResults[i],
-                                  showType: false,
-                                  showTitles: true,
-                                  heroTagPrefix: '',
-                                )
-                              : model.hasMore
-                                  ? Builder(
-                                      builder: (context) {
-                                        if (i == model.searchResults.length)
-                                          model.fetchMore();
-                                        return GridItemPlaceholder();
-                                      },
-                                    )
-                                  : Container(),
-                        ),
+                : Scrollbar(
+                    thumbVisibility: false,
+                    thickness: 10,
+                    controller: scrollController, // Here
+                    child: MasonryGridView.count(
+                      padding: const EdgeInsets.all(10.0),
+                      itemCount: model.searchResults.length + 2,
+                      crossAxisCount: getColumns(context),
+                      controller: scrollController,
+                      itemBuilder: (ctx, i) => AspectRatio(
+                        aspectRatio: 0.667,
+                        child: i < model.searchResults.length
+                            ? ItemGridView(
+                                item: model.searchResults[i],
+                                showType: false,
+                                showTitles: true,
+                                heroTagPrefix: '',
+                              )
+                            : model.hasMore
+                                ? Builder(
+                                    builder: (context) {
+                                      if (i == model.searchResults.length)
+                                        model.fetchMore();
+                                      return GridItemPlaceholder();
+                                    },
+                                  )
+                                : Container(),
                       ),
                     ),
                   ),

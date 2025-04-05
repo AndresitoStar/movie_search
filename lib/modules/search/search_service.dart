@@ -1,3 +1,4 @@
+import 'package:movie_search/model/api/models/api.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/rest/resolver.dart';
@@ -21,9 +22,15 @@ class SearchService extends BaseService {
         totalPagesResult = body['total_pages'];
         if (totalResults > 0) {
           for (var data in body['results']) {
-            final mediaType = data['media_type'] ?? realType;
-            BaseSearchResult b = BaseSearchResult.fromJson(mediaType, data);
-            searchResult.add(b);
+            try {
+              final mediaType = data['media_type'] ?? realType;
+              BaseSearchResult b = BaseSearchResult.fromJson(mediaType, data);
+              searchResult.add(b);
+            } on ApiException catch (e) {
+              continue;
+            } on Exception catch (e) {
+              print(e);
+            }
           }
         }
 

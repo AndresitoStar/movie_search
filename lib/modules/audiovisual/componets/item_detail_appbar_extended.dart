@@ -235,7 +235,7 @@ class ItemDetailAppbarContentSimple
         IgnorePointer(
           ignoring: true,
           child: ContentImageWidget(
-            model.backDropImageUrl ?? model.posterImageUrl,
+            model.posterImageUrl,
             fit: BoxFit.cover,
             isBackdrop: model.backDropImageUrl != null,
           ),
@@ -249,20 +249,28 @@ class ItemDetailAppbarContentSimple
                 end: Alignment.bottomCenter,
                 colors: [
                   context.theme.colorScheme.surface.withOpacity(0.2),
-                  context.theme.colorScheme.surface.withOpacity(0.1),
+                  context.theme.colorScheme.surface.withOpacity(0.2),
+                  context.theme.colorScheme.surface.withOpacity(0.8),
                   context.theme.scaffoldBackgroundColor,
                 ],
               ),
               border: Border.symmetric(
-                  vertical:
-                      BorderSide(color: context.theme.scaffoldBackgroundColor)),
+                vertical:
+                    BorderSide(color: context.theme.scaffoldBackgroundColor),
+              ),
             ),
           ),
         ),
         if (model.dataReady)
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: VideosCarousel(param: model.data!),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: ItemDetailMainContent(
+              isSliver: false,
+              showActions: false,
+              showOverview: false,
+            ),
           ),
         Align(
           alignment: Alignment.bottomCenter,
