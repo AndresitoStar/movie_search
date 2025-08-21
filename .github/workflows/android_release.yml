@@ -2,8 +2,8 @@ name: Build Android Release and Create GitHub Release
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - '*'
 
 jobs:
   build-android-release:
