@@ -12,8 +12,7 @@ class HomePopularViewModel extends InfiniteScrollViewModel<BaseSearchResult> {
   HomePopularViewModel() : _trendingService = TrendingService();
 
   @override
-  Future<AbstractSearchResponse<BaseSearchResult>> makeSearch(
-      {int? page, required bool force}) {
+  Future<AbstractSearchResponse<BaseSearchResult>> makeSearch({int? page, required bool force}) {
     final type = ContentTypeController.getInstance().currentType;
     return _trendingService.getAny(
       type.type,
@@ -23,6 +22,8 @@ class HomePopularViewModel extends InfiniteScrollViewModel<BaseSearchResult> {
       force: force,
     );
   }
+
+  static String get instanceName => 'home_popular';
 }
 
 class HomePopularView extends ContentPreviewViewMoreWidget {
@@ -44,4 +45,7 @@ class HomePopularView extends ContentPreviewViewMoreWidget {
 
   @override
   String get title => 'Most Popular';
+
+  @override
+  String get viewModelInstanceName => HomePopularViewModel.instanceName;
 }

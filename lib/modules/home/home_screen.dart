@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/modules/home/content_type_widget.dart';
 import 'package:movie_search/modules/home/genre_carousel.dart';
 import 'package:movie_search/modules/home/home_movie_now_playing.dart';
@@ -17,24 +18,24 @@ import 'package:rxdart/rxdart.dart';
 import 'home_popular.dart';
 
 class HomeScreen extends StatelessWidget {
-  static String routeName = "/home";
+  static String routeName = "/";
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
     final isMobile = Device.screenType == ScreenType.mobile;
 
     return CustomScaffold(
       bottomBarIndex: 0,
-      floatingActionButton: isMobile
-          ? FloatingActionButton(
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(SearchScreen.routeName),
-              child: Icon(MyIcons.search),
-              foregroundColor: theme.colorScheme.onPrimary,
-              backgroundColor: theme.colorScheme.primary,
-            )
-          : null,
+      // floatingActionButton: isMobile
+      //     ? FloatingActionButton(
+      //         onPressed: () =>
+      //             context.go(SearchScreen.routeName),
+      //         child: Icon(MyIcons.search),
+      //         foregroundColor: theme.colorScheme.onPrimary,
+      //         backgroundColor: theme.colorScheme.primary,
+      //       )
+      //     : null,
       appBar: AppBar(
         title: ContentTypeWidget(),
         centerTitle: true,
@@ -58,7 +59,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () =>
-                Navigator.of(context).pushNamed(SearchScreen.routeName),
+                context.go('/${SearchScreen.routeName}'),
             icon: Icon(MyIcons.search),
           ),
           if (!isMobile) MyNavigationBar(index: 0),

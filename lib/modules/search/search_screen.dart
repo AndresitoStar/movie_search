@@ -4,11 +4,10 @@ import 'package:movie_search/modules/search/search_results.dart';
 import 'package:movie_search/modules/search/search_service.dart';
 import 'package:movie_search/modules/search/search_viewmodel.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
-import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class SearchScreen extends StatelessWidget {
-  static const String routeName = "/search";
+  static const String routeName = "search";
 
   @override
   Widget build(BuildContext context) {

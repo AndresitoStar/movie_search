@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:movie_search/core/content_type_controller.dart';
+import 'package:movie_search/core/infinite_scroll_viewmodel.dart';
 import 'package:movie_search/firebase_options.dart';
 import 'package:movie_search/modules/account/viewModel/account_viewmodel.dart';
 import 'package:movie_search/modules/favourite/viewmodel/favourite_viewmodel.dart';
+import 'package:movie_search/modules/home/home_movie_now_playing.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
@@ -15,28 +17,52 @@ import 'package:movie_search/ui/widgets/extensions.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
-import 'modules/splash/splash_screen.dart';
+import 'modules/home/home_movie_top_rated.dart';
+import 'modules/home/home_movie_upcoming.dart';
+import 'modules/home/home_popular.dart';
+import 'modules/home/home_trending_all.dart';
 import 'modules/themes/theme_viewmodel.dart';
 
 final GlobalKey<ScaffoldState> drawerKey = new GlobalKey<ScaffoldState>();
-final GlobalKey<NavigatorState> globalNavigatorKey =
-    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> globalNavigatorKey = GlobalKey<NavigatorState>();
+final getIt = GetIt.instance;
 
 void main() async {
+  usePathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDateFormatting("es_ES", null);
   final color = await _resolveColorSchema();
-  SharedPreferencesHelper.wasHereBefore().then(
-      (value) => runApp(EasyDynamicThemeWidget(child: App(color: color))));
+  SharedPreferencesHelper.wasHereBefore().then((value) => runApp(EasyDynamicThemeWidget(child: App(color: color))));
   await ContentTypeController.getInstance().loadCurrentType();
   _configureSingleton();
 }
 
 _configureSingleton() {
-  final getIt = GetIt.instance;
+  
   getIt.registerSingleton<HomeController>(HomeController());
+  getIt.registerFactory<InfiniteScrollViewModel>(
+    () => HomeNowPlayingViewModel(),
+    instanceName: HomeNowPlayingViewModel.instanceName,
+  );
+  getIt.registerFactory<InfiniteScrollViewModel>(
+    () => HomeTopRatedViewModel(),
+    instanceName: HomeTopRatedViewModel.instanceName,
+  );
+  getIt.registerFactory<InfiniteScrollViewModel>(
+    () => HomePopularViewModel(),
+    instanceName: HomePopularViewModel.instanceName,
+  );
+  getIt.registerFactory<InfiniteScrollViewModel>(
+    () => HomeUpcomingViewModel(),
+    instanceName: HomeUpcomingViewModel.instanceName,
+  );
+  getIt.registerFactory<InfiniteScrollViewModel>(
+    () => HomeTrendingAllViewModel(window: TrendingWindow.WEEK),
+    instanceName: HomeTrendingAllViewModel.instanceName,
+  );
 }
 
 Future<FlexScheme> _resolveColorSchema() async {
@@ -46,7 +72,6 @@ Future<FlexScheme> _resolveColorSchema() async {
 }
 
 class App extends StatelessWidget {
-  final navigatorKey = GlobalKey<NavigatorState>();
   final FlexScheme color;
 
   App({Key? key, required this.color}) : super(key: key);
@@ -57,27 +82,21 @@ class App extends StatelessWidget {
       maxTabletWidth: 720,
       builder: (context, orientation, screenType) => MultiProvider(
         providers: [
-          ChangeNotifierProvider<AccountViewModel>(
-              create: (context) => AccountViewModel()..checkUserLogged()),
-          ChangeNotifierProvider<FavouritesViewModel>(
-              create: (context) => FavouritesViewModel()),
+          ChangeNotifierProvider<AccountViewModel>(create: (context) => AccountViewModel()..checkUserLogged()),
+          ChangeNotifierProvider<FavouritesViewModel>(create: (context) => FavouritesViewModel()),
         ],
         child: ViewModelBuilder<ThemeViewModel>.reactive(
           viewModelBuilder: () => ThemeViewModel(
             color,
-            themeMode:
-                EasyDynamicTheme.of(context).themeMode ?? ThemeMode.system,
+            themeMode: EasyDynamicTheme.of(context).themeMode ?? ThemeMode.system,
           ),
-          builder: (context, model, child) => MaterialApp(
+          builder: (context, model, child) => MaterialApp.router(
             title: 'Movie Search',
             debugShowCheckedModeBanner: false,
             theme: model.theme,
             darkTheme: model.darkTheme,
             themeMode: EasyDynamicTheme.of(context).themeMode,
-            navigatorKey: globalNavigatorKey,
-            onGenerateRoute: (settings) =>
-                Routes.generateRoute(context, settings),
-            initialRoute: SplashScreen.route,
+            routerConfig: Routes.go_routes,
             scrollBehavior: MyCustomScrollBehavior(),
           ),
         ),

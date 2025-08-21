@@ -20,6 +20,8 @@ class HomeNowPlayingViewModel extends InfiniteScrollViewModel<BaseSearchResult> 
       force: force,
     );
   }
+
+  static String get instanceName => 'home_now_playing';
 }
 
 class HomeNowPlayingView extends ContentPreviewViewMoreWidget {
@@ -41,4 +43,7 @@ class HomeNowPlayingView extends ContentPreviewViewMoreWidget {
 
   @override
   String get title => 'Now Playing';
+
+  @override
+  String get viewModelInstanceName => HomeNowPlayingViewModel.instanceName;
 }

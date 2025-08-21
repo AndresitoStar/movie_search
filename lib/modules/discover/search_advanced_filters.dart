@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/model/api/models/api.dart';
 import 'package:movie_search/model/api/models/country.dart';
 import 'package:movie_search/model/api/models/genre.dart';
@@ -507,7 +508,7 @@ class SearchAdvancedFilterView extends ViewModelWidget<DiscoverViewModel> {
                 minLeadingWidth: 0,
                 onTap: () async {
                   model.search();
-                  Navigator.of(context).pop();
+                  context.pop();
                 },
               ),
               SizedBox(height: 10),

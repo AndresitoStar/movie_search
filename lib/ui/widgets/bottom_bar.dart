@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/modules/account/viewModel/account_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:movie_search/modules/discover/discover_screen.dart';
 import 'package:movie_search/modules/favourite/views/favs_screen.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
-import 'package:movie_search/modules/search/search_screen.dart';
 import 'package:movie_search/ui/frino_icons.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/screens/settings.dart';
@@ -45,45 +45,18 @@ mixin _BottomBar {
   onSelectIndex({required int i, required BuildContext context}) {
     switch (i) {
       case 0:
-        if (index != 0)
-          Navigator.of(context)
-              .popUntil(ModalRoute.withName(HomeScreen.routeName));
+        if (index != 0) context.go(HomeScreen.routeName);
         break;
       case 1:
-        if (index != 1) goToDiscover(context);
+        if (index != 1) context.go('/${DiscoverScreen.routeName}');
         break;
       case 2:
-        if (index != 2) goToFavourites(context);
+        if (index != 2) context.go('/${FavouriteScreen.routeName}');
         break;
       case 3:
-        if (index != 3) goToSettings(context);
+        if (index != 3) context.go('/${SettingsScreen.routeName}');
         break;
     }
-  }
-
-  Future goToFavourites(BuildContext context) {
-    if (index == 0)
-      return Navigator.of(context).pushNamed(FavouriteScreen.routeName);
-    return Navigator.of(context)
-        .pushReplacementNamed(FavouriteScreen.routeName);
-  }
-
-  Future goToSearch(BuildContext context) {
-    if (index == 0)
-      return Navigator.of(context).pushNamed(SearchScreen.routeName);
-    return Navigator.of(context).pushReplacementNamed(SearchScreen.routeName);
-  }
-
-  Future goToSettings(BuildContext context) {
-    if (index == 0)
-      return Navigator.of(context).pushNamed(SettingsScreen.routeName);
-    return Navigator.of(context).pushReplacementNamed(SettingsScreen.routeName);
-  }
-
-  Future goToDiscover(BuildContext context) {
-    if (index == 0)
-      return Navigator.of(context).pushNamed(DiscoverScreen.routeName);
-    return Navigator.of(context).pushReplacementNamed(DiscoverScreen.routeName);
   }
 }
 
@@ -94,8 +67,7 @@ class MyBottomBar extends StatelessWidget with _BottomBar {
 
   @override
   Widget build(BuildContext context) {
-    final isLandscape = Device.screenType == ScreenType.desktop ||
-        Device.screenType == ScreenType.tablet;
+    final isLandscape = Device.screenType == ScreenType.desktop || Device.screenType == ScreenType.tablet;
     return SizedBox(
       width: isLandscape ? Adaptive.pc(20) : 100.w,
       child: Stack(

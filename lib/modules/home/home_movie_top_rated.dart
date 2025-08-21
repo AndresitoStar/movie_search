@@ -23,6 +23,8 @@ class HomeTopRatedViewModel extends InfiniteScrollViewModel<BaseSearchResult> {
       force: force,
     );
   }
+
+  static String get instanceName => 'home_top_rated';
 }
 
 class HomeTopRatedView extends ContentPreviewViewMoreWidget {
@@ -44,4 +46,7 @@ class HomeTopRatedView extends ContentPreviewViewMoreWidget {
 
   @override
   String get title => 'Top Rated';
+
+  @override
+  String get viewModelInstanceName => HomeTopRatedViewModel.instanceName;
 }

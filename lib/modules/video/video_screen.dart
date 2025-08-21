@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/core/content_preview.dart';
 import 'package:movie_search/model/api/models/video.dart';
 import 'package:movie_search/ui/frino_icons.dart';
@@ -22,7 +23,7 @@ class VideoScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         forceMaterialTransparency: true,
-        leading: IconButton(icon: Icon(MyIcons.arrow_left), onPressed: () => Navigator.of(context).pop()),
+        leading: IconButton(icon: Icon(MyIcons.arrow_left), onPressed: () => context.pop()),
         titleSpacing: 0,
         elevation: 0,
       ),

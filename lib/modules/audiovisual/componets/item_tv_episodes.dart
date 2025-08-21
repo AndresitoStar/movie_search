@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/model/api/models/tv.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_appbar.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
@@ -29,7 +30,7 @@ class EpisodesPage extends StatelessWidget {
             floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
             floatingActionButton: Device.screenType != ScreenType.mobile
                 ? FloatingActionButton.extended(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => context.pop(),
                     label: Text('ATRAS'),
                     icon: Icon(MyIcons.arrow_left),
                   )

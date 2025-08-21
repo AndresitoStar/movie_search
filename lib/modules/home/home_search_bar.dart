@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/modules/search/search_screen.dart';
 import 'package:movie_search/ui/icons.dart';
 
@@ -26,5 +27,5 @@ class HomeSearchBar extends StatelessWidget {
     );
   }
 
-  _onPressed(BuildContext context) => Navigator.of(context).pushNamed(SearchScreen.routeName);
+  _onPressed(BuildContext context) => context.go(SearchScreen.routeName);
 }

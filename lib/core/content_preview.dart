@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/core/content_preview_page.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/home/home_screen.dart';
@@ -11,8 +12,7 @@ import 'package:stacked/stacked.dart';
 
 import 'infinite_scroll_viewmodel.dart';
 
-abstract class ContentPreviewViewMoreWidget
-    extends StackedView<InfiniteScrollViewModel> {
+abstract class ContentPreviewViewMoreWidget extends StackedView<InfiniteScrollViewModel> {
   ContentPreviewViewMoreWidget({Key? key}) : super(key: key);
 
   @override
@@ -24,17 +24,14 @@ abstract class ContentPreviewViewMoreWidget
   }
 
   @override
-  Widget builder(
-      BuildContext context, InfiniteScrollViewModel viewModel, Widget? child) {
-    final isLandsCape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+  Widget builder(BuildContext context, InfiniteScrollViewModel viewModel, Widget? child) {
+    final isLandsCape = MediaQuery.of(context).orientation == Orientation.landscape;
     final totalItems = 5;
     final doIt = viewModel.items.length > totalItems;
     //final height = MediaQuery.of(context).size.longestSide / 3.5;
-    final height = isLandsCape
-        ? MediaQuery.of(context).size.shortestSide / 3
-        : MediaQuery.of(context).size.shortestSide / 1.5;
-    final aspectRatio = isLandsCape ? 16/9 : 0.669;
+    final height =
+        isLandsCape ? MediaQuery.of(context).size.shortestSide / 3 : MediaQuery.of(context).size.shortestSide / 1.5;
+    final aspectRatio = isLandsCape ? 16 / 9 : 0.669;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -54,7 +51,7 @@ abstract class ContentPreviewViewMoreWidget
                 Icon(Icons.arrow_forward_ios, size: 8),
               ],
             ),
-            onPressed: () => onPressed(context, viewModel),
+            onPressed: () => onPressed(context),
           ),
         ),
         Container(
@@ -68,9 +65,8 @@ abstract class ContentPreviewViewMoreWidget
             scrollDirection: Axis.horizontal,
             itemCount: viewModel.items.length,
             itemBuilder: (ctx, i) => AnimatedCrossFade(
-              crossFadeState: !viewModel.isBusy || !viewModel.initialised
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
+              crossFadeState:
+                  !viewModel.isBusy || !viewModel.initialised ? CrossFadeState.showSecond : CrossFadeState.showFirst,
               duration: Duration(milliseconds: 400),
               firstChild: AspectRatio(
                 aspectRatio: aspectRatio,
@@ -97,12 +93,9 @@ abstract class ContentPreviewViewMoreWidget
     );
   }
 
-  int _getColumns(BuildContext context) => UiUtils.calculateColumns(
-      context: context, itemWidth: 150, minValue: 2, maxValue: 6);
-
-  onPressed(BuildContext context, InfiniteScrollViewModel viewModel) {
-    Navigator.of(context).push(Routes.defaultRoute(
-        null, ContentPreviewPage(param: viewModel, showData: itemShowData)));
+  onPressed(BuildContext context) {
+    context.pushNamed('/preview/$viewModelInstanceName',
+        extra: ContentPreviewPage(viewModelInstanceName: viewModelInstanceName));
   }
 
   String get viewMoreButtonHeroTag;
@@ -112,6 +105,8 @@ abstract class ContentPreviewViewMoreWidget
   String get title;
 
   bool get itemShowData => false;
+
+  String get viewModelInstanceName;
 }
 
 class UiUtils {
@@ -128,7 +123,6 @@ class UiUtils {
   static String generateRandomString({int length = 10}) {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     final random = Random.secure();
-    return List.generate(length, (index) => chars[random.nextInt(chars.length)])
-        .join();
+    return List.generate(length, (index) => chars[random.nextInt(chars.length)]).join();
   }
 }

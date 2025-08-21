@@ -1,11 +1,10 @@
-import 'dart:io';
-import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/modules/dialog_image/dialog_image_viewmodel.dart';
 import 'package:movie_search/modules/dialog_image/download_image_button.dart';
 import 'package:movie_search/providers/util.dart';
@@ -170,7 +169,7 @@ class _DialogImageState extends State<DialogImage> {
                   MyCircularButton(
                     icon: Icon(MyIcons.clear),
                     color: Colors.red,
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => context.pop(),
                   ),
                 ],
               ),

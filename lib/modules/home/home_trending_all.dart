@@ -32,6 +32,8 @@ class HomeTrendingAllViewModel extends InfiniteScrollViewModel<BaseSearchResult>
       force: force,
     );
   }
+
+  static String get instanceName => 'home_trending_all';
 }
 
 class HomeTrendingAllView extends ContentPreviewViewMoreWidget {
@@ -55,4 +57,7 @@ class HomeTrendingAllView extends ContentPreviewViewMoreWidget {
 
   @override
   String get title => 'Tendencias ${window.title}';
+
+  @override
+  String get viewModelInstanceName => HomeTrendingAllViewModel.instanceName;
 }

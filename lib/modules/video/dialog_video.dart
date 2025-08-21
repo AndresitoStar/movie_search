@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/model/api/models/video.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -75,7 +76,7 @@ class DialogVideo extends StatelessWidget {
               children: [
                 ElevatedButton(
                     style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(Colors.red)),
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => context.pop(),
                     child: Text('Cerrar'))
               ],
             ),

@@ -20,6 +20,8 @@ class HomeUpcomingViewModel extends InfiniteScrollViewModel<BaseSearchResult> {
       force: force,
     );
   }
+
+  static String get instanceName => 'home_upcoming';
 }
 
 class HomeUpcomingView extends ContentPreviewViewMoreWidget {
@@ -41,4 +43,7 @@ class HomeUpcomingView extends ContentPreviewViewMoreWidget {
 
   @override
   String get title => 'Upcoming Movies';
+
+  @override
+  String get viewModelInstanceName => HomeUpcomingViewModel.instanceName;
 }

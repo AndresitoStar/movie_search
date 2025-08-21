@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/trending/trending_viewmodel.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
-import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:movie_search/ui/widgets/extensions.dart';
 
@@ -28,7 +28,7 @@ class TrendingPage extends StatelessWidget {
                 elevation: 0,
                 leading: IconButton(
                     icon: Icon(MyIcons.arrow_left),
-                    onPressed: () => Navigator.of(context).pop()),
+                    onPressed: () => context.pop()),
               ),
               body: viewModel.isBusy
                   ? Center(child: CircularProgressIndicator())

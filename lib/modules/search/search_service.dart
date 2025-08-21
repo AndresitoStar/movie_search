@@ -26,7 +26,7 @@ class SearchService extends BaseService {
               final mediaType = data['media_type'] ?? realType;
               BaseSearchResult b = BaseSearchResult.fromJson(mediaType, data);
               searchResult.add(b);
-            } on ApiException catch (e) {
+            } on ApiException catch (_) {
               continue;
             } on Exception catch (e) {
               print(e);

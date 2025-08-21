@@ -47,7 +47,6 @@ class CustomScaffold extends StatelessWidget {
                     ...actions,
                   ],
                   forceMaterialTransparency: true,
-                  automaticallyImplyLeading: bottomBarIndex > 0,
                   elevation: 2,
                   title: Text(title ?? 'Movie Search'),
                 )

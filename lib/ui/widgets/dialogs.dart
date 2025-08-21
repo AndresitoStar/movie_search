@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/modules/account/viewModel/account_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
@@ -48,10 +49,10 @@ class MyDialogs {
       cancelButtonText: 'Cancelar',
       onTapConfirm: () {
         onConfirm();
-        Navigator.of(context).pop();
+        context.pop();
       },
       onTapCancel: () {
-        Navigator.of(context).pop();
+        context.pop();
       },
       panaraDialogType: PanaraDialogType.normal,
       title: title,
@@ -108,7 +109,7 @@ class MyGoogleButton extends StatelessWidget {
       ),
       onPressed: () {
         context.read<AccountViewModel>().loginGoogle();
-        if (makePop) Navigator.of(context).pop();
+        if (makePop) context.pop();
       },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),

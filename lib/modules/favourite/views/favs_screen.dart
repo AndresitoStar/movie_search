@@ -16,7 +16,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
 class FavouriteScreen extends ViewModelWidget<FavouritesViewModel> {
-  static String routeName = "/favourite";
+  static String routeName = "favourite";
 
   @override
   Widget build(BuildContext context, FavouritesViewModel model) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/core/content_preview.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_page.dart';
@@ -7,8 +8,6 @@ import 'package:movie_search/modules/search/search_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/routes.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
-import 'package:provider/provider.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../ui/widgets/panara_button.dart';
@@ -68,14 +67,6 @@ class _ResultListItem extends StatelessWidget {
   final bool showTitles;
   final String? searchCriteria;
 
-  _onPressed(BuildContext context) {
-    final child = ItemDetailPage(
-      item: this.searchResult,
-      heroTagPrefix: UiUtils.generateRandomString(),
-    );
-    Navigator.of(context).push(Routes.defaultRoute(null, child));
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -83,8 +74,8 @@ class _ResultListItem extends StatelessWidget {
         if (searchCriteria != null)
           SharedPreferencesHelper.getInstance()
               .updateSearchHistory(searchCriteria!);
-        // searchViewModel.queryControl.unfocus();
-        _onPressed(context);
+        context
+            .go('/${searchResult.type.type.toLowerCase()}/${searchResult.id}');
       },
       child: Card(
         elevation: 0,
@@ -179,7 +170,7 @@ class _ResultListItemCompact extends ViewModelWidget<SearchViewModel> {
             style: context.theme.textTheme.headlineMedium,
           ),
           subtitle: Text(
-            searchResult.type.nameSingular ?? '-',
+            searchResult.type.nameSingular,
             style: context.theme.textTheme.titleMedium,
           ),
         ),
@@ -197,15 +188,22 @@ class _ResultListItemCompact extends ViewModelWidget<SearchViewModel> {
           buttonTextColor: Colors.white,
           text: 'Ver detalles',
           onTap: () {
-            Navigator.of(context).pop();
-            final child = ItemDetailPage(
-              item: this.searchResult,
-              heroTagPrefix: UiUtils.generateRandomString(),
-            );
-            Navigator.of(context).push(Routes.defaultRoute(null, child));
+            context.pop();
+            context.push(Uri(
+                    path:
+                        '/${this.searchResult.type.type.toLowerCase()}/${this.searchResult.id}')
+                .toString());
           },
           bgColor: PanaraColors.normal,
           isOutlined: false,
+        ),
+        const SizedBox(height: 10),
+        PanaraButton(
+          buttonTextColor: Colors.white,
+          text: 'Atras',
+          onTap: () => context.pop(),
+          bgColor: PanaraColors.normal,
+          isOutlined: true,
         ),
       ],
     );
@@ -218,11 +216,40 @@ class _ResultListItemCompact extends ViewModelWidget<SearchViewModel> {
     }
     return ListTile(
       onTap: () => _onPressed(context),
-      title: RichText(
-        text: TextSpan(
-          children: _getTextSpans(searchResult.title ?? '', searchCriteria,
-              context: context),
-        ),
+      minTileHeight: 100,
+      title: Row(
+        spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (searchResult.backDropImage != null ||
+              searchResult.posterImage != null)
+            SizedBox(
+              height: 200,
+              child: searchResult.backDropImage != null
+                  ? AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: ContentImageWidget(
+                        searchResult.backDropImage,
+                        isBackdrop: true,
+                        fit: BoxFit.fitHeight,
+                      ),
+                    )
+                  : searchResult.posterImage != null
+                      ? AspectRatio(
+                          aspectRatio: 9 / 16,
+                          child: ContentImageWidget(searchResult.posterImage))
+                      : null,
+            ),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                children: _getTextSpans(
+                    searchResult.title ?? '', searchCriteria,
+                    context: context),
+              ),
+            ),
+          ),
+        ],
       ),
       subtitle: searchResult.titleOriginal != null &&
               searchResult.titleOriginal != searchResult.title

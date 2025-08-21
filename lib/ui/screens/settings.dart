@@ -1,40 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/modules/themes/theme_selector.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/scaffold.dart';
 import 'package:movie_search/ui/widgets/theme_switcher.dart';
 
 class SettingsScreen extends StatelessWidget {
-  static const String routeName = "/settings";
+  static const String routeName = "settings";
 
   @override
   Widget build(BuildContext context) {
-    final landscape = MediaQuery.of(context).size.aspectRatio > 0.7;
 
     return CustomScaffold(
       bottomBarIndex: 3,
-      body: Column(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (!landscape)
-                  AppBar(
-                    title: Text('Acerca de'),
-                    forceMaterialTransparency: true,
-                    leading: IconButton(
-                      icon: Icon(MyIcons.arrow_left),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    titleSpacing: 0,
-                    elevation: 0,
-                  )
-              ],
-            ),
-          ),
-        ],
+      appBar: AppBar(
+        title: Text('Acerca de'),
+        forceMaterialTransparency: true,
+        leading: IconButton(
+          icon: Icon(MyIcons.arrow_left),
+          onPressed: () => context.pop(),
+        ),
+        titleSpacing: 0,
+        elevation: 0,
       ),
+      body: _getInfo(context, 'Movie Search', '1.0.0'),
+      forceAppbar: true,
     );
   }
 
@@ -46,23 +36,17 @@ class SettingsScreen extends StatelessWidget {
       children: [
         Image.asset('assets/images/ic_launcher.png', width: 150, height: 150),
         SizedBox(height: 30),
-        Text(appName,
-            style: theme.textTheme.headlineMedium!
-                .copyWith(color: theme.colorScheme.primary)),
+        Text(appName, style: theme.textTheme.headlineMedium!.copyWith(color: theme.colorScheme.primary)),
         IconButton(
           icon: Icon(Icons.color_lens_rounded),
           onPressed: () => ThemeSelectorDialog.show(context),
         ),
         MyThemeBtn(),
         SizedBox(height: 30),
-        Text('Made by',
-            style:
-                theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
+        Text('Made by', style: theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
         Text('Andrés Forns Jusino', style: theme.textTheme.titleLarge),
         SizedBox(height: 30),
-        Text('Version',
-            style:
-                theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
+        Text('Version', style: theme.textTheme.titleSmall!.copyWith(color: theme.hintColor)),
         Text(version, style: theme.textTheme.titleLarge),
       ],
     );

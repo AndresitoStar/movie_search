@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/modules/audiovisual/model/image.dart';
 import 'package:movie_search/modules/audiovisual/viewmodel/item_images_viewmodel.dart';
 import 'package:movie_search/providers/util.dart';
@@ -93,7 +94,7 @@ class ItemImagesPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
             icon: Icon(MyIcons.arrow_left),
-            onPressed: () => Navigator.of(context).pop()),
+            onPressed: () => context.pop()),
       ),
       body: Builder(builder: (context) {
         return Scrollbar(

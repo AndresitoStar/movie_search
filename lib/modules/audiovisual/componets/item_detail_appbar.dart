@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/ui/icons.dart';
 import 'package:movie_search/ui/widgets/circular_button.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -27,7 +28,13 @@ class ItemDetailSliverAppBar extends StatelessWidget {
           MyIcons.arrow_left,
           color: Theme.of(context).colorScheme.onSurface,
         ),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () {
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.go('/');
+          }
+        },
       ),
       actions: actions,
       flexibleSpace: FlexibleSpaceBar(

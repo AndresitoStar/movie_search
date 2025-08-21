@@ -10,7 +10,6 @@ import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel
 import 'package:movie_search/modules/audiovisual/viewmodel/item_recomendations_viewmodel.dart';
 import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
 import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/ui/icons.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:stacked/stacked.dart';
 
@@ -20,14 +19,9 @@ class ItemDetailPage extends StatelessWidget {
   final BaseSearchResult item;
   final String heroTagPrefix;
 
-  static final String route = '/detail';
+  const ItemDetailPage({Key? key, required this.item, this.heroTagPrefix = ''}) : super(key: key);
 
-  const ItemDetailPage({Key? key, required this.item, this.heroTagPrefix = ''})
-      : super(key: key);
-
-  bool get isTabletDesktop =>
-      Device.screenType == ScreenType.tablet ||
-      Device.screenType == ScreenType.desktop;
+  bool get isTabletDesktop => Device.screenType == ScreenType.tablet || Device.screenType == ScreenType.desktop;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +31,8 @@ class ItemDetailPage extends StatelessWidget {
         return Container(
           color: Theme.of(context).scaffoldBackgroundColor,
           child: Scaffold(
-            appBar: isTabletDesktop
-                ? AppBar(backgroundColor: Colors.transparent)
-                : null,
-            body: isTabletDesktop
-                ? ItemDetailLandscape(heroTagPrefix)
-                : ItemDetailPortrait(heroTagPrefix, item),
+            appBar: isTabletDesktop ? AppBar(backgroundColor: Colors.transparent) : null,
+            body: isTabletDesktop ? ItemDetailLandscape(heroTagPrefix) : ItemDetailPortrait(heroTagPrefix, item),
           ),
         );
       },
@@ -54,8 +44,7 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
   final String heroTagPrefix;
   final BaseSearchResult item;
 
-  const ItemDetailPortrait(this.heroTagPrefix, this.item, {Key? key})
-      : super(key: key);
+  const ItemDetailPortrait(this.heroTagPrefix, this.item, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ItemDetailViewModel model) {
@@ -69,10 +58,7 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
           expandedHeight: 100.w / 0.667,
           actions: [
             if (model.dataReady) ItemLikeButton(item: model.data!),
-            ItemImagesButtonView(
-                id: model.itemId,
-                type: model.itemType,
-                title: model.title ?? ''),
+            ItemImagesButtonView(id: model.itemId, type: model.itemType, title: model.title ?? ''),
             //     if (model.itemType != TMDB_API_TYPE.PERSON) VideoButton(param: model.data!),
           ],
           // ],
@@ -92,7 +78,7 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
             ItemDetailRecommendationHorizontalList(
               model.itemType.type,
               model.itemId,
-              ERecommendationType.Recommendation,
+              ERecommendationType.Recommendation.type,
             ),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
           ] else ...[
@@ -100,7 +86,7 @@ class ItemDetailPortrait extends ViewModelWidget<ItemDetailViewModel> {
             ItemDetailRecommendationHorizontalList(
               model.itemType.type,
               model.itemId,
-              ERecommendationType.Credit,
+              ERecommendationType.Credit.type,
             ),
           ],
         ] else
@@ -146,7 +132,7 @@ class ItemDetailLandscape extends ViewModelWidget<ItemDetailViewModel> {
                     model.itemType.type,
                     model.itemId,
                     sliver: false,
-                    ERecommendationType.Credit,
+                    ERecommendationType.Credit.type,
                   ),
               ],
             ],

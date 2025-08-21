@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
 import 'package:movie_search/ui/icons.dart';
@@ -24,7 +25,7 @@ class ItemListPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
             icon: Icon(MyIcons.arrow_left),
-            onPressed: () => Navigator.of(context).pop()),
+            onPressed: () => context.pop()),
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(10.0),

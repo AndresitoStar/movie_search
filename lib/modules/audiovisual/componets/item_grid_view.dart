@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_like_button.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_detail_main_image.dart';
 import 'package:movie_search/modules/audiovisual/model/base.dart';
@@ -34,9 +35,7 @@ class ItemGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     if (useBackdrop) return SearchResultListItem(searchResult: item);
     final theme = Theme.of(context);
-    final showTitlesWidget = Device.screenType == ScreenType.desktop
-        ? false
-        : showTitles && item.title != null;
+    final showTitlesWidget = Device.screenType == ScreenType.desktop ? false : showTitles && item.title != null;
     return Builder(
       builder: (context) {
         final child = Card(
@@ -47,14 +46,13 @@ class ItemGridView extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: GestureDetector(
-            onTap: () => _onPressed(context),
+            onTap: () => context.push('/${item.type.type.toLowerCase()}/${item.id}'),
             child: Stack(
               fit: StackFit.expand,
               clipBehavior: Clip.antiAliasWithSaveLayer,
               children: [
                 AspectRatio(
-                  aspectRatio:
-                      item.type == TMDB_API_TYPE.PERSON ? 0.669 : 0.667,
+                  aspectRatio: item.type == TMDB_API_TYPE.PERSON ? 0.669 : 0.667,
                   child: item.posterImage != null
                       ? ContentImageWidget(
                           item.posterImage,
@@ -69,13 +67,10 @@ class ItemGridView extends StatelessWidget {
                     top: -1,
                     right: 0,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 5),
-                      child: Text(item.type.name.toLowerCase(),
-                          style: context.theme.primaryTextTheme.bodySmall),
+                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                      child: Text(item.type.name.toLowerCase(), style: context.theme.primaryTextTheme.bodySmall),
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.only(bottomLeft: Radius.circular(10)),
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10)),
                         color: context.theme.primaryColor,
                       ),
                     ),
@@ -90,18 +85,14 @@ class ItemGridView extends StatelessWidget {
                         ItemBookmarkTag(item: item),
                         ClipRect(
                           child: Container(
-                            color: theme.colorScheme.surface
-                                .withOpacity(0.95),
+                            color: theme.colorScheme.surface.withOpacity(0.95),
                             child: ListTile(
                               title: Text(
                                 item.title ?? '' + '\n',
-                                textAlign: useBackdrop
-                                    ? TextAlign.start
-                                    : TextAlign.center,
+                                textAlign: useBackdrop ? TextAlign.start : TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
-                                style: theme.textTheme.titleLarge!
-                                    .copyWith(fontSize: 16),
+                                style: theme.textTheme.titleLarge!.copyWith(fontSize: 16),
                               ),
                               subtitle: item.subtitle == null
                                   ? null
@@ -125,15 +116,5 @@ class ItemGridView extends StatelessWidget {
         return child;
       },
     );
-  }
-
-  _onPressed(BuildContext context) {
-    print('$heroTagPrefix${item.id}');
-    return Navigator.of(context).push(Routes.defaultRoute(
-        null,
-        ItemDetailPage(
-          item: this.item,
-          heroTagPrefix: heroTagPrefix,
-        )));
   }
 }

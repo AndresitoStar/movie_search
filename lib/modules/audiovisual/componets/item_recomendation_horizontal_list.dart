@@ -10,7 +10,7 @@ import 'package:stacked/stacked.dart';
 class ItemDetailRecommendationHorizontalList extends StatelessWidget {
   final String type;
   final num typeId;
-  final ERecommendationType recommendationType;
+  final String recommendationType;
   final bool sliver;
 
   const ItemDetailRecommendationHorizontalList(this.type, this.typeId, this.recommendationType,
@@ -23,6 +23,7 @@ class ItemDetailRecommendationHorizontalList extends StatelessWidget {
       viewModelBuilder: () => ItemRecommendationViewModel(this.type, this.typeId, this.recommendationType),
       builder: (context, model, _) {
         final height = 300.0;
+        final recommendationType = ERecommendationType.fromString(this.recommendationType);
         final child = !model.initialised
             ? Container(height: 10, child: LinearProgressIndicator())
             : model.isBusy

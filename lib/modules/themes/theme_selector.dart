@@ -73,7 +73,6 @@ class ThemeSelectorDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(32),
                     onTap: () {
                       viewModel.setColor(colors[i]);
-                      // Navigator.of(context).pop();
                     },
                     child: CircleAvatar(
                       radius: 32,

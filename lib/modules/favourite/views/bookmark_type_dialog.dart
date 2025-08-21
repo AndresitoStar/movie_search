@@ -139,7 +139,7 @@ class SelectBookmarkTypeDialog extends StatelessWidget {
                           ),
                           // ButtonBar(children: [
                           //   ElevatedButton(
-                          //     onPressed: () => Navigator.of(context).pop(),
+                          //     onPressed: () => context.pop(),
                           //     child: Text('Cancelar'),
                           //   ),
                           // ]),
