@@ -57,7 +57,7 @@ class ThemeViewModel extends BaseViewModel {
 
   final OutlinedBorder _buttonsBorder = RoundedRectangleBorder(borderRadius: BorderRadius.circular(15));
 
-  CardTheme get cardTheme => CardTheme(shape: _buttonsBorder);
+  CardThemeData get cardTheme => CardThemeData(shape: _buttonsBorder);
 
   ElevatedButtonThemeData get baseElevatedButtonThemeData => ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

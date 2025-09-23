@@ -7,7 +7,7 @@ import 'package:stacked/stacked.dart';
 
 class AccountViewModel extends BaseViewModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   String? userUuid;
   String? displayName;
@@ -32,11 +32,11 @@ class AccountViewModel extends BaseViewModel {
   Future loginGoogle() async {
     setBusy(true);
     try {
-      GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+      GoogleSignInAccount? googleSignInAccount = await _googleSignIn.authenticate();
       if (googleSignInAccount != null) {
         GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
         AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleSignInAuthentication.accessToken,
+          accessToken: googleSignInAuthentication.idToken,
           idToken: googleSignInAuthentication.idToken,
         );
         UserCredential authResult = await _auth.signInWithCredential(credential);

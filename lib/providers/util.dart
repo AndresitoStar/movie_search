@@ -299,3 +299,10 @@ extension DurationExtension on Duration {
     // return tokens.join(':');
   }
 }
+
+class UIUtils {
+  static int getColumns(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return (width ~/ 200).clamp(2, 8);
+  }
+}

@@ -7,15 +7,8 @@ class DefaultPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Colors.grey;
-    final colorBaseValue = Theme.of(context).brightness == Brightness.dark ? 700 : 300;
-    final colorHighlightValue = Theme.of(context).brightness == Brightness.dark ? 600 : 100;
     return Container(
-      child: Shimmer.fromColors(
-        baseColor: color[colorBaseValue]!,
-        highlightColor: color[colorHighlightValue]!,
-        child: Container(color: Theme.of(context).highlightColor),
-      ),
+      child: Container(color: Theme.of(context).highlightColor),
     );
   }
 }

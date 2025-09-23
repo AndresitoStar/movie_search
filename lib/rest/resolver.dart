@@ -25,7 +25,6 @@ extension MediaImageTypeExtension on MediaImageType {
 abstract class BaseService {
   late Dio clientTMDB;
   late Dio clientOMDB;
-  late Dio parseClient;
 
   static const _DEFAULT_TIMEOUT = Duration(seconds: 20);
 
@@ -36,13 +35,6 @@ abstract class BaseService {
   };
 
   Map<String, dynamic> get baseParams => {..._baseParams};
-
-  final Map<String, dynamic> _baseParseHeaders = {
-    'X-Parse-Application-Id': 'gvoaJEkVpRdAftO8vI9uKQZZA6m7llGC05QkQBa1',
-    'X-Parse-REST-API-Key': '7BYTnyTQt9Pw1XEpSF0k6ygIF4f0VxXUnKcOdVSC',
-  };
-
-  Map<String, dynamic> get baseParseParams => {..._baseParseHeaders};
 
   BaseService() {
     clientTMDB = new Dio();
@@ -55,12 +47,6 @@ abstract class BaseService {
     clientOMDB.options.connectTimeout = _DEFAULT_TIMEOUT;
     clientOMDB.options.receiveTimeout = _DEFAULT_TIMEOUT;
     clientOMDB.options.queryParameters = {"apikey": "9eb7fce9"};
-
-    parseClient = new Dio();
-    parseClient.options.baseUrl = 'https://parseapi.back4app.com/parse/';
-    parseClient.options.connectTimeout = _DEFAULT_TIMEOUT; //5s
-    parseClient.options.receiveTimeout = _DEFAULT_TIMEOUT;
-    parseClient.options.headers = _baseParseHeaders;
   }
 
   Future<List<MediaImage>> getImages(String type, int typeId) async {

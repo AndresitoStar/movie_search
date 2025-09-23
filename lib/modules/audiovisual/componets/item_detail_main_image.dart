@@ -94,33 +94,36 @@ class ContentImageWidget extends StackedView<ContentImageViewModel> {
   Widget builder(
       BuildContext context, ContentImageViewModel model, Widget? child) {
     if (imagePath == null || imagePath!.isEmpty) return PlaceholderImage();
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      // constraints: BoxConstraints(maxHeight: 10.h),
-      child: GestureDetector(
-        onTap: ignorePointer
-            ? null
-            : onSelectImage != null
-                ? () => onSelectImage!.call()
-                : () => DialogImage.show(
-                      context: context,
-                      imageUrl: imagePath!,
-                      baseUrl: URL_IMAGE_BIG,
-                    ),
-        child: CachedNetworkImage(
-          imageUrl:
-              !_isOutsideTMDB ? '$URL_IMAGE_BIG${imagePath}' : imagePath!,
-          placeholder: (_, __) => withPlaceholder && !_isOutsideTMDB
-              ? CachedNetworkImage(
-                  fit: fit,
-                  imageUrl: '$placeholderBaseUrl${imagePath}',
-                  placeholder: (context, _) => DefaultPlaceholder(),
-                )
-              : DefaultPlaceholder(),
-          errorWidget: (ctx, _, __) =>
-              PlaceholderImage(height: MediaQuery.of(ctx).size.height * 0.6),
-          fit: fit,
-          // width: double.infinity,
+    return Hero(
+      tag: imagePath!,
+      child: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        // constraints: BoxConstraints(maxHeight: 10.h),
+        child: GestureDetector(
+          onTap: ignorePointer
+              ? null
+              : onSelectImage != null
+                  ? () => onSelectImage!.call()
+                  : () => DialogImage.show(
+                        context: context,
+                        imageUrl: imagePath!,
+                        baseUrl: URL_IMAGE_BIG,
+                      ),
+          child: CachedNetworkImage(
+            imageUrl:
+                !_isOutsideTMDB ? '$URL_IMAGE_BIG${imagePath}' : imagePath!,
+            placeholder: (_, __) => withPlaceholder && !_isOutsideTMDB
+                ? CachedNetworkImage(
+                    fit: fit,
+                    imageUrl: '$placeholderBaseUrl${imagePath}',
+                    placeholder: (context, _) => DefaultPlaceholder(),
+                  )
+                : DefaultPlaceholder(),
+            errorWidget: (ctx, _, __) =>
+                PlaceholderImage(height: MediaQuery.of(ctx).size.height * 0.6),
+            fit: fit,
+            // width: double.infinity,
+          ),
         ),
       ),
     );

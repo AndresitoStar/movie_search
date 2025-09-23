@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_search/modules/audiovisual/componets/item_grid_view.dart';
+import 'package:movie_search/providers/util.dart';
 import 'package:movie_search/ui/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
@@ -26,7 +27,7 @@ class DiscoverResults extends StatelessWidget {
                     child: MasonryGridView.count(
                       padding: const EdgeInsets.all(10.0),
                       itemCount: model.searchResults.length + 2,
-                      crossAxisCount: getColumns(context),
+                      crossAxisCount: UIUtils.getColumns(context),
                       controller: scrollController,
                       itemBuilder: (ctx, i) => AspectRatio(
                         aspectRatio: 0.667,
@@ -53,8 +54,4 @@ class DiscoverResults extends StatelessWidget {
     );
   }
 
-  int getColumns(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return (width ~/ 200).clamp(1, 8);
-  }
 }

@@ -46,18 +46,15 @@ class ShowImagesButton extends StatelessWidget {
   final String title;
   final Map<MediaImageType, List<MediaImage>> images;
 
-  const ShowImagesButton(
-      {super.key, required this.title, required this.images});
+  const ShowImagesButton({super.key, required this.title, required this.images});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: images.isEmpty
-          ? null
-          : () => Navigator.push(
-              context,
-              Routes.defaultRoute(
-                  null, ItemImagesPage(title: title, imagesMap: images))),
+      onPressed: images.isEmpty ? null : () => context.push('/images', extra: {
+        'title': title,
+        'imagesMap': images,
+      }),
       icon: Icon(
         MyIcons.gallery,
         color: Theme.of(context).colorScheme.onSurface,
@@ -66,86 +63,4 @@ class ShowImagesButton extends StatelessWidget {
   }
 }
 
-class ItemImagesPage extends StatelessWidget {
-  final String title;
-  final Map<MediaImageType, List<MediaImage>> imagesMap;
-  final List<String> _images = [];
 
-  ItemImagesPage({Key? key, required this.title, required this.imagesMap})
-      : super(key: key) {
-    for (MediaImageType type in [
-      MediaImageType.POSTER,
-      MediaImageType.BACKDROP,
-      MediaImageType.PROFILES
-    ]) {
-      if (imagesMap.containsKey(type) && imagesMap[type]!.length > 0)
-        _images.addAll(imagesMap[type]!.map((e) => e.filePath!).toList());
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        forceMaterialTransparency: true,
-        primary: true,
-        titleSpacing: 0,
-        elevation: 0,
-        leading: IconButton(
-            icon: Icon(MyIcons.arrow_left),
-            onPressed: () => context.pop()),
-      ),
-      body: Builder(builder: (context) {
-        return Scrollbar(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                for (MediaImageType type in [
-                  MediaImageType.POSTER,
-                  MediaImageType.BACKDROP,
-                  MediaImageType.PROFILES
-                ])
-                  if (imagesMap.containsKey(type) &&
-                      imagesMap[type]!.length > 0)
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      itemCount: imagesMap[type]!.length,
-                      itemBuilder: (ctx, i) {
-                        return ContentImageWidget(
-                          imagesMap[type]![i].filePath,
-                          fit: BoxFit.cover,
-                          onSelectImage: () => onSelectImage(
-                              context, imagesMap[type]![i].filePath),
-                        );
-                      },
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: getColumns(context),
-                        childAspectRatio: imagesMap[type]!
-                            .map((e) => e.aspectRatio!)
-                            .reduce(max),
-                        crossAxisSpacing: 3,
-                        mainAxisSpacing: 3,
-                      ),
-                    ),
-              ],
-            ),
-          ),
-        );
-      }),
-    );
-  }
-
-  int getColumns(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return (width ~/ 150).clamp(1, 6);
-  }
-
-  onSelectImage(BuildContext context, String? filePath) {
-    if (filePath == null) return;
-    final index = _images.indexOf(filePath);
-    DialogImage.showCarousel(
-        context: context, images: _images, currentImage: index);
-  }
-}
