@@ -11,8 +11,8 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
 
-  static void showDialog(BuildContext context) {
-    showBlurDialog(
+  static Future showDialog(BuildContext context) {
+    return showBlurDialog(
       context: context,
       child: Dialog(
         child: SizedBox(

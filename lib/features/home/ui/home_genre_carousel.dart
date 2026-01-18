@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movie_search/common/extensions/context_extensions.dart';
+import 'package:movie_search/common/model/tmdb_type.dart';
 import 'package:movie_search/common/provider/genres_provider.dart';
 import 'package:movie_search/features/audiovisual/ui/widgets/item_list_view.dart';
 import 'package:movie_search/features/home/provider/home_provider.dart';
@@ -39,20 +40,24 @@ class HomeGenreCarousel extends HookConsumerWidget {
               });
               return Column(
                 children: [
+                  ListTile(
+                    title: Text('Explora ${contentTypeProvider.value!.nameSingular}s por generos', style: context.textTheme.titleLarge),
+                  ),
                   Container(
                     color: context.theme.scaffoldBackgroundColor,
                     child: TabBar(
                       indicatorSize: TabBarIndicatorSize.tab,
                       isScrollable: true,
-                      labelColor: Theme.of(context).colorScheme.onPrimary,
+                      labelColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                      // labelStyle: context.theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                       tabAlignment: .start,
                       indicatorColor: context.colors.onPrimary,
-                      automaticIndicatorColorAdjustment: false,
                       indicator: BoxDecoration(
-                        color: context.colors.primary.withValues(alpha: 0.2),
+                        color: context.colors.primaryContainer,
+                        borderRadius: .vertical(top: .circular(8))
                       ),
                       // unselectedLabelColor: context.theme.colorScheme.onPrimary,
-                      labelStyle: context.theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                      automaticIndicatorColorAdjustment: false,
                       unselectedLabelStyle: context.theme.textTheme.titleSmall,
                       tabs: genres.map((e) => Tab(text: e.name)).toList(),
                     ),
@@ -107,7 +112,7 @@ class HomeActualGenreCarousel extends ConsumerWidget with RouteAware {
                 .map((item) => ItemGridCarousel(searchResult: item))
                 .toList();
             return Container(
-              color: context.colors.primary.withValues(alpha: 0.2),
+              color: context.colors.primaryContainer,
               child: CarouselSlider(
                 items: items,
                 carouselController: controller,
@@ -138,7 +143,7 @@ class HomeActualGenreCarousel extends ConsumerWidget with RouteAware {
   Widget _buildPlaceholder(BuildContext context) {
     int columns = context.calculateColumns(itemWidth: 400, minValue: 1, maxValue: 5);
     return Container(
-      color: context.theme.scaffoldBackgroundColor,
+      color: context.colors.primaryContainer,
       child: AspectRatio(aspectRatio: 1.778 * columns),
     );
   }

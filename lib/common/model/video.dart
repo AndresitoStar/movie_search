@@ -11,7 +11,7 @@ class Video {
 
   Video({this.id, this.iso6391, this.iso31661, this.key, this.name, this.site, this.size, this.type});
 
-  String get youtubeThumbnail => 'https://img.youtube.com/vi/${this.key}/0.jpg';
+  String get youtubeThumbnail => 'https://img.youtube.com/vi/$key/0.jpg';
 
   Video.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -22,5 +22,22 @@ class Video {
     site = json['site'];
     size = json['size'];
     type = json['type'];
+  }
+}
+
+class Videos {
+  int? id;
+  List<Video> results = [];
+
+  Videos({this.id, required this.results});
+
+  Videos.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    if (json['results'] != null) {
+      results = <Video>[];
+      json['results'].forEach((v) {
+        results.add(Video.fromJson(v));
+      });
+    }
   }
 }

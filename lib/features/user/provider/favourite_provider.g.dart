@@ -37,7 +37,7 @@ final class FavouriteListProvider
   FavouriteList create() => FavouriteList();
 }
 
-String _$favouriteListHash() => r'0c6b71c69e7da0f6ad6524a8c4eda5e44fb3f015';
+String _$favouriteListHash() => r'4b68dd1bc72bcbc5a0e806e563bc9d0879dcf008';
 
 abstract class _$FavouriteList
     extends $AsyncNotifier<Map<String, List<BaseSearchResult>>> {

@@ -7,9 +7,9 @@ class BaseFavouriteItem {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': this.id,
-      'type': this.type,
-      'json': this.json,
+      'id': id,
+      'type': type,
+      'json': json,
     };
   }
 

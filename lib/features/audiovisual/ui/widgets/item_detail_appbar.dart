@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:movie_search/ui/icons.dart';
-import 'package:movie_search/ui/widgets/circular_button.dart';
+import 'package:movie_search/common/ui/circular_button.dart';
+import 'package:movie_search/common/ui/icons.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ItemDetailSliverAppBar extends StatelessWidget {
@@ -9,9 +9,7 @@ class ItemDetailSliverAppBar extends StatelessWidget {
   final List<Widget>? actions;
   final double? expandedHeight;
 
-  const ItemDetailSliverAppBar(this.child,
-      {Key? key, this.actions, this.expandedHeight})
-      : super(key: key);
+  const ItemDetailSliverAppBar(this.child, {super.key, this.actions, this.expandedHeight});
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +22,7 @@ class ItemDetailSliverAppBar extends StatelessWidget {
       // colorScheme.background: Colors.transparent,
       leading: MyCircularButton(
         color: Colors.transparent,
-        icon: Icon(
-          MyIcons.arrow_left,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
+        icon: Icon(MyIcons.arrow_left, color: Theme.of(context).colorScheme.onSurface),
         onPressed: () {
           if (context.canPop()) {
             context.pop();
@@ -37,10 +32,7 @@ class ItemDetailSliverAppBar extends StatelessWidget {
         },
       ),
       actions: actions,
-      flexibleSpace: FlexibleSpaceBar(
-        background: child,
-        collapseMode: CollapseMode.pin,
-      ),
+      flexibleSpace: FlexibleSpaceBar(background: child, collapseMode: CollapseMode.pin),
     );
   }
 }

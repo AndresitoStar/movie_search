@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/model/api/models/movie.dart';
-import 'package:movie_search/model/api/models/person.dart';
-import 'package:movie_search/model/api/models/tv.dart';
-import 'package:movie_search/modules/audiovisual/componets/item_collection.dart';
-import 'package:movie_search/modules/audiovisual/componets/item_tv_season.dart';
-import 'package:movie_search/modules/audiovisual/componets/item_watch_providers_view.dart';
-import 'package:movie_search/modules/audiovisual/model/base.dart';
-import 'package:movie_search/modules/audiovisual/viewmodel/item_detail_viewmodel.dart';
-import 'package:movie_search/modules/person/components/person_horizontal_list.dart';
-import 'package:movie_search/providers/util.dart';
-import 'package:stacked/stacked.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movie_search/common/domain/search_result.dart';
+import 'package:movie_search/common/extensions/date_extensions.dart';
+import 'package:movie_search/common/model/movie.dart';
+import 'package:movie_search/common/model/person.dart';
+import 'package:movie_search/common/model/tmdb_type.dart';
+import 'package:movie_search/common/model/tv.dart';
+import 'package:movie_search/common/ui/utils.dart';
+import 'package:movie_search/features/audiovisual/ui/widgets/credits_horizontal.dart';
+import 'package:movie_search/features/audiovisual/ui/widgets/item_detail_collection.dart';
+import 'package:movie_search/features/audiovisual/ui/widgets/item_tv_season.dart';
+import 'package:movie_search/features/audiovisual/ui/widgets/item_watch_provider_views.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'item_detail_ui_util.dart';
-
-class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
+class ItemDetailSecondaryContent extends ConsumerWidget {
   final bool isSliver;
+  final BaseSearchResult item;
 
-  ItemDetailSecondaryContent({this.isSliver = true});
+  const ItemDetailSecondaryContent({required this.item, super.key, this.isSliver = true});
 
   @override
   Widget build(BuildContext context, viewModel) {
-    final BaseSearchResult item = viewModel.data!;
     final children = <Widget>[
       if (item.type == TMDB_API_TYPE.MOVIE) ..._movieContentWidgets(context, item.movie!),
       if (item.type == TMDB_API_TYPE.TV_SHOW) ..._tvShowsContentWidgets(context, item.tvShow!),
@@ -39,12 +38,7 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
           label: 'Sitio Oficial',
           subtitle: GestureDetector(
             onTap: () => launchUrl(Uri.parse(movie.homepage!)),
-            child: Text(
-              movie.homepage!,
-              style: TextStyle(
-                decoration: TextDecoration.underline,
-              ),
-            ),
+            child: Text(movie.homepage!, style: TextStyle(decoration: TextDecoration.underline)),
           ),
         ),
       ContentRow(
@@ -60,20 +54,19 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
           value1: DateTime.tryParse(movie.releaseDate!)?.format,
           value2: movie.runtime != null ? '${movie.runtime} minutos' : null,
         ),
-      ContentDivider(value: movie.productionCompanies?.join(', ')),
-      ContentHorizontal(
-        padding: 8,
-        label: 'Productora',
-        // content: movie.productionCompanies?.join(', '),
-        subtitle: LogosWidget.fromLogoList(movie.productionCompanies!),
-        forceLight: Theme.of(context).brightness == Brightness.dark,
-      ),
+      if (movie.productionCompanies != null) ...[
+        ContentDivider(value: movie.productionCompanies?.join(', ')),
+        ContentHorizontal(
+          padding: 8,
+          label: 'Productora',
+          // content: movie.productionCompanies?.join(', '),
+          subtitle: LogosWidget.fromLogoList(movie.productionCompanies!),
+          forceLight: Theme.of(context).brightness == Brightness.dark,
+        ),
+      ],
       if (movie.collection != null) ...[
         Divider(indent: 8, endIndent: 8),
-        ItemCollectionView(
-          collection: movie.collection!,
-          sliver: false,
-        ),
+        ItemCollectionView(collection: movie.collection!, sliver: false),
       ],
       ItemWatchProvidersView(type: TMDB_API_TYPE.MOVIE.type, id: movie.id),
     ];
@@ -93,35 +86,16 @@ class ItemDetailSecondaryContent extends ViewModelWidget<ItemDetailViewModel> {
         value1: tvShow.firstAirDate == null ? null : DateTime.tryParse(tvShow.firstAirDate!)?.format,
         value2: tvShow.episodeRuntimeAverage == null ? null : '${tvShow.episodeRuntimeAverage} minutos',
       ),
-      if (tvShow.seasons != null && tvShow.seasons!.length > 0) ItemDetailTvSeasonView(false),
+      if (tvShow.seasons != null && tvShow.seasons!.isNotEmpty) ItemDetailTvSeasonView(sliver: false, model: tvShow),
       if (tvShow.createdByPerson != null && tvShow.createdByPerson!.isNotEmpty)
-        ListTile(
-          title: Text(
-            'Creadores',
-            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                  color: Theme.of(context).primaryColor,
-                ),
-          ),
-          subtitle: Container(
-            height: 330,
-            child: PersonHorizontalList(
-              items: tvShow.createdByPerson!,
-              tag: '${tvShow.id}',
-            ),
-          ),
-        ),
+        PersonHorizontalList(persons: tvShow.createdByPerson!, tag: '${tvShow.id}'),
       if (tvShow.homepage != null && tvShow.homepage!.isNotEmpty)
         ContentHorizontal(
           padding: 8,
           label: 'Sitio Oficial',
           subtitle: GestureDetector(
             onTap: () => launchUrlString(tvShow.homepage!),
-            child: Text(
-              tvShow.homepage!,
-              style: TextStyle(
-                decoration: TextDecoration.underline,
-              ),
-            ),
+            child: Text(tvShow.homepage!, style: TextStyle(decoration: TextDecoration.underline)),
           ),
         ),
       if (tvShow.productionCompanies != null && tvShow.productionCompanies!.isNotEmpty)

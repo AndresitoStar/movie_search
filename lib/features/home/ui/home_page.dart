@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
         title: ContentTypeWidget(),
         customActions: [
           if (isMobile)
-            IconButton(onPressed: context.goSearch, icon: Icon(MyIcons.search), color: context.colors.onPrimary),
+            IconButton(onPressed: context.goSearch, icon: Icon(MyIcons.search)),
         ],
         bottomBarIndex: 0,
       ),

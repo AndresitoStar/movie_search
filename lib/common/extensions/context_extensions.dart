@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_search/common/ui/dialogs.dart';
 import 'package:movie_search/features/search/ui/search_page.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -12,9 +13,11 @@ extension ThemeExtension on BuildContext {
 
   MediaQueryData get mq => MediaQuery.of(this);
 
-  goHome() => go('/home');
+  bool get isMobile => Device.screenType == ScreenType.mobile;
 
-  goSearch() {
+  void goHome() => go('/home');
+
+  Future goSearch() {
     final isMobile = Device.screenType == ScreenType.mobile;
     if (!isMobile) {
       return SearchPage.showDialog(this);
@@ -22,15 +25,20 @@ extension ThemeExtension on BuildContext {
     return push('/search');
   }
 
-  goDiscover() => push('/discover');
+  Future goDiscover() => push('/discover');
 
-  goFavourites() => push('/profile');
+  Future goFavourites() => push('/profile');
 
-  goSettings() => push('/settings');
+  Future goSettings() => push('/settings');
 
   int calculateColumns({required int itemWidth, required int minValue, required int maxValue}) {
     final width = MediaQuery.of(this).size.width;
     return (width ~/ itemWidth).clamp(minValue, maxValue);
+  }
+
+  Future showErrorDialog({required String error, VoidCallback? onTapDismiss}) async {
+    if (!mounted) return;
+    return MyDialogs.showError(this, error: error, onTapDismiss: onTapDismiss);
   }
 }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_search/common/domain/search_result.dart';
 import 'package:movie_search/common/extensions/context_extensions.dart';
-import 'package:movie_search/common/provider/favourite_provider.dart';
+import 'package:movie_search/features/user/provider/favourite_provider.dart';
 
 // class ItemLikeButton extends ViewModelWidget<FavouritesViewModel> {
 //   final double iconSize;

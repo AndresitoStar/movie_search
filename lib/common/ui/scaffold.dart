@@ -15,6 +15,7 @@ class CustomScaffold extends StatelessWidget {
   final PreferredSizeWidget? appBar;
   final FloatingActionButton? floatingActionButton;
   final Key? childKey;
+  final Color? backgroundColor;
 
   const CustomScaffold({
     super.key,
@@ -27,6 +28,7 @@ class CustomScaffold extends StatelessWidget {
     this.forceAppbar = false,
     this.floatingActionButton,
     this.actions = const [],
+    this.backgroundColor,
   });
 
   @override
@@ -38,6 +40,7 @@ class CustomScaffold extends StatelessWidget {
       endDrawer: endDrawer,
       floatingActionButton: floatingActionButton,
       key: childKey,
+      backgroundColor: backgroundColor ?? context.theme.scaffoldBackgroundColor,
       appBar:
           appBar ??
           (!isMobile && bottomBarIndex >= 0
@@ -82,13 +85,12 @@ class CustomScaffoldAppbar extends StatelessWidget implements PreferredSizeWidge
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = Device.screenType == ScreenType.mobile;
     return Hero(
       tag: 'custom_app_bar',
       child: AppBar(
-        centerTitle: true,
-        // backgroundColor: context.colors.primary,
-        automaticallyImplyLeading: isMobile,
+        // centerTitle: false,
+        backgroundColor: context.colors.primary,
+        automaticallyImplyLeading: context.isMobile,
         title: title,
         bottom: bottom,
         // leading: isMobile
@@ -106,8 +108,8 @@ class CustomScaffoldAppbar extends StatelessWidget implements PreferredSizeWidge
         forceMaterialTransparency: true,
         actions: [
           ...customActions,
-          if (isMobile) SizedBox(width: 10),
-          if (!isMobile && bottomBarIndex >= 0) MyNavigationBar(index: bottomBarIndex),
+          if (context.isMobile) SizedBox(width: 10),
+          if (!context.isMobile && bottomBarIndex >= 0) MyNavigationBar(index: bottomBarIndex),
         ],
       ),
     );

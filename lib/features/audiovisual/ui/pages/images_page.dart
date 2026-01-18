@@ -1,23 +1,19 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:movie_search/modules/audiovisual/model/image.dart';
-import 'package:movie_search/providers/util.dart';
-import 'package:movie_search/rest/resolver.dart';
-import 'package:movie_search/ui/icons.dart';
-import 'package:movie_search/ui/widgets/dialog_image.dart';
+import 'package:movie_search/common/extensions/context_extensions.dart';
+import 'package:movie_search/common/model/media_image.dart';
+import 'package:movie_search/common/ui/content_image.dart';
+import 'package:movie_search/common/ui/icons.dart';
+import 'package:movie_search/common/utils.dart';
 
-import 'item_detail_main_image.dart';
-
-class ItemImagesGroup extends StatelessWidget {
+class ImagesPage extends StatelessWidget {
   static const String routeName = "/images";
 
   final String title;
   final Map<MediaImageType, List<MediaImage>> imagesMap;
 
-  const ItemImagesGroup({super.key, required this.title, required this.imagesMap});
+  const ImagesPage({super.key, required this.title, required this.imagesMap});
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +36,7 @@ class ItemImagesGroup extends StatelessWidget {
               ? imagesMap[mediaType]![0].filePath
               : null;
           return InkWell(
-            onTap: () => context.push('/images/list', extra: {
-              'type': mediaType,
-              'images': imagesMap[mediaType] ?? [],
-            }),
+            onTap: () => context.push('/album', extra: {'type': mediaType, 'images': imagesMap[mediaType] ?? []}),
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -52,16 +45,33 @@ class ItemImagesGroup extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: ListTile(
-                title: Text(mediaType.title, textAlign: TextAlign.center),
-                subtitle: Text('${imagesMap[mediaType]?.length ?? 0} images', textAlign: TextAlign.center),
-              ),
               alignment: Alignment.center,
+              child: Chip(
+                elevation: 0,
+                backgroundColor: context.colors.primary,
+                labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                label: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      mediaType.title,
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.titleSmall?.copyWith(color: context.colors.onPrimary),
+                    ),
+                    Text(
+                      '${imagesMap[mediaType]?.length ?? 0} images',
+                      textAlign: TextAlign.center,
+                      style: context.textTheme.labelSmall?.copyWith(color: context.colors.onPrimary),
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         },
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: UIUtils.getColumns(context),
+          crossAxisCount: context.calculateColumns(itemWidth: 200, minValue: 2, maxValue: 8),
           childAspectRatio: 1,
           crossAxisSpacing: 3,
           mainAxisSpacing: 3,
@@ -80,11 +90,11 @@ class ItemImagesGroup extends StatelessWidget {
   }
 }
 
-class ItemImagesPage extends StatelessWidget {
+class AlbumPage extends StatelessWidget {
   final MediaImageType type;
   final List<MediaImage> images;
 
-  const ItemImagesPage({super.key, required this.type, required this.images});
+  const AlbumPage({super.key, required this.type, required this.images});
 
   @override
   Widget build(BuildContext context) {
@@ -128,9 +138,7 @@ class ItemImagesPage extends StatelessWidget {
       case MediaImageType.PROFILES:
         return 0.667; // 2:3
       case MediaImageType.BACKDROP:
-        return 1.778; // 16:9
-      default:
-        return 1;
+        return 1.778;
     }
   }
 
@@ -142,8 +150,6 @@ class ItemImagesPage extends StatelessWidget {
         return 500;
       case MediaImageType.PROFILES:
         return 185;
-      default:
-        return 500;
     }
   }
 }

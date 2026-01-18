@@ -44,7 +44,7 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ListTile(
-          title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(title, style: context.textTheme.titleLarge),
           trailing: !canNavigate
               ? null
               : TextButton(

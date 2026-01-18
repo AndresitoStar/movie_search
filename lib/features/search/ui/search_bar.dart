@@ -41,6 +41,10 @@ class SearchBar extends ConsumerWidget {
           decoration: InputDecoration(
             prefixIcon: Icon(MyIcons.search, size: 16),
             hintText: hint ?? 'Buscar una película, serie, persona...',
+            border: .none,
+            disabledBorder: .none,
+            enabledBorder: .none,
+            focusedBorder: .none,
             suffixIcon: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

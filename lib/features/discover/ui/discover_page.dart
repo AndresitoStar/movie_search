@@ -44,14 +44,13 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       bottomBarIndex: 1,
-      body: DiscoverResults(controller: _scrollController),
-      appBar: CustomScaffoldAppbar(
-        bottomBarIndex: 1,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
-          child: DiscoverFilterBar(),
-        ),
+      body: Column(
+        children: [
+          DiscoverFilterBar(),
+          Expanded(child: DiscoverResults(controller: _scrollController)),
+        ],
       ),
+      appBar: CustomScaffoldAppbar(bottomBarIndex: 1, title: Text('Descubrir')),
     );
   }
 
@@ -61,6 +60,3 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
     super.dispose();
   }
 }
-
-
-
