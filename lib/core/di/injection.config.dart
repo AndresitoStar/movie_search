@@ -77,6 +77,9 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i107.SearchService.create(gh<_i361.Dio>(instanceName: 'tmdbClient')),
     );
+    gh.factory<_i224.ConfigRepository>(
+      () => _i224.ConfigRepository(gh<_i224.ConfigService>()),
+    );
     gh.lazySingleton<_i240.DiscoverRepository>(
       () => _i240.DiscoverRepository(gh<_i721.DiscoverService>()),
     );
@@ -85,9 +88,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i737.AudiovisualService>(),
         gh<_i493.ImdbService>(),
       ),
-    );
-    gh.factory<_i224.ConfigRepository>(
-      () => _i224.ConfigRepository(gh<_i224.ConfigService>()),
     );
     gh.lazySingleton<_i729.SearchRepository>(
       () => _i729.SearchRepository(gh<_i107.SearchService>()),

@@ -23,6 +23,7 @@ class Discover extends _$Discover {
   Future<void> _discover() async {
     final contentTypeProvider = ref.read(homeContentTypeProvider);
     final filterProvider = ref.watch(discoverFilterProvider);
+    final countrySelected = "UY";// TODO ref.watch(selectedCountryProvider);
 
     if (!contentTypeProvider.hasValue) return;
     try {
@@ -31,9 +32,11 @@ class Discover extends _$Discover {
       final repository = getIt<DiscoverRepository>();
       final response = await repository.getDiscoverWithFilter(
           type: contentTypeProvider.value!.type,
+          watchRegion: countrySelected,
           genre: filterProvider.genres?.map((e) => e.id.toString()).join(','),
           cast: filterProvider.cast?.map((e) => e.id.toString()).join(','),
           sortBy: filterProvider.sortBy,
+          watchProviders: filterProvider.watchProviders?.map((e) => e.providerId.toString()).toList(),
           page: 1
       );
 
@@ -57,14 +60,17 @@ class Discover extends _$Discover {
 
     final contentTypeProvider = ref.read(homeContentTypeProvider);
     final filterProvider = ref.watch(discoverFilterProvider);
+    final countrySelected = "UY";// TODO ref.watch(selectedCountryProvider);
 
     try {
       final repository = getIt<DiscoverRepository>();
       final response = await repository.getDiscoverWithFilter(
         type: contentTypeProvider.value!.type,
+        watchRegion: countrySelected,
         genre: filterProvider.genres?.map((e) => e.id.toString()).join(','),
         cast: filterProvider.cast?.map((e) => e.id.toString()).join(','),
         sortBy: filterProvider.sortBy,
+        watchProviders: filterProvider.watchProviders?.map((e) => e.providerId.toString()).toList(),
         page: state.currentPage + 1,
       );
 
@@ -97,7 +103,7 @@ class DiscoverFilter extends _$DiscoverFilter {
     );
   }
 
-  toggleGenreFilter(Genre genre) {
+  void toggleGenreFilter(Genre genre) {
     final currentGenres = state.genres ?? [];
     if (currentGenres.any((g) => g.id == genre.id)) {
       final updatedGenres = currentGenres.where((g) => g.id != genre.id).toList();
@@ -108,15 +114,26 @@ class DiscoverFilter extends _$DiscoverFilter {
     }
   }
 
-  toggleSortOrderFilter(SortOrder sortOrder) {
+  void toggleSortOrderFilter(SortOrder sortOrder) {
     state = state.copyWith(sortOrder: sortOrder);
   }
 
-  toggleSortDirectionFilter(SortDirection sortDirection) {
+  void toggleSortDirectionFilter(SortDirection sortDirection) {
     state = state.copyWith(sortDirection: sortDirection);
   }
 
-  updateFilter({
+  void toggleWatchProviderFilter(WatchProvider provider) {
+    final currentProviders = state.watchProviders ?? [];
+    if (currentProviders.any((p) => p.providerId == provider.providerId)) {
+      final updatedProviders = currentProviders.where((p) => p.providerId != provider.providerId).toList();
+      state = state.copyWith(watchProviders: updatedProviders);
+    } else {
+      final updatedProviders = [...currentProviders, provider];
+      state = state.copyWith(watchProviders: updatedProviders);
+    }
+  }
+
+  void updateFilter({
     List<Genre>? genres,
     List<BaseSearchResult>? cast,
     String? country,

@@ -18,7 +18,7 @@ class MyIcons {
   static const IconData search = FrinoIcons.f_search_2;
   static const IconData more = FrinoIcons.f_more_horizontal;
   static const IconData default_image = Icons.photo;
-  static const IconData imdb = FontAwesomeIcons.imdb;
+  static IconData imdb = FontAwesomeIcons.imdb.data;
   static const IconData quality = Icons.high_quality_rounded;
   static const IconData history = FrinoIcons.f_clock;
   static const IconData people = Icons.group_outlined;
@@ -27,21 +27,21 @@ class MyIcons {
   static const IconData star = FrinoIcons.f_star_filled;
   static const IconData movie = FrinoIcons.f_movie_tape;
   static const IconData tv = FrinoIcons.f_tv;
-  static const IconData trending = FontAwesomeIcons.hotTubPerson;
+  static IconData trending = FontAwesomeIcons.hotTubPerson.data;
   static const IconData popular = FrinoIcons.f_star_outline;
   static const IconData filter = FrinoIcons.f_filter;
   static const IconData calendar = FrinoIcons.f_calendar;
   static const IconData download = Icons.file_download;
   static const IconData error = Icons.warning;
   static const IconData video = Icons.ondemand_video_rounded;
-  static const IconData youtube = FontAwesomeIcons.youtube;
+  static IconData youtube = FontAwesomeIcons.youtube.data;
   static const IconData drawerHamburger = FrinoIcons.f_menu;
   static const IconData maximize = Icons.crop_square;
   static const IconData minimize = Icons.minimize;
   static const IconData gallery = FrinoIcons.f_gallery;
-  static const IconData discover = FontAwesomeIcons.compass;
+  static IconData discover = FontAwesomeIcons.compass.data;
 
-  static const IconData facebook = FontAwesomeIcons.squareFacebook;
-  static const IconData instagram = FontAwesomeIcons.instagram;
+  static IconData facebook = FontAwesomeIcons.squareFacebook.data;
+  static IconData instagram = FontAwesomeIcons.instagram.data;
   static const IconData twitter = FrinoIcons.f_twitter_official;
 }

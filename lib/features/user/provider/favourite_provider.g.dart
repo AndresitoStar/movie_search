@@ -10,7 +10,7 @@ part of 'favourite_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(FavouriteList)
-const favouriteListProvider = FavouriteListProvider._();
+final favouriteListProvider = FavouriteListProvider._();
 
 final class FavouriteListProvider
     extends
@@ -18,7 +18,7 @@ final class FavouriteListProvider
           FavouriteList,
           Map<String, List<BaseSearchResult>>
         > {
-  const FavouriteListProvider._()
+  FavouriteListProvider._()
     : super(
         from: null,
         argument: null,
@@ -45,7 +45,6 @@ abstract class _$FavouriteList
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref =
         this.ref
             as $Ref<
@@ -63,17 +62,17 @@ abstract class _$FavouriteList
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(bookmarks)
-const bookmarksProvider = BookmarksFamily._();
+final bookmarksProvider = BookmarksFamily._();
 
 final class BookmarksProvider
     extends $FunctionalProvider<String?, String?, String?>
     with $Provider<String?> {
-  const BookmarksProvider._({
+  BookmarksProvider._({
     required BookmarksFamily super.from,
     required num super.argument,
   }) : super(
@@ -128,7 +127,7 @@ String _$bookmarksHash() => r'497ec761f80af78e0ded5248ad6c08d5269c44c2';
 
 final class BookmarksFamily extends $Family
     with $FunctionalFamilyOverride<String?, num> {
-  const BookmarksFamily._()
+  BookmarksFamily._()
     : super(
         retry: null,
         name: r'bookmarksProvider',

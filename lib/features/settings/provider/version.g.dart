@@ -10,11 +10,11 @@ part of 'version.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(AppVersion)
-const appVersionProvider = AppVersionProvider._();
+final appVersionProvider = AppVersionProvider._();
 
 final class AppVersionProvider
     extends $AsyncNotifierProvider<AppVersion, AppVersionInfo> {
-  const AppVersionProvider._()
+  AppVersionProvider._()
     : super(
         from: null,
         argument: null,
@@ -40,7 +40,6 @@ abstract class _$AppVersion extends $AsyncNotifier<AppVersionInfo> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<AppVersionInfo>, AppVersionInfo>;
     final element =
         ref.element
@@ -50,14 +49,14 @@ abstract class _$AppVersion extends $AsyncNotifier<AppVersionInfo> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Provider to get the version string (e.g., "2.0.0")
 
 @ProviderFor(appVersionString)
-const appVersionStringProvider = AppVersionStringProvider._();
+final appVersionStringProvider = AppVersionStringProvider._();
 
 /// Provider to get the version string (e.g., "2.0.0")
 
@@ -65,7 +64,7 @@ final class AppVersionStringProvider
     extends $FunctionalProvider<String, String, String>
     with $Provider<String> {
   /// Provider to get the version string (e.g., "2.0.0")
-  const AppVersionStringProvider._()
+  AppVersionStringProvider._()
     : super(
         from: null,
         argument: null,
@@ -103,7 +102,7 @@ String _$appVersionStringHash() => r'f36cd6ee334f6500c5f677000bd098b8c295e702';
 /// Provider to get the full version with build number (e.g., "2.0.0+1")
 
 @ProviderFor(appFullVersion)
-const appFullVersionProvider = AppFullVersionProvider._();
+final appFullVersionProvider = AppFullVersionProvider._();
 
 /// Provider to get the full version with build number (e.g., "2.0.0+1")
 
@@ -111,7 +110,7 @@ final class AppFullVersionProvider
     extends $FunctionalProvider<String, String, String>
     with $Provider<String> {
   /// Provider to get the full version with build number (e.g., "2.0.0+1")
-  const AppFullVersionProvider._()
+  AppFullVersionProvider._()
     : super(
         from: null,
         argument: null,
@@ -149,7 +148,7 @@ String _$appFullVersionHash() => r'a3ea47c979b0cc7653bd6e195a727d0e433783c2';
 /// Provider to get the version with build in parentheses (e.g., "2.0.0 (1)")
 
 @ProviderFor(appVersionWithBuild)
-const appVersionWithBuildProvider = AppVersionWithBuildProvider._();
+final appVersionWithBuildProvider = AppVersionWithBuildProvider._();
 
 /// Provider to get the version with build in parentheses (e.g., "2.0.0 (1)")
 
@@ -157,7 +156,7 @@ final class AppVersionWithBuildProvider
     extends $FunctionalProvider<String, String, String>
     with $Provider<String> {
   /// Provider to get the version with build in parentheses (e.g., "2.0.0 (1)")
-  const AppVersionWithBuildProvider._()
+  AppVersionWithBuildProvider._()
     : super(
         from: null,
         argument: null,
@@ -196,14 +195,14 @@ String _$appVersionWithBuildHash() =>
 /// Provider to get the app name
 
 @ProviderFor(appName)
-const appNameProvider = AppNameProvider._();
+final appNameProvider = AppNameProvider._();
 
 /// Provider to get the app name
 
 final class AppNameProvider extends $FunctionalProvider<String, String, String>
     with $Provider<String> {
   /// Provider to get the app name
-  const AppNameProvider._()
+  AppNameProvider._()
     : super(
         from: null,
         argument: null,

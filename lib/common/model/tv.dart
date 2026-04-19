@@ -346,6 +346,20 @@ class WatchProviderResponse {
   }
 }
 
+class WatchProviderListResponse {
+  final List<WatchProvider> results;
+
+  WatchProviderListResponse({required this.results});
+
+  factory WatchProviderListResponse.fromJson(Map<String, dynamic> json) {
+    final List<WatchProvider> results = [];
+    for (final item in json['results']) {
+      results.add(WatchProvider.fromJson(item));
+    }
+    return WatchProviderListResponse(results: results);
+  }
+}
+
 class WatchProvider {
   int providerId;
   String? providerName;
@@ -371,4 +385,14 @@ class WatchProvider {
       'display_priority': displayPriority,
     };
   }
+
+  // define equality operator and hashcode
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is WatchProvider && other.providerId == providerId;
+  }
+
+  @override
+  int get hashCode => providerId.hashCode;
 }

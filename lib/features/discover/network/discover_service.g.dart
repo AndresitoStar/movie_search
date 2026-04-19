@@ -26,6 +26,8 @@ class _DiscoverService implements DiscoverService {
     String? genre,
     String? cast,
     String? sortBy,
+    String? watchProviders,
+    String? watchRegion,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -33,6 +35,8 @@ class _DiscoverService implements DiscoverService {
       r'with_genres': genre,
       r'with_people': cast,
       r'sort_by': sortBy,
+      r'with_watch_providers': watchProviders,
+      r'watch_region': watchRegion,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -52,7 +56,7 @@ class _DiscoverService implements DiscoverService {
     try {
       _value = SearchResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;

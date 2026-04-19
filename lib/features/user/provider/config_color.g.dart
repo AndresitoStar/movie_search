@@ -10,11 +10,11 @@ part of 'config_color.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ColorConfig)
-const colorConfigProvider = ColorConfigProvider._();
+final colorConfigProvider = ColorConfigProvider._();
 
 final class ColorConfigProvider
     extends $AsyncNotifierProvider<ColorConfig, FlexScheme> {
-  const ColorConfigProvider._()
+  ColorConfigProvider._()
     : super(
         from: null,
         argument: null,
@@ -40,7 +40,6 @@ abstract class _$ColorConfig extends $AsyncNotifier<FlexScheme> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<FlexScheme>, FlexScheme>;
     final element =
         ref.element
@@ -50,14 +49,14 @@ abstract class _$ColorConfig extends $AsyncNotifier<FlexScheme> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Provider to get the current color scheme
 
 @ProviderFor(currentColorScheme)
-const currentColorSchemeProvider = CurrentColorSchemeProvider._();
+final currentColorSchemeProvider = CurrentColorSchemeProvider._();
 
 /// Provider to get the current color scheme
 
@@ -65,7 +64,7 @@ final class CurrentColorSchemeProvider
     extends $FunctionalProvider<FlexScheme, FlexScheme, FlexScheme>
     with $Provider<FlexScheme> {
   /// Provider to get the current color scheme
-  const CurrentColorSchemeProvider._()
+  CurrentColorSchemeProvider._()
     : super(
         from: null,
         argument: null,

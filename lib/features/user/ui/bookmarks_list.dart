@@ -51,9 +51,9 @@ class _BookmarksListContent extends StatelessWidget {
 
   Widget _buildItemList(BuildContext context, MapEntry<String, List<BaseSearchResult?>> entry) {
     return GestureDetector(
-      // onTap: () => Navigator.of(
-      //   context,
-      // ).push(Routes.defaultRoute(null, ItemListPage(items: entry.value as List<BaseSearchResult>, title: entry.key))),
+      onTap: () {
+        print('Tap en ${entry.key}');
+      },
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(

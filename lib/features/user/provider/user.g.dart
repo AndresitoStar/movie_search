@@ -10,11 +10,11 @@ part of 'user.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(UserNotifier)
-const userProvider = UserNotifierProvider._();
+final userProvider = UserNotifierProvider._();
 
 final class UserNotifierProvider
     extends $NotifierProvider<UserNotifier, UserState> {
-  const UserNotifierProvider._()
+  UserNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -48,7 +48,6 @@ abstract class _$UserNotifier extends $Notifier<UserState> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<UserState, UserState>;
     final element =
         ref.element
@@ -58,14 +57,14 @@ abstract class _$UserNotifier extends $Notifier<UserState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Provider to get the current user UUID
 
 @ProviderFor(userUuid)
-const userUuidProvider = UserUuidProvider._();
+final userUuidProvider = UserUuidProvider._();
 
 /// Provider to get the current user UUID
 
@@ -73,7 +72,7 @@ final class UserUuidProvider
     extends $FunctionalProvider<String?, String?, String?>
     with $Provider<String?> {
   /// Provider to get the current user UUID
-  const UserUuidProvider._()
+  UserUuidProvider._()
     : super(
         from: null,
         argument: null,
@@ -111,7 +110,7 @@ String _$userUuidHash() => r'4117fe2ffef3143c91e87541741fad29aeb7bd56';
 /// Provider to check if user is authenticated
 
 @ProviderFor(isAuthenticated)
-const isAuthenticatedProvider = IsAuthenticatedProvider._();
+final isAuthenticatedProvider = IsAuthenticatedProvider._();
 
 /// Provider to check if user is authenticated
 
@@ -119,7 +118,7 @@ final class IsAuthenticatedProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Provider to check if user is authenticated
-  const IsAuthenticatedProvider._()
+  IsAuthenticatedProvider._()
     : super(
         from: null,
         argument: null,
@@ -157,7 +156,7 @@ String _$isAuthenticatedHash() => r'88f6041d0672c2fc59fd97d55d7c9fe392f1fe1c';
 /// Provider to get the authentication provider used
 
 @ProviderFor(authProviderType)
-const authProviderTypeProvider = AuthProviderTypeProvider._();
+final authProviderTypeProvider = AuthProviderTypeProvider._();
 
 /// Provider to get the authentication provider used
 
@@ -165,7 +164,7 @@ final class AuthProviderTypeProvider
     extends $FunctionalProvider<AuthProvider, AuthProvider, AuthProvider>
     with $Provider<AuthProvider> {
   /// Provider to get the authentication provider used
-  const AuthProviderTypeProvider._()
+  AuthProviderTypeProvider._()
     : super(
         from: null,
         argument: null,
@@ -203,14 +202,14 @@ String _$authProviderTypeHash() => r'9faf4c024a1bcd5c8181ef1add3c7034cb95429c';
 /// Provider to check if an auth operation is in progress
 
 @ProviderFor(isAuthLoading)
-const isAuthLoadingProvider = IsAuthLoadingProvider._();
+final isAuthLoadingProvider = IsAuthLoadingProvider._();
 
 /// Provider to check if an auth operation is in progress
 
 final class IsAuthLoadingProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Provider to check if an auth operation is in progress
-  const IsAuthLoadingProvider._()
+  IsAuthLoadingProvider._()
     : super(
         from: null,
         argument: null,
@@ -248,19 +247,19 @@ String _$isAuthLoadingHash() => r'e4d350797b8b04b7220994579d6cdba49aab9b1a';
 /// Provider to manage auth mode (sign in vs sign up)
 
 @ProviderFor(AuthModeNotifier)
-const authModeProvider = AuthModeNotifierProvider._();
+final authModeProvider = AuthModeNotifierProvider._();
 
 /// Provider to manage auth mode (sign in vs sign up)
 final class AuthModeNotifierProvider
     extends $NotifierProvider<AuthModeNotifier, AuthMode> {
   /// Provider to manage auth mode (sign in vs sign up)
-  const AuthModeNotifierProvider._()
+  AuthModeNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'authModeProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -281,7 +280,7 @@ final class AuthModeNotifierProvider
   }
 }
 
-String _$authModeNotifierHash() => r'59a5e93c3d2c3e1d47781cb56e503038f6671629';
+String _$authModeNotifierHash() => r'6820ca8e16009d303b4f37280e2e259ae012042c';
 
 /// Provider to manage auth mode (sign in vs sign up)
 
@@ -290,7 +289,6 @@ abstract class _$AuthModeNotifier extends $Notifier<AuthMode> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AuthMode, AuthMode>;
     final element =
         ref.element
@@ -300,21 +298,21 @@ abstract class _$AuthModeNotifier extends $Notifier<AuthMode> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 /// Provider to check if currently showing sign in
 
 @ProviderFor(isSignInMode)
-const isSignInModeProvider = IsSignInModeProvider._();
+final isSignInModeProvider = IsSignInModeProvider._();
 
 /// Provider to check if currently showing sign in
 
 final class IsSignInModeProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Provider to check if currently showing sign in
-  const IsSignInModeProvider._()
+  IsSignInModeProvider._()
     : super(
         from: null,
         argument: null,
@@ -347,19 +345,19 @@ final class IsSignInModeProvider extends $FunctionalProvider<bool, bool, bool>
   }
 }
 
-String _$isSignInModeHash() => r'e2d4f205aa186827973baefba6add4ef891e43bc';
+String _$isSignInModeHash() => r'12a29cfe8c2cc81d2fb9838ad5574dfa3aff6028';
 
 /// Provider to check if currently showing sign up
 
 @ProviderFor(isSignUpMode)
-const isSignUpModeProvider = IsSignUpModeProvider._();
+final isSignUpModeProvider = IsSignUpModeProvider._();
 
 /// Provider to check if currently showing sign up
 
 final class IsSignUpModeProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Provider to check if currently showing sign up
-  const IsSignUpModeProvider._()
+  IsSignUpModeProvider._()
     : super(
         from: null,
         argument: null,
@@ -392,4 +390,4 @@ final class IsSignUpModeProvider extends $FunctionalProvider<bool, bool, bool>
   }
 }
 
-String _$isSignUpModeHash() => r'ea2f94ebb7d835930e3f60d5ade9b075af0bd590';
+String _$isSignUpModeHash() => r'eb82a45bcecb51ead2453d4ca9ba019ae6f4a614';

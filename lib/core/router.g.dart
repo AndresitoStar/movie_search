@@ -10,12 +10,12 @@ part of 'router.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(approuter)
-const approuterProvider = ApprouterProvider._();
+final approuterProvider = ApprouterProvider._();
 
 final class ApprouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
-  const ApprouterProvider._()
+  ApprouterProvider._()
     : super(
         from: null,
         argument: null,

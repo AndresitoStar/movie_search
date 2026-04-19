@@ -10,7 +10,7 @@ part of 'audiovisual_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(fetchDetails)
-const fetchDetailsProvider = FetchDetailsFamily._();
+final fetchDetailsProvider = FetchDetailsFamily._();
 
 final class FetchDetailsProvider
     extends
@@ -20,7 +20,7 @@ final class FetchDetailsProvider
           FutureOr<BaseSearchResult>
         >
     with $FutureModifier<BaseSearchResult>, $FutureProvider<BaseSearchResult> {
-  const FetchDetailsProvider._({
+  FetchDetailsProvider._({
     required FetchDetailsFamily super.from,
     required (num, String) super.argument,
   }) : super(
@@ -68,7 +68,7 @@ String _$fetchDetailsHash() => r'7ed0d616cf39ae692856f40671a4fba4e76aa1a2';
 
 final class FetchDetailsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<BaseSearchResult>, (num, String)> {
-  const FetchDetailsFamily._()
+  FetchDetailsFamily._()
     : super(
         retry: null,
         name: r'fetchDetailsProvider',
@@ -85,7 +85,7 @@ final class FetchDetailsFamily extends $Family
 }
 
 @ProviderFor(fetchImages)
-const fetchImagesProvider = FetchImagesFamily._();
+final fetchImagesProvider = FetchImagesFamily._();
 
 final class FetchImagesProvider
     extends
@@ -97,7 +97,7 @@ final class FetchImagesProvider
     with
         $FutureModifier<MediaImageResponse>,
         $FutureProvider<MediaImageResponse> {
-  const FetchImagesProvider._({
+  FetchImagesProvider._({
     required FetchImagesFamily super.from,
     required (num, String) super.argument,
   }) : super(
@@ -146,7 +146,7 @@ String _$fetchImagesHash() => r'3ba48aee403d37f14001e87905dba018c29d684d';
 final class FetchImagesFamily extends $Family
     with
         $FunctionalFamilyOverride<FutureOr<MediaImageResponse>, (num, String)> {
-  const FetchImagesFamily._()
+  FetchImagesFamily._()
     : super(
         retry: null,
         name: r'fetchImagesProvider',
@@ -163,12 +163,12 @@ final class FetchImagesFamily extends $Family
 }
 
 @ProviderFor(fetchImdbRating)
-const fetchImdbRatingProvider = FetchImdbRatingFamily._();
+final fetchImdbRatingProvider = FetchImdbRatingFamily._();
 
 final class FetchImdbRatingProvider
     extends $FunctionalProvider<AsyncValue<num>, num, FutureOr<num>>
     with $FutureModifier<num>, $FutureProvider<num> {
-  const FetchImdbRatingProvider._({
+  FetchImdbRatingProvider._({
     required FetchImdbRatingFamily super.from,
     required (num, String, String?) super.argument,
   }) : super(
@@ -215,7 +215,7 @@ String _$fetchImdbRatingHash() => r'8197a8c355a534a03934bd4aac9a6a7ed023f98a';
 
 final class FetchImdbRatingFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<num>, (num, String, String?)> {
-  const FetchImdbRatingFamily._()
+  FetchImdbRatingFamily._()
     : super(
         retry: null,
         name: r'fetchImdbRatingProvider',
@@ -232,7 +232,7 @@ final class FetchImdbRatingFamily extends $Family
 }
 
 @ProviderFor(fetchContentRatings)
-const fetchContentRatingsProvider = FetchContentRatingsFamily._();
+final fetchContentRatingsProvider = FetchContentRatingsFamily._();
 
 final class FetchContentRatingsProvider
     extends
@@ -242,7 +242,7 @@ final class FetchContentRatingsProvider
           FutureOr<ContentRatings>
         >
     with $FutureModifier<ContentRatings>, $FutureProvider<ContentRatings> {
-  const FetchContentRatingsProvider._({
+  FetchContentRatingsProvider._({
     required FetchContentRatingsFamily super.from,
     required (num, String) super.argument,
   }) : super(
@@ -291,7 +291,7 @@ String _$fetchContentRatingsHash() =>
 
 final class FetchContentRatingsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<ContentRatings>, (num, String)> {
-  const FetchContentRatingsFamily._()
+  FetchContentRatingsFamily._()
     : super(
         retry: null,
         name: r'fetchContentRatingsProvider',
@@ -308,12 +308,12 @@ final class FetchContentRatingsFamily extends $Family
 }
 
 @ProviderFor(fetchVideos)
-const fetchVideosProvider = FetchVideosFamily._();
+final fetchVideosProvider = FetchVideosFamily._();
 
 final class FetchVideosProvider
     extends $FunctionalProvider<AsyncValue<Videos>, Videos, FutureOr<Videos>>
     with $FutureModifier<Videos>, $FutureProvider<Videos> {
-  const FetchVideosProvider._({
+  FetchVideosProvider._({
     required FetchVideosFamily super.from,
     required (num, String) super.argument,
   }) : super(
@@ -360,7 +360,7 @@ String _$fetchVideosHash() => r'82b3494a1640ecfb1faef5f17046eb27c9eea85b';
 
 final class FetchVideosFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Videos>, (num, String)> {
-  const FetchVideosFamily._()
+  FetchVideosFamily._()
     : super(
         retry: null,
         name: r'fetchVideosProvider',
@@ -377,7 +377,7 @@ final class FetchVideosFamily extends $Family
 }
 
 @ProviderFor(fetchCollectionDetails)
-const fetchCollectionDetailsProvider = FetchCollectionDetailsFamily._();
+final fetchCollectionDetailsProvider = FetchCollectionDetailsFamily._();
 
 final class FetchCollectionDetailsProvider
     extends
@@ -387,7 +387,7 @@ final class FetchCollectionDetailsProvider
           FutureOr<Collection>
         >
     with $FutureModifier<Collection>, $FutureProvider<Collection> {
-  const FetchCollectionDetailsProvider._({
+  FetchCollectionDetailsProvider._({
     required FetchCollectionDetailsFamily super.from,
     required String super.argument,
   }) : super(
@@ -436,7 +436,7 @@ String _$fetchCollectionDetailsHash() =>
 
 final class FetchCollectionDetailsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Collection>, String> {
-  const FetchCollectionDetailsFamily._()
+  FetchCollectionDetailsFamily._()
     : super(
         retry: null,
         name: r'fetchCollectionDetailsProvider',
@@ -453,7 +453,7 @@ final class FetchCollectionDetailsFamily extends $Family
 }
 
 @ProviderFor(fetchWatchProvider)
-const fetchWatchProviderProvider = FetchWatchProviderFamily._();
+final fetchWatchProviderProvider = FetchWatchProviderFamily._();
 
 final class FetchWatchProviderProvider
     extends
@@ -465,7 +465,7 @@ final class FetchWatchProviderProvider
     with
         $FutureModifier<List<WatchProvider>>,
         $FutureProvider<List<WatchProvider>> {
-  const FetchWatchProviderProvider._({
+  FetchWatchProviderProvider._({
     required FetchWatchProviderFamily super.from,
     required (num, String) super.argument,
   }) : super(
@@ -518,7 +518,7 @@ final class FetchWatchProviderFamily extends $Family
           FutureOr<List<WatchProvider>>,
           (num, String)
         > {
-  const FetchWatchProviderFamily._()
+  FetchWatchProviderFamily._()
     : super(
         retry: null,
         name: r'fetchWatchProviderProvider',

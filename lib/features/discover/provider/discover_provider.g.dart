@@ -10,11 +10,11 @@ part of 'discover_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(Discover)
-const discoverProvider = DiscoverProvider._();
+final discoverProvider = DiscoverProvider._();
 
 final class DiscoverProvider
     extends $NotifierProvider<Discover, PaginatedState> {
-  const DiscoverProvider._()
+  DiscoverProvider._()
     : super(
         from: null,
         argument: null,
@@ -41,14 +41,13 @@ final class DiscoverProvider
   }
 }
 
-String _$discoverHash() => r'a8ee198ebaef0f2c6729adcd16b7abfebf50b949';
+String _$discoverHash() => r'9712474934e30613a1f71a627b829258f525d45f';
 
 abstract class _$Discover extends $Notifier<PaginatedState> {
   PaginatedState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<PaginatedState, PaginatedState>;
     final element =
         ref.element
@@ -58,16 +57,16 @@ abstract class _$Discover extends $Notifier<PaginatedState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(DiscoverFilter)
-const discoverFilterProvider = DiscoverFilterProvider._();
+final discoverFilterProvider = DiscoverFilterProvider._();
 
 final class DiscoverFilterProvider
     extends $NotifierProvider<DiscoverFilter, DiscoverFilterState> {
-  const DiscoverFilterProvider._()
+  DiscoverFilterProvider._()
     : super(
         from: null,
         argument: null,
@@ -94,14 +93,13 @@ final class DiscoverFilterProvider
   }
 }
 
-String _$discoverFilterHash() => r'54745f51801017c8580ae14b834bf8e9b13a87d3';
+String _$discoverFilterHash() => r'5791f93361ffe17ff6396347dad06080d1d3c621';
 
 abstract class _$DiscoverFilter extends $Notifier<DiscoverFilterState> {
   DiscoverFilterState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<DiscoverFilterState, DiscoverFilterState>;
     final element =
         ref.element
@@ -111,6 +109,6 @@ abstract class _$DiscoverFilter extends $Notifier<DiscoverFilterState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

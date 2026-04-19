@@ -34,13 +34,15 @@ class DiscoverRepository {
 
   Future<SearchResponse> getDiscoverWithFilter({
     required String type,
+    required String watchRegion,
     int page = 1,
     String? genre,
     String? cast,
     String? sortBy,
+    List<String>? watchProviders,
     bool forceRefresh = false,
   }) async {
-    final cacheKey = '$type-$page-g:${genre ?? ''}-c:${cast ?? ''}-s:${sortBy ?? ''}';
+    final cacheKey = '$type-$page-g:${genre ?? ''}-c:${cast ?? ''}-s:${sortBy ?? ''}-w:${watchProviders?.join(',') ?? ''}-r:$watchRegion';
     if (!forceRefresh && _cacheWithFilter.containsKey(cacheKey)) {
       return _cacheWithFilter[cacheKey]!;
     }
@@ -49,7 +51,9 @@ class DiscoverRepository {
       page: page,
       genre: genre,
       cast: cast,
-      sortBy: sortBy
+      sortBy: sortBy,
+      watchProviders: watchProviders?.join('|'),
+      watchRegion: watchRegion,
     );
     response.fixResultsWithType(type);
     _cacheWithFilter[cacheKey] = response;

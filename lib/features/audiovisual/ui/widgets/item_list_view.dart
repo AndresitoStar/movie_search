@@ -166,18 +166,10 @@ class _ResultListItemCompact extends ConsumerWidget {
     final searchItemIdSelected = ref.watch(searchSelectedIndexProvider);
     return ListTile(
       onTap: () => _onPressed(context, ref),
-      minTileHeight: 100,
-      title: Row(
-        spacing: 10,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: RichText(
-              text: TextSpan(children: _getTextSpans(searchResult.title ?? '', searchCriteria, context: context)),
-            ),
-          ),
-        ],
+      title: RichText(
+        text: TextSpan(children: _getTextSpans(searchResult.title ?? '', searchCriteria, context: context)),
       ),
+      isThreeLine: searchItemIdSelected == searchResult.id,
       subtitle: searchItemIdSelected == searchResult.id
           ? AnimatedContainer(
               duration: Duration(milliseconds: 500),
@@ -215,7 +207,7 @@ class _ResultListItemCompact extends ConsumerWidget {
                 ],
               ),
             )
-          : null,
+          : Text(searchResult.type.nameSingular),
       trailing: searchResult.type != TMDB_API_TYPE.PERSON
           ? null
           : Icon(Icons.person_outline_outlined, color: context.theme.colorScheme.primary),

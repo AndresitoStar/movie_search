@@ -1,13 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movie_search/common/extensions/context_extensions.dart';
 import 'package:movie_search/common/model/country.dart';
 import 'package:movie_search/common/model/genre.dart';
 import 'package:movie_search/common/model/tmdb_type.dart';
+import 'package:movie_search/common/model/tv.dart';
 import 'package:movie_search/common/provider/genres_provider.dart';
 import 'package:movie_search/common/ui/expansion_tile_card.dart';
 import 'package:movie_search/common/ui/frino_icons.dart';
 import 'package:movie_search/common/ui/utils.dart';
+import 'package:movie_search/common/utils.dart';
 import 'package:movie_search/features/discover/provider/discover_provider.dart';
 import 'package:movie_search/features/home/provider/home_provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -31,6 +35,8 @@ class DiscoverFilterBar extends ConsumerWidget {
             if (currentFilter.sortOrder != null) Chip(label: Text('Ordenado por: ${currentFilter.sortOrder!.label}')),
             if (currentFilter.genres != null && currentFilter.genres!.isNotEmpty)
               Chip(label: Text('Generos: ${currentFilter.genres!.map((e) => e.name).join(', ')}')),
+            if (currentFilter.watchProviders != null && currentFilter.watchProviders!.isNotEmpty)
+              Chip(label: Text('Plataforma: ${currentFilter.watchProviders!.map((e) => e.providerName).join(', ')}')),
           ],
         ),
       ),
@@ -98,6 +104,7 @@ class DiscoverFilterView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final contentTypeProvider = ref.watch(homeContentTypeProvider);
     final genresProvider = ref.watch(genresByTypeProvider(contentTypeProvider.value!));
+    final watchProvidersProvider = ref.watch(watchProvidersByTypeProvider(contentTypeProvider.value!));
     final currentFilter = ref.watch(discoverFilterProvider);
     final sortOrdersValues = contentTypeProvider.value == TMDB_API_TYPE.MOVIE
         ? SortOrder.movieSortOrders()
@@ -189,13 +196,13 @@ class DiscoverFilterView extends ConsumerWidget {
                   Divider(),
                   if (genresProvider.value != null)
                     Builder(
-                      builder: (field) {
+                      builder: (context) {
                         final List<Genre> value = ref.watch(discoverFilterProvider).genres ?? [];
                         return Theme(
                           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                           child: ExpansionTileCard(
                             title: Text('Generos'),
-                            initiallyExpanded: true,
+                            initiallyExpanded: value.isNotEmpty,
                             elevation: 0,
                             baseColor: context.theme.colorScheme.surface.withValues(alpha: 0.05),
                             expandedColor: context.theme.colorScheme.surface.withValues(alpha: 0.5),
@@ -240,96 +247,67 @@ class DiscoverFilterView extends ConsumerWidget {
                       },
                     ),
                   Divider(),
-                  // ReactiveValueListenableBuilder(
-                  //   formControlName: DiscoverViewModel.FORM_TYPE,
-                  //   builder: (context, typeControl, _) => ReactiveFormField<Set<WatchProvider>, Set<WatchProvider>>(
-                  //     formControlName: DiscoverViewModel.FORM_PROVIDERS,
-                  //     builder: (field) {
-                  //       final value = field.control.value ?? {};
-                  //       return Theme(
-                  //         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                  //         child: ExpansionTileCard(
-                  //           title: Text('Donde ver'),
-                  //           subtitle: field.control.isNotNull && value.isNotEmpty
-                  //               ? Wrap(
-                  //                   spacing: 5,
-                  //                   children: value
-                  //                       .map(
-                  //                         (e) => Chip(
-                  //                           label: Text(
-                  //                             e.providerName!,
-                  //                             style: context.theme.textTheme.bodyMedium?.copyWith(
-                  //                               color: context.theme.colorScheme.onSecondary,
-                  //                               fontWeight: FontWeight.bold,
-                  //                             ),
-                  //                           ),
-                  //                           avatar: Container(
-                  //                             clipBehavior: Clip.hardEdge,
-                  //                             decoration: BoxDecoration(shape: BoxShape.circle),
-                  //                             height: 20,
-                  //                             width: 20,
-                  //                             child: CachedNetworkImage(imageUrl: '$URL_IMAGE_MEDIUM${e.logoPath}'),
-                  //                           ),
-                  //                           side: BorderSide(
-                  //                             color: context.theme.colorScheme.secondary.withOpacity(0.7),
-                  //                           ),
-                  //                           backgroundColor: context.theme.colorScheme.secondary,
-                  //                           deleteIcon: Icon(
-                  //                             Icons.clear,
-                  //                             color: context.theme.colorScheme.onSecondary,
-                  //                             size: 12,
-                  //                           ),
-                  //                           onDeleted: () => model.toggleProvider(e),
-                  //                           deleteIconColor: context.theme.colorScheme.onSurface,
-                  //                         ),
-                  //                       )
-                  //                       .toList(),
-                  //                 )
-                  //               : null,
-                  //           elevation: 0,
-                  //           baseColor: context.theme.colorScheme.surface.withOpacity(0.05),
-                  //           expandedColor: context.theme.colorScheme.surface.withOpacity(0.5),
-                  //           borderRadius: BorderRadius.zero,
-                  //           children: ListTile.divideTiles(
-                  //             color: context.theme.dividerColor,
-                  //             context: context,
-                  //             tiles: model.watchProviders
-                  //                 .toList()
-                  //                 .where((s) => !value.map((e) => e.providerId).toList().contains(s.providerId))
-                  //                 .map(
-                  //                   (e) => ListTile(
-                  //                     onTap: () => model.toggleProvider(e),
-                  //                     leading: Container(
-                  //                       clipBehavior: Clip.hardEdge,
-                  //                       margin: EdgeInsets.all(1),
-                  //                       decoration: BoxDecoration(shape: BoxShape.circle),
-                  //                       height: 32,
-                  //                       width: 32,
-                  //                       child: Image.network('$URL_IMAGE_MEDIUM${e.logoPath}'),
-                  //                     ),
-                  //                     trailing: value.contains(e)
-                  //                         ? Icon(FontAwesomeIcons.check, color: context.theme.colorScheme.tertiary)
-                  //                         : null,
-                  //                     title: Text(
-                  //                       e.providerName ?? '${e.providerId}',
-                  //                       overflow: TextOverflow.fade,
-                  //                       textWidthBasis: TextWidthBasis.parent,
-                  //                       // textAlign: TextAlign.center,
-                  //                       style: context.theme.textTheme.bodyMedium!.copyWith(
-                  //                         color: value.contains(e)
-                  //                             ? context.theme.colorScheme.primary
-                  //                             : context.theme.textTheme.bodyMedium!.color,
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                 )
-                  //                 .toList(),
-                  //           ).toList(),
-                  //         ),
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
+                  if (watchProvidersProvider.value != null)
+                    Builder(
+                      builder: (context) {
+                        final filters = ref.watch(discoverFilterProvider).watchProviders ?? [];
+                        return Theme(
+                          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTileCard(
+                            title: Text('Plataforma'),
+                            elevation: 0,
+                            initiallyExpanded: filters.isNotEmpty,
+                            baseColor: context.theme.colorScheme.surface.withOpacity(0.05),
+                            expandedColor: context.theme.colorScheme.surface.withOpacity(0.5),
+                            borderRadius: BorderRadius.zero,
+                            children: [
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 5,
+                                alignment: WrapAlignment.start,
+                                children: watchProvidersProvider.value!.toList().map((e) {
+                                  print('---');
+                                  print('Current filters: ${filters.map((e) => e.providerName).join(', ')}');
+                                  print('Provider: ${e.providerName}, selected: ${filters.contains(e)}');
+                                  print('---');
+                                  return GestureDetector(
+                                    onTap: () => ref.read(discoverFilterProvider.notifier).toggleWatchProviderFilter(e),
+                                    child: Chip(
+                                      elevation: 0,
+                                      backgroundColor: filters.contains(e)
+                                          ? context.theme.colorScheme.secondary
+                                          : context.theme.chipTheme.backgroundColor,
+                                      avatar: Container(
+                                        clipBehavior: Clip.hardEdge,
+                                        margin: EdgeInsets.all(1),
+                                        decoration: BoxDecoration(shape: BoxShape.circle),
+                                        height: 32,
+                                        width: 32,
+                                        child: CachedNetworkImage(imageUrl: '$URL_IMAGE_MEDIUM${e.logoPath}'),
+                                      ),
+                                      label: Text(
+                                        e.providerName ?? '${e.providerId}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: context.theme.textTheme.bodyMedium!.copyWith(
+                                          color: filters.contains(e)
+                                              ? context.theme.colorScheme.onSecondary
+                                              : null,
+                                          fontWeight: filters.contains(e)
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                              SizedBox(height: 10),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   // Divider(),
                   // ReactiveValueListenableBuilder(
                   //   formControlName: DiscoverViewModel.FORM_COUNTRY,

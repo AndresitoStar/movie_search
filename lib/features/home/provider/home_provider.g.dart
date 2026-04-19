@@ -10,11 +10,11 @@ part of 'home_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(HomeContentType)
-const homeContentTypeProvider = HomeContentTypeProvider._();
+final homeContentTypeProvider = HomeContentTypeProvider._();
 
 final class HomeContentTypeProvider
     extends $AsyncNotifierProvider<HomeContentType, TMDB_API_TYPE> {
-  const HomeContentTypeProvider._()
+  HomeContentTypeProvider._()
     : super(
         from: null,
         argument: null,
@@ -40,7 +40,6 @@ abstract class _$HomeContentType extends $AsyncNotifier<TMDB_API_TYPE> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<AsyncValue<TMDB_API_TYPE>, TMDB_API_TYPE>;
     final element =
         ref.element
@@ -50,16 +49,16 @@ abstract class _$HomeContentType extends $AsyncNotifier<TMDB_API_TYPE> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(HomeGenreCarouseSelected)
-const homeGenreCarouseSelectedProvider = HomeGenreCarouseSelectedProvider._();
+final homeGenreCarouseSelectedProvider = HomeGenreCarouseSelectedProvider._();
 
 final class HomeGenreCarouseSelectedProvider
     extends $NotifierProvider<HomeGenreCarouseSelected, Genre?> {
-  const HomeGenreCarouseSelectedProvider._()
+  HomeGenreCarouseSelectedProvider._()
     : super(
         from: null,
         argument: null,
@@ -94,7 +93,6 @@ abstract class _$HomeGenreCarouseSelected extends $Notifier<Genre?> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<Genre?, Genre?>;
     final element =
         ref.element
@@ -104,12 +102,12 @@ abstract class _$HomeGenreCarouseSelected extends $Notifier<Genre?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(itemsForActualGenre)
-const itemsForActualGenreProvider = ItemsForActualGenreProvider._();
+final itemsForActualGenreProvider = ItemsForActualGenreProvider._();
 
 final class ItemsForActualGenreProvider
     extends
@@ -121,7 +119,7 @@ final class ItemsForActualGenreProvider
     with
         $FutureModifier<List<BaseSearchResult>>,
         $FutureProvider<List<BaseSearchResult>> {
-  const ItemsForActualGenreProvider._()
+  ItemsForActualGenreProvider._()
     : super(
         from: null,
         argument: null,

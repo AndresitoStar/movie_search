@@ -40,7 +40,7 @@ class _AudiovisualService implements AudiovisualService {
     try {
       _value = BaseResult.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -73,7 +73,7 @@ class _AudiovisualService implements AudiovisualService {
     try {
       _value = MediaImageResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -100,7 +100,7 @@ class _AudiovisualService implements AudiovisualService {
     try {
       _value = ExternalIdResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -127,7 +127,7 @@ class _AudiovisualService implements AudiovisualService {
     try {
       _value = ContentRatings.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -154,7 +154,7 @@ class _AudiovisualService implements AudiovisualService {
     try {
       _value = Videos.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -181,7 +181,7 @@ class _AudiovisualService implements AudiovisualService {
     try {
       _value = Credit.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -208,7 +208,7 @@ class _AudiovisualService implements AudiovisualService {
     try {
       _value = SearchResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -235,7 +235,7 @@ class _AudiovisualService implements AudiovisualService {
     try {
       _value = Collection.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;
@@ -265,7 +265,7 @@ class _AudiovisualService implements AudiovisualService {
     try {
       _value = WatchProviderResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
+      errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
     }
     return _value;

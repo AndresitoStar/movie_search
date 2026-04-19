@@ -10,11 +10,11 @@ part of 'search_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(Search)
-const searchProvider = SearchProvider._();
+final searchProvider = SearchProvider._();
 
 final class SearchProvider
     extends $NotifierProvider<Search, SearchPaginatedState> {
-  const SearchProvider._()
+  SearchProvider._()
     : super(
         from: null,
         argument: null,
@@ -48,7 +48,6 @@ abstract class _$Search extends $Notifier<SearchPaginatedState> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<SearchPaginatedState, SearchPaginatedState>;
     final element =
         ref.element
@@ -58,16 +57,16 @@ abstract class _$Search extends $Notifier<SearchPaginatedState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(SearchSelectedIndex)
-const searchSelectedIndexProvider = SearchSelectedIndexProvider._();
+final searchSelectedIndexProvider = SearchSelectedIndexProvider._();
 
 final class SearchSelectedIndexProvider
     extends $NotifierProvider<SearchSelectedIndex, num> {
-  const SearchSelectedIndexProvider._()
+  SearchSelectedIndexProvider._()
     : super(
         from: null,
         argument: null,
@@ -102,7 +101,6 @@ abstract class _$SearchSelectedIndex extends $Notifier<num> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<num, num>;
     final element =
         ref.element
@@ -112,6 +110,6 @@ abstract class _$SearchSelectedIndex extends $Notifier<num> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

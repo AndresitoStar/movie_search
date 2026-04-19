@@ -19,5 +19,7 @@ abstract class DiscoverService {
     @Query('with_genres') String? genre,
     @Query('with_people') String? cast,
     @Query('sort_by') String? sortBy,
+    @Query('with_watch_providers') String? watchProviders,
+    @Query('watch_region') String? watchRegion,
   });
 }

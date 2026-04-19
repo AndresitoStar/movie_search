@@ -10,7 +10,7 @@ part of 'infinite_scroll_content_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(fetchBaseContent)
-const fetchBaseContentProvider = FetchBaseContentFamily._();
+final fetchBaseContentProvider = FetchBaseContentFamily._();
 
 final class FetchBaseContentProvider
     extends
@@ -22,7 +22,7 @@ final class FetchBaseContentProvider
     with
         $FutureModifier<List<BaseSearchResult>>,
         $FutureProvider<List<BaseSearchResult>> {
-  const FetchBaseContentProvider._({
+  FetchBaseContentProvider._({
     required FetchBaseContentFamily super.from,
     required (ContentConfig, TMDB_API_TYPE?, Map<ApiParams, String>)
     super.argument,
@@ -77,7 +77,7 @@ final class FetchBaseContentFamily extends $Family
           FutureOr<List<BaseSearchResult>>,
           (ContentConfig, TMDB_API_TYPE?, Map<ApiParams, String>)
         > {
-  const FetchBaseContentFamily._()
+  FetchBaseContentFamily._()
     : super(
         retry: null,
         name: r'fetchBaseContentProvider',
@@ -100,11 +100,11 @@ final class FetchBaseContentFamily extends $Family
 }
 
 @ProviderFor(ContentPreviewListItems)
-const contentPreviewListItemsProvider = ContentPreviewListItemsFamily._();
+final contentPreviewListItemsProvider = ContentPreviewListItemsFamily._();
 
 final class ContentPreviewListItemsProvider
     extends $NotifierProvider<ContentPreviewListItems, PaginatedState> {
-  const ContentPreviewListItemsProvider._({
+  ContentPreviewListItemsProvider._({
     required ContentPreviewListItemsFamily super.from,
     required (ContentConfig, TMDB_API_TYPE?, Map<ApiParams, String>)
     super.argument,
@@ -162,7 +162,7 @@ final class ContentPreviewListItemsFamily extends $Family
           PaginatedState,
           (ContentConfig, TMDB_API_TYPE?, Map<ApiParams, String>)
         > {
-  const ContentPreviewListItemsFamily._()
+  ContentPreviewListItemsFamily._()
     : super(
         retry: null,
         name: r'contentPreviewListItemsProvider',
@@ -199,7 +199,6 @@ abstract class _$ContentPreviewListItems extends $Notifier<PaginatedState> {
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args.$1, _$args.$2, _$args.$3);
     final ref = this.ref as $Ref<PaginatedState, PaginatedState>;
     final element =
         ref.element
@@ -209,6 +208,6 @@ abstract class _$ContentPreviewListItems extends $Notifier<PaginatedState> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args.$1, _$args.$2, _$args.$3));
   }
 }
