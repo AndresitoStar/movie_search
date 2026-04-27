@@ -1,7 +1,7 @@
 name: Build Android Release and Create GitHub Release
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
   push:
     tags:
       - '*'
