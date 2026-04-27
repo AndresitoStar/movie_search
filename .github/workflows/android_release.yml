@@ -1,10 +1,6 @@
 name: Build Android Release and Create GitHub Release
-
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - '*'
 
 jobs:
   build-android-release:
