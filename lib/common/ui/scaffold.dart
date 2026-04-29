@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:movie_search/common/extensions/context_extensions.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

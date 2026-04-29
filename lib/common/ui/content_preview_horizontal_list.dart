@@ -103,7 +103,7 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
     );
   }
 
-  onPressed(BuildContext context, {String? title}) {
+  void onPressed(BuildContext context, {String? title}) {
     context.push(
       '/items-preview/',
       extra: {

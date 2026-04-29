@@ -5,8 +5,7 @@ import 'package:movie_search/common/ui/dialogs.dart';
 import 'package:movie_search/features/user/provider/user.dart';
 import 'package:movie_search/features/user/ui/bookmarks_list.dart';
 
-class LoggedUserView extends ConsumerWidget
-{
+class LoggedUserView extends ConsumerWidget {
   const LoggedUserView({super.key});
 
   @override
@@ -27,10 +26,7 @@ class LoggedUserView extends ConsumerWidget
             ),
             label: Text('Logout'),
             icon: Icon(Icons.logout_outlined),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.redAccent,
-              foregroundColor: Colors.white,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, foregroundColor: Colors.white),
           ),
           BookmarksListView(),
         ],
@@ -38,11 +34,3 @@ class LoggedUserView extends ConsumerWidget
     );
   }
 }
-
-/**
- *
- * ThemeData(
-    inputDecorationTheme: InputDecorationTheme(
-
-    ),
- */

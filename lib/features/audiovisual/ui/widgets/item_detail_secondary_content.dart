@@ -23,9 +23,9 @@ class ItemDetailSecondaryContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, viewModel) {
     final children = <Widget>[
-      if (item.type == TMDB_API_TYPE.MOVIE) ..._movieContentWidgets(context, item.movie!),
-      if (item.type == TMDB_API_TYPE.TV_SHOW) ..._tvShowsContentWidgets(context, item.tvShow!),
-      if (item.type == TMDB_API_TYPE.PERSON) ..._personContentWidgets(context, item.person!),
+      if (item.type == TMDB_API_TYPE.MOVIE && item.movie != null) ..._movieContentWidgets(context, item.movie!),
+      if (item.type == TMDB_API_TYPE.TV_SHOW && item.tvShow != null) ..._tvShowsContentWidgets(context, item.tvShow!),
+      if (item.type == TMDB_API_TYPE.PERSON && item.person != null) ..._personContentWidgets(context, item.person!),
     ];
     return isSliver ? SliverList(delegate: SliverChildListDelegate(children)) : Column(children: children);
   }
