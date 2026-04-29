@@ -1,6 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart' show GoRouterHelper;
 import 'package:movie_search/common/domain/search_result.dart';
 import 'package:movie_search/common/extensions/context_extensions.dart';
 import 'package:movie_search/common/ui/icons.dart';
@@ -52,7 +53,18 @@ class _BookmarksListContent extends StatelessWidget {
   Widget _buildItemList(BuildContext context, MapEntry<String, List<BaseSearchResult?>> entry) {
     return GestureDetector(
       onTap: () {
-        print('Tap en ${entry.key}');
+        context.push(
+          '/items-preview/',
+          extra: {
+            'title': entry.key,
+            // 'config': config,
+            // 'apiParams': apiParams,
+            'items': entry.value,
+            'requiredType': 'combined', // default
+            // 'itemGridHeroTag': itemGridHeroTag,
+            // 'forcedType': forcedType,
+          },
+        );
       },
       child: Container(
         clipBehavior: Clip.hardEdge,

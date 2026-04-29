@@ -1,10 +1,10 @@
-name: Build Android Release and Create GitHub Release
+name: Build Windows Release and Create GitHub Release
 on:
   workflow_dispatch:
 
 jobs:
-  build-android-release:
-    runs-on: ubuntu-latest
+  build-windows-release:
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -17,19 +17,22 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build APK (release)
-        run: flutter build apk --release
+      - name: Build Windows (release)
+        run: flutter build windows --release
 
-      - name: Upload APK as artifact
+      - name: Zip Windows build
+        run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath movie_search_windows.zip
+
+      - name: Upload Windows zip as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: windows-release-zip
+          path: movie_search_windows.zip
 
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/app/outputs/flutter-apk/app-release.apk
+          files: movie_search_windows.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
