@@ -12,7 +12,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.41.8'
+          flutter-version: "3.41.8"
 
       - name: Install dependencies
         run: flutter pub get
@@ -23,16 +23,18 @@ jobs:
       - name: Zip Windows build
         run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath movie_search_windows.zip
 
-      - name: Upload Windows zip as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-release-zip
-          path: movie_search_windows.zip
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag v${{ github.run_number }}
+          git push origin v${{ github.run_number }}
 
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
           files: movie_search_windows.zip
+          tag_name: v${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
