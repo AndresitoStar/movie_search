@@ -16,12 +16,17 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
     final isLandsCape =
         forcedType != TMDB_API_TYPE.PERSON && MediaQuery.of(context).orientation == Orientation.landscape;
     //final height = MediaQuery.of(context).size.longestSide / 3.5;
-    final double height = forcedType == TMDB_API_TYPE.PERSON
+    double height = forcedType == TMDB_API_TYPE.PERSON
         ? (context.mq.size.shortestSide / 2.5).clamp(100, 200)
         : isLandsCape
         ? (context.mq.size.shortestSide / 3).clamp(150, 250)
         : context.mq.size.shortestSide / 1.5;
     final aspectRatio = isLandsCape ? 16 / 9 : 0.669;
+
+    // if isLandscape, height is 3x
+      if (isLandsCape && mode == ContentPreviewMode.grid) {
+        height *= 6;
+      }
 
     List<BaseSearchResult> list = [];
     if (items != null) {
@@ -62,42 +67,67 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
         ),
         Container(
           constraints: BoxConstraints(minHeight: height, maxHeight: height),
-          child: ListView.builder(
-            physics: ClampingScrollPhysics(),
-            // shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: list.isEmpty ? 5 : list.length,
-            itemBuilder: (ctx, i) => AnimatedCrossFade(
-              crossFadeState: list.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-              duration: Duration(milliseconds: 400),
-              firstChild: AspectRatio(
-                aspectRatio: aspectRatio,
-                key: UniqueKey(),
-                child: Card(color: context.theme.dividerColor, margin: .symmetric(horizontal: 10)),
-              ),
-              secondChild: AspectRatio(
-                aspectRatio: aspectRatio,
-                key: UniqueKey(),
-                child: Builder(
-                  builder: (context) {
-                    if (list.isEmpty || i >= list.length) {
-                      return Container();
+          child: mode == ContentPreviewMode.list
+              ? ListView.builder(
+                  physics: ClampingScrollPhysics(),
+                  // shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: list.isEmpty ? 5 : list.length,
+                  itemBuilder: (ctx, i) => AnimatedCrossFade(
+                    crossFadeState: list.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                    duration: Duration(milliseconds: 400),
+                    firstChild: AspectRatio(
+                      aspectRatio: aspectRatio,
+                      key: UniqueKey(),
+                      child: Card(color: context.theme.dividerColor, margin: .symmetric(horizontal: 10)),
+                    ),
+                    secondChild: AspectRatio(
+                      aspectRatio: aspectRatio,
+                      key: UniqueKey(),
+                      child: Builder(
+                        builder: (context) {
+                          if (list.isEmpty || i >= list.length) {
+                            return Container();
+                          }
+                          final item = list[i];
+                          return i < list.length
+                              ? ItemGridView(
+                                  item: item,
+                                  showType: itemShowData,
+                                  showTitles: itemShowTitle,
+                                  useBackdrop: isLandsCape,
+                                  heroTagPrefix: itemGridHeroTag,
+                                )
+                              : Container();
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              : GridView.builder(
+                  physics: ClampingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 9/21,
+                  ),
+                  itemCount: list.length,
+                  itemBuilder: (ctx, i) {
+                    if (gridItemBuilder != null) {
+                      return gridItemBuilder!(ctx, list[i]);
                     }
                     final item = list[i];
-                    return i < list.length
-                        ? ItemGridView(
-                            item: item,
-                            showType: itemShowData,
-                            showTitles: itemShowTitle,
-                            useBackdrop: isLandsCape,
-                            heroTagPrefix: itemGridHeroTag,
-                          )
-                        : Container();
+                    return ItemGridView(
+                      item: item,
+                      showType: itemShowData,
+                      showTitles: itemShowTitle,
+                      useBackdrop: isLandsCape,
+                      heroTagPrefix: itemGridHeroTag,
+                    );
                   },
                 ),
-              ),
-            ),
-          ),
         ),
       ],
     );
@@ -141,4 +171,11 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
   bool get canNavigate => true;
 
   List<BaseSearchResult>? get items => null;
+
+  ContentPreviewMode get mode => ContentPreviewMode.list;
+
+  // builder para grid mode, para evitar repetir codigo en los hijos, puede ser null
+  Widget Function(BuildContext context, BaseSearchResult item)? get gridItemBuilder => null;
 }
+
+enum ContentPreviewMode { list, grid }

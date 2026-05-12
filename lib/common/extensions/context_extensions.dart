@@ -15,6 +15,8 @@ extension ThemeExtension on BuildContext {
 
   bool get isMobile => Device.screenType == ScreenType.mobile;
 
+  bool get isDesktop => Device.screenType == ScreenType.desktop;
+
   void goHome() => go('/home');
 
   Future goSearch() {

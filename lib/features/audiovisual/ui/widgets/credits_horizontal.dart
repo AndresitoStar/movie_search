@@ -1,8 +1,10 @@
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:movie_search/common/domain/search_result.dart';
 import 'package:movie_search/common/model/person.dart';
 import 'package:movie_search/common/model/tmdb_type.dart';
 import 'package:movie_search/common/provider/infinite_scroll_content_provider.dart';
 import 'package:movie_search/common/ui/content_preview_horizontal_list.dart';
+import 'package:movie_search/features/audiovisual/ui/widgets/item_grid_view.dart';
 
 class CreditsHorizontal extends ContentPreviewViewMoreWidget {
   final num id;
@@ -36,6 +38,19 @@ class CreditsHorizontal extends ContentPreviewViewMoreWidget {
 
   @override
   bool get canNavigate => false;
+
+  @override
+  ContentPreviewMode get mode => ContentPreviewMode.grid;
+
+  @override
+  Widget Function(BuildContext context, BaseSearchResult item)? get gridItemBuilder {
+    return (context, item) {
+      return ItemGridListTilePerson(
+        item: item,
+        heroTagPrefix: itemGridHeroTag,
+      );
+    };
+  }
 }
 
 class PersonHorizontalList extends ContentPreviewViewMoreWidget {

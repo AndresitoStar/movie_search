@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_search/common/extensions/context_extensions.dart';
 import 'package:movie_search/common/model/media_image.dart';
 import 'package:movie_search/common/model/tmdb_type.dart';
 import 'package:movie_search/common/ui/icons.dart';
@@ -47,7 +48,21 @@ class ShowImagesButton extends StatelessWidget {
     return !compact
         ? child
         : InkWell(
-            onTap: () => context.push('/images', extra: {'title': title, 'images': images.toMap()}),
+            onTap: () {
+              final imagesMap = images.toMap();
+              if (imagesMap.length == 1) {
+                final singleType = imagesMap.keys.first;
+                final singleImages = imagesMap[singleType] ?? [];
+                if (singleImages.isNotEmpty) {
+                  context.push('/album', extra: {'type': singleType, 'images': singleImages});
+                  return;
+                }
+              }
+              context.push('/images', extra: {'title': title, 'images': images.toMap()});
+            },
+            splashColor: context.colors.secondary,
+            focusColor: context.colors.secondary,
+            overlayColor: WidgetStateProperty.all(context.colors.secondary.withOpacity(0.5)),
             child: Column(
               mainAxisSize: .min,
               mainAxisAlignment: .center,
