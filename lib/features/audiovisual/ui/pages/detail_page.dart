@@ -108,10 +108,10 @@ class ItemDetailLandscape extends ConsumerWidget {
           child: Column(
             children: [
               ...[
-                ItemDetailListTileTitle(item: item),
+                ItemDetailListTileTitleLandscape(item: item),
                 ItemDetailLandscapeAppBar(heroTagPrefix: heroTagPrefix, isLandscape: true, item: item),
+                ItemDetailGenreHorizontalList(item: item),
                 if (item.hasBackdrop()) ItemDetailOverview(item: item),
-                // ItemDetailAppbarContentExtended(heroTagPrefix),
                 if (!item.isPerson()) CreditsHorizontal(id: item.id, type: item.type.type),
                 ItemDetailSecondaryContent(isSliver: false, item: item),
                 RecommendationsHorizontal(type: item.type.type, id: item.id),

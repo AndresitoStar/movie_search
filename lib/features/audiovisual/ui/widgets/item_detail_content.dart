@@ -102,6 +102,84 @@ class ItemDetailListTileTitle extends StatelessWidget {
   }
 }
 
+class ItemDetailListTileTitleLandscape extends StatelessWidget {
+  const ItemDetailListTileTitleLandscape({super.key, required this.item});
+
+  final BaseSearchResult item;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(item.title!, style: context.theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (item.originalTitle != item.title)
+            Text(
+              item.originalTitle ?? '',
+              style: context.theme.textTheme.titleMedium!.copyWith(
+                color: context.theme.textTheme.titleMedium!.color!.withOpacity(0.8),
+              ),
+            ),
+          if (item.tagline != null && item.tagline!.isNotEmpty)
+            Text(
+              item.tagline!,
+              style: context.theme.textTheme.titleMedium!.copyWith(
+                fontStyle: FontStyle.italic,
+                color: context.theme.textTheme.titleMedium!.color!.withOpacity(0.8),
+              ),
+            ),
+          if (item.type != TMDB_API_TYPE.PERSON && (item.releaseYear != null || item.runtime != null))
+            Text(
+              "${item.type.name} · ${item.releaseYear} · ${item.runtime ?? ''}",
+              style: context.theme.textTheme.titleMedium!.copyWith(
+                color: context.theme.textTheme.titleMedium!.color!.withOpacity(0.8),
+              ),
+            ),
+        ],
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 10,
+        children: [
+          if (!item.isPerson())
+            ContentVoteAverageView(voteAverage: item.voteAverage),
+          if (!item.isPerson())
+            ImdbRatingView(item.id, item.type.type, imdbId: item.movie?.imdbId, key: ValueKey(item.id)),
+          if (item.type == TMDB_API_TYPE.TV_SHOW) ContentRatingView(item.id, item.type),
+        ],
+      ),
+    );
+  }
+}
+
+class ItemDetailGenreHorizontalList extends StatelessWidget {
+  final BaseSearchResult item;
+  const ItemDetailGenreHorizontalList({super.key, required this.item});
+  // Chip // Horizontal ListView // Single line
+
+  @override
+  Widget build(BuildContext context) {
+    final genres = item.genres;
+    if (genres == null || genres.isEmpty) return SizedBox.shrink();
+    return Container(
+      height: 56,
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        scrollDirection: Axis.horizontal,
+        itemCount: genres.length,
+        separatorBuilder: (context, index) => SizedBox(width: 8),
+        itemBuilder: (context, index) => Chip(
+          label: Text(genres[index]),
+          backgroundColor: Colors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ),
+      ),
+    );
+  }
+}
+
 class ItemDetailOverview extends StatelessWidget {
   final bool isSliver;
   final bool centered;

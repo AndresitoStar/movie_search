@@ -96,10 +96,10 @@ class ItemGridView extends StatelessWidget {
                                 maxLines: 2,
                                 style: theme.textTheme.titleLarge!.copyWith(fontSize: 16),
                               ),
-                              subtitle: item.subtitle == null
+                              subtitle: item.person?.character == null
                                   ? null
                                   : Text(
-                                      item.subtitle!,
+                                      item.person!.character!,
                                       textAlign: TextAlign.center,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
@@ -165,6 +165,88 @@ class ItemGridViewPerson extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class ItemGridListTilePerson extends StatelessWidget {
+  final BaseSearchResult item;
+  final String heroTagPrefix;
+
+  ItemGridListTilePerson({Key? key, required this.item, required this.heroTagPrefix}) : super(key: UniqueKey());
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      elevation: 5,
+      child: InkWell(
+        onTap: () => context.push(
+          '/${item.type.type.toLowerCase()}/${item.id}',
+          extra: {'item': item, 'tag': heroTagPrefix},
+        ),
+        child: Center(
+          child: Row(
+            children: [
+              AspectRatio(
+                  aspectRatio: .669,
+                  child: item.posterImage != null
+                      ? ContentImageWidget(item.posterImage, fit: BoxFit.fill, ignorePointer: true, isBackdrop: false)
+                      : PlaceholderImagePerson(),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        if (item.title != null)
+                          Text(
+                            item.title!,
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: context.theme.textTheme.titleLarge!.copyWith(fontSize: 16),
+                          ),
+                        if (item.person?.character != null)
+                          Text(
+                            item.person!.character!,
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: context.theme.textTheme.bodySmall,
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              // ListTile(
+              //   contentPadding: EdgeInsets.only(right: 12, left: 8),
+              //   onTap: () =>
+              //       context.push('/${item.type.type.toLowerCase()}/${item.id}', extra: {'item': item, 'tag': heroTagPrefix}),
+              //   title: Text(
+              //     item.title!,
+              //     textAlign: TextAlign.end,
+              //     overflow: TextOverflow.ellipsis,
+              //     maxLines: 2,
+              //     style: context.theme.textTheme.titleLarge!.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+              //   ),
+              //   subtitle: item.person?.character == null
+              //       ? null
+              //       : Text(
+              //           item.person!.character!,
+              //           textAlign: TextAlign.end,
+              //           overflow: TextOverflow.ellipsis,
+              //           maxLines: 2,
+              //           style: context.theme.textTheme.bodySmall,
+              //         ),
+              // ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

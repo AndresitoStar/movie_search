@@ -42,6 +42,42 @@ class BaseSearchResult {
     return movie?.overview ?? tvShow?.overview ?? person?.biography ?? 'No overview available.';
   }
 
+  String? get releaseYear {
+    if (type == TMDB_API_TYPE.TV_SHOW) {
+      if (tvShow?.firstAirDate != null && tvShow?.lastAirDate != null) {
+        String firstYear = DateTime.tryParse(tvShow!.firstAirDate!)?.year.toString() ?? '';
+        String lastYear = DateTime.tryParse(tvShow!.lastAirDate!)?.year.toString() ?? '';
+        return '$firstYear - $lastYear';
+      } else if (tvShow?.firstAirDate != null) {
+        return DateTime.tryParse(tvShow!.firstAirDate!)?.year.toString() ?? '';
+      }
+    } else {
+      return year?.toString();
+    }
+    return null;
+  }
+
+  String? get runtime {
+    if (type == TMDB_API_TYPE.MOVIE) {
+      return movie?.runtime != null ? _formatRuntime(movie!.runtime!) : null;
+    } else if (type == TMDB_API_TYPE.TV_SHOW) {
+      return tvShow?.episodeRunTime != null && tvShow!.episodeRunTime!.isNotEmpty
+          ? _formatRuntime(tvShow!.episodeRunTime!.first)
+          : null;
+    }
+    return null;
+  }
+
+  String _formatRuntime(num runtime) {
+    final hours = runtime ~/ 60;
+    final minutes = runtime % 60;
+    if (hours > 0) {
+      return '${hours}h ${minutes}m';
+    } else {
+      return '${minutes}m';
+    }
+  }
+
   BaseSearchResult.fromMovie(Movie this.movie)
     : id = movie.id,
       title = movie.title,

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/common/ui/placeholder_image.dart';
 import 'package:movie_search/common/utils.dart';
@@ -26,30 +27,51 @@ class ContentImageWidget extends StatelessWidget {
 
   bool get _isOutsideTMDB => imagePath != null && imagePath!.startsWith('https://');
 
+  static String getURL(String imagePath) {
+    return '$URL_IMAGE_BIG$imagePath';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (imagePath == null || imagePath!.isEmpty) return PlaceholderImage();
+    final imageUrl = !_isOutsideTMDB ? '$URL_IMAGE_BIG$imagePath' : imagePath!;
+
+    // Para desktop, usa Image.network con filterQuality alto
+    if (defaultTargetPlatform == TargetPlatform.linux ||
+        defaultTargetPlatform == TargetPlatform.windows ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      return Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: GestureDetector(
+          onTap: ignorePointer ? null : onSelectImage ?? () => DialogImage.show(context: context, imageUrl: imageUrl),
+          child: Image.network(
+            imageUrl,
+            fit: fit,
+            filterQuality: FilterQuality.high, // Mejora la calidad de rendering
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return withPlaceholder && !_isOutsideTMDB
+                  ? Image.network('$placeholderBaseUrl$imagePath', fit: fit, filterQuality: FilterQuality.high)
+                  : DefaultPlaceholder();
+            },
+            errorBuilder: (ctx, _, __) => PlaceholderImage(height: MediaQuery.of(ctx).size.height * 0.6),
+          ),
+        ),
+      );
+    }
+
+    // Para mobile, mantiene CachedNetworkImage
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
-      // constraints: BoxConstraints(maxHeight: 10.h),
       child: GestureDetector(
-        onTap: ignorePointer
-            ? null
-            : onSelectImage != null
-            ? () => onSelectImage!.call()
-            : () => DialogImage.show(context: context, imageUrl: imagePath!, baseUrl: URL_IMAGE_BIG),
+        onTap: ignorePointer ? null : onSelectImage ?? () => DialogImage.show(context: context, imageUrl: imageUrl),
         child: CachedNetworkImage(
-          imageUrl: !_isOutsideTMDB ? '$URL_IMAGE_BIG$imagePath' : imagePath!,
+          imageUrl: imageUrl,
+          fit: fit,
           placeholder: (_, __) => withPlaceholder && !_isOutsideTMDB
-              ? CachedNetworkImage(
-                  fit: fit,
-                  imageUrl: '$placeholderBaseUrl$imagePath',
-                  placeholder: (context, _) => DefaultPlaceholder(),
-                )
+              ? CachedNetworkImage(imageUrl: '$placeholderBaseUrl$imagePath', fit: fit)
               : DefaultPlaceholder(),
           errorWidget: (ctx, _, __) => PlaceholderImage(height: MediaQuery.of(ctx).size.height * 0.6),
-          fit: fit,
-          // width: double.infinity,
         ),
       ),
     );

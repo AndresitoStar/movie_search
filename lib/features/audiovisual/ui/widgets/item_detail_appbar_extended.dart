@@ -5,7 +5,6 @@ import 'package:movie_search/common/extensions/context_extensions.dart';
 import 'package:movie_search/common/model/tmdb_type.dart';
 import 'package:movie_search/common/ui/content_image.dart';
 import 'package:movie_search/features/audiovisual/provider/audiovisual_provider.dart';
-import 'package:movie_search/features/audiovisual/ui/widgets/imdb_widget.dart';
 import 'package:movie_search/features/audiovisual/ui/widgets/item_detail_content.dart';
 import 'package:movie_search/features/audiovisual/ui/widgets/item_image_button.dart';
 
@@ -54,22 +53,29 @@ class ItemDetailLandscapeAppBar extends StatelessWidget {
             ),
             Expanded(
               child: Column(
-                spacing: 10,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ItemImagesButtonView(id: item.id, type: item.type, title: item.title ?? '', compact: true),
-                  if (item.type != TMDB_API_TYPE.PERSON)
-                    RawChip(
-                      backgroundColor: Colors.transparent,
-                      avatar: Icon(Icons.star, color: Colors.yellow),
-                      label: Text(
-                        item.voteAverage != null ? item.voteAverage!.toStringAsFixed(1) : 'N/A',
-                        style: context.theme.textTheme.titleMedium!.copyWith(
-                          color: context.theme.textTheme.titleMedium!.color!.withOpacity(0.8),
+                  Expanded(
+                    flex: 1,
+                    child: Card(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(3))),
+                      child: ItemImagesButtonView(id: item.id, type: item.type, title: item.title ?? '', compact: true),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Card(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(3))),
+                      child: Center(
+                        child: Text(
+                          'Trailers',
+                          style: context.theme.textTheme.titleMedium!.copyWith(
+                            color: context.theme.textTheme.titleMedium!.color!.withOpacity(0.8),
+                          ),
                         ),
                       ),
                     ),
-                  ImdbRatingView(item.id, item.type.type, imdbId: item.movie?.imdbId, key: ValueKey(item.id)),
-                  if (item.type == TMDB_API_TYPE.TV_SHOW) ContentRatingView(item.id, item.type),
+                  ),
                 ],
               ),
             ),

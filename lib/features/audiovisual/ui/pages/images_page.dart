@@ -6,6 +6,8 @@ import 'package:movie_search/common/model/media_image.dart';
 import 'package:movie_search/common/ui/content_image.dart';
 import 'package:movie_search/common/ui/icons.dart';
 import 'package:movie_search/common/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ImagesPage extends StatelessWidget {
   static const String routeName = "/images";
@@ -114,7 +116,9 @@ class AlbumPage extends StatelessWidget {
           return ContentImageWidget(
             image.filePath,
             fit: BoxFit.cover,
-            // onSelectImage: () => onSelectImage(context, image.filePath),
+            onSelectImage: context.isMobile && image.filePath == null
+                ? null
+                : () => launchUrlString(ContentImageWidget.getURL(image.filePath!)),
           );
         },
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
