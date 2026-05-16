@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:movie_search/common/domain/search_result.dart';
 import 'package:movie_search/common/model/person.dart';
@@ -119,4 +120,38 @@ class RecommendationsHorizontal extends ContentPreviewViewMoreWidget {
 
   @override
   bool get canNavigate => false;
+}
+
+class PersonCreditsHorizontal extends ContentPreviewViewMoreWidget {
+  final num id;
+
+  PersonCreditsHorizontal({required this.id, super.key}) {
+    super.apiParams = {ApiParams.id: id.toString()};
+  }
+
+  @override
+  ContentConfig get config => ContentConfig.personCredits;
+
+  @override
+  String get itemGridHeroTag => 'content_persons_credit_item';
+
+  @override
+  // TODO: implement pageRouteName
+  String get pageRouteName => throw UnimplementedError();
+
+  @override
+  String get title => 'Ha participado en';
+
+  @override
+  TextStyle? get titleTextStyle => TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
+
+  @override
+  String get viewMoreButtonHeroTag => 'content_persons_credit_view_more';
+
+  @override
+  bool get itemShowTitle => true;
+
+  @override
+  bool get canNavigate => false;
+
 }

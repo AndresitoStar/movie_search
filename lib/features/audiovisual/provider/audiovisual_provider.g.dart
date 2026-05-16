@@ -510,7 +510,7 @@ final class FetchWatchProviderProvider
 }
 
 String _$fetchWatchProviderHash() =>
-    r'5594e3c5798a2e8482b2dd9ea28ae9c0aa5780a7';
+    r'862548e5f5d01edfaade4c9b5bcc9e41cf334e4d';
 
 final class FetchWatchProviderFamily extends $Family
     with

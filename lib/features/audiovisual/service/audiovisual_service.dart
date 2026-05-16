@@ -48,4 +48,7 @@ abstract class AudiovisualService {
 
   @GET('/{type}/{id}/watch/providers')
   Future<WatchProviderResponse> getWatchProviders(@Path('type') String type, @Path('id') String id);
+
+  @GET('/person/{id}/combined_credits')
+  Future<CombinedCredits> getCombinedCredits(@Path('id') String id);
 }

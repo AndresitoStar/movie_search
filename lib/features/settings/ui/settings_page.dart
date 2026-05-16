@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_search/common/extensions/context_extensions.dart';
+import 'package:movie_search/common/model/country.dart';
 import 'package:movie_search/common/provider/theme_provider.dart';
-import 'package:movie_search/common/ui/icons.dart';
 import 'package:movie_search/common/ui/scaffold.dart';
 import 'package:movie_search/common/ui/square_avatar.dart';
 import 'package:movie_search/common/ui/utils.dart';
+import 'package:movie_search/features/settings/provider/south_american_countries_provider.dart';
 import 'package:movie_search/features/settings/provider/version.dart';
 import 'package:movie_search/features/user/provider/config_color.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -66,19 +66,17 @@ class SettingsPage extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text('Movie Search', style: context.textTheme.headlineMedium!.copyWith(color: context.colors.primary)),
-        Text('Version', style: context.textTheme.titleSmall!.copyWith(color: context.theme.hintColor)),
-        versionInfo.when(
-          data: (info) => Text(info.fullVersion),
-          loading: () => Text('-'),
-          error: (_, __) => Text('-'),
-        ),
-        SizedBox(height: 10),
-        Text('Made by', style: context.textTheme.titleSmall!.copyWith(color: context.theme.hintColor)),
-        Text('Andrés Forns Jusino', style: context.textTheme.titleLarge),
-        SizedBox(height: 10),
+        Divider(),
+        // ---------------- Settings ---------------
         MyThemeBtn(),
         _ColorSelectWidget(),
-        SizedBox(height: 30),
+        _CountrySelectorWidget(),
+        Divider(),
+        // ---------------- App Info ---------------
+        Text('Made by', style: context.textTheme.titleSmall!.copyWith(color: context.theme.hintColor)),
+        Text('Andrés Forns Jusino', style: context.textTheme.titleLarge),
+        Text('Version', style: context.textTheme.titleSmall!.copyWith(color: context.theme.hintColor)),
+        versionInfo.when(data: (info) => Text(info.fullVersion), loading: () => Text('-'), error: (_, __) => Text('-')),
       ],
     );
   }
@@ -251,6 +249,72 @@ class _ColorListTile extends StatelessWidget {
       subtitle: Text(scheme.data.description.capitalize),
       trailing: row,
       onTap: onTap,
+    );
+  }
+}
+
+class _CountrySelectorWidget extends ConsumerWidget {
+  const _CountrySelectorWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedCountry = ref.watch(selectedCountryProvider);
+    return InkWell(
+      onTap: () async {
+        final country = await ref.read(selectedCountryProvider.future);
+        if (context.mounted) {
+          _showCountrySelector(context, ref, country);
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Pais',
+            style: context.textTheme.titleSmall!.copyWith(color: context.theme.hintColor),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            selectedCountry.maybeWhen(orElse: () => 'Select a country', data: (c) => c.name),
+            style: context.textTheme.titleLarge,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  _showCountrySelector(BuildContext context, WidgetRef ref, Country selectedCountry) {
+    final countries = ref.watch(southAmericanCountriesProvider);
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return countries.maybeWhen(
+          orElse: () => Container(),
+          data: (countries) {
+            final initialIndex = countries.indexWhere((c) => c.iso31661 == selectedCountry.iso31661);
+            final scrollController = ScrollController(
+              initialScrollOffset: initialIndex * 72.0,
+            ); // Asumiendo que cada ListTile tiene una altura de 72
+            return ListView.builder(
+              controller: scrollController,
+              itemCount: countries.length,
+              itemBuilder: (context, index) {
+                final country = countries[index];
+                return ListTile(
+                  title: Text(country.name),
+                  selected: country.iso31661 == selectedCountry.iso31661,
+                  selectedTileColor: context.colors.primary.withOpacity(0.2),
+                  onTap: () {
+                    ref.read(selectedCountryProvider.notifier).setSelectedCountry(country);
+                    context.pop();
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

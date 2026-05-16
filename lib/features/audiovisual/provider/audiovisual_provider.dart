@@ -6,6 +6,7 @@ import 'package:movie_search/common/model/tv.dart';
 import 'package:movie_search/common/model/video.dart';
 import 'package:movie_search/core/di/injection.dart';
 import 'package:movie_search/features/audiovisual/repository/audiovisual_repository.dart';
+import 'package:movie_search/features/settings/provider/south_american_countries_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'audiovisual_provider.g.dart';
@@ -50,6 +51,6 @@ Future<Collection> fetchCollectionDetails(Ref ref, String id) async {
 Future<List<WatchProvider>> fetchWatchProvider(Ref ref, num id, String type) async {
   final repository = getIt<AudiovisualRepository>();
   final response = await repository.getWatchProviders(type, id.toString());
-  final region = 'UY'; // TODO Get region by countryProvider
-  return response.results[region] ?? [];
+  final region = await ref.read(selectedCountryProvider.future);
+  return response.results[region.iso31661] ?? [];
 }

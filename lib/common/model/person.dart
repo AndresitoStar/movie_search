@@ -38,7 +38,9 @@ class Person {
 
   Person.fromJson(Map<String, dynamic> json)
     : adult = json['adult'],
-      alsoKnownAs = json['also_known_as'] != null ? (json['also_known_as'] as List).cast<String>() : null,
+      alsoKnownAs = json['also_known_as'] != null
+          ? (json['also_known_as'] as List).cast<String>()
+          : null,
       biography = json['biography'],
       birthday = json['birthday'],
       deathday = json['deathday'],
@@ -107,4 +109,54 @@ class Credit {
       totalResult: cast?.length ?? 0,
     );
   }
+}
+
+class CombinedCredits {
+  int? id;
+  List<BaseSearchResult>? cast;
+  List<BaseSearchResult>? crew;
+
+  CombinedCredits({this.id, this.cast});
+
+  CombinedCredits.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    if (json['cast'] != null) {
+      cast = <BaseSearchResult>[];
+      crew = <BaseSearchResult>[];
+      json['cast'].forEach((v) {
+        if (v['media_type'] case final String mediaType?) {
+          final baseResult = BaseSearchResult.fromJson(mediaType, v);
+          cast!.add(baseResult);
+        } else {
+          print(
+            'Warning: media_type is missing for cast item with id ${v['id']}',
+          );
+        }
+      });
+      json['crew'].forEach((v) {
+        if (v['media_type'] case final String mediaType?) {
+          final baseResult = BaseSearchResult.fromJson(mediaType, v);
+          crew!.add(baseResult);
+        } else {
+          print(
+            'Warning: media_type is missing for crew item with id ${v['id']}',
+          );
+        }
+      });
+    }
+  }
+
+  List<BaseSearchResult> toBaseSearchResultList() {
+    return [...?cast, ...?crew];
+  }
+
+  // // to SearchResponse method
+  // SearchResponse toSearchResponse() {
+  //   return SearchResponse(
+  //     page: 1,
+  //     result: cast!.map((e) => BaseSearchResult.fromPerson(e)).toList(),
+  //     totalPageResult: 1,
+  //     totalResult: cast?.length ?? 0,
+  //   );
+  // }
 }

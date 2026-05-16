@@ -39,6 +39,13 @@ Future<List<BaseSearchResult>> fetchBaseContent(
       final repository = getIt<AudiovisualRepository>();
       final response = await repository.getRecommendations(params[ApiParams.type]!, params[ApiParams.id]!);
       return response.result;
+    case ContentConfig.personCredits:
+      if (!params.containsKey(ApiParams.id)) {
+        throw ArgumentError('Params "id" and "type" are required for persons credits API path');
+      }
+      final repository = getIt<AudiovisualRepository>();
+      final response = await repository.getCombinedCreditsForPerson(params[ApiParams.id]!);
+      return response.toBaseSearchResultList();
     default:
       final repository = getIt<ContentPreviewRepository>();
 
@@ -58,6 +65,7 @@ enum ContentConfig {
   onTheAir("/{{type}}/on_the_air"),
   recommendations(""),
   none(""),
+  personCredits(""),
   credits("");
 
   final String path;

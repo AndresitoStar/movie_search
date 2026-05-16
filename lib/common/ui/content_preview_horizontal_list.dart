@@ -49,7 +49,7 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ListTile(
-          title: Text(title, style: context.textTheme.titleLarge),
+          title: Text(title, style: titleTextStyle ?? context.textTheme.titleLarge),
           trailing: !canNavigate
               ? null
               : TextButton(
@@ -153,6 +153,8 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
   String get itemGridHeroTag;
 
   String get title;
+
+  TextStyle? get titleTextStyle => null;
 
   bool get itemShowData => false;
 
