@@ -19,6 +19,7 @@ class AudiovisualRepository {
   final Map<String, ContentRatings> _contentRatingsCache = {};
   final Map<String, Videos> _contentVideosCache = {};
   final Map<String, Credit> _contentCreditCache = {};
+  final Map<String, CombinedCredits> _contentCombinedCreditCache = {};
   final Map<String, SearchResponse> _recommendationsCache = {};
   final Map<String, Collection> _contentCollectionCache = {};
   final Map<String, WatchProviderResponse> _contentWatchProvidersCache = {};
@@ -132,6 +133,17 @@ class AudiovisualRepository {
       final result = await _service.getWatchProviders(type, id);
       _contentWatchProvidersCache[cacheKey] = result;
       return result;
+    }
+  }
+
+  Future<CombinedCredits> getCombinedCreditsForPerson(String id) async {
+    final cacheKey = id;
+    if (_contentCombinedCreditCache.containsKey(cacheKey)) {
+      return _contentCombinedCreditCache[cacheKey]!;
+    } else {
+      final credits = await _service.getCombinedCredits(id);
+      _contentCombinedCreditCache[cacheKey] = credits;
+      return credits;
     }
   }
 }

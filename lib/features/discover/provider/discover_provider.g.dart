@@ -41,7 +41,7 @@ final class DiscoverProvider
   }
 }
 
-String _$discoverHash() => r'9712474934e30613a1f71a627b829258f525d45f';
+String _$discoverHash() => r'97f7549ca9d291120c1798fbd784d982822d405e';
 
 abstract class _$Discover extends $Notifier<PaginatedState> {
   PaginatedState build();

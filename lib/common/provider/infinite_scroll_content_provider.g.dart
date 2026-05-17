@@ -69,7 +69,7 @@ final class FetchBaseContentProvider
   }
 }
 
-String _$fetchBaseContentHash() => r'8cf67e2e7b5597d48881c185f216e5712799f57d';
+String _$fetchBaseContentHash() => r'577c2bca1890bc7656345c7edc0817d9303d6aa6';
 
 final class FetchBaseContentFamily extends $Family
     with

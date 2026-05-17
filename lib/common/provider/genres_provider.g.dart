@@ -142,7 +142,7 @@ final class WatchProvidersByTypeProvider
 }
 
 String _$watchProvidersByTypeHash() =>
-    r'a673b1cc8ad7a10ff132b063a4e444ca890f00d0';
+    r'c7b68c045f5f6c190f70700e2746bec7471046f6';
 
 final class WatchProvidersByTypeFamily extends $Family
     with

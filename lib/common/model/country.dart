@@ -16,6 +16,12 @@ class Country {
       nativeName: json["native_name"],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    "iso_3166_1": iso31661,
+    "english_name": name,
+    "native_name": nativeName,
+  };
 }
 
 enum SortDirection {

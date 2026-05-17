@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movie_search/common/domain/search_result.dart';
 import 'package:movie_search/common/extensions/context_extensions.dart';
 import 'package:movie_search/common/model/tmdb_type.dart';
@@ -8,7 +10,7 @@ import 'package:movie_search/common/provider/infinite_scroll_content_provider.da
 import 'package:movie_search/features/audiovisual/ui/widgets/item_grid_view.dart';
 import 'package:movie_search/features/home/provider/home_provider.dart';
 
-abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
+abstract class ContentPreviewViewMoreWidget extends HookConsumerWidget {
   ContentPreviewViewMoreWidget({super.key});
 
   @override
@@ -24,9 +26,9 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
     final aspectRatio = isLandsCape ? 16 / 9 : 0.669;
 
     // if isLandscape, height is 3x
-      if (isLandsCape && mode == ContentPreviewMode.grid) {
-        height *= 6;
-      }
+    if (isLandsCape && mode == ContentPreviewMode.grid) {
+      height *= 6;
+    }
 
     List<BaseSearchResult> list = [];
     if (items != null) {
@@ -44,12 +46,29 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
 
     final contentType = ref.watch(homeContentTypeProvider);
     final title = this.title.replaceAll('{{type}}', contentType.value?.name ?? 'Movie');
+    final controller = useScrollController();
+    final showLeftButton = useState(false);
+    final showRightButton = useState(false);
+
+    useEffect(() {
+      void update() {
+        if (controller.hasClients) {
+          showLeftButton.value = controller.offset > 0;
+          showRightButton.value = controller.offset < controller.position.maxScrollExtent;
+        }
+      }
+
+      controller.addListener(update);
+      WidgetsBinding.instance.addPostFrameCallback((_) => update());
+
+      return () => controller.removeListener(update);
+    }, [controller]);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ListTile(
-          title: Text(title, style: context.textTheme.titleLarge),
+          title: Text(title, style: titleTextStyle(context) ?? context.textTheme.titleLarge),
           trailing: !canNavigate
               ? null
               : TextButton(
@@ -65,69 +84,133 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
                   onPressed: () => onPressed(context, title: title),
                 ),
         ),
-        Container(
-          constraints: BoxConstraints(minHeight: height, maxHeight: height),
-          child: mode == ContentPreviewMode.list
-              ? ListView.builder(
-                  physics: ClampingScrollPhysics(),
-                  // shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: list.isEmpty ? 5 : list.length,
-                  itemBuilder: (ctx, i) => AnimatedCrossFade(
-                    crossFadeState: list.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                    duration: Duration(milliseconds: 400),
-                    firstChild: AspectRatio(
-                      aspectRatio: aspectRatio,
-                      key: UniqueKey(),
-                      child: Card(color: context.theme.dividerColor, margin: .symmetric(horizontal: 10)),
-                    ),
-                    secondChild: AspectRatio(
-                      aspectRatio: aspectRatio,
-                      key: UniqueKey(),
-                      child: Builder(
-                        builder: (context) {
-                          if (list.isEmpty || i >= list.length) {
-                            return Container();
-                          }
-                          final item = list[i];
-                          return i < list.length
-                              ? ItemGridView(
-                                  item: item,
-                                  showType: itemShowData,
-                                  showTitles: itemShowTitle,
-                                  useBackdrop: isLandsCape,
-                                  heroTagPrefix: itemGridHeroTag,
-                                )
-                              : Container();
-                        },
-                      ),
-                    ),
-                  ),
-                )
-              : GridView.builder(
-                  physics: ClampingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
-                    childAspectRatio: 9/21,
-                  ),
-                  itemCount: list.length,
-                  itemBuilder: (ctx, i) {
-                    if (gridItemBuilder != null) {
-                      return gridItemBuilder!(ctx, list[i]);
-                    }
-                    final item = list[i];
-                    return ItemGridView(
-                      item: item,
-                      showType: itemShowData,
-                      showTitles: itemShowTitle,
-                      useBackdrop: isLandsCape,
-                      heroTagPrefix: itemGridHeroTag,
-                    );
-                  },
+        Builder(
+          builder: (context) {
+            return Stack(
+              alignment: .center,
+              children: [
+                Container(
+                  constraints: BoxConstraints(minHeight: height, maxHeight: height),
+                  child: mode == ContentPreviewMode.list
+                      ? ListView.builder(
+                          physics: ClampingScrollPhysics(),
+                          controller: controller,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: list.isEmpty ? 5 : list.length,
+                          itemBuilder: (ctx, i) => AnimatedCrossFade(
+                            crossFadeState: list.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                            duration: Duration(milliseconds: 400),
+                            firstChild: AspectRatio(
+                              aspectRatio: aspectRatio,
+                              key: UniqueKey(),
+                              child: Card(color: context.theme.dividerColor, margin: .symmetric(horizontal: 10)),
+                            ),
+                            secondChild: AspectRatio(
+                              aspectRatio: aspectRatio,
+                              key: UniqueKey(),
+                              child: Builder(
+                                builder: (context) {
+                                  if (list.isEmpty || i >= list.length) {
+                                    return Container();
+                                  }
+                                  final item = list[i];
+                                  return i < list.length
+                                      ? ItemGridView(
+                                          item: item,
+                                          showType: itemShowData,
+                                          showTitles: itemShowTitle,
+                                          useBackdrop: isLandsCape,
+                                          heroTagPrefix: itemGridHeroTag,
+                                        )
+                                      : Container();
+                                },
+                              ),
+                            ),
+                          ),
+                        )
+                      : GridView.builder(
+                          physics: ClampingScrollPhysics(),
+                          controller: controller,
+                          scrollDirection: Axis.horizontal,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8,
+                            childAspectRatio: 9 / 21,
+                          ),
+                          itemCount: list.length,
+                          itemBuilder: (ctx, i) {
+                            if (gridItemBuilder != null) {
+                              return gridItemBuilder!(ctx, list[i]);
+                            }
+                            final item = list[i];
+                            return ItemGridView(
+                              item: item,
+                              showType: itemShowData,
+                              showTitles: itemShowTitle,
+                              useBackdrop: isLandsCape,
+                              heroTagPrefix: itemGridHeroTag,
+                            );
+                          },
+                        ),
                 ),
+                if (showLeftButton.value && !context.isMobile)
+                  Align(
+                    alignment: .centerLeft,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        if (controller.hasClients) {
+                          double possibleNewPosition = (controller.offset - controller.position.viewportDimension)
+                              .clamp(0, controller.position.maxScrollExtent);
+                          if (possibleNewPosition > 0) {
+                            controller.animateTo(
+                              possibleNewPosition,
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.easeOut,
+                            );
+                          } else {
+                            controller.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+                          }
+                        }
+                      },
+                      mini: true,
+                      shape: CircleBorder(),
+                      heroTag: '${viewMoreButtonHeroTag}_left',
+                      child: Icon(Icons.arrow_back_ios, size: 16),
+                    ),
+                  ),
+                if (showRightButton.value && !context.isMobile)
+                  Align(
+                    alignment: .centerRight,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        if (controller.hasClients) {
+                          double possibleNewPosition = (controller.offset + controller.position.viewportDimension)
+                              .clamp(0, controller.position.maxScrollExtent);
+                          if (possibleNewPosition > controller.position.maxScrollExtent) {
+                            controller.animateTo(
+                              controller.position.maxScrollExtent,
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.easeOut,
+                            );
+                          } else {
+                            controller.animateTo(
+                              possibleNewPosition,
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.easeOut,
+                            );
+                          }
+                        }
+                      },
+                      mini: true,
+                      shape: CircleBorder(),
+                      heroTag: '${viewMoreButtonHeroTag}_right',
+                      child: Icon(Icons.arrow_forward_ios, size: 16),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
       ],
     );
@@ -153,6 +236,8 @@ abstract class ContentPreviewViewMoreWidget extends ConsumerWidget {
   String get itemGridHeroTag;
 
   String get title;
+
+  TextStyle? titleTextStyle(BuildContext context) => null;
 
   bool get itemShowData => false;
 

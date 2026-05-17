@@ -106,10 +106,11 @@ class BaseSearchResult {
       subtitle = person.character,
       type = TMDB_API_TYPE.PERSON;
 
-  isPerson() => type == TMDB_API_TYPE.PERSON;
-  isMovie() => type == TMDB_API_TYPE.MOVIE;
-  isTvShow() => type == TMDB_API_TYPE.TV_SHOW;
-  hasBackdrop() => backDropImage != null && backDropImage!.isNotEmpty;
+  bool isPerson() => type == TMDB_API_TYPE.PERSON;
+  bool isMovie() => type == TMDB_API_TYPE.MOVIE;
+  bool isTvShow() => type == TMDB_API_TYPE.TV_SHOW;
+  bool hasBackdrop() => backDropImage != null && backDropImage!.isNotEmpty;
+  bool hasAnyImage() => (posterImage != null && posterImage!.isNotEmpty) || hasBackdrop();
 
   static BaseSearchResult fromJson(String? mediaType, Map<String, dynamic> data) {
     if (mediaType == 'person') {

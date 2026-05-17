@@ -22,7 +22,18 @@ class ItemDetailLandscapeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final useBackdrop = item.backDropImage != null;
+    if (!item.hasAnyImage()) {
+      return Container(
+        height: 200,
+        alignment: Alignment.center,
+        child: Text(
+          'No images available',
+          style: context.theme.textTheme.titleMedium!.copyWith(
+            color: context.theme.textTheme.titleMedium!.color!.withOpacity(0.8),
+          ),
+        ),
+      );
+    }
     return Container(
       clipBehavior: .hardEdge,
       decoration: BoxDecoration(),
@@ -33,13 +44,13 @@ class ItemDetailLandscapeAppBar extends StatelessWidget {
           children: [
             SizedBox(width: 8),
             IgnorePointer(
-              child: ContentImageWidget(item.posterImage, fit: useBackdrop ? BoxFit.fill : BoxFit.fitHeight),
+              child: ContentImageWidget(item.posterImage, fit: BoxFit.fill),
             ),
             AspectRatio(
               aspectRatio: 16 / 9,
               child: item.hasBackdrop()
                   ? IgnorePointer(
-                      child: ContentImageWidget(item.backDropImage, fit: useBackdrop ? BoxFit.fill : BoxFit.fitHeight),
+                      child: ContentImageWidget(item.backDropImage, fit: BoxFit.fill, isBackdrop: true),
                     )
                   : Scrollbar(
                       child: SingleChildScrollView(

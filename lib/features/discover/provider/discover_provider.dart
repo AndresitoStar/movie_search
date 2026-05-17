@@ -7,6 +7,7 @@ import 'package:movie_search/common/model/tv.dart';
 import 'package:movie_search/core/di/injection.dart';
 import 'package:movie_search/features/discover/discover_repository.dart';
 import 'package:movie_search/features/home/provider/home_provider.dart';
+import 'package:movie_search/features/settings/provider/south_american_countries_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'discover_provider.g.dart';
@@ -23,7 +24,7 @@ class Discover extends _$Discover {
   Future<void> _discover() async {
     final contentTypeProvider = ref.read(homeContentTypeProvider);
     final filterProvider = ref.watch(discoverFilterProvider);
-    final countrySelected = "UY";// TODO ref.watch(selectedCountryProvider);
+    final countrySelected = await ref.read(selectedCountryProvider.future);
 
     if (!contentTypeProvider.hasValue) return;
     try {
@@ -32,7 +33,7 @@ class Discover extends _$Discover {
       final repository = getIt<DiscoverRepository>();
       final response = await repository.getDiscoverWithFilter(
           type: contentTypeProvider.value!.type,
-          watchRegion: countrySelected,
+          watchRegion: countrySelected.iso31661,
           genre: filterProvider.genres?.map((e) => e.id.toString()).join(','),
           cast: filterProvider.cast?.map((e) => e.id.toString()).join(','),
           sortBy: filterProvider.sortBy,
@@ -60,13 +61,13 @@ class Discover extends _$Discover {
 
     final contentTypeProvider = ref.read(homeContentTypeProvider);
     final filterProvider = ref.watch(discoverFilterProvider);
-    final countrySelected = "UY";// TODO ref.watch(selectedCountryProvider);
+    final countrySelected = await ref.read(selectedCountryProvider.future);
 
     try {
       final repository = getIt<DiscoverRepository>();
       final response = await repository.getDiscoverWithFilter(
         type: contentTypeProvider.value!.type,
-        watchRegion: countrySelected,
+        watchRegion: countrySelected.iso31661,
         genre: filterProvider.genres?.map((e) => e.id.toString()).join(','),
         cast: filterProvider.cast?.map((e) => e.id.toString()).join(','),
         sortBy: filterProvider.sortBy,

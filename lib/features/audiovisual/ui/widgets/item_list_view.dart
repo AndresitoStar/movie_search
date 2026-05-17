@@ -50,7 +50,9 @@ class _ResultListItem extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             if (searchResult.backDropImage != null)
-              ContentImageWidget(searchResult.backDropImage, ignorePointer: true, isBackdrop: true),
+              ContentImageWidget(searchResult.backDropImage, ignorePointer: true, isBackdrop: true)
+            else
+              ContentImageWidget(searchResult.posterImage, ignorePointer: true, fit: BoxFit.cover),
             if (showTitles)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -80,22 +82,6 @@ class _ResultListItem extends StatelessWidget {
                       ),
                     ),
                   ),
-                ],
-              ),
-            if (searchResult.backDropImage == null)
-              Row(
-                children: [
-                  AspectRatio(
-                    aspectRatio: 9 / 16,
-                    child: Card(
-                      margin: const EdgeInsets.fromLTRB(3, 3, 0, 3),
-                      child: Card(
-                        clipBehavior: Clip.hardEdge,
-                        child: ContentImageWidget(searchResult.posterImage, ignorePointer: true, fit: BoxFit.cover),
-                      ),
-                    ),
-                  ),
-                  Spacer(),
                 ],
               ),
           ],
